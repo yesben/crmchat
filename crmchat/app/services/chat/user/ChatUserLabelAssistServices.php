@@ -63,6 +63,7 @@ class ChatUserLabelAssistServices extends BaseServices
             if (!$this->dao->saveAll($data))
                 throw new AdminException('设置标签失败');
         }
+        return true;
     }
 
     /**

@@ -127,7 +127,7 @@ class User extends AuthController
      */
     public function userInfo(ChatUserServices $services, $userId)
     {
-        return $this->success($services->getUserInfo((int)$userId)->toArray());
+        return $this->success($services->getUserInfo((int)$userId, ['*'], ['label'])->toArray());
     }
 
     /**

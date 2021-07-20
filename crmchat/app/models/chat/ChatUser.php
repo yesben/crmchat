@@ -12,6 +12,8 @@
 namespace app\models\chat;
 
 
+use app\models\chat\user\ChatUserLabel;
+use app\models\chat\user\ChatUserLabelAssist;
 use crmeb\basic\BaseModel;
 use crmeb\traits\ModelTrait;
 use think\Model;
@@ -37,6 +39,14 @@ class ChatUser extends BaseModel
      * @var string
      */
     protected $key = 'id';
+
+    /**
+     * @return \think\model\relation\HasManyThrough
+     */
+    public function label()
+    {
+        return $this->hasManyThrough(ChatUserLabel::class, ChatUserLabelAssist::class, 'user_id', 'id', 'id', 'label_id');
+    }
 
     /**
      * @param Model $query
