@@ -1,6 +1,6 @@
 ﻿
 
-CREATE TABLE `eb_application` (
+CREATE TABLE IF NOT EXISTS `eb_application` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL DEFAULT '' COMMENT '应用名称',
   `appid` varchar(32) NOT NULL DEFAULT '' COMMENT '应用ID',
@@ -26,7 +26,7 @@ INSERT INTO `eb_application` VALUES (3,'客服','202116257358989495','da52ac1338
 # Structure for table "eb_cache"
 #
 
-CREATE TABLE `eb_cache` (
+CREATE TABLE IF NOT EXISTS `eb_cache` (
   `key` varchar(32) NOT NULL DEFAULT '' COMMENT '身份管理名称',
   `result` text NOT NULL COMMENT '缓存数据',
   `expire_time` int(11) NOT NULL DEFAULT '0' COMMENT '失效时间0=永久',
@@ -44,7 +44,7 @@ INSERT INTO `eb_cache` VALUES ('kf_adv','\"<p><strong>\\u8fd9\\u5c31\\u662f\\u4e
 # Structure for table "eb_category"
 #
 
-CREATE TABLE `eb_category` (
+CREATE TABLE IF NOT EXISTS `eb_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pid` int(10) NOT NULL DEFAULT '0' COMMENT '上级id',
   `owner_id` int(10) NOT NULL DEFAULT '0' COMMENT '所属人，0为全部',
@@ -61,7 +61,7 @@ CREATE TABLE `eb_category` (
 # Structure for table "eb_chat_service"
 #
 
-CREATE TABLE `eb_chat_service` (
+CREATE TABLE IF NOT EXISTS `eb_chat_service` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `appid` varchar(32) NOT NULL DEFAULT '' COMMENT 'APPID',
   `mer_id` int(10) NOT NULL DEFAULT '0' COMMENT '商户id',
@@ -87,7 +87,7 @@ CREATE TABLE `eb_chat_service` (
 # Structure for table "eb_chat_service_dialogue_record"
 #
 
-CREATE TABLE `eb_chat_service_dialogue_record` (
+CREATE TABLE IF NOT EXISTS `eb_chat_service_dialogue_record` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `appid` varchar(32) NOT NULL DEFAULT '' COMMENT 'APPID',
   `mer_id` int(32) NOT NULL DEFAULT '0' COMMENT '商户id',
@@ -109,7 +109,7 @@ CREATE TABLE `eb_chat_service_dialogue_record` (
 # Structure for table "eb_chat_service_feedback"
 #
 
-CREATE TABLE `eb_chat_service_feedback` (
+CREATE TABLE IF NOT EXISTS `eb_chat_service_feedback` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '用户uid',
   `rela_name` varchar(50) NOT NULL DEFAULT '0' COMMENT '姓名',
@@ -126,7 +126,7 @@ CREATE TABLE `eb_chat_service_feedback` (
 # Structure for table "eb_chat_service_record"
 #
 
-CREATE TABLE `eb_chat_service_record` (
+CREATE TABLE IF NOT EXISTS `eb_chat_service_record` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `appid` varchar(32) NOT NULL DEFAULT '' COMMENT 'APPID',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '发送人的uid',
@@ -150,7 +150,7 @@ CREATE TABLE `eb_chat_service_record` (
 # Structure for table "eb_chat_service_speechcraft"
 #
 
-CREATE TABLE `eb_chat_service_speechcraft` (
+CREATE TABLE IF NOT EXISTS `eb_chat_service_speechcraft` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `kefu_id` int(10) NOT NULL DEFAULT '0' COMMENT '0为全局话术',
   `cate_id` int(10) NOT NULL DEFAULT '0' COMMENT '0为不分类全局话术',
@@ -167,7 +167,7 @@ CREATE TABLE `eb_chat_service_speechcraft` (
 # Structure for table "eb_chat_user"
 #
 
-CREATE TABLE `eb_chat_user` (
+CREATE TABLE IF NOT EXISTS `eb_chat_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(10) NOT NULL DEFAULT '0' COMMENT '用户UID',
   `group_id` int(10) NOT NULL DEFAULT '0' COMMENT '分组',
@@ -192,7 +192,7 @@ CREATE TABLE `eb_chat_user` (
 # Structure for table "eb_chat_user_group"
 #
 
-CREATE TABLE `eb_chat_user_group` (
+CREATE TABLE IF NOT EXISTS `eb_chat_user_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `group_name` varchar(100) NOT NULL DEFAULT '' COMMENT '分组名称',
   PRIMARY KEY (`id`)
@@ -202,7 +202,7 @@ CREATE TABLE `eb_chat_user_group` (
 # Structure for table "eb_chat_user_label"
 #
 
-CREATE TABLE `eb_chat_user_label` (
+CREATE TABLE IF NOT EXISTS `eb_chat_user_label` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `label` varchar(100) NOT NULL DEFAULT '' COMMENT '标签名称',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '用户表自增ID',
@@ -216,7 +216,7 @@ CREATE TABLE `eb_chat_user_label` (
 # Structure for table "eb_chat_user_label_assist"
 #
 
-CREATE TABLE `eb_chat_user_label_assist` (
+CREATE TABLE IF NOT EXISTS `eb_chat_user_label_assist` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `label_id` int(10) NOT NULL DEFAULT '0' COMMENT '标签ID',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '用户表自增ID',
@@ -228,7 +228,7 @@ CREATE TABLE `eb_chat_user_label_assist` (
 # Structure for table "eb_migrations"
 #
 
-CREATE TABLE `eb_migrations` (
+CREATE TABLE IF NOT EXISTS `eb_migrations` (
   `version` bigint(20) NOT NULL,
   `migration_name` varchar(100) DEFAULT NULL,
   `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -242,7 +242,7 @@ CREATE TABLE `eb_migrations` (
 # Structure for table "eb_system_admin"
 #
 
-CREATE TABLE `eb_system_admin` (
+CREATE TABLE IF NOT EXISTS `eb_system_admin` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `account` varchar(32) NOT NULL DEFAULT '' COMMENT '后台管理员账号',
   `head_pic` varchar(255) NOT NULL DEFAULT '' COMMENT '后台管理员头像',
@@ -271,7 +271,7 @@ INSERT INTO `eb_system_admin` VALUES (1,'admin','','$2y$10$/BM3hGVZN2wq2gPXYIJZB
 # Structure for table "eb_system_attachment"
 #
 
-CREATE TABLE `eb_system_attachment` (
+CREATE TABLE IF NOT EXISTS `eb_system_attachment` (
   `att_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL DEFAULT '' COMMENT '附件名称',
   `att_dir` varchar(200) NOT NULL DEFAULT '' COMMENT '附件路径',
@@ -290,7 +290,7 @@ CREATE TABLE `eb_system_attachment` (
 # Structure for table "eb_system_attachment_category"
 #
 
-CREATE TABLE `eb_system_attachment_category` (
+CREATE TABLE IF NOT EXISTS `eb_system_attachment_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pid` int(10) NOT NULL DEFAULT '0' COMMENT '父级ID',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '分类名称',
@@ -302,7 +302,7 @@ CREATE TABLE `eb_system_attachment_category` (
 # Structure for table "eb_system_config"
 #
 
-CREATE TABLE `eb_system_config` (
+CREATE TABLE IF NOT EXISTS `eb_system_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `menu_name` varchar(255) NOT NULL DEFAULT '' COMMENT '字段名称',
   `type` varchar(255) NOT NULL DEFAULT '' COMMENT '类型(文本框,单选按钮...)',
@@ -333,7 +333,7 @@ INSERT INTO `eb_system_config` VALUES (1,'site_name','text','input',1,'',0,'requ
 # Structure for table "eb_system_config_tab"
 #
 
-CREATE TABLE `eb_system_config_tab` (
+CREATE TABLE IF NOT EXISTS `eb_system_config_tab` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pid` int(10) NOT NULL DEFAULT '0' COMMENT '上级分类id',
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT '配置分类名称',
@@ -356,7 +356,7 @@ INSERT INTO `eb_system_config_tab` VALUES (1,0,'基础配置','basics',1,0,'ios-
 # Structure for table "eb_system_group"
 #
 
-CREATE TABLE `eb_system_group` (
+CREATE TABLE IF NOT EXISTS `eb_system_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cate_id` int(10) NOT NULL DEFAULT '0' COMMENT '分类id',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '数据组名称',
@@ -376,7 +376,7 @@ CREATE TABLE `eb_system_group` (
 # Structure for table "eb_system_group_data"
 #
 
-CREATE TABLE `eb_system_group_data` (
+CREATE TABLE IF NOT EXISTS `eb_system_group_data` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `gid` int(10) NOT NULL DEFAULT '0' COMMENT '对应的数据组id',
   `value` text NOT NULL COMMENT '数据组对应的数据值（json数据）',
@@ -396,7 +396,7 @@ CREATE TABLE `eb_system_group_data` (
 # Structure for table "eb_system_log"
 #
 
-CREATE TABLE `eb_system_log` (
+CREATE TABLE IF NOT EXISTS `eb_system_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `admin_id` int(10) NOT NULL DEFAULT '0' COMMENT '管理员id',
   `admin_name` varchar(64) NOT NULL DEFAULT '' COMMENT '管理员姓名',
@@ -417,7 +417,7 @@ CREATE TABLE `eb_system_log` (
 # Structure for table "eb_system_menus"
 #
 
-CREATE TABLE `eb_system_menus` (
+CREATE TABLE IF NOT EXISTS `eb_system_menus` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `pid` int(10) NOT NULL DEFAULT '0' COMMENT '父级id',
   `icon` varchar(16) NOT NULL DEFAULT '' COMMENT '图标',
@@ -455,7 +455,7 @@ INSERT INTO `eb_system_menus` VALUES (7,0,'md-home','统计','admin','index','',
 # Structure for table "eb_system_role"
 #
 
-CREATE TABLE `eb_system_role` (
+CREATE TABLE IF NOT EXISTS `eb_system_role` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `role_name` varchar(32) NOT NULL DEFAULT '' COMMENT '身份管理名称',
   `rules` text NOT NULL COMMENT '身份管理权限(menus_id)',
