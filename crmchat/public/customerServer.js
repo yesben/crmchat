@@ -1,4 +1,13 @@
+//配置
+const settingObj = {
+  domeId: 'customerServerTip',//无需修改
+  openUrl: 'http://192.168.31.192:8080/admin/chat/index'//打开客服地址需要更换成自己的域名,
+  deviceType: '',//无需填写
+};
 
+
+
+//以下无需修改
 // 图片
 var base64ImageObject = {
   // 客服消息
@@ -10,13 +19,6 @@ var base64ImageObject = {
 }
 
 
-const settingObj = {
-  wssUrl: 'wss://pro.crmeb.net/adminapi',
-  domeId: 'customerServerTip',
-  openUrl: 'http://192.168.31.192:8080/admin/chat/index',
-  deviceType: '',
-  httpUrl: 'http://chat.lfmn.fun/'
-};
 // 将token获取并携带
 let scriptToken = document.querySelector('#customerServer').getAttribute('token');
 window.testGetFatherData.token = scriptToken;
@@ -53,19 +55,10 @@ const html = `
       <div class="connent_count"></div>
     </div>
 `;
-//  <div class="iframe_handle">
-//       <span>关闭</span>
-//     </div>
-// <div class="pc_customerServer_container_header">
-//     <div class="pc_customerServer_container_header_title">联系客服</div>
-//     <div class="pc_customerServer_container_header_handle" id="closeWindow">
-//       <img src="${base64ImageObject.putItAway}"></img>
-//     </div>
-//   </div>
+
 const iframeHtml = `
     <iframe src="${settingObj.openUrl}&now=${Math.random()}" frameborder="0" class="iframe_contanier" style="width:100%; height:100%;"></iframe>
   `;
-
 
 
 window.onload = function() {
@@ -115,33 +108,6 @@ window.onload = function() {
     });
   }
 
-
-
-
-
-  // 向子页面传送数据
-
-  // var iframeContent = document.querySelector('.iframe_contanier');
-  // var iframeCustServerWindow = iframeContent.contentWindow;
-
-  // iframeCustServerWindow.onload = () => {
-  //   iframeCustServerWindow.postMessage('来自父页面的参数', 'http://192.168.31.192:8080');
-  // };
-
-
-
-
-  // 头部 dom
-  // var closeWindowDom = document.querySelector('#closeWindow');
-  // // 联系客服头部操作 -- 关闭联系客服弹窗
-  // closeWindowDom.addEventListener('click', function() {
-  //   if(settingObj.deviceType == 'Mobile') {
-  //     iframe.style.top = '100%';
-  //   } else {
-  //     iframe.style.bottom = '-645px';
-  //     iframe.style.opacity = '0';
-  //   }
-  // })
   var connent_count = document.querySelector('.connent_count');
   Object.keys(connent_count_css).forEach(item => {
     connent_count.style[item] = connent_count_css[item]
@@ -170,11 +136,6 @@ window.onload = function() {
       }
       connentCount.innerHTML = e.data.num;
     }
-
-    // if(e.data.type == 'message_getshopDetiles') {
-
-    // }
-
 
   });
 
@@ -226,18 +187,6 @@ window.onload = function() {
 
   function getCustomeServer() {
 
-    // 发送图文数据
-    // ajax({
-    //   url: settingObj.httpUrl + 'api/mobile/service/cache',
-    //   type: "POST",
-    //   async: true,   // async----> 同步：false，异步：true 
-    //   data: { ...testGetFatherData },
-    //   success: function(data) {   //返回接受信息
-    //     let response = JSON.parse(data);
-    //     console.log(response);
-    //   }
-    // })
-
     if(canCustomerServerType) {
       if(settingObj.deviceType == 'Mobile') {
         iframe.style.top = '0';
@@ -255,27 +204,6 @@ window.onload = function() {
     iframe_contanier.contentWindow.postMessage(testGetFatherData, "*"); // 传送图文数据
     iframe_contanier.contentWindow.postMessage({ type: 'openCustomeServer' }, "*"); //通知iframe 打开了客服弹框
   }
-
-
-  setInterval(() => {
-
-  }, 3000);
-
-  // 如果用户浏览网页超过10秒，则开始进行websocket链接，构造 iframe 聊天框
-  // var timer = null;
-  // var count = 0;
-  // timer = setInterval(() => {
-  //   count++;
-  //   console.log(count);
-  //   // 如果计数大于10 或者 客服服务已经创建，则清空计数器
-  //   if(count > 10 || document.body.querySelector('.iframe_contanier')) {
-  //     clearInterval(timer);
-  //     count = 0;
-  //     getCustomeServer({ canOpen: false });
-  //   }
-
-  // }, 1000);
-
 
 }
 // 生成指定范围内的随机数
@@ -314,21 +242,6 @@ function ajax(options) {
     }
   }
 }
-
-// eg：
-// ajax({
-//     url : "a.php",  // url---->地址
-//     type : "POST",   // type ---> 请求方式
-//     async : true,   // async----> 同步：false，异步：true 
-//     data : {        //传入信息
-//         name : "张三",
-//         age : 18
-//     },
-//     success : function(data){   //返回接受信息
-//         console.log(data);
-//     }
-// })
-
 
 
 // 将Object 改装成以 & 符号连接的字符串
@@ -450,99 +363,4 @@ var iframe_content_css = {
   'border-radius': '4px',
   transition: '.3s'
 }
-  // webScoket 的简单封装
-  // let Socket = ''
-  // let setIntervalWesocketPush = null
-
-  // /**
-  //  * 建立websocket连接
-  //  * @param {string} url ws地址
-  //  */
-  // const createSocket = url => {
-  //   Socket && Socket.close()
-  //   if(!Socket) {
-  //     console.log('建立websocket连接')
-  //     Socket = new WebSocket(url)
-  //     Socket.onopen = onopenWS
-  //     Socket.onmessage = onmessageWS
-  //     Socket.onerror = onerrorWS
-  //     Socket.onclose = oncloseWS
-  //   } else {
-  //     console.log('websocket已连接')
-  //   }
-  // }
-
-  // /**打开WS之后发送心跳 */
-  // const onopenWS = () => {
-  //   sendPing()
-  // }
-
-  // /**连接失败重连 */
-  // const onerrorWS = () => {
-  //   Socket.close()
-  //   clearInterval(setIntervalWesocketPush)
-  //   console.log('连接失败重连中')
-  //   if(Socket.readyState !== 3) {
-  //     Socket = null
-  //     createSocket()
-  //   }
-  // }
-
-  // /**WS数据接收统一处理 */
-  // const onmessageWS = e => {
-  //   window.dispatchEvent(new CustomEvent('onmessageWS', {
-  //     detail: {
-  //       data: e.data
-  //     }
-  //   }))
-  // }
-
-  // /**
-  //  * 发送数据但连接未建立时进行处理等待重发
-  //  * @param {any} message 需要发送的数据
-  //  */
-  // const connecting = message => {
-  //   setTimeout(() => {
-  //     if(Socket.readyState === 0) {
-  //       connecting(message)
-  //     } else {
-  //       Socket.send(JSON.stringify(message))
-  //     }
-  //   }, 1000)
-  // }
-
-  // /**
-  //  * 发送数据
-  //  * @param {any} message 需要发送的数据
-  //  */
-  // const sendWSPush = message => {
-  //   if(Socket !== null && Socket.readyState === 3) {
-  //     Socket.close()
-  //     createSocket()
-  //   } else if(Socket.readyState === 1) {
-  //     Socket.send(JSON.stringify(message))
-  //   } else if(Socket.readyState === 0) {
-  //     connecting(message)
-  //   }
-  // }
-
-  // /**断开重连 */
-  // const oncloseWS = () => {
-  //   clearInterval(setIntervalWesocketPush)
-  //   console.log('websocket已断开....正在尝试重连')
-  //   if(Socket.readyState !== 2) {
-  //     Socket = null
-  //     createSocket()
-  //   }
-  // }
-  // /**发送心跳
-  //  * @param {number} time 心跳间隔毫秒 默认5000
-  //  * @param {string} ping 心跳名称 默认字符串ping
-  //  */
-  // const sendPing = (time = 5000, ping = 'ping') => {
-  //   clearInterval(setIntervalWesocketPush)
-  //   Socket.send(ping)
-  //   setIntervalWesocketPush = setInterval(() => {
-  //     Socket.send(ping)
-  //   }, time)
-  // }
+ 
