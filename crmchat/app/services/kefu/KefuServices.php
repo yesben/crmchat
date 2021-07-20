@@ -1,0 +1,146 @@
+<?php
+// +----------------------------------------------------------------------
+// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// +----------------------------------------------------------------------
+// | Copyright (c) 2016~2020 https://www.crmeb.com All rights reserved.
+// +----------------------------------------------------------------------
+// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// +----------------------------------------------------------------------
+// | Author: CRMEB Team <admin@crmeb.com>
+// +----------------------------------------------------------------------
+
+namespace app\services\kefu;
+
+
+use app\dao\chat\ChatServiceDao;
+use app\services\chat\ChatServiceAuxiliaryServices;
+use app\services\chat\ChatServiceDialogueRecordServices;
+use app\services\chat\ChatServiceRecordServices;
+use app\services\chat\ChatServiceServices;
+use crmeb\basic\BaseServices;
+use crmeb\services\SwooleTaskService;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\DbException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\ValidateException;
+
+/**
+ * Class KefuServices
+ * @package app\services\kefu
+ */
+class KefuServices extends BaseServices
+{
+
+    /**
+     * KefuServices constructor.
+     * @param ChatServiceDao $dao
+     */
+    public function __construct(ChatServiceDao $dao)
+    {
+        $this->dao = $dao;
+    }
+
+    /**
+     * 获取客服列表
+     * @param array $where
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function getServiceList(array $where, array $noId)
+    {
+        $where['status'] = 1;
+        $where['noId']   = $noId;
+        $where['online'] = 1;
+        [$page, $limit] = $this->getPageValue();
+        $list  = $this->dao->getServiceList($where, $page, $limit);
+        $count = $this->dao->count($where);
+        return compact('list', 'count');
+    }
+
+    /**
+     * 获取聊天记录
+     * @param int $userId
+     * @param int $toUserId
+     * @param int $isUp
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function getChatList(int $userId, int $toUserId, int $upperId)
+    {
+        /** @var ChatServiceDialogueRecordServices $service */
+        $service = app()->make(ChatServiceDialogueRecordServices::class);
+        [$page, $limit] = $this->getPageValue();
+        return array_reverse($service->tidyChat($service->getServiceChatList(['chat' => [$userId, $toUserId]], $limit, $upperId)));
+    }
+
+    /**
+     * 转移客服
+     * @param int $kfuUid
+     * @param int $uid
+     * @param int $toUid
+     * @return mixed
+     */
+    public function setTransfer(string $appid, int $kfuUserId, int $userId, int $kefuToUserId)
+    {
+        if ($userId === $kefuToUserId) {
+            throw new ValidateException('自己不能转接给自己');
+        }
+        /** @var ChatServiceAuxiliaryServices $auxiliaryServices */
+        $auxiliaryServices = app()->make(ChatServiceAuxiliaryServices::class);
+        /** @var ChatServiceDialogueRecordServices $service */
+        $service = app()->make(ChatServiceDialogueRecordServices::class);
+        $addTime = $auxiliaryServices->value(['binding_id' => $kfuUserId, 'relation_id' => $userId], 'update_time');
+        $list    = $service->getMessageList(['chat' => [$kfuUserId, $userId], 'add_time' => $addTime]);
+        $data    = [];
+        foreach ($list as $item) {
+            if ($item['to_user_id'] == $kfuUserId) {
+                $item['to_user_id'] = $kefuToUserId;
+            }
+            if ($item['user_id'] == $kfuUserId) {
+                $item['user_id'] = $kefuToUserId;
+            }
+            $item['add_time'] = time();
+            unset($item['id']);
+            $data[] = $item;
+        }
+        $record = $this->transaction(function () use ($data, $appid, $service, $kfuUserId, $userId, $kefuToUserId, $auxiliaryServices) {
+            if ($data) {
+                $num         = count($data) - 1;
+                $messageData = $data[$num] ?? [];
+                $res         = $service->saveAll($data);
+            } else {
+                $num         = 0;
+                $res         = true;
+                $messageData = [];
+            }
+            /** @var ChatServiceRecordServices $serviceRecord */
+            $serviceRecord = app()->make(ChatServiceRecordServices::class);
+            $info          = $serviceRecord->get(['user_id' => $kfuUserId, 'to_uid' => $userId], ['type', 'message_type', 'is_tourist', 'avatar', 'nickname']);
+            $record        = $serviceRecord->saveRecord($appid, $userId, $kefuToUserId, $messageData['msn'] ?? '', $info['type'] ?? 1, $messageData['message_type'] ?? 1, $num, $info['is_tourist'] ?? 0, $info['nickname'] ?? "", $info['avatar'] ?? '');
+            $res           = $res && $auxiliaryServices->saveAuxliary(['binding_id' => $kfuUserId, 'relation_id' => $userId]);
+            if (!$res && !$record) {
+                throw new ValidateException('转接客服失败');
+            }
+            return $record;
+        });
+        try {
+            $keufInfo = $this->dao->get(['user_id' => $kfuUserId], ['avatar', 'nickname']);
+            if ($keufInfo) {
+                $keufInfo = $keufInfo->toArray();
+            } else {
+                $keufInfo = (object)[];
+            }
+            //给转接的客服发送消息通知
+            SwooleTaskService::kefu()->type('transfer')->to($kefuToUserId)->data(['recored' => $record, 'kefuInfo' => $keufInfo])->push();
+            //告知用户对接此用户聊天
+            $keufToInfo = $this->dao->get(['uid' => $kefuToUserId], ['avatar', 'nickname']);
+            SwooleTaskService::user()->type('to_transfer')->to($userId)->data(['toUid' => $kefuToUserId, 'avatar' => $keufToInfo['avatar'] ?? '', 'nickname' => $keufToInfo['nickname'] ?? ''])->push();
+        } catch (\Exception $e) {
+        }
+        return true;
+    }
+}

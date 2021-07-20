@@ -1,0 +1,183 @@
+<?php
+// +----------------------------------------------------------------------
+// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// +----------------------------------------------------------------------
+// | Copyright (c) 2016~2020 https://www.crmeb.com All rights reserved.
+// +----------------------------------------------------------------------
+// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// +----------------------------------------------------------------------
+// | Author: CRMEB Team <admin@crmeb.com>
+// +----------------------------------------------------------------------
+
+namespace app\services\chat;
+
+
+use app\dao\chat\ChatServiceRecordDao;
+use Carbon\Carbon;
+use crmeb\basic\BaseServices;
+use crmeb\utils\Str;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\DbException;
+use think\db\exception\ModelNotFoundException;
+use think\Model;
+
+/**
+ * Class ChatServiceRecordServices
+ * @package app\services\chat
+ * @method array|Model|null getLatelyMsgUid(array $where, string $key) 查询最近和用户聊天的uid用户
+ */
+class ChatServiceRecordServices extends BaseServices
+{
+
+    /**
+     * ChatServiceRecordServices constructor.
+     * @param ChatServiceRecordDao $dao
+     */
+    public function __construct(ChatServiceRecordDao $dao)
+    {
+        $this->dao = $dao;
+    }
+
+    /**
+     * 获取某个客服的客户列表
+     * @param string $appid
+     * @param int $userId
+     * @param string $nickname
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function getUserList(string $appid, int $userId, string $nickname)
+    {
+        return $this->dao->getServiceList(['appid' => $appid, 'user_id' => $userId, 'title' => $nickname, 'is_tourist' => 0], 0, 0);
+    }
+
+    /**
+     * 获取客服用户聊天列表
+     * @param string $appid
+     * @param int $userId
+     * @param string $nickname
+     * @param int $isTourist
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function getServiceList(string $appid, int $userId, string $nickname, int $isTourist = 0)
+    {
+        [$page, $limit] = $this->getPageValue();
+        $list = $this->dao->getServiceList(['appid' => $appid, 'user_id' => $userId, 'title' => $nickname, 'is_tourist' => $isTourist], $page, $limit);
+        foreach ($list as &$item) {
+            if ($item['message_type'] == 1) {
+                $item['message'] = Str::substrUTf8($item['message'], '10', 'UTF-8', '');
+            }
+            $item['_update_time'] = date('Y-m-d H:i', $item['update_time']);
+        }
+        return $list;
+    }
+
+    /**
+     * 更新客服用户信息
+     * @param int $uid
+     * @param array $data
+     * @return mixed
+     */
+    public function updateRecord(array $where, array $data)
+    {
+        return $this->dao->update($where, $data);
+    }
+
+    /**
+     * 写入聊天相关人数据
+     * @param int $uid
+     * @param int $toUid
+     * @param string $message
+     * @param int $type
+     * @param int $messageType
+     * @param int $num
+     * @return mixed
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function saveRecord(string $appid, int $userId, int $toUserid, string $message, int $type, int $messageType, int $num, int $isTourist = 0, string $nickname = '', string $avatar = '', int $online = 0)
+    {
+        $info = $this->dao->get(['appid' => $appid, 'user_id' => $toUserid, 'to_user_id' => $userId]);
+        if ($info) {
+            $info->type         = $type;
+            $info->message      = $message;
+            $info->message_type = $messageType;
+            $info->update_time  = time();
+            $info->mssage_num   = $num;
+            $info->online       = $online;
+            if ($avatar) $info->avatar = $avatar;
+            if ($nickname) $info->nickname = $nickname;
+            $info->save();
+            $this->dao->update(['user_id' => $userId, 'to_user_id' => $toUserid], ['message' => $message, 'message_type' => $messageType]);
+            return $info->toArray();
+        } else {
+            return $this->dao->save([
+                'user_id'      => $toUserid,
+                'to_user_id'   => $userId,
+                'type'         => $type,
+                'online'       => $online,
+                'message'      => $message,
+                'avatar'       => $avatar,
+                'nickname'     => $nickname,
+                'message_type' => $messageType,
+                'mssage_num'   => $num,
+                'add_time'     => time(),
+                'update_time'  => time(),
+                'is_tourist'   => $isTourist,
+                'appid'        => $appid
+            ])->toArray();
+        }
+    }
+
+    /**
+     * 统计客户人数
+     * @param int $id
+     * @return array
+     */
+    public function getKefuSum(int $id = 0)
+    {
+        $all          = $this->dao->count(['user_id' => $id]);
+        $toDayKefu    = $this->dao->count(['time' => 'today', 'user_id' => $id, 'is_tourist' => 1]);
+        $month        = $this->dao->count(['time' => 'month', 'user_id' => $id]);
+        $toDayTourist = $this->dao->count(['time' => 'today', 'user_id' => $id, 'is_tourist' => 0]);
+        return compact('all', 'toDayKefu', 'month', 'toDayTourist');
+    }
+
+    /**
+     * 获取统计数据
+     * @param int $id
+     * @param int $year
+     * @param int $month
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function getKefuStatistics(int $id, int $year, int $month)
+    {
+        $date      = Carbon::create($year, $month);
+        $startTime = strtotime($date->startOfMonth()->toDateTimeString());
+        $endTime   = strtotime($date->lastOfMonth()->toDateTimeString()) + 86399;
+
+        return [
+            'list'    => $this->dao->kefuStatistics([
+                'user_id'    => $id,
+                'is_tourist' => 0,
+                'startTime'  => $startTime,
+                'endTime'    => $endTime,
+            ]),
+            'tourist' => $this->dao->kefuStatistics([
+                'user_id'    => $id,
+                'is_tourist' => 1,
+                'startTime'  => $startTime,
+                'endTime'    => $endTime,
+            ])
+        ];
+    }
+}

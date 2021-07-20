@@ -1,0 +1,408 @@
+<template>
+  <div class="pc_customerServer_container">
+    <!-- 客服头部开始 -->
+    <div class="pc_customerServer_container_header">
+      <div class="pc_customerServer_container_header_title">{{chatServerData.to_user_nickname}}</div>
+      <div class="pc_customerServer_container_header_handle" @click="closeIframe">
+        <span class="iconfont">&#xe6c5;</span>
+      </div>
+    </div>
+    <!-- 客服头部结束 -->
+
+    <!-- 聊天内容开始 -->
+    <div class="pc_customerServer_container_content">
+      <happy-scroll size="1" resize hide-horizontal :scroll-top="scrollTop" @vertical-start="scrollHandler">
+        <div class="scroll_content" id="chat_scroll">
+          <!-- 滑动到容器顶部时，动画加载 -->
+          <Spin v-show="isLoad">
+            <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
+            <div>Loading</div>
+          </Spin>
+          <!-- 动画结束 -->
+
+          <!-- 聊天内容列表 -->
+          <div class="chart_list">
+            <div class="chart_list_item" v-for="(item, index) in records" :key="index">
+              <div class="chart_list_item_time" v-show="item.show">{{item.time}}</div>
+              <div class="chart_list_item_content" :class="{'right-box': item.user_id == chatServerData.user_id}">
+                <div class="chart_list_item_avatar">
+                  <img :src="item.avatar" alt="">
+                </div>
+                <!-- 文字及表情信息 -->
+                <div class="chart_list_item_text" v-if="item.msn_type <= 2">
+                  <span v-html="replace_em(item.msn)"></span>
+                </div>
+                <!-- 图片信息 -->
+                <div class="chart_list_item_img" v-if="item.msn_type == 3">
+                  <img v-lazy="item.msn" />
+                </div>
+
+                <!-- 图文信息 -->
+                <div class="chart_list_item_imgOrText" v-if="item.msn_type == 5">
+                  <div class="order-wrapper">
+                    <div class="img-box">
+                      <img :src="item.other.image" alt="">
+                    </div>
+                    <div class="order-info">
+                      <div class="price-box">
+                        <div class="num">¥ {{item.other.price}}</div>
+                        <!-- <a herf="javascript:;" class="more" @click.stop="lookGoods(item)">查看商品 ></a> -->
+                      </div>
+                      <div class="name">{{item.other.store_name}}</div>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+          <!-- 聊天内容列表结束 -->
+        </div>
+      </happy-scroll>
+    </div>
+    <!-- 聊天内容结束 -->
+
+    <!-- 内容输入开始 -->
+    <div class="pc_customerServer_container_footer">
+      <div class="pc_customerServer_container_footer_header">
+        <div class="pc_customerServer_container_footer_header_handle">
+          <div @click="inputConType = 2">
+            <img src="@/assets/images/customerServer/face.png" alt="">
+          </div>
+          <div>
+            <img src="@/assets/images/customerServer/picture.png" alt="">
+            <input type="file" class="type_file" @change="uploadFile">
+          </div>
+        </div>
+      </div>
+      <!-- 输入框容器 -->
+      <div class="pc_customerServer_container_footer_input" v-if="inputConType == 1">
+        <textarea v-model="userMessage" class="pc_customerServer_container_footer_input-textarea" rows="5" placeholder="请输入文字"></textarea>
+      </div>
+      <!-- 输入框容器结束 -->
+
+      <!-- 表情及图片容器 -->
+      <div class="pc_customerServer_container_footer_emoji" v-if="inputConType == 2">
+        <div class="emoji-item" v-for="(emoji, index) in emojiList" :key="index">
+          <i class="em" :class="emoji" @click.stop="select(emoji)"></i>
+        </div>
+      </div>
+      <!-- 表情及图片容器结束 -->
+      <!-- 相关操作 -- 点击发送 -->
+      <div class="pc_customerServer_container_footer_handle">
+        <div class="pc_customerServer_container_footer_handle_send" @click="sendText">
+          <span>发送</span>
+        </div>
+      </div>
+      <!-- 相关操作结束 -->
+
+    </div>
+    <!-- 内容输入结束 -->
+  </div>
+</template>
+<script>
+import { HappyScroll } from 'vue-happy-scroll'
+import emojiList from "@/utils/emoji";
+import socketServer from './minix/socketServer';
+export default {
+  components: {
+    HappyScroll
+  },
+  mixins: [socketServer],
+  data() {
+    return {
+      isLoad: false,
+      scrollTop: 0,
+      emojiList: emojiList,
+      inputConType: 1
+    }
+  },
+  created() {
+
+    // this.connentServer(); // 连接webSocket 服务 [mixins 方法]
+    this.getUserRecord(); // 查看当前是否有客服在线 
+
+  },
+  computed: {
+    records() {
+
+      return this.chatServerData.serviceList.map((item, index) => {
+        item.time = this.$moment(item.add_time * 1000).format('MMMDo H:mm')
+        if(index) {
+          if(
+            item.add_time -
+            this.chatServerData.serviceList[index - 1].add_time >=
+            300
+          ) {
+            item.show = true;
+          } else {
+            item.show = false;
+          }
+        } else {
+          item.show = true;
+        }
+        return item;
+      });
+    }
+  },
+  methods: {
+    getScrollTop() {
+      console.log(123);
+    },
+    getScrollEnd() {
+      console.log(321);
+    },
+
+    scrollHandler(e) {
+      console.log('滑动到顶部了');
+      this.isLoad = true;
+      setTimeout(() => {
+        this.isLoad = false;
+      }, 2000)
+    },
+    // 聊天表情转换
+    replace_em(str) {
+      str = str.replace(/\[em-([a-z_]*)\]/g, "<span class='em em-$1'/></span>");
+      return str;
+    },
+  }
+}
+</script>
+<style lang="less" scoped>
+.pc_customerServer_container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #f5f5f5;
+  &_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(270deg, #1890ff 0%, #3875ea 100%);
+    padding: 18px 14px;
+    font-size: 16px;
+    color: #fff;
+    &_handle {
+      cursor: pointer;
+    }
+  }
+
+  &_content {
+    flex: 1;
+    overflow: hidden;
+    .scroll_content {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      padding-bottom: 20px;
+      box-sizing: border-box;
+      .chart_list {
+        &_item {
+          &_content {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+          }
+
+          &_avatar {
+            width: 33px;
+            height: 33px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 10px;
+            align-self: flex-start;
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+          &_text {
+            max-width: 60%;
+            word-wrap: break-word;
+            background: #fff;
+            padding: 14px;
+            font-size: 14px;
+            border-radius: 4px;
+          }
+          &_img {
+            max-width: 60%;
+            img {
+              width: 100%;
+              height: auto;
+            }
+          }
+          .chart_list_item_imgOrText {
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            width: 226px;
+            box-sizing: border-box;
+            .order-wrapper {
+              .img-box {
+                width: 100%;
+                img {
+                  width: 100%;
+                  height: auto;
+                }
+              }
+              .order-info {
+                .price-box {
+                  color: #ff0000;
+                  font-size: 18px;
+                }
+                .name {
+                  font-size: 14px;
+                }
+              }
+            }
+          }
+          &_time {
+            text-align: center;
+            margin: 10px auto;
+          }
+          .right-box {
+            flex-direction: row-reverse;
+            .chart_list_item_avatar {
+              margin-left: 10px;
+            }
+            .chart_list_item_text {
+              text-align: right;
+              background: #3875ea;
+              color: #fff;
+            }
+            .chart_list_item_img {
+              text-align: right;
+              background: #fff;
+              img {
+                width: 100%;
+                height: auto;
+              }
+            }
+            .chart_list_item_imgOrText {
+              background: #fff;
+              padding: 10px;
+              border-radius: 8px;
+              width: 226px;
+              box-sizing: border-box;
+              .order-wrapper {
+                .img-box {
+                  width: 100%;
+                  img {
+                    width: 100%;
+                    height: auto;
+                  }
+                }
+                .order-info {
+                  .price-box {
+                    color: #ff0000;
+                    font-size: 18px;
+                  }
+                  .name {
+                    font-size: 14px;
+                  }
+                }
+              }
+            }
+          }
+          &_text {
+          }
+        }
+      }
+    }
+  }
+  &_footer {
+    background: #fff;
+    padding: 14px 18px;
+    min-height: 180px;
+    &_header {
+      &_handle {
+        display: flex;
+        > div {
+          margin-right: 19px;
+          position: relative;
+          img {
+            width: 22px;
+            height: 22px;
+          }
+          .type_file {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+          }
+        }
+      }
+    }
+
+    &_input {
+      &-textarea {
+        width: 100%;
+        height: 100%;
+        border: none;
+        outline: none;
+        padding-top: 4px;
+        font-size: 14px;
+        line-height: 16px;
+      }
+    }
+    &_emoji {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      margin-top: 10px;
+      max-height: 180px;
+      overflow-y: auto;
+      .emoji-item {
+        padding: 6px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    &_handle {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      &_send {
+        width: 56px;
+        height: 26px;
+        background: #3875ea;
+        border-radius: 3px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.demo-spin-icon-load {
+  animation: ani-demo-spin 1s linear infinite;
+}
+
+@keyframes ani-demo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+/deep/ .happy-scroll-content {
+  width: 100%;
+  box-sizing: border-box;
+}
+</style>
