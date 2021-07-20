@@ -1,6 +1,4 @@
-﻿
-
-CREATE TABLE IF NOT EXISTS `eb_application` (
+﻿CREATE TABLE IF NOT EXISTS `eb_application` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL DEFAULT '' COMMENT '应用名称',
   `appid` varchar(32) NOT NULL DEFAULT '' COMMENT '应用ID',
