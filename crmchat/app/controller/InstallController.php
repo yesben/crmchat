@@ -43,8 +43,8 @@ class InstallController
         if (!file_exists($path . 'public/install/' . $sqlFile) || !file_exists($path . 'public/install/' . $configFile)) {
             return '缺少必要的安装文件!';
         }
-        $Title   = "CRMEB安装向导";
-        $Powered = "Powered by CRMEB";
+        $Title   = "CRMChat安装向导";
+        $Powered = "Powered by CRMChat";
         $steps   = array(
             '1' => '安装许可协议',
             '2' => '运行环境检测',
