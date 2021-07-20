@@ -195,7 +195,7 @@ ThinkPHP6.0遵循PSR-2命名规范和PSR-4自动加载规范，并且注意如�
 #PROXY-START/
 location  ~* \.(php|jsp|cgi|asp|aspx)$
 {
-    proxy_pass http://127.0.0.1:20199;
+    proxy_pass http://127.0.0.1:20108;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -203,7 +203,7 @@ location  ~* \.(php|jsp|cgi|asp|aspx)$
 }
 location /
 {
-    proxy_pass http://127.0.0.1:20199;
+    proxy_pass http://127.0.0.1:20108;
     proxy_http_version 1.1;
     proxy_read_timeout 360s;   
     proxy_redirect off; 
@@ -310,6 +310,12 @@ php think swoole restart
 关闭
 ```sh
 php think swoole stop
+```
+
+正式运行命令请用www用户启动命令:
+
+```sh
+sudo -u www php think swoole restart
 ```
 
 
