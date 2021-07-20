@@ -1,7 +1,7 @@
 CRM-CHAT TP6+Swoole4
 ===============
 
-> 运行环境要求PHP7.1 ~ 7.3。不支持windows环境运行
+> 运行环境要求PHP7.1 ~ 7.4。不支持windows环境运行
 
 ## 开发规范
 #### 命名规范
@@ -226,11 +226,7 @@ location /
 
 ## 环境配置
 ### php配置，进入宝塔的软件商店，进入php的设置
-1. 
-2. 点击安装扩展标签，安装 fileinfo，redis，Swoole4 这三个扩展
-3. 点击配置修改标签，将 memory_limit 脚本内存控制改为 256M
-4. 点击配置文件标签，将 extension = swoole_loader73.so 代码添加在最下方，然后保存。
-5. 点击服务标签，重启 php 服务。
+1. 点击安装扩展标签，安装 fileinfo，redis，Swoole4 这三个扩展
 ### mysql配置，进入宝塔的软件商店，进入mysql的设置
 1. 点击配置修改标签，找到 sql-mode ，将后面的值修改为 NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
 2. 点击服务标签，重启 mysql 服务。
