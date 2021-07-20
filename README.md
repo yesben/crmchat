@@ -118,7 +118,7 @@ ThinkPHP6.0遵循PSR-2命名规范和PSR-4自动加载规范，并且注意如�
     use FooLibrary\Bar\Baz\{ ClassA, ClassB};
     
    ~~~
-#### CRMEB PRO规范
+#### 开发规范
  1. 所有数据验证放在模块下的 validates 目录下
  2. JSON返回使用父级 AuthController类中的success 和 fail
  3. 错误判断抛出异常，由一个错误类统一控制输出
