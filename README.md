@@ -140,6 +140,16 @@ sudo -u www php think swoole restart
 ```
 
 
+## 页面展示
+
+![输入图片说明](readme/image/2.jpg)
+![输入图片说明](readme/image/3.jpg)
+
+## 下期功能展示
+
+![输入图片说明](readme/image/1.jpg)
+
+
 ## 开发规范
 #### 命名规范
 ThinkPHP6.0遵循PSR-2命名规范和PSR-4自动加载规范，并且注意如下规范:
