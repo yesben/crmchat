@@ -2,7 +2,10 @@
   <div class="pc_customerServer_container">
     <!-- 客服头部开始 -->
     <div class="pc_customerServer_container_header">
-      <div class="pc_customerServer_container_header_title">{{chatServerData.to_user_nickname}}</div>
+      <div class="pc_customerServer_container_header_title">
+        <img :src="chatServerData.avatar" alt="">
+        <span>{{chatServerData.to_user_nickname}}</span>
+      </div>
       <div class="pc_customerServer_container_header_handle" @click="closeIframe">
         <span class="iconfont">&#xe6c5;</span>
       </div>
@@ -186,6 +189,16 @@ export default {
     padding: 18px 14px;
     font-size: 16px;
     color: #fff;
+    &_title {
+      display: flex;
+      align-items: center;
+      img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+    }
     &_handle {
       cursor: pointer;
     }

@@ -24,23 +24,9 @@ class Test
 {
     protected $app;
 
-
     public function index()
     {
-
-        dump(strstr('http', 'http://chat.lfmn.fun/uploads/attach/2021/07/20210717/fb2c034652f6f995be83d5818955adbb.jpg'));
-        $token = 'eyJpdiI6Im1oNThXdWZSY250QkhuTm4wdXJkeFE9PSIsInZhbHVlIjoiM2lDMEFNdERZYWlLZmJhRnBMVVE4NG1IbTIwRlBEU3MxajdVSEplUHNYWDlEbHdCdHJsUWFSY0pIRlpIMjN4NHhneXpGaXJ4ZzYxTDRSdVJWVWJVdWxWcndmaGNnRWd1L1l2NmJ3U0VQQ0V2Ry96ZmNLeDNKRWtjVVFLZkVSbzgzd21pWVlCcjAxaUhmNEpSUC9aUGkzMm1VR3I2ZCtUc2pLamcrNGpVL29RPSIsIm1hYyI6IjlmMWFhZDlhY2UxYjRjYzFhMTAwODE5MzJjNDM3MWMxNGJiZjJjZjhhZTI5ODc3OWMxMDZlODRiYjFkZTI3M2EifQ==';
-//        dump(strlen($token));
-        /** @var Encrypter $encrypter */
-        $encrypter = app()->make(Encrypter::class);
-
-        $res = $encrypter->decrypt($token);
-        dump($res);
-        /** @var Captcha $captcha */
-        $captcha = app()->make(Captcha::class);
-        $res     = $captcha->create([], true);
-        dump($res['key']);
-        echo '<img src="' . $res['img'] . '">';
+        var_dump(Carbon::today()->startOfDay()->toDateTimeString(), Carbon::today()->endOfDay()->toDateTimeString());
     }
 
     public function rule()

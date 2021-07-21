@@ -1,47 +1,111 @@
 <template>
-  <div>
+  <div class="getCode_container">
     <div class="i-layout-page-header">
       <div class="i-layout-page-header">
         <span class="ivu-page-header-title">{{ $route.meta.title }}</span>
       </div>
     </div>
     <div class="content">
-      <p class="font-w">1. 新版统计代码获取 （不想手工添加代码？立刻一键安装）</p>
-      <p>此代码同时适用于PC端、移动端的页面，以异步加载形式进行加载，数据更准确、加载速度更快。请将此代码复制并粘贴到您要跟踪的每个网页中。</p>
+      <br>
+      <p class="font-w">
+        <a style="font-size: 20px" :href="`http://192.168.31.192:8080/chat/index?uid=10&nickName=%E5%BC%A0%E8%B6%8A&phone=13038593836&key=1626851220262&type=getImgOrText&time=1626851220262&token=${token.token}&deviceType=Mobile&now=0.9937210994959702`">
+          点击这里，开始体验
+        </a>
+      </p>
+      <br>
+
+      <p class="font-w">1.crmeb文件引入说明</p>
+      <p class="text-i">1.html引入方式， 在html文件中直接引入js文件 </p>
       <div class="code-content-wrap">
-<textarea id="NormalCodeTextarea" class="code">
-<script>
-  var _hmt = _hmt || [];
-  (function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?4630a77947abc101ccd8b2887d899f35";
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(hm, s);
-  })();
-</script>
-</textarea>
+        <textarea id="NormalCodeTextarea" class="code" rows="2">
+          <script src="{{srcUrl}}"></script>
+        </textarea>
       </div>
       <div class="other-wrap">
-        <a @click="getCopy()" class="btn btn-blue btn-large" href="javascript:void(0);"><span>复制代码</span></a>
-        <span v-if="cloneTip" class="setting-highlight">已复制到剪贴板！</span>
+        <a @click="getCopy('NormalCodeTextarea')" class="btn btn-blue btn-large" href="javascript:void(0);"><span>复制代码</span></a>
       </div>
-      <p class="font-w">2. 代码安装说明 安装实例 建站工具中的安装方法</p>
-      <p class="text-i">1. 请将代码添加到网站全部页面的标签前。</p>
-      <p class="text-i">2. 建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果。</p>
-      <p class="text-i">3. 如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的，后，放入JS文件中即可。</p>
-      <p class="font-w">3. 代码检测</p>
-      <p class="text-i">代码安装完成后，您可以在“代码安装检查”页面自动检测或手动检测代码安装情况。</p>
+      <p class="text-i">2.vue引入方式, 在main.js加入以下代码 </p>
+      <div class="code-content-wrap">
+        <textarea id="NormalCodeTextarea1" class="code textarea" rows="8">
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "{{srcUrl}}";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })()
+        </textarea>
+      </div>
+      <div class="other-wrap">
+        <a @click="getCopy('NormalCodeTextarea1')" class="btn btn-blue btn-large" href="javascript:void(0);"><span>复制代码</span></a>
+      </div>
+
+      <p class="font-w">2. 使用说明</p>
+      <p class="text-i">1. 引入js文件后，实例化对象(initCustomerServer)，并传入所需参数，完整示例如下</p>
+      <div class="code-content-wrap">
+        <textarea id="NormalCodeTextarea2" class="code textarea" rows="30">
+              let option = {
+                  openUrl: 'http://192.168.31.192:8080',
+                  domId: 'customerServerTip',
+                  token: '{{token.token}}'
+                  sendUserData: {
+                    uid: 10,
+                    nickName: '张越',
+                    phone: '13038593836'
+                  },
+                  productInfo: {
+                    store_name: '蒙奇 D 路飞',
+                    stock: '库存',
+                    sales: '122', // 销量 
+                    ficti: '10', // 赠送
+                    price: '100',
+                    image: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F4495e731345f73cb023b1d70197d50e7f451dbc91a88e-UU7MfN_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1629276024&t=9d1c5b297dc857ddd2d18c9580dde427'
+                  }
+                }
 
 
+                let canCustomerServer = new initCustomerServer(option);
+                canCustomerServer.init();
+        </textarea>
+      </div>
+      <br>
+      <p class="text-i">2. 参数说明</p>
+      <Table :columns="columns1" :data="data1"></Table>
+      <br>
+      <p class="font-w">3. token获取</p>
+      <br>
+
+      <textarea id="NormalCodeTextarea3" class="code textarea" rows="5">
+         {{token.token}}
+      </textarea>
+      <div class="other-wrap">
+        <a @click="getCopy('NormalCodeTextarea3')" class="btn btn-blue btn-large" href="javascript:void(0);"><span>复制代码</span></a>
+        &nbsp;
+        <div @click="resetToken()" class="btn btn-blue btn-large" href="javascript:void(0);"><span>重置token</span></div>
+
+      </div>
       <p style="padding-top:20px;">小贴士：</p>
       <p>1.此代码不会影响您网站页面的显示，请您放心使用。</p>
-      <p>2.如果您有技术上的疑问，可咨询您的网站管理员、托管公司，或者百度推广顾问。</p>
+      <p>2.如果您有技术上的疑问，可咨询您的网站管理员、托管公司、CRMEB。</p>
     </div>
+
+    <Modal v-model="canfrime" title="提示" @on-ok="confirme" @on-cancel="cancel">
+      <div class="ivu-modal-confirm">
+        <img src="@/assets/images/warring.png" alt="">
+        <div>
+          token重置后，数据将全部更新，历史数据将会失效，请问是否确定？
+        </div>
+      </div>
+    </Modal>
+
   </div>
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState } from 'vuex';
+import { adminAppCustomer, appReset } from '@/api/kefu';
+import initCustomerServer from '@/libs/customerServer';
+
+
 
 export default {
   name: 'setting_user',
@@ -61,15 +125,191 @@ export default {
   },
   data() {
     return {
+      canfrime: false,
+      srcUrl: `${location.origin}/customerServer.js`,
       cloneTip: false,
+      columns1: [
+        {
+          title: '参数',
+          key: 'name'
+        },
+        {
+          title: '类型',
+          key: 'type'
+        },
+        {
+          title: '是否必选',
+          key: 'isRequired'
+        },
+        {
+          title: '示例值',
+          key: 'example'
+        },
+        {
+          title: '参数说明',
+          key: 'message'
+        }
+      ],
+      data1: [
+        {
+          name: 'openUrl',
+          type: 'String',
+          isRequired: 'false',
+          example: 'http://192.168.31.192:8080',
+          message: '部署后台服务的服务器域名，若不填写，则自动获取放置customerServer.js的服务器域名'
+        },
+        {
+          name: 'domId',
+          type: 'String',
+          isRequired: 'false',
+          example: 'customerServerTip',
+          message: '展示在页面右下角联系客服的dom的id，可根据id获取到dom后自行修改样式, 默认为customerServerTip'
+        },
+        {
+          name: 'token',
+          type: 'String',
+          isRequired: 'true',
+          example: '',
+          message: '交互凭证, 可在页面下方获取'
+        },
+        {
+          name: 'sendUserData',
+          type: 'Object',
+          isRequired: 'false',
+          example: '',
+          message: '用户信息，若不填写，则默认用户为游客'
+        },
+        {
+          name: 'uid',
+          type: 'String',
+          isRequired: 'fasle',
+          example: '10',
+          message: '用户的id'
+        },
+        {
+          name: 'nickName',
+          type: 'String',
+          isRequired: 'fasle',
+          example: '张三',
+          message: '用户昵称'
+        },
+        {
+          name: 'phone',
+          type: 'String',
+          isRequired: 'fasle',
+          example: '138****2765',
+          message: '用户联系方式'
+        },
+        {
+          name: 'time',
+          type: 'String',
+          isRequired: 'true',
+          example: 'new Date().getTime()',
+          message: '传入时间的时间戳'
+        },
+        {
+          name: 'productInfo',
+          type: 'Object',
+          isRequired: 'true',
+          example: '{}',
+          message: '商品详情的对象容器'
+        },
+        {
+          name: 'store_name',
+          type: 'String',
+          isRequired: 'true',
+          example: '碎花裙',
+          message: '商品名称'
+        },
+        {
+          name: 'stock',
+          type: 'String',
+          isRequired: 'true',
+          example: '碎花裙',
+          message: '商品名称'
+        },
+        {
+          name: 'sales',
+          type: 'Number | String',
+          isRequired: 'true',
+          example: '100',
+          message: '销量'
+        },
+        {
+          name: 'price',
+          type: 'Number | String',
+          isRequired: 'true',
+          example: '10',
+          message: '商品价格'
+        },
+        {
+          name: 'image',
+          type: 'String',
+          isRequired: 'true',
+          example: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F4495e731345f73cb023b1d70197d50e7f451dbc91a88e-UU7MfN_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1629276024&t=9d1c5b297dc857ddd2d18c9580dde427',
+          message: '商品图片链接'
+        }
+      ],
+      token: ''
     }
   },
   mounted() {
+    this.getAdminAppCustomer();
 
+    let option = {
+      openUrl: 'http://192.168.31.192:8080',
+      domId: 'customerServerTip',
+      insertDomNode: '.getCode_container',
+      token: 'eyJpdiI6Ild2K1BRQ0NZNlFrQWNDMERpMXBPa2c9PSIsInZhbHVlIjoicjVQNFB6ZVUrM2lMajlxcUdVem91ZnVscVZxRmZoUnVBOUdmMlFTVW5Ia0EzRDV2M0I4U3RnTnk0SGdCdUk2NmN0MmZkUXdlNlV5STZpU3pGOUpEeVBZSXdEYkMraTEybVpUS2Y1SHNtYXQ0MUZpVHNJTmFYeFNUdkh1R3FwL1JDeUJZWmRRZW42OFd4NERYUFV2eVhRSXdteWFzUFdMRDZRaDgydVZDcG40PSIsIm1hYyI6ImVjYzU4NzdiZTA0NDYzZDIzZTk0NmI2OGQwYjVjMmQ2ZjM1NTJlYTEwNmYyMDQ0NmNhNGE5NTE5NGViZGUxNjQifQ==', //eyJpdiI6Ild2K1BRQ0NZNlFrQWNDMERpMXBPa2c9PSIsInZhbHVlIjoicjVQNFB6ZVUrM2lMajlxcUdVem91ZnVscVZxRmZoUnVBOUdmMlFTVW5Ia0EzRDV2M0I4U3RnTnk0SGdCdUk2NmN0MmZkUXdlNlV5STZpU3pGOUpEeVBZSXdEYkMraTEybVpUS2Y1SHNtYXQ0MUZpVHNJTmFYeFNUdkh1R3FwL1JDeUJZWmRRZW42OFd4NERYUFV2eVhRSXdteWFzUFdMRDZRaDgydVZDcG40PSIsIm1hYyI6ImVjYzU4NzdiZTA0NDYzZDIzZTk0NmI2OGQwYjVjMmQ2ZjM1NTJlYTEwNmYyMDQ0NmNhNGE5NTE5NGViZGUxNjQifQ==
+      sendUserData: {
+        uid: 10,
+        nickName: '张越',
+        phone: '13038593836',
+        key: new Date().getTime(),
+        type: 'getImgOrText',
+        time: new Date().getTime(),
+      },
+      productInfo: {
+        store_name: '蒙奇 D 路飞',
+        stock: '库存',
+        sales: '122', // 销量 
+        ficti: '10', // 赠送
+        price: '100',
+        image: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F4495e731345f73cb023b1d70197d50e7f451dbc91a88e-UU7MfN_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1629276024&t=9d1c5b297dc857ddd2d18c9580dde427'
+      }
+    }
+
+
+    let canCustomerServer = new initCustomerServer(option);
+    canCustomerServer.init();
   },
   methods: {
-    getCopy(){
-      let content = this.copyToClipboard(document.getElementById('NormalCodeTextarea'))
+    // 获取token
+    getAdminAppCustomer() {
+      adminAppCustomer().then(res => {
+        console.log(res);
+        if(res.status == 200) {
+          if(res.data.list.length) {
+            this.token = res.data.list[0];
+          }
+        }
+      })
+    },
+    // 重置token
+    resetToken() {
+      this.canfrime = true;
+    },
+    // 确定重置token
+    confirme() {
+      appReset(this.token.id).then(res => {
+        if(res.status == 200) {
+          this.$set(this.token, 'token', res.data.token);
+        }
+      })
+    },
+    cancel() { },
+    getCopy(id) {
+      let content = this.copyToClipboard(document.getElementById(id))
       if(content) this.cloneTip = true
     },
     copyToClipboard(elem) {
@@ -77,7 +317,7 @@ export default {
       var targetId = "_hiddenCopyText_";
       var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
       var origSelectionStart, origSelectionEnd;
-      if (isInput) {
+      if(isInput) {
         // can just use the original source element for the selection and copy
         target = elem;
         origSelectionStart = elem.selectionStart;
@@ -85,7 +325,7 @@ export default {
       } else {
         // must use a temporary form element for the selection and copy
         target = document.getElementById(targetId);
-        if (!target) {
+        if(!target) {
           var target = document.createElement("textarea");
           target.style.position = "absolute";
           target.style.left = "-9999px";
@@ -104,21 +344,24 @@ export default {
       var succeed;
       try {
         succeed = document.execCommand("copy");
-      } catch (e) {
+      } catch(e) {
         succeed = false;
       }
       // restore original focus
-      if (currentFocus && typeof currentFocus.focus === "function") {
+      if(currentFocus && typeof currentFocus.focus === "function") {
         currentFocus.focus();
       }
 
-      if (isInput) {
+      if(isInput) {
         // restore prior selection
         elem.setSelectionRange(origSelectionStart, origSelectionEnd);
       } else {
         // clear temporary content
         target.textContent = "";
       }
+
+      this.$Message.success('已成功复制到粘贴板');
+
       return succeed;
     }
   }
@@ -129,10 +372,23 @@ export default {
 .content {
   width: 100%;
   color: #323437;
-  background: #FFFFFF;
+  background: #ffffff;
   margin-top: 18px;
   font-size: 13px;
   padding: 10px;
+}
+.table_width {
+  padding: 40px;
+}
+
+.ivu-modal-confirm {
+  display: flex;
+  align-items: center;
+}
+.ivu-modal-confirm img {
+  width: 40px;
+  height: 40px;
+  margin-right: 30px;
 }
 
 .font-w {
@@ -159,9 +415,22 @@ export default {
   margin: 14px 0;
 }
 
+.textarea {
+  border: none;
+  /* height: 40px; */
+  width: 100%;
+  outline: 0;
+  resize: none;
+  background-color: #f8f8f8;
+  font-family: Arial;
+  color: #323437;
+  line-height: 24px;
+  text-align: left;
+}
+
 #NormalCodeTextarea {
   border: none;
-  height: 140px;
+  /* height: 40px; */
   width: 100%;
   outline: 0;
   resize: none;

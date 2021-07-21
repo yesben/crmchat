@@ -59,6 +59,17 @@ import schema from "async-validator";
 import dialog from "@/libs/dialog";
 import timeOptions from "@/libs/timeOptions";
 import scroll from "@/libs/loading";
+
+// http://chat.lfmn.fun/customerServer.js
+
+// (function() {
+//   var hm = document.createElement("script");
+//   hm.src = "http://chat.lfmn.fun/customerServer.js";
+//   var s = document.getElementsByTagName("script")[0];
+//   s.parentNode.insertBefore(hm, s);
+// })()
+
+
 import * as tools from "@/libs/tools";
 //日期
 import moment from 'moment'

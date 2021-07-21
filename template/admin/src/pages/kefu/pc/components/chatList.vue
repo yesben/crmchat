@@ -182,7 +182,8 @@ export default {
     this.bus.$on('change', data => {
       this.nickname = data
     })
-    this.getList()
+    this.getList();
+    this.wsStart();
   },
   methods: {
     wsStart() {
@@ -230,6 +231,7 @@ export default {
               if(data.recored.is_tourist == this.hdTabCur) { this.userList.unshift(data.recored) }
             }
           }
+
           if(data.recored.is_tourist != this.hdTabCur && data.recored.id) {
             this.$Notice.info({
               title: this.hdTabCur ? '用户发来消息啦！' : '游客发来消息啦！'

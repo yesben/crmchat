@@ -1,13 +1,13 @@
 import { mobileScoket } from '@/libs/socket';
-import { userRecord, serviceUpload, serviceCache } from '@/api/kefu';
+import { userRecord, serviceUpload } from '@/api/kefu';
 import { setSen, getSen } from '@/libs/util'
+import Cookies from "js-cookie";
 
-var mp3 = require('../../../../assets/video/notice.wav');
-var mp3 = new Audio(mp3);
-
+var mp3 = require('@/assets/video/notice.wav');
 export default {
   data() {
     return {
+      mp3: new Audio(mp3),
       inputConType: 1,
       userMessage: '',
       chatServerData: {
@@ -30,6 +30,11 @@ export default {
   },
   created() {
     this.upperData = this.$route.query;
+    if(this.upperData.token != getSen('mobile_token')) {
+      setSen('mobile_token', this.upperData.token);
+    }
+
+
     Object.keys(this.upperData).forEach(item => {
       setSen(item, this.upperData[item]);
     });
@@ -39,12 +44,16 @@ export default {
       if(e.data.type == 'getImgOrText') {
         this.userKey = e.data.key;
         this.productMessage = e.data.productInfo;
-
-
-        // this.chatServerData.serviceList.push(this.productMessage);
       }
 
       if(e.data.type == 'openCustomeServer') {
+        this.bus.pageWs.then((ws) => {
+          ws.send({ type: 'to_chat', data: { id: this.chatServerData.to_user_id } });
+        })
+      }
+
+      if(e.data.type == 'closeCustomeServer') {
+        console.log(1);
         this.bus.pageWs.then((ws) => {
           ws.send({ type: 'to_chat', data: { id: 0 } });
         })
@@ -75,6 +84,8 @@ export default {
     }
   },
   methods: {
+
+    // 建立连接
     connentServer() {
       let token = getSen('mobile_token');
       this.bus.pageWs = mobileScoket(true, token);
@@ -87,7 +98,7 @@ export default {
         });
 
         ws.$on("reply", (data) => {
-          mp3.play();
+          this.mp3.play();
         });
 
         ws.$on('success', data => {
@@ -108,7 +119,7 @@ export default {
 
         ws.$on('mssage_num', data => {
           if(data.num > 0) {
-            mp3.play();
+            this.mp3.play();
           }
           parent.postMessage({ type: 'message_num', num: data.num }, "*");
         })
@@ -160,14 +171,16 @@ export default {
     // 查看当前是否有客服在线, 若不在线，跳转到反馈界面
     getUserRecord() {
       let postData = {
-        uid: this.upperData.uid,
+        uid: this.upperData.uid || getSen('uid') || 0,
         limit: 20,
+        // user_id: this.upperData.uid ? 0 : getSen('user_id')
         // idTo: '',
         // toUserId: ''
       }
       userRecord(postData).then(res => {
         if(res.status == 200) {
           this.chatServerData = res.data;
+          console.log(res.data);
           let cookieData = {
             nickname: '',
             uid: '',
@@ -185,6 +198,28 @@ export default {
         if(res.status == 400) {
           this.$router.push({ name: 'customerOutLine' });
         }
+      }).catch(rej => {
+        if(rej.status == 400) {
+          this.$router.push({ name: 'customerOutLine' });
+        }
+      })
+    },
+    // 滑动到顶部
+    scrollHandler(e) {
+      console.log('滑动到顶部了');
+      this.isLoad = true;
+      userRecord({
+        limit: 20,
+        uid: this.chatServerData.uid,
+        idTo: this.chatServerData.serviceList ? this.chatServerData.serviceList[0].id : '',
+        toUserId: this.chatServerData.to_user_id
+      }).then(res => {
+        if(res.status == 200) {
+          res.data.serviceList.reverse().forEach(item => {
+            this.chatServerData.serviceList.unshift(item);
+          })
+        }
+        this.isLoad = false;
       })
     },
     closeIframe() {

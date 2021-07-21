@@ -3,6 +3,7 @@
 
     <div class="left-wrapper">
       <Input class="search_box" prefix="ios-search" placeholder="搜索用户名称" @on-enter="bindSearch" @on-change="inputChange" />
+
       <div class="user_info">
         <img v-lazy="kefuInfo.avatar" alt="">
         <span>{{kefuInfo.nickname}}</span>
@@ -13,13 +14,14 @@
           </div>
 
           <div class="online-down" v-show="isOnline">
-            <div class="item" @click.stop="changeOnline(1)"><span class="iconfont iconduihao" v-if="online"></span><i class="green"></i>在线</div>
-            <div class="item" @click.stop="changeOnline(0)"><span class="iconfont iconduihao" v-if="!online"></span><i></i>下线</div>
+            <div class="item" @click.stop="changeOnline(1)"><span class="iconfont iconduihao" v-if="online == 1"></span><i class="green"></i>在线</div>
+            <div class="item" @click.stop="changeOnline(0)"><span class="iconfont iconduihao" v-if="online == 0"></span><i></i>下线</div>
+            <div class="item" @click.stop="changeOnline(3)"><span class="iconfont iconduihao" v-if="online == 3"></span><i class="orange"></i>退出登录</div>
           </div>
         </div>
 
       </div>
-      <div class="out-btn" @click.stop="outLogin">退出登录</div>
+      <!-- <div class="out-btn" @click.stop="outLogin">退出登录</div> -->
     </div>
 
     <!-- <div class="right-menu">
@@ -86,6 +88,10 @@ export default {
 
     },
     changeOnline(type) {
+      if(type == 3) {
+        this.outLogin();
+        return;
+      }
       this.$emit('setOnline', type);
       this.isOnline = false
     },
@@ -138,6 +144,8 @@ export default {
     display: flex;
     flex: 1;
     align-items: center;
+    justify-content: space-between;
+    padding-right: 15px;
 
     .search_box {
       width: 295px;
@@ -195,9 +203,9 @@ export default {
       .online-down {
         z-index: 50;
         position: absolute;
-        left: 0;
-        bottom: -70px;
-        width: 86px;
+        left: 5px;
+        bottom: -75px;
+        width: 120px;
         background: #fff;
         color: #333;
         box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.08);
@@ -276,5 +284,9 @@ export default {
       }
     }
   }
+}
+
+.orange {
+  background: #ff6700 !important;
 }
 </style>

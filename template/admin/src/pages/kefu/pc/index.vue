@@ -68,8 +68,8 @@
                 </div>
               </div>
             </happy-scroll>
-
           </div>
+
           <div class="chat-textarea">
             <div class="chat-btn-wrapper">
               <div class="left-wrapper">
@@ -326,6 +326,9 @@ export default {
           if(data.recored.id) {
             this.newRecored = data.recored;
           }
+
+
+
         });
         ws.$on("timeout", (data) => {
           setTimeout(() => {

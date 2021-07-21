@@ -229,7 +229,7 @@ export default [
 	},
 	// 外部连接，跳转联系客服模块
 	{
-		path: '/admin/customerServer/index',
+		path: '/chat/index',
 		name: 'customerServerRedirect',
 		meta: {
 			title: '联系客服'
@@ -237,7 +237,7 @@ export default [
 		component: () => import('@/pages/kefu/externalConnection/index')
 	},
 	{
-		path: '/admin/customerServer/pc',
+		path: '/chat/pc',
 		name: 'customerServerPc',
 		meta: {
 			title: '联系客服pc'
@@ -245,7 +245,7 @@ export default [
 		component: () => import('@/pages/kefu/externalConnection/pcCustomerServer')
 	},
 	{
-		path: '/admin/customerServer/mobile',
+		path: '/chat/mobile',
 		name: 'customerServerMobile',
 		meta: {
 			title: '联系客服mobile'
@@ -254,7 +254,7 @@ export default [
 	},
 	{
 		// 客服不在线。提交反馈
-		path: '/admin/customerServer/customerOutLine',
+		path: '/chat/customerOutLine',
 		name: 'customerOutLine',
 		meta: {
 			title: '提交反馈'

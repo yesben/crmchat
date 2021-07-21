@@ -27,9 +27,9 @@ Route::group('api', function () {
             //验证码
             Route::get('captcha_pro', 'Login/captcha')->name('')->option(['real_name' => '获取验证码']);
 
-            Route::get('index', 'Test/index')->option(['real_name' => '测试地址']);
+//            Route::get('index', 'Test/index')->option(['real_name' => '测试地址']);
 
-            Route::get('r', 'Test/rule')->option(['real_name' => '路由地址']);
+//            Route::get('r', 'Test/rule')->option(['real_name' => '路由地址']);
 
         });
 

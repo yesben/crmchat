@@ -44,15 +44,15 @@
             </div>
           </div>
 
-          <!-- <div class="label-list" @click.stop="isUserLabel = true">
+          <div class="label-list" @click.stop="isUserLabel = true">
             <span>用户标签</span>
             <div class="con">
-              <div class="label-item" v-for="item in activeUserInfo.labelNames">{{item}}</div>
+              <div class="label-item" v-for="item in activeUserInfo.label">{{item.label}}</div>
             </div>
             <div class="right-icon">
               <Icon type="ios-arrow-forward" size="14" />
             </div>
-          </div> -->
+          </div>
 
         </div>
         <div class="user-info">
@@ -352,6 +352,7 @@ export default {
     getUserInfo() {
       userInfo(this.uid).then(res => {
         this.activeUserInfo = res.data;
+        console.log(this.activeUserInfo);
         this.copyGroupId = this.activeUserInfo.group_id;
         console.log(this.activeUserInfo);
       }).catch(error => {

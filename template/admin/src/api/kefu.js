@@ -218,7 +218,7 @@ export function userLabel(id) {
  */
 export function userLabelPut(id, data) {
   return request({
-    url: `user/label?id=${id}`,
+    url: `user/label/${id}`,
     method: 'put',
     data,
     kefu: true
@@ -643,5 +643,27 @@ export function serviceCache(key) {
     url: `service/cache/${key}`,
     method: 'get',
     mobile: true
+  })
+}
+
+/*
+  客户端 获取token接口
+*/
+
+export function adminAppCustomer() {
+  return request({
+    url: '/app',
+    method: 'get'
+  })
+}
+
+/*
+  重置token
+*/
+
+export function appReset(id) {
+  return request({
+    url: `/app/reset/${id}`,
+    method: 'put'
   })
 }

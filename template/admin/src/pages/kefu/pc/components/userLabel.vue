@@ -3,7 +3,7 @@
     <div class="label-box" v-for="(item,index) in labelList" :key="index">
       <div class="title">{{item.name}}</div>
       <div class="list">
-        <div class="label-item" :class="{on:label.disabled}" v-for="(label,j) in item.label" :key="j" @click="selectLabel(label)">{{label.label}}</div>
+        <div class="label-item" :class="{'on': label.disabled}" v-for="(label, j) in item.label" :key="j" @click="selectLabel(label)">{{label.label}}</div>
       </div>
     </div>
     <div class="footer">
@@ -62,13 +62,11 @@ export default {
     subBtn() {
       let unLaberids = [];
       this.labelList.map(item => {
-
         item.label.map(i => {
           if(i.disabled == false) {
             unLaberids.push(i.id);
           }
         });
-
       });
       userLabelPut(this.uid, {
         label_ids: this.activeIds,
