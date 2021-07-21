@@ -44,6 +44,8 @@ class User extends AuthController
             ['nickname', '', '', 'nickname_like'],
             ['group_id', ''],
             ['time', ''],
+            ['sex', ''],
+            ['user_type', '']
         ]);
 
         return $this->success($this->services->getChatUserList($where));

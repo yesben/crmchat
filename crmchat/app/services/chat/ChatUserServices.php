@@ -15,7 +15,10 @@ namespace app\services\chat;
 use app\dao\chat\ChatUserDao;
 use app\services\chat\user\ChatUserGroupServices;
 use app\services\chat\user\ChatUserLabelAssistServices;
+use Carbon\Carbon;
 use crmeb\basic\BaseServices;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
 use think\exception\ValidateException;
 use crmeb\services\FormBuilder as Form;
 
@@ -34,6 +37,20 @@ class ChatUserServices extends BaseServices
     public function __construct(ChatUserDao $dao)
     {
         $this->dao = $dao;
+    }
+
+    /**
+     * 统计客户人数
+     * @param int $id
+     * @return array
+     */
+    public function getKefuSum(string $appid = '')
+    {
+        $all          = $this->dao->count(['appid' => $appid]);
+        $toDayKefu    = $this->dao->count(['time' => 'today', 'appid' => $appid, 'is_tourist' => 1]);
+        $month        = $this->dao->count(['time' => 'month', 'appid' => $appid]);
+        $toDayTourist = $this->dao->count(['time' => 'today', 'appid' => $appid, 'is_tourist' => 0]);
+        return compact('all', 'toDayKefu', 'month', 'toDayTourist');
     }
 
     /**
@@ -115,6 +132,47 @@ class ChatUserServices extends BaseServices
         /** @var ChatUserLabelAssistServices $service */
         $service = app()->make(ChatUserLabelAssistServices::class);
         return $service->updateLabel($ids, $labelId, $unLabelId);
+    }
+
+    /**
+     * 获取统计数据
+     * @param int $id
+     * @param int $year
+     * @param int $month
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function getKefuStatistics(int $id, int $type, int $year, int $month)
+    {
+        if ($type) {
+            $date      = Carbon::create($year, $month);
+            $startTime = $date->startOfMonth()->toDateTimeString();
+            $endTime   = $date->endOfMonth()->toDateTimeString();
+        } else {
+            $date      = Carbon::create($year);
+            $startTime = $date->startOfYear()->toDateTimeString();
+            $endTime   = $date->endOfYear()->toDateTimeString();
+        }
+
+
+        return [
+            'list'    => $this->dao->kefuStatistics([
+                'user_id'    => $id,
+                'type'       => $type,
+                'is_tourist' => 0,
+                'startTime'  => $startTime,
+                'endTime'    => $endTime,
+            ]),
+            'tourist' => $this->dao->kefuStatistics([
+                'user_id'    => $id,
+                'type'       => $type,
+                'is_tourist' => 1,
+                'startTime'  => $startTime,
+                'endTime'    => $endTime,
+            ])
+        ];
     }
 
 }

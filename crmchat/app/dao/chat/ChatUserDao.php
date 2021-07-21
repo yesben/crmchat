@@ -14,6 +14,8 @@ namespace app\dao\chat;
 
 use app\models\chat\ChatUser;
 use crmeb\basic\BaseDao;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
 
 /**
  * Class ChatUserDao
@@ -55,4 +57,26 @@ class ChatUserDao extends BaseDao
     {
         return $this->search($where);
     }
+
+    /**
+     * @param array $where
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function kefuStatistics(array $where)
+    {
+        $type = $where['type'] ?? 0;
+        return $this->search()
+            ->when(isset($where['user_id']) && $where['user_id'], function ($query) use ($where) {
+                $query->where('id', $where['user_id']);
+            })->when(isset($where['appid']) && $where['appid'], function ($query) use ($where) {
+                $query->where('appid', $where['appid']);
+            })->whereBetweenTime('create_time', $where['startTime'], $where['endTime'])
+            ->field([!$type ? "DATE_FORMAT(create_time,'%Y-%m-%d') as month" : "DATE_FORMAT(create_time,'%Y-%m') as month", 'count(*) as number'])
+            ->group('month')
+            ->select()->toArray();
+    }
+
 }

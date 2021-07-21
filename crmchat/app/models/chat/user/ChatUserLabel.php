@@ -56,7 +56,9 @@ class ChatUserLabel extends BaseModel
      */
     public function searchCateIdAttr($query, $value)
     {
-        $query->where('cate_id', $value);
+        if ($value != '') {
+            $query->where('cate_id', $value);
+        }
     }
 
 }

@@ -14,11 +14,12 @@
 // +----------------------------------------------------------------------
 return [
     // 执行用户（Windows下无效）
-    'user' => null,
+    'user'     => null,
     // 指令定义
     'commands' => [
-        'make:dao' => \crmeb\command\Dao::class,
+        'make:dao'     => \crmeb\command\Dao::class,
         'make:service' => \crmeb\command\Service::class,
-        'install' => \crmeb\command\Install::class
+        'install'      => \crmeb\command\Install::class,
+        'key'          => \crmeb\command\Key::class
     ],
 ];

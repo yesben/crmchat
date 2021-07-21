@@ -3,6 +3,143 @@ CRM-CHAT TP6+Swoole4
 
 > 运行环境要求PHP7.1 ~ 7.4。不支持windows环境运行
 
+
+# 安装
+本安装教程针对的是宝塔面板安装 环境为 nginx1.18 mysql5.7 php7.3
+## 站点配置
+1. 创建站点 （注：创建站点注意php版本选择纯静态）
+2. 上传你的代码到站点根目录下
+3. 点开站点设置，网站目录标签下，配置运行目录为 /public
+4. ssl标签中，配置https证书
+5. 反向代理标签下，配置站点反向代理，目标URL填写为 http://127.0.0.1:20108 ，点击提交，在列表中点击配置文件，将下方代码复制替换全部。
+~~~
+#PROXY-START/
+location  ~* \.(php|jsp|cgi|asp|aspx)$
+{
+    proxy_pass http://127.0.0.1:20108;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header REMOTE-HOST $remote_addr;
+}
+location /
+{
+    proxy_pass http://127.0.0.1:20108;
+    proxy_http_version 1.1;
+    proxy_read_timeout 360s;   
+    proxy_redirect off; 
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header REMOTE-HOST $remote_addr;
+    
+    add_header X-Cache $upstream_cache_status;
+    
+    #Set Nginx Cache
+    
+       add_header Cache-Control no-cache;
+    expires 12h;
+}
+#PROXY-END/
+~~~
+
+## 环境配置
+### php配置，进入宝塔的软件商店，进入php的设置
+1. 点击安装扩展标签，安装 fileinfo，redis，Swoole4 这三个扩展
+### mysql配置，进入宝塔的软件商店，进入mysql的设置
+1. 点击配置修改标签，找到 sql-mode ，将后面的值修改为 NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+2. 点击服务标签，重启 mysql 服务。
+
+## 启动swoole
+1. 打开命令行执行命令: `php -v` 查看命令行版本是否为配置的 PHP 版本
+2. 命令行切换到站点目录下执行启动命令: `php think swoole start`
+3. 在浏览器中输入你的域名（例如：www.yourdomain.com）安装程序会自动执行安装。期间系统会提醒你输入数据库信息以完成安装。
+4. 再次打开命令行换到站点目录下执行重启命令: `php think swoole restart` 
+
+## 访问地址
+### 后台访问地址：
+域名/admin 
+
+### 安装过程中请牢记您的账号密码！
+
+## 重新安装
+1. 清除数据库
+2. 删除/public/install/install.lock 文件
+3. 执行重启命令: `php think swoole restart`
+4. 执行完安装后再次执行重启命令: `php think swoole restart`
+
+## 手动安装
+1. 创建数据库，倒入数据库文件
+数据库文件目录/public/install/crmeb.sql
+2. 修改数据库连接文件
+配置文件路径/.env
+~~~
+APP_DEBUG = true
+
+[APP]
+DEFAULT_TIMEZONE = Asia/Shanghai
+
+[DATABASE]
+TYPE = mysql
+HOSTNAME = 127.0.0.1 #数据库连接地址
+DATABASE = test #数据库名称
+USERNAME = username #数据库登录账号
+PASSWORD = password #数据库登录密码
+HOSTPORT = 3306 #数据库端口
+CHARSET = utf8
+DEBUG = true
+
+[REDIS]
+REDIS_HOSTNAME = 127.0.0.1 #redis地址
+PORT = 6379 #redis端口
+REDIS_PASSWORD = '' #redis密码
+SELECT = 0 #redis数据库
+
+[CACHE]
+PREFIX = 
+TAG_PREFIX = 
+
+[LANG]
+default_lang = zh-cn
+
+~~~
+3. 修改目录权限（linux系统）777
+/public
+/runtime
+4. 启动swoole
+~~~
+php think swoole
+~~~
+
+5. 后台登录：
+http://域名/admin
+默认账号：admin 密码：crmeb.com
+
+
+## 启动命令
+
+开启
+```sh
+php think swoole
+```
+重启
+```sh
+php think swoole restart
+```
+关闭
+```sh
+php think swoole stop
+```
+
+正式运行命令请用www用户启动命令:
+
+```sh
+sudo -u www php think swoole restart
+```
+
+
 ## 开发规范
 #### 命名规范
 ThinkPHP6.0遵循PSR-2命名规范和PSR-4自动加载规范，并且注意如下规范:
@@ -182,141 +319,6 @@ ThinkPHP6.0遵循PSR-2命名规范和PSR-4自动加载规范，并且注意如�
 后台多种角色、多重身份权限管理，权限可以控制到每一步操作
 ### 一键安装
 自动检查系统环境一键安装
-
-# 安装
-本安装教程针对的是宝塔面板安装 环境为 nginx1.18 mysql5.7 php7.3
-## 站点配置
-1. 创建站点 （注：创建站点注意php版本选择纯静态）
-2. 上传你的代码到站点根目录下
-3. 点开站点设置，网站目录标签下，配置运行目录为 /public
-4. ssl标签中，配置https证书
-5. 反向代理标签下，配置站点反向代理，目标URL填写为 http://127.0.0.1:20108 ，点击提交，在列表中点击配置文件，将下方代码复制替换全部。
-~~~
-#PROXY-START/
-location  ~* \.(php|jsp|cgi|asp|aspx)$
-{
-    proxy_pass http://127.0.0.1:20108;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header REMOTE-HOST $remote_addr;
-}
-location /
-{
-    proxy_pass http://127.0.0.1:20108;
-    proxy_http_version 1.1;
-    proxy_read_timeout 360s;   
-    proxy_redirect off; 
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header REMOTE-HOST $remote_addr;
-    
-    add_header X-Cache $upstream_cache_status;
-    
-    #Set Nginx Cache
-    
-       add_header Cache-Control no-cache;
-    expires 12h;
-}
-#PROXY-END/
-~~~
-
-## 环境配置
-### php配置，进入宝塔的软件商店，进入php的设置
-1. 点击安装扩展标签，安装 fileinfo，redis，Swoole4 这三个扩展
-### mysql配置，进入宝塔的软件商店，进入mysql的设置
-1. 点击配置修改标签，找到 sql-mode ，将后面的值修改为 NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
-2. 点击服务标签，重启 mysql 服务。
-
-## 启动swoole
-1. 打开命令行执行命令: `php -v` 查看命令行版本是否为配置的 PHP 版本
-2. 命令行切换到站点目录下执行启动命令: `php think swoole start`
-3. 在浏览器中输入你的域名（例如：www.yourdomain.com）安装程序会自动执行安装。期间系统会提醒你输入数据库信息以完成安装。
-4. 再次打开命令行换到站点目录下执行重启命令: `php think swoole restart` 
-
-## 访问地址
-### 后台访问地址：
-域名/admin 
-
-### 安装过程中请牢记您的账号密码！
-
-## 重新安装
-1. 清除数据库
-2. 删除/public/install/install.lock 文件
-3. 执行重启命令: `php think swoole restart`
-4. 执行完安装后再次执行重启命令: `php think swoole restart`
-
-## 手动安装
-1. 创建数据库，倒入数据库文件
-数据库文件目录/public/install/crmeb.sql
-2. 修改数据库连接文件
-配置文件路径/.env
-~~~
-APP_DEBUG = true
-
-[APP]
-DEFAULT_TIMEZONE = Asia/Shanghai
-
-[DATABASE]
-TYPE = mysql
-HOSTNAME = 127.0.0.1 #数据库连接地址
-DATABASE = test #数据库名称
-USERNAME = username #数据库登录账号
-PASSWORD = password #数据库登录密码
-HOSTPORT = 3306 #数据库端口
-CHARSET = utf8
-DEBUG = true
-
-[REDIS]
-REDIS_HOSTNAME = 127.0.0.1 #redis地址
-PORT = 6379 #redis端口
-REDIS_PASSWORD = '' #redis密码
-SELECT = 0 #redis数据库
-
-[CACHE]
-PREFIX = 
-TAG_PREFIX = 
-
-[LANG]
-default_lang = zh-cn
-
-~~~
-3. 修改目录权限（linux系统）777
-/public
-/runtime
-4. 启动swoole
-~~~
-php think swoole
-~~~
-
-5. 后台登录：
-http://域名/admin
-默认账号：admin 密码：crmeb.com
-
-
-## 启动命令
-
-开启
-```sh
-php think swoole
-```
-重启
-```sh
-php think swoole restart
-```
-关闭
-```sh
-php think swoole stop
-```
-
-正式运行命令请用www用户启动命令:
-
-```sh
-sudo -u www php think swoole restart
-```
 
 
 本项目包含的第三方源码和二进制文件之版权信息另行标注。

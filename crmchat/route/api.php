@@ -4,6 +4,7 @@ use app\http\middleware\admin\AdminAuthTokenMiddleware;
 use app\http\middleware\admin\AdminCkeckRoleMiddleware;
 use app\http\middleware\admin\AdminLogMiddleware;
 use app\http\middleware\AllowOriginMiddleware;
+use app\http\middleware\InstallMiddleware;
 use app\http\middleware\kefu\KefuAuthTokenMiddleware;
 use app\http\middleware\mobile\MobileAuthTokenMiddleware;
 use think\facade\Config;
@@ -40,6 +41,7 @@ Route::group('api', function () {
             Route::get('logo', 'Index/logo')->option(['real_name' => '获取logo']);
             Route::get('jnotice', 'Index/jnotice')->option(['real_name' => '消息通知']);
             Route::get('menusList', 'Index/getMenusList')->option(['real_name' => '获取菜单']);
+            Route::put('app/reset/:id', 'Application/reset')->option(['real_name' => '重置token']);
 
             Route::resource('app', 'Application')->option(['real_name' => [
                 'index'  => '获取应用列表接口',
@@ -437,4 +439,4 @@ Route::group('api', function () {
 
     })->prefix('mobile.');
 
-})->middleware(AllowOriginMiddleware::class);
+})->middleware([AllowOriginMiddleware::class, InstallMiddleware::class]);

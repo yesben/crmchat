@@ -83,7 +83,7 @@ class Install extends Command
     {
         $installLockDir = root_path('public') . 'install/install.lock';
         if (file_exists($installLockDir)) {
-            $crmeb = get_crmeb_version();
+            $crmeb    = get_crmeb_version();
             $question = $output->confirm($input, '您已经安装' . $crmeb . '版本是否重新安装,重新安装会清除掉之前的数据请谨慎操作?', false);
             if ($question) {
                 $res = $this->authBackups();
@@ -129,10 +129,10 @@ class Install extends Command
      */
     protected function createAdmin()
     {
-        $account = $this->adminAccount();
+        $account  = $this->adminAccount();
         $password = $this->adminPassword();
         /** @var SystemAdminServices $service */
-        $service = app()->make(SystemAdminServices::class);
+        $service  = app()->make(SystemAdminServices::class);
         $tablepre = env('database.prefix');
         $this->app->db->query('truncate table ' . $tablepre . 'system_admin');
         try {
@@ -194,15 +194,15 @@ class Install extends Command
         $this->output->write("\r 正在清理表数据");
 
         /** @var MysqlBackupService $service */
-        $service = app()->make(MysqlBackupService::class, [[
+        $service   = app()->make(MysqlBackupService::class, [[
             //数据库备份卷大小
             'compress' => 1,
             //数据库备份文件是否启用压缩 0不压缩 1 压缩
-            'level' => 5,
+            'level'    => 5,
         ]]);
-        $dataList = $service->dataList();
+        $dataList  = $service->dataList();
         $tableName = array_column($dataList, 'name');
-        $count = count($tableName);
+        $count     = count($tableName);
         if ($count) {
             $res = $this->app->db->transaction(function () use ($database, $tableName) {
                 foreach ($tableName as $name) {
@@ -225,7 +225,7 @@ class Install extends Command
     {
         $tablepre = env('database.prefix');
         $sqlArray = $this->sqlSplit($installSql, $tablepre);
-        $table = new Table();
+        $table    = new Table();
         $this->output->writeln('+----------------------------- [SQL安装] -----------------------------------+');
         $this->output->newLine();
         $header = ['表名', '执行结果', '错误原因', '时间'];
@@ -298,11 +298,10 @@ class Install extends Command
     {
         $tablepre = env('database.prefix');
         $database = env('database.database');
-        $blTable = ['eb_system_admin', 'eb_system_role', 'eb_system_config', 'eb_system_config_tab',
-            'eb_system_menus', 'eb_system_file', 'eb_express', 'eb_system_group', 'eb_system_group_data',
-            'eb_template_message', 'eb_shipping_templates', "eb_shipping_templates_region",
-            "eb_shipping_templates_free", 'eb_system_city', 'eb_diy', 'eb_member_ship', 'eb_member_right',
-            'eb_agreement', 'eb_store_service_speechcraft', 'eb_system_user_level', 'eb_cache'];
+        $blTable  = ['eb_system_admin', 'eb_system_role', 'eb_system_config',
+            'eb_system_config_tab', 'eb_system_menus', 'eb_system_group',
+            'eb_system_group_data', 'eb_agreement', 'eb_chat_service_speechcraft',
+            'eb_cache'];
         if ($tablepre !== 'eb_') {
             $blTable = array_map(function ($name) use ($tablepre) {
                 return str_replace('eb_', $tablepre, $name);
@@ -329,15 +328,15 @@ class Install extends Command
 
         $sql = preg_replace("/TYPE=(InnoDB|MyISAM|MEMORY)( DEFAULT CHARSET=[^; ]+)?/", "ENGINE=\\1 DEFAULT CHARSET=utf8", $sql);
 
-        $sql = str_replace("\r", "\n", $sql);
-        $ret = [];
-        $num = 0;
+        $sql          = str_replace("\r", "\n", $sql);
+        $ret          = [];
+        $num          = 0;
         $queriesarray = explode(";\n", trim($sql));
         unset($sql);
         foreach ($queriesarray as $query) {
             $ret[$num] = '';
-            $queries = explode("\n", trim($query));
-            $queries = array_filter($queries);
+            $queries   = explode("\n", trim($query));
+            $queries   = array_filter($queries);
             foreach ($queries as $query) {
                 $str1 = substr($query, 0, 1);
                 if ($str1 != '#' && $str1 != '-')
@@ -356,15 +355,15 @@ class Install extends Command
     protected function authBackups(bool $g = false)
     {
         /** @var MysqlBackupService $service */
-        $service = app()->make(MysqlBackupService::class, [[
+        $service   = app()->make(MysqlBackupService::class, [[
             //数据库备份卷大小
             'compress' => 1,
             //数据库备份文件是否启用压缩 0不压缩 1 压缩
-            'level' => 5,
+            'level'    => 5,
         ]]);
-        $dataList = $service->dataList();
+        $dataList  = $service->dataList();
         $tableName = array_column($dataList, 'name');
-        $count = count($tableName);
+        $count     = count($tableName);
         if ($count) {
             $this->output->writeln('+----------------------------- [自动备份] ----------------------------------+');
             $this->output->newLine();
@@ -375,7 +374,7 @@ class Install extends Command
             foreach ($tableName as $i => $t) {
 
                 $equalStr = str_repeat("=", $i);
-                $space = str_repeat(" ", $count - $i);
+                $space    = str_repeat(" ", $count - $i);
                 $this->output->write("\r [$equalStr>$space]($i/$count%)");
 
                 $res = $service->backup($t, 0);

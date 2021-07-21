@@ -13,6 +13,7 @@ namespace app\controller\admin;
 
 
 use app\services\chat\ChatServiceRecordServices;
+use app\services\chat\ChatUserServices;
 use app\services\system\SystemMenusServices;
 
 /**
@@ -87,17 +88,18 @@ class Index extends AuthController
      * 客户统计
      * @return mixed
      */
-    public function sum()
+    public function sum(ChatUserServices $services)
     {
-        return $this->success($this->services->getKefuSum());
+        return $this->success($services->getKefuSum());
     }
 
     /**
      * 客户首页统计
      * @return mixed
      */
-    public function index()
+    public function index(ChatUserServices $services)
     {
+        $type  = $this->request->get('type', 0);
         $year  = $this->request->get('year', date('Y'));
         $month = $this->request->get('month', date('m'));
         if ($month <= 0 || $month > 12) {
@@ -109,7 +111,7 @@ class Index extends AuthController
         if (strlen($year) > 4) {
             return $this->fail('年份错误');
         }
-        return $this->success($this->services->getKefuStatistics(0, (int)$year, (int)$month));
+        return $this->success($services->getKefuStatistics(0, (int)$type, (int)$year, (int)$month));
     }
 
 }

@@ -64,6 +64,36 @@ class Application extends AuthController
     }
 
     /**
+     * 重置token
+     * @param $id
+     * @return mixed
+     */
+    public function reset($id)
+    {
+        $appInfo = $this->services->get($id);
+        if (!$appInfo) {
+            return $this->fail('应用不存在');
+        }
+        $rand               = rand(1000, 9999);
+        $time               = time();
+        $data['rand']       = $rand;
+        $data['timestamp']  = $time;
+        $data['app_secret'] = md5($appInfo->appid . $time . $rand);
+        /** @var Encrypter $encrypter */
+        $encrypter = app()->make(Encrypter::class);
+
+        $data['token'] = $encrypter->encrypt(json_encode([
+            'appid'      => $appInfo->appid,
+            'app_secret' => $data['app_secret'],
+            'rand'       => $rand,
+            'timestamp'  => $time,
+        ]));
+        $this->services->update($id, $data);
+
+        return $this->success($data);
+    }
+
+    /**
      * 保存数据
      * @return mixed
      */

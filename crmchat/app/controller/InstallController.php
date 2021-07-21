@@ -12,6 +12,7 @@
 namespace app\controller;
 
 use app\Request;
+use think\facade\Console;
 
 class InstallController
 {
@@ -43,8 +44,8 @@ class InstallController
         if (!file_exists($path . 'public/install/' . $sqlFile) || !file_exists($path . 'public/install/' . $configFile)) {
             return '缺少必要的安装文件!';
         }
-        $Title   = "CRMChat安装向导";
-        $Powered = "Powered by CRMChat";
+        $Title   = "CRMEB安装向导";
+        $Powered = "Powered by CRMEB";
         $steps   = array(
             '1' => '安装许可协议',
             '2' => '运行环境检测',
@@ -401,9 +402,6 @@ class InstallController
                     }
                     //读取配置文件，并替换真实配置数据1
                     $strConfig = file_get_contents($path . 'public/install/' . $configFile);
-                    $app_key   = md5($this->get_client_ip() . uniqid() . time());
-                    $strConfig = str_replace('#APP_KEY#', $app_key, $strConfig);
-
                     $strConfig = str_replace('#DB_HOST#', $dbHost, $strConfig);
                     $strConfig = str_replace('#DB_NAME#', $dbName, $strConfig);
                     $strConfig = str_replace('#DB_USER#', $dbUser, $strConfig);
@@ -475,6 +473,8 @@ class InstallController
                 $version        = trim($curent_version['version']);
                 $this->installlog();
                 @touch($path . 'public/install/install.lock');
+                //生成key
+                Console::call('key');
                 return view('/install/step5', [
                     'title'   => $Title,
                     'powered' => $Powered

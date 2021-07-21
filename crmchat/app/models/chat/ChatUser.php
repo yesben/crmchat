@@ -15,7 +15,7 @@ namespace app\models\chat;
 use app\models\chat\user\ChatUserLabel;
 use app\models\chat\user\ChatUserLabelAssist;
 use crmeb\basic\BaseModel;
-use crmeb\traits\ModelTrait;
+use crmeb\traits\TimeModelTrait;
 use think\Model;
 
 /**
@@ -26,7 +26,7 @@ use think\Model;
 class ChatUser extends BaseModel
 {
 
-    use ModelTrait;
+    use TimeModelTrait;
 
     /**
      * 表名
@@ -52,7 +52,7 @@ class ChatUser extends BaseModel
      * @param Model $query
      * @param $value
      */
-    public function searchNicknameLike($query, $value)
+    public function searchNicknameLikeAttr($query, $value)
     {
         if ($value) {
             $query->where(function ($query) use ($value) {
@@ -65,10 +65,57 @@ class ChatUser extends BaseModel
      * @param Model $query
      * @param $value
      */
-    public function searchGroupId($query, $value)
+    public function searchGroupIdAttr($query, $value)
     {
         if ($value) {
             $query->where('group_id', $value);
+        }
+    }
+
+    /**
+     * @param Model $query
+     * @param $value
+     */
+    public function searchAppidAttr($query, $value)
+    {
+        if ($value) {
+            $query->where('appid', $value);
+        }
+    }
+
+    /**
+     * @param Model $query
+     * @param $value
+     */
+    public function searchUserTypeAttr($query, $value)
+    {
+        //0 = pc,1=微信，2=小程序，3=H5
+        if ($value != '') {
+            switch ($value) {
+                case 'routine':
+                    $query->where('type', 2);
+                    break;
+                case 'wechat':
+                    $query->where('type', 1);
+                    break;
+                case 'h5':
+                    $query->where('type', 3);
+                    break;
+                case 'pc':
+                    $query->where('type', 0);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @param Model $query
+     * @param $value
+     */
+    public function searchSexAttr($query, $value)
+    {
+        if ($value != '') {
+            $query->where('sex', $value);
         }
     }
 }
