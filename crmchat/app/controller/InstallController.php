@@ -408,7 +408,7 @@ class InstallController
                     $strConfig = str_replace('#DB_PWD#', $dbPwd, $strConfig);
                     $strConfig = str_replace('#DB_PORT#', $post['dbport'], $strConfig);
                     $strConfig = str_replace('#DB_PREFIX#', $dbPrefix, $strConfig);
-                    $strConfig = str_replace('#DB_CHARSET#', 'utf8', $strConfig);
+                    $strConfig = str_replace('#DB_CHARSET#', 'utf8mb4', $strConfig);
                     // $strConfig = str_replace('#DB_DEBUG#', false, $strConfig);
 
                     //redis数据库信息
