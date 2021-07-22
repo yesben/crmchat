@@ -8,13 +8,13 @@
     <div class="content">
       <br>
       <p class="font-w">
-        <a style="font-size: 20px" :href="`http://192.168.31.192:8080/chat/index?uid=10&nickName=%E5%BC%A0%E8%B6%8A&phone=13038593836&key=1626851220262&type=getImgOrText&time=1626851220262&token=${token.token}&deviceType=Mobile&now=0.9937210994959702`">
+        <a style="font-size: 20px" :href="linkUrl" target="_blank">
           点击这里，开始体验
         </a>
       </p>
       <br>
 
-      <p class="font-w">1.crmeb文件引入说明</p>
+      <p class="font-w">1.crm文件引入说明</p>
       <p class="text-i">1.html引入方式， 在html文件中直接引入js文件 </p>
       <div class="code-content-wrap">
         <textarea id="NormalCodeTextarea" class="code" rows="2">
@@ -121,6 +121,9 @@ export default {
     },
     labelPosition() {
       return this.isMobile ? 'top' : 'left'
+    },
+    linkUrl() {
+      return `${location.origin}/chat/index?uid=10&nickName=%E5%BC%A0%E8%B6%8A&phone=13038593836&key=1626851220262&type=getImgOrText&time=1626851220262&token=${this.token.token}&deviceType=Mobile&now=0.9937210994959702`;
     }
   },
   data() {
@@ -253,44 +256,45 @@ export default {
       token: ''
     }
   },
+
   mounted() {
     this.getAdminAppCustomer();
 
-    let option = {
-      openUrl: 'http://192.168.31.192:8080',
-      domId: 'customerServerTip',
-      insertDomNode: '.getCode_container',
-      token: 'eyJpdiI6Ild2K1BRQ0NZNlFrQWNDMERpMXBPa2c9PSIsInZhbHVlIjoicjVQNFB6ZVUrM2lMajlxcUdVem91ZnVscVZxRmZoUnVBOUdmMlFTVW5Ia0EzRDV2M0I4U3RnTnk0SGdCdUk2NmN0MmZkUXdlNlV5STZpU3pGOUpEeVBZSXdEYkMraTEybVpUS2Y1SHNtYXQ0MUZpVHNJTmFYeFNUdkh1R3FwL1JDeUJZWmRRZW42OFd4NERYUFV2eVhRSXdteWFzUFdMRDZRaDgydVZDcG40PSIsIm1hYyI6ImVjYzU4NzdiZTA0NDYzZDIzZTk0NmI2OGQwYjVjMmQ2ZjM1NTJlYTEwNmYyMDQ0NmNhNGE5NTE5NGViZGUxNjQifQ==', //eyJpdiI6Ild2K1BRQ0NZNlFrQWNDMERpMXBPa2c9PSIsInZhbHVlIjoicjVQNFB6ZVUrM2lMajlxcUdVem91ZnVscVZxRmZoUnVBOUdmMlFTVW5Ia0EzRDV2M0I4U3RnTnk0SGdCdUk2NmN0MmZkUXdlNlV5STZpU3pGOUpEeVBZSXdEYkMraTEybVpUS2Y1SHNtYXQ0MUZpVHNJTmFYeFNUdkh1R3FwL1JDeUJZWmRRZW42OFd4NERYUFV2eVhRSXdteWFzUFdMRDZRaDgydVZDcG40PSIsIm1hYyI6ImVjYzU4NzdiZTA0NDYzZDIzZTk0NmI2OGQwYjVjMmQ2ZjM1NTJlYTEwNmYyMDQ0NmNhNGE5NTE5NGViZGUxNjQifQ==
-      sendUserData: {
-        uid: 10,
-        nickName: '张越',
-        phone: '13038593836',
-        key: new Date().getTime(),
-        type: 'getImgOrText',
-        time: new Date().getTime(),
-      },
-      productInfo: {
-        store_name: '蒙奇 D 路飞',
-        stock: '库存',
-        sales: '122', // 销量 
-        ficti: '10', // 赠送
-        price: '100',
-        image: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F4495e731345f73cb023b1d70197d50e7f451dbc91a88e-UU7MfN_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1629276024&t=9d1c5b297dc857ddd2d18c9580dde427'
-      }
-    }
 
-
-    let canCustomerServer = new initCustomerServer(option);
-    canCustomerServer.init();
   },
   methods: {
     // 获取token
     getAdminAppCustomer() {
       adminAppCustomer().then(res => {
-        console.log(res);
         if(res.status == 200) {
           if(res.data.list.length) {
             this.token = res.data.list[0];
+            let option = {
+              openUrl: location.origin,
+              domId: 'customerServerTip',
+              insertDomNode: '.getCode_container',
+              token: this.token.token,
+              sendUserData: {
+                uid: 10,
+                nickName: '张越',
+                phone: '13038593836',
+                key: new Date().getTime(),
+                type: 'getImgOrText',
+                time: new Date().getTime(),
+              },
+              productInfo: {
+                store_name: '蒙奇 D 路飞',
+                stock: '库存',
+                sales: '122', // 销量 
+                ficti: '10', // 赠送
+                price: '100',
+                image: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F4495e731345f73cb023b1d70197d50e7f451dbc91a88e-UU7MfN_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1629276024&t=9d1c5b297dc857ddd2d18c9580dde427'
+              }
+            }
+
+
+            let canCustomerServer = new initCustomerServer(option);
+            canCustomerServer.init();
           }
         }
       })

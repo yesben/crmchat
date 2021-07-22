@@ -3,8 +3,10 @@
     <div class="chart-title">
       <p class="chart-left">趋势图</p>
       <p class="chart-right">
-        <span class="active">年</span>
-        <span>月</span>
+        <RadioGroup v-model="visitDate" type="button" class="ivu-mr-8" @on-change="handleChangeVisitType">
+          <Radio label="1">年</Radio>
+          <Radio label="0">月</Radio>
+        </RadioGroup>
       </p>
     </div>
     <div class="">
@@ -12,30 +14,31 @@
     </div>
   </div>
 </template>
-
 <script>
+
 import echarts from "echarts";
-import {charApi} from "../../../api";
+import { charApi } from "../../../api";
 export default {
   name: "statisticsCharts",
-  data(){
+  data() {
     return {
-      option:null,
-      year:'2021',
-      month:'07'
+      option: {},
+      year: '2021',
+      month: '07',
+      visitDate: '0'
     }
   },
-  methods:{
-    getChart(){
+  methods: {
+    getChart() {
       this.option = {
         tooltip: {
           trigger: 'axis'
         },
         legend: {
           data: ['客户', '游客'],
-          icon:'rect',
-          right:20,
-          top:20
+          icon: 'rect',
+          right: 20,
+          top: 20
         },
         grid: {
           left: '3%',
@@ -46,38 +49,38 @@ export default {
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          nameTextStyle:{
-            color:'#CCCCCC'
+          nameTextStyle: {
+            color: '#CCCCCC'
           },
-          axisLine:{
-            lineStyle:{
-              color:'#CCCCCC'
+          axisLine: {
+            lineStyle: {
+              color: '#CCCCCC'
             }
           },
-          axisLabel:{
-            color :'#666666',
+          axisLabel: {
+            color: '#666666',
 
           },
           data: []
         },
         yAxis: {
           type: 'value',
-          name:'每日新增(人)',
-          nameTextStyle:{
-            color:'#CCCCCC'
+          name: '每日新增(人)',
+          nameTextStyle: {
+            color: '#CCCCCC'
           },
-          axisLine:{
-            lineStyle:{
-              color:'#CCCCCC'
+          axisLine: {
+            lineStyle: {
+              color: '#CCCCCC'
             }
           },
-          axisLabel:{
-            color :'#666666',
+          axisLabel: {
+            color: '#666666',
 
           },
-          splitLine:{
-            lineStyle:{
-              type:'dashed'
+          splitLine: {
+            lineStyle: {
+              type: 'dashed'
             }
           }
         },
@@ -90,8 +93,8 @@ export default {
                 color: '#1890FF'
               }
             },
-            lineStyle:{
-              width:3
+            lineStyle: {
+              width: 3
             },
             data: []
           },
@@ -103,16 +106,16 @@ export default {
                 color: '#10CCA3'
               }
             },
-            lineStyle:{
-              width:3
+            lineStyle: {
+              width: 3
             },
             data: []
           }
         ]
       };
       var data = {
-        year:this.year,
-        month:this.month
+        year: this.year,
+        month: this.month
       }
       charApi(data).then(async res => {
         let da = res.data
@@ -121,7 +124,7 @@ export default {
         let seriesKe = []
         let seriesYou = []
         let xAxis = []
-        keArr.forEach((val,index)=>{
+        keArr.forEach((val, index) => {
           xAxis.push(val.month)
           seriesYou.push(youArr[index].number)
           seriesKe.push(val.number)
@@ -133,48 +136,77 @@ export default {
         let myChart = echarts.init(document.getElementById('echarts1'))
         // 基于准备好的dom，初始化echarts实例
         myChart.setOption(this.option, true);
-        window.onresize =  myChart.resize()
+        window.onresize = myChart.resize()
       }).catch(res => {
         this.$Message.error(res.msg)
       })
+    },
+    handleChangeVisitType() {
+
+      charApi({ type: this.visitDate }).then(res => {
+        let da = res.data
+        let keArr = da.list
+        let youArr = da.tourist
+        let seriesKe = []
+        let seriesYou = []
+        let xAxis = []
+        keArr.forEach((val, index) => {
+          xAxis.push(val.month)
+          seriesYou.push(youArr[index].number)
+          seriesKe.push(val.number)
+        })
+        //console.log(seriesKe)
+        this.option.xAxis.data = xAxis
+        this.option.series[0].data = seriesKe
+        this.option.series[1].data = seriesYou
+        let myChart = echarts.init(document.getElementById('echarts1'))
+        // 基于准备好的dom，初始化echarts实例
+        myChart.setOption(this.option, true);
+        window.onresize = myChart.resize();
+      }).catch(rej => {
+        this.$Message.error(rej.msg)
+      })
+
     }
   },
-  mounted(){
+  mounted() {
     this.getChart()
   }
 }
 </script>
 
-<style lang="less">
-.chart-content{
+<style lang="less" scoped>
+.chart-content {
   width: 100%;
   height: auto;
-  background-color: #FFFFFF;
-  .chart-title{
-    border-bottom: 2px solid #F5F5F5;
-    overflow:hidden;
+  background-color: #ffffff;
+  .chart-title {
+    border-bottom: 2px solid #f5f5f5;
+    overflow: hidden;
     padding: 10px 10px;
-    .chart-left{
+    .chart-left {
       float: left;
       color: #000000;
       font-size: 16px;
       font-weight: 800;
     }
-    .chart-right{
+    .chart-right {
       float: right;
-      span{
+      cursor: pointer;
+      span {
         display: inline-block;
-        border: 2px solid #1890FF;
-        color: #1890FF;
-        padding:2px 16px;
+        border: 2px solid #1890ff;
+        color: #1890ff;
+        padding: 2px 16px;
       }
-      span:last-of-type{border-left: none;}
-      span.active{
-        background-color: #1890FF;
-        color: #FFFFFF;
+      span:last-of-type {
+        border-left: none;
+      }
+      span.active {
+        background-color: #1890ff;
+        color: #ffffff;
       }
     }
   }
 }
-
 </style>

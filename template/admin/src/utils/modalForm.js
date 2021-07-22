@@ -43,6 +43,7 @@ export default function(formRequestPromise, { width = '700' } = { width: '700' }
             duration: 0
         })
         formRequestPromise.then(({ data }) => {
+            // console.log(data);
             if(data.status === false) {
                 msg()
                 return Notice.warning({

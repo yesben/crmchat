@@ -55,7 +55,7 @@
           </div>
 
         </div>
-        <div class="user-info">
+        <!-- <div class="user-info">
           <div class="item">
             <span>用户等级</span>
             {{activeUserInfo.level_name}}
@@ -79,7 +79,7 @@
             <span>生日</span>
             {{activeUserInfo.birthday | getDay}}
           </div>
-        </div>
+        </div> -->
       </div>
       <empty v-else status="2" msg="暂无用户信息"></empty>
     </template>

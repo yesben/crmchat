@@ -103,11 +103,13 @@
         </Col>
       </Row>
       <Table :columns="columns" :data="userLists" class="mt25" ref="table" highlight-row :loading="loading" no-userFrom-text="暂无数据" no-filtered-userFrom-text="暂无筛选结果" @on-selection-change="onSelectTab" @on-sort-change="sortChanged">
+
         <template slot-scope="{ row, index }" slot="avatars">
           <div class="tabBox_img" v-viewer>
             <img v-lazy="row.avatar">
           </div>
         </template>
+
         <template slot-scope="{ row, index }" slot="nickname">
           <div class="acea-row">
             <Icon type="md-male" v-show="row.sex==='男'" color="#2db7f5" size="15" class="mr5" />
@@ -115,6 +117,13 @@
             <div v-text="row.nickname"></div>
           </div>
         </template>
+
+        <template slot-scope="{ row, index }" slot="group_id">
+          <div>
+            {{groupListObj[row.group_id]}}
+          </div>
+        </template>
+
         <template slot-scope="{ row, index }" slot="isMember">
           <div>{{row.isMember?'是':'否'}}</div>
         </template>
@@ -150,14 +159,27 @@
     <Modal v-model="labelShow" scrollable title="请选择用户标签" :closable="false" width="320" :footer-hide="true">
       <userLabel :uid="labelActive.uid" @close="labelClose" @onceGetList="userGroup"></userLabel>
     </Modal>
+    <Modal v-model="setUserGroupModel" scrollable title="请选择用户分组" :closable="false" width="320" :footer-hide="true">
+      <user-group v-if="setUserGroupModel" :activeUserInfo="activeUserInfo" :userGroup="getUserGroup" @handleSelectGroup="handleSelectGroup" @close="setUserGroupModel=false"></user-group>
+    </Modal>
+
+    <Modal v-model="labelGroupSelect.model" scrollable title="批量设置用户标签" :closable="false" width="320" :footer-hide="true">
+      <label-group v-if="labelGroupSelect.model" :labelList="labelGroupSelect.list" @close="labelGroupSelect.model=false" @confrim="handleEditLabelGroup"></label-group>
+    </Modal>
+
+    <Modal v-model="userGroupSelect.model" scrollable title="批量设置用户分组" :closable="false" width="320" :footer-hide="true">
+      <user-group v-if="userGroupSelect.model" :userGroup="userGroupSelect.list" @handleSelectGroup="handleselectUsersGroup" @close="userGroupSelect.model=false"></user-group>
+    </Modal>
 
   </div>
 </template>
 
 <script>
 import userLabel from "../../../components/userLabel";
+import userGroup from './components/userGroup'; // 用户分组
+import labelGroup from './components/labelGroup';
 import { mapState } from 'vuex';
-import { userList, getUserData, isShowApi, userSetGroup, userGroupApi, userSetLabelApi, userLabelApi, userSynchro } from '@/api/user';
+import { userList, getUserData, isShowApi, userSetGroup, userGroupApi, userSetLabelApi, userLabelApi, userSynchro, putUserLabel, userBatchGroupApi } from '@/api/user';
 import { agentSpreadApi } from '@/api/agent'
 import editFrom from '../../../components/from/from';
 import sendFrom from '@/components/sendCoupons/index';
@@ -167,9 +189,21 @@ import city from '@/utils/city';
 import customerInfo from '@/components/customerInfo'
 export default {
   name: 'user_list',
-  components: { editFrom, sendFrom, userDetails, newsCategory, customerInfo, userLabel },
+  components: { editFrom, sendFrom, userDetails, newsCategory, customerInfo, userLabel, userGroup, labelGroup },
   data() {
     return {
+      setUserGroupModel: false, // 设置用户分组
+      getUserGroup: [], // 获取的用户分组
+      activeUserInfo: {}, // 用户数据存储容器
+      // 选择用户标签变量容器
+      labelGroupSelect: {
+        model: false, // 弹框
+        list: [] // 数组
+      },
+      userGroupSelect: {
+        model: false,
+        list: []
+      },
       labelShow: false,
       customerShow: false,
       promoterShow: false,
@@ -319,7 +353,7 @@ export default {
         },
         {
           title: '分组',
-          key: 'group_id',
+          slot: 'group_id',
           minWidth: 100
         },
         {
@@ -347,6 +381,7 @@ export default {
       timeVal: [],
       array_ids: [],
       groupList: [],
+      groupListObj: {},
       levelList: [],
       labelFrom: {
         page: 1,
@@ -374,6 +409,7 @@ export default {
     this.groupLists();
   },
   methods: {
+
     onceGetList() {
       this.getList();
     },
@@ -429,27 +465,86 @@ export default {
       };
       userGroupApi(data).then(res => {
         this.groupList = res.data.list;
+        this.groupList.forEach(item => {
+          this.$set(this.groupListObj, item.id, item.group_name);
+        })
       })
     },
-    // 批量设置分组；
+    // 批量设置分组；查询分组
     setGroup() {
       if(this.selectionList.length === 0) {
         this.$Message.warning('请选择要设置分组的用户');
       } else {
         let uids = { uids: this.array_ids };
         userSetGroup(uids).then((res) => {
-          console.log(res.data)
+          if(res.status == 200) {
+            this.userGroupSelect.model = true;
+            this.userGroupSelect.list = res.data;
+          }
         });
       }
     },
-    // 批量设置标签；
+    // 批量设置分组 - 设置分组
+    handleselectUsersGroup(item) {
+      userBatchGroupApi({
+        ids: this.selectionList.map(item => item.id),
+        group_id: item.id
+      }).then(res => {
+        if(res.status == 200) {
+          this.userGroupSelect.model = false;
+          this.getList();
+          this.$Message.success(res.msg);
+        }
+      }).catch(rej => {
+        this.$Message.error(rej.msg);
+      })
+    },
+    // 批量设置标签；查询标签
     setLabel() {
       if(this.selectionList.length === 0) {
         this.$Message.warning('请选择要设置标签的用户');
       } else {
         let uids = { uids: this.array_ids };
-        this.$modalForm(userSetLabelApi(uids)).then(() => this.$refs.sends.getList());
+        userSetLabelApi(uids).then(res => {
+          if(res.status == 200) {
+            this.labelGroupSelect.list = res.data;
+            this.labelGroupSelect.model = true;
+          }
+        })
+        // this.$modalForm(userSetLabelApi(uids)).then(() => this.$refs.sends.getList());
       }
+    },
+    // 批量设置标签，确认
+    handleEditLabelGroup(labelList) {
+      let ids = this.selectionList.map(item => item.id); // 用户id
+      let label_id = [] // 选中的标签id
+      let un_label_id = [] // 取消的标签id
+      let postObject = {};
+      labelList.forEach(item => {
+        if(item.label && item.label.length) {
+          item.label.forEach(val => {
+            if(val.disabled) {
+              label_id.push(val.id);
+            } else {
+              un_label_id.push(val.id);
+            }
+          })
+        }
+      });
+      postObject = {
+        ids, label_id, un_label_id
+      };
+
+      putUserLabel('', postObject).then(res => {
+        if(res.status == 200) {
+          this.getList();
+          this.$Message.success(res.msg);
+          this.labelGroupSelect.model = false;
+        }
+      }).catch(rej => {
+        this.$Message.error(rej.msg);
+      })
+
     },
     // 具体日期
     onchangeTime(e) {
@@ -461,14 +556,37 @@ export default {
       let uid = [];
       uid.push(row.id);
       let uids = { uids: uid };
+      this.activeUserInfo = row;
       switch(name) {
         case '1':
           this.openLabel(row)
           break;
         case '2':
-          this.editS(row)
+          userSetGroup().then(res => {
+            if(res.status == 200) {
+              this.getUserGroup = res.data;
+              this.setUserGroupModel = true;
+            }
+          })
           break
       }
+    },
+    // 确认设置用户分组
+    handleSelectGroup(item) {
+
+      userBatchGroupApi({
+        ids: [this.activeUserInfo.id],
+        group_id: item.id
+      }).then(res => {
+        if(res.status == 200) {
+          this.setUserGroupModel = false;
+          this.getList();
+          this.$Message.success('设置成功');
+        }
+      }).catch(rej => {
+        this.$Message.error(rej.msg);
+      })
+
     },
     openLabel(row) {
       this.labelShow = true
@@ -526,6 +644,7 @@ export default {
       userList(this.userFrom).then(async res => {
         let data = res.data;
         this.userLists = data.list;
+        console.log(this.userLists);
         this.total = data.count;
         this.loading = false;
       }).catch(res => {

@@ -25,19 +25,24 @@ export default {
       upperData: {}, // 外部链接携带进来的参数
       unreadMessages: '',
       userKey: '',
-      productMessage: {}
+      productMessage: {},
+      isShowProductModel: false // 是否显示携带商品
     }
   },
   created() {
+    // 获取url参数
     this.upperData = this.$route.query;
+    // 更新token
     if(this.upperData.token != getSen('mobile_token')) {
       setSen('mobile_token', this.upperData.token);
     }
-
-
+    // 将url参数存入缓存
     Object.keys(this.upperData).forEach(item => {
-      setSen(item, this.upperData[item]);
+      if(this.upperData[item]) {
+        setSen(item, this.upperData[item]);
+      }
     });
+    this.getUserRecord(); // 查看当前是否有客服在线 
     // 获取从父页面传递过来的数据
     window.addEventListener("message", e => {
       // 获取图文数据
@@ -53,7 +58,6 @@ export default {
       }
 
       if(e.data.type == 'closeCustomeServer') {
-        console.log(1);
         this.bus.pageWs.then((ws) => {
           ws.send({ type: 'to_chat', data: { id: 0 } });
         })
@@ -66,18 +70,8 @@ export default {
     productMessage: {
       handler(val, oldVal) {
         if(JSON.stringify(val) != JSON.stringify(oldVal)) {
-          this.bus.pageWs.then((ws) => {
-            ws.send({
-              type: 'chat',
-              data: {
-                to_user_id: this.chatServerData.to_user_id,
-                uid: this.chatServerData.uid,
-                type: 5,
-                other: { ...val }
-              }
-            })
-          })
-          // this.chatServerData.serviceList.push(val);
+          this.isShowProductModel = true;
+          this.goPageBottom(); // 滑动到页面底部
         }
       },
       deep: true
@@ -139,6 +133,22 @@ export default {
         ).offsetHeight;
       });
     },
+    // 发送商品给客服
+    sendProduct() {
+      this.bus.pageWs.then((ws) => {
+        ws.send({
+          type: 'chat',
+          data: {
+            to_user_id: this.chatServerData.to_user_id,
+            uid: this.chatServerData.uid,
+            type: 5,
+            other: this.productMessage
+          }
+        })
+      })
+      this.isShowProductModel = false;
+      this.goPageBottom();
+    },
     // 文本发送
     sendText() {
       if(this.userMessage) {
@@ -177,10 +187,11 @@ export default {
         // idTo: '',
         // toUserId: ''
       }
+
       userRecord(postData).then(res => {
         if(res.status == 200) {
           this.chatServerData = res.data;
-          console.log(res.data);
+          this.goPageBottom();
           let cookieData = {
             nickname: '',
             uid: '',
@@ -206,7 +217,6 @@ export default {
     },
     // 滑动到顶部
     scrollHandler(e) {
-      console.log('滑动到顶部了');
       this.isLoad = true;
       userRecord({
         limit: 20,
