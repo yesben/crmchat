@@ -8,6 +8,8 @@
 <h1 align="center">CRM-CHAT</h1> 
 
 
+如果对您有帮助，您可以点右上角 "Star" 支持一下 谢谢！
+
 > 基于 TP6+Swoole4 开发 
   运行环境要求PHP7.1 ~ 7.4。不支持windows环境运行
 
