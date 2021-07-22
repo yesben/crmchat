@@ -39,7 +39,7 @@ http://域名/kefu
 ![输入图片说明](readme/image/2.jpg)
 ![输入图片说明](readme/image/3.jpg)
 
-## 下期功能展示(以下功能暂没有开发,仅提供展示)
+## 下期APP功能展示(以下功能暂没有开发,仅提供展示)
 
 ![输入图片说明](readme/image/1.jpg)
 
