@@ -10,7 +10,7 @@
       <div class="index_from page-account-container">
         <div class="page-account-top ">
           <div class="page-account-top-logo">
-            <img :src="login_logo" alt="logo" style="width:271px;height:74px;">
+            <img :src="login_logo" alt="logo" style="width:auto;height:74px;">
           </div>
         </div>
         <Form ref="formInline" :model="formInline" :rules="ruleInline" @keyup.enter="handleSubmit('formInline')">

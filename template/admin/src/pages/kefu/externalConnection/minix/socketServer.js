@@ -25,7 +25,8 @@ export default {
       upperData: {}, // 外部链接携带进来的参数
       unreadMessages: '',
       userKey: '',
-      productMessage: {}
+      productMessage: {},
+      isShowProductModel: false // 是否显示携带商品
     }
   },
   created() {
@@ -57,7 +58,6 @@ export default {
       }
 
       if(e.data.type == 'closeCustomeServer') {
-        console.log(1);
         this.bus.pageWs.then((ws) => {
           ws.send({ type: 'to_chat', data: { id: 0 } });
         })
@@ -70,18 +70,8 @@ export default {
     productMessage: {
       handler(val, oldVal) {
         if(JSON.stringify(val) != JSON.stringify(oldVal)) {
-          this.bus.pageWs.then((ws) => {
-            ws.send({
-              type: 'chat',
-              data: {
-                to_user_id: this.chatServerData.to_user_id,
-                uid: this.chatServerData.uid,
-                type: 5,
-                other: { ...val }
-              }
-            })
-          })
-          // this.chatServerData.serviceList.push(val);
+          this.isShowProductModel = true;
+          this.goPageBottom(); // 滑动到页面底部
         }
       },
       deep: true
@@ -143,6 +133,22 @@ export default {
         ).offsetHeight;
       });
     },
+    // 发送商品给客服
+    sendProduct() {
+      this.bus.pageWs.then((ws) => {
+        ws.send({
+          type: 'chat',
+          data: {
+            to_user_id: this.chatServerData.to_user_id,
+            uid: this.chatServerData.uid,
+            type: 5,
+            other: this.productMessage
+          }
+        })
+      })
+      this.isShowProductModel = false;
+      this.goPageBottom();
+    },
     // 文本发送
     sendText() {
       if(this.userMessage) {
@@ -185,6 +191,7 @@ export default {
       userRecord(postData).then(res => {
         if(res.status == 200) {
           this.chatServerData = res.data;
+          this.goPageBottom();
           let cookieData = {
             nickname: '',
             uid: '',
