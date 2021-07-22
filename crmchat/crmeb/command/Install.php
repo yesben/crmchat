@@ -20,24 +20,76 @@ use think\console\input\Argument;
 use think\console\input\Option;
 use think\console\Output;
 use think\console\Table;
+use think\db\exception\BindParamException;
 
 class Install extends Command
 {
 
+    /**
+     * @var string
+     */
     protected $host;
 
+    /**
+     * @var int
+     */
+    protected $isDemo = 1;
+
+    /**
+     * 不会被清除掉的表
+     * @var array
+     */
+    protected $unCleanTable = [
+        'eb_system_admin',
+        'eb_system_config',
+        'eb_system_config_tab',
+        'eb_system_menus',
+        'eb_system_group',
+        'eb_system_group_data',
+        'eb_chat_service_speechcraft',
+        'eb_cache'
+    ];
+
+    /**
+     * 所需扩展
+     * @var string[]
+     */
+    protected $checkLoaded = [
+        'redis', 'swoole', 'fileinfo'
+    ];
+
+    /**
+     * 函数检测
+     * @var string[]
+     */
+    protected $checkFunction = [
+        'curl_init', 'openssl_encrypt', 'gd_info'
+    ];
+
+    /**
+     *
+     */
     protected function configure()
     {
         $this->setName('install')
             ->addArgument('status', Argument::OPTIONAL, 'start/remove')
-            ->addOption('h', null, Option::VALUE_REQUIRED, '网站域名')
-            ->addOption('db', null, Option::VALUE_NONE, '是否卸载数据库')
+            ->addOption('h', null, Option::VALUE_OPTIONAL, '网站域名')
+            ->addOption('db', null, Option::VALUE_OPTIONAL, '是否卸载数据库', 0)
+            ->addOption('demo', null, Option::VALUE_OPTIONAL, '是否保留默认数据', 1)
             ->setDescription('命令行一键安装/卸载');
     }
 
+    /**
+     * @param Input $input
+     * @param Output $output
+     * @return int|void|null
+     * @throws BindParamException
+     */
     protected function execute(Input $input, Output $output)
     {
         $status = $input->getArgument('status') ?: 'start';
+
+        $this->isDemo = $input->getOption('demo');
 
         $database = env('database.database');
         if (in_array($status, ['start', 'remove'])) {
@@ -52,6 +104,13 @@ class Install extends Command
             }
         }
 
+        if ('7.1' > phpversion()) {
+            throw new \Exception('您的php版本过低，不能安装本软件，兼容php版本7.1~7.4，谢谢！');
+        }
+
+        if (phpversion() > '7.4') {
+            throw new \Exception('您的php版本太高，不能安装本软件，兼容php版本7.1~7.4，谢谢！');
+        }
 
         if ($input->hasOption('h')) {
             $this->host = $input->getOption('h');
@@ -77,7 +136,7 @@ class Install extends Command
      * 开始安装
      * @param Input $input
      * @param Output $output
-     * @throws \think\db\exception\BindParamException
+     * @throws BindParamException
      */
     protected function start(Input $input, Output $output)
     {
@@ -99,7 +158,8 @@ class Install extends Command
                 return;
             }
         }
-
+        //环境检测
+        $this->environmentDetection();
 
         $installSql = file_get_contents(root_path('public' . DIRECTORY_SEPARATOR . 'install') . 'crmeb.sql');
         if (!$installSql) {
@@ -122,6 +182,44 @@ class Install extends Command
         $output->info('密码:' . $password);
 
         return;
+    }
+
+    /**
+     * 环境检测
+     */
+    protected function environmentDetection()
+    {
+        $table = new Table();
+        $this->output->writeln('+----------------------------- [环境检测] -----------------------------------+');
+        $this->output->newLine();
+        $header = ['扩展名', '是否安装'];
+        $table->setHeader($header);
+        $load = true;
+        foreach ($this->checkLoaded as $loaded) {
+            if (extension_loaded($loaded)) {
+                $table->addRow([$loaded, '已安装']);
+            } else {
+                $load = false;
+                $table->addRow([$loaded, '未安装']);
+            }
+        }
+        $header = ['函数名', '是否存在'];
+        $table->setHeader($header);
+        foreach ($this->checkFunction as $fun) {
+            if (function_exists($fun)) {
+                $table->addRow([$fun, '已存在']);
+            } else {
+                $load = false;
+                $table->addRow([$fun, '不存在']);
+            }
+        }
+
+        $this->output->writeln($table->render());
+        $this->output->newLine(2);
+
+        if ($load == false) {
+            throw new \Exception('请安装必要扩展');
+        }
     }
 
     /**
@@ -156,7 +254,7 @@ class Install extends Command
      * 卸载程序
      * @param Input $input
      * @param Output $output
-     * @throws \think\db\exception\BindParamException
+     * @throws BindParamException
      */
     protected function remove(Input $input, Output $output)
     {
@@ -223,18 +321,29 @@ class Install extends Command
      */
     protected function query(string $installSql)
     {
-        $tablepre = env('database.prefix');
+        $tablepre = env('database.prefix', '');
         $sqlArray = $this->sqlSplit($installSql, $tablepre);
-        $table    = new Table();
+        $dataname = env('database.database');
+        try {
+            $res = $this->app->db->query('select * from information_schema.SCHEMATA where SCHEMA_NAME = "' . $dataname . '"');
+            if (!$res) {
+                $this->app->db->query('CREATE DATABASE ' . $dataname);
+            }
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        $table = new Table();
         $this->output->writeln('+----------------------------- [SQL安装] -----------------------------------+');
         $this->output->newLine();
         $header = ['表名', '执行结果', '错误原因', '时间'];
         $table->setHeader($header);
+        $tableNameData = [];
         foreach ($sqlArray as $sql) {
             $sql = trim($sql);
             if (strstr($sql, 'CREATE TABLE')) {
                 preg_match('/CREATE TABLE (IF NOT EXISTS)? `eb_([^ ]*)`/is', $sql, $matches);
-                $tableName = $tablepre . ($matches[2] ?? '');
+                $tableName       = $tablepre . ($matches[2] ?? '');
+                $tableNameData[] = $tableName;
             } else {
                 $tableName = '';
             }
@@ -252,6 +361,21 @@ class Install extends Command
                 $tableName && $table->addRow([$tableName, 'x', $e->getMessage(), date('Y-m-d H:i:s')]);
             }
         }
+
+        if (!$this->isDemo) {
+            $unCleanTable = $this->unCleanTable;
+            foreach ($unCleanTable as $k => $v) {
+                $unCleanTable[$k] = str_replace('eb_', $tablepre, $v);
+            }
+            foreach ($tableNameData as $table) {
+                if (!is_array($table, $unCleanTable)) {
+                    $this->app->db->transaction(function () use ($table) {
+                        $this->app->db->query('truncate table ' . $table);
+                    });
+                }
+            }
+        }
+
         $this->output->writeln($table->render());
         $this->output->newLine(2);
     }
@@ -271,7 +395,7 @@ class Install extends Command
         if (!$account) {
             $this->output->error('账号至少4个字符');
             $this->output->newLine();
-            $this->adminAccount();
+            $account = $this->adminAccount();
         }
         return $account;
     }
@@ -286,7 +410,7 @@ class Install extends Command
         if (!preg_match('/^(?![a-zA-z]+$)(?!\d+$)(?![!@#$%^<>&*]+$)[a-zA-Z\d!@#$%^&<>*]{6,16}$/', $password)) {
             $this->output->error('请输入符合要求的密码');
             $this->output->newLine();
-            $this->adminPassword();
+            $password = $this->adminPassword();
         }
         return $password;
     }
@@ -350,7 +474,7 @@ class Install extends Command
     /**
      * 自动备份表
      * @return bool|mixed|string|null
-     * @throws \think\db\exception\BindParamException
+     * @throws BindParamException
      */
     protected function authBackups(bool $g = false)
     {
