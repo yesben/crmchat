@@ -14,6 +14,7 @@
 
     <!-- 聊天内容开始 -->
     <div class="pc_customerServer_container_content">
+
       <div class="productMessage_container" v-if="isShowProductModel">
         <div class="productMessage_container_image">
           <img :src="productMessage.image" alt="">
@@ -25,8 +26,8 @@
             <div @click="sendProduct">发送客服</div>
           </div>
         </div>
-
       </div>
+
       <happy-scroll size="1" resize hide-horizontal :scroll-top="scrollTop" @vertical-start="scrollHandler">
         <div class="scroll_content" id="chat_scroll" :class="{ 'pt140': isShowProductModel }">
           <!-- 滑动到容器顶部时，动画加载 -->
