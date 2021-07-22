@@ -380,7 +380,7 @@ INSERT INTO `eb_system_config` (`id`, `menu_name`, `type`, `input_type`, `config
 (142, 'tengxun_map_key', 'text', 'input', 68, '', 0, '', 100, 0, '', '腾讯地图KEY', '腾讯地图KEY，申请地址：https://lbs.qq.com', 0, 1),
 (144, 'cache_config', 'text', 'input', 1, '', 0, '', 100, 0, '"86400"', '网站缓存时间', '配置全局缓存时间（秒），默认留空为永久缓存', 0, 1),
 (168, 'site_logo_square', 'upload', '', 1, '', 1, '', 0, 0, '"https:\\/\\/qiniu.crmeb.net\\/attach\\/2021\\/07\\/45f9c202107201838358522.png"', '后台小LOGO', '后台菜单缩进小LOGO，尺寸180*180', 1, 1),
-(171, 'login_logo', 'upload', '', 26, '', 1, '', 0, 0, '', '后台登录页LOGO', '后台登录页LOGO，建议尺寸270x75', 4, 1),
+(171, 'login_logo', 'upload', '', 1, '', 1, '', 0, 0, '', '后台登录页LOGO', '后台登录页LOGO，建议尺寸270x75', 4, 1),
 (172, 'qiniu_uploadUrl', 'text', 'input', 33, '', 0, '', 100, 0, '""', '空间域名 Domain', '空间域名 Domain', 0, 1),
 (173, 'qiniu_accessKey', 'text', 'input', 33, '', 0, '', 100, 0, '""', 'accessKey', 'accessKey', 0, 1),
 (174, 'qiniu_secretKey', 'text', 'input', 33, '', 0, '', 100, 0, '""', 'secretKey', 'secretKey', 0, 1),
