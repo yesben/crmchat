@@ -8,13 +8,13 @@
     <div class="content">
       <br>
       <p class="font-w">
-        <a style="font-size: 20px" :href="`http://192.168.31.192:8080/chat/index?uid=10&nickName=%E5%BC%A0%E8%B6%8A&phone=13038593836&key=1626851220262&type=getImgOrText&time=1626851220262&token=${token.token}&deviceType=Mobile&now=0.9937210994959702`">
+        <a style="font-size: 20px" :href="`${window.origin}/chat/index?uid=10&nickName=%E5%BC%A0%E8%B6%8A&phone=13038593836&key=1626851220262&type=getImgOrText&time=1626851220262&token=${token.token}&deviceType=Mobile&now=0.9937210994959702`" target="_blank">
           点击这里，开始体验
         </a>
       </p>
       <br>
 
-      <p class="font-w">1.crmeb文件引入说明</p>
+      <p class="font-w">1.crm文件引入说明</p>
       <p class="text-i">1.html引入方式， 在html文件中直接引入js文件 </p>
       <div class="code-content-wrap">
         <textarea id="NormalCodeTextarea" class="code" rows="2">

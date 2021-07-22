@@ -29,15 +29,19 @@ export default {
     }
   },
   created() {
+    // 获取url参数
     this.upperData = this.$route.query;
+    // 更新token
     if(this.upperData.token != getSen('mobile_token')) {
       setSen('mobile_token', this.upperData.token);
     }
-
-
+    // 将url参数存入缓存
     Object.keys(this.upperData).forEach(item => {
-      setSen(item, this.upperData[item]);
+      if(this.upperData[item]) {
+        setSen(item, this.upperData[item]);
+      }
     });
+    this.getUserRecord(); // 查看当前是否有客服在线 
     // 获取从父页面传递过来的数据
     window.addEventListener("message", e => {
       // 获取图文数据
@@ -177,10 +181,10 @@ export default {
         // idTo: '',
         // toUserId: ''
       }
+
       userRecord(postData).then(res => {
         if(res.status == 200) {
           this.chatServerData = res.data;
-          console.log(res.data);
           let cookieData = {
             nickname: '',
             uid: '',
@@ -206,7 +210,6 @@ export default {
     },
     // 滑动到顶部
     scrollHandler(e) {
-      console.log('滑动到顶部了');
       this.isLoad = true;
       userRecord({
         limit: 20,

@@ -110,7 +110,7 @@
       </div>
       <!-- 用户标签 -->
       <Modal v-model="isMsg" :mask="true" class="none-radius isMsgbox" width="600" :footer-hide="true">
-        <msgWindow v-if="isMsg" @close="msgClose" @activeTxt="activeTxt"></msgWindow>
+        <msg-window v-if="isMsg" @close="msgClose" @activeTxt="activeTxt"></msg-window>
       </Modal>
       <!-- 商品弹窗 -->
       <!-- <div v-if="isProductBox">

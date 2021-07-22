@@ -197,10 +197,10 @@ export function updtaeAdmin(data) {
  * @description 批量设置分组
  * data 请求参数
  */
-export function userSetGroup(data) {
+export function userSetGroup(data, method) {
     return request({
         url: `user/group/all`,
-        method: 'get',
+        method: method ? method : 'get',
         data
     })
 }
@@ -309,7 +309,7 @@ export function userSetLabelApi(data) {
  * @description 标签表单
  * data 请求参数
  */
-export function userBatchLabelApi (data) {
+export function userBatchLabelApi(data) {
     return request({
         url: `user/batch/label`,
         method: 'put',
@@ -321,7 +321,7 @@ export function userBatchLabelApi (data) {
  * @description 获取所有分组
  * data 请求参数
  */
-export function userGroupAllApi (data) {
+export function userGroupAllApi(data) {
     return request({
         url: `user/group/all`,
         method: 'get',
@@ -333,7 +333,7 @@ export function userGroupAllApi (data) {
  * @description 批量修改用户分组
  * data 请求参数
  */
-export function userBatchGroupApi (data) {
+export function userBatchGroupApi(data) {
     return request({
         url: `user/batch/group`,
         method: 'put',
@@ -494,7 +494,7 @@ export function getUserLabel(uid) {
     return request({
         url: `user/label/all`,
         method: 'get',
-        params:{id:uid}
+        params: { id: uid }
     });
 }
 

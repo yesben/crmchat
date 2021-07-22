@@ -125,7 +125,7 @@ export default {
   created() {
 
     // this.connentServer(); // 连接webSocket 服务 [mixins 方法]
-    this.getUserRecord(); // 查看当前是否有客服在线 
+    // this.getUserRecord(); // 查看当前是否有客服在线 
 
   },
   computed: {
