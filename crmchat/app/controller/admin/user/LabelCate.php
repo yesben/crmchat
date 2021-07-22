@@ -37,7 +37,7 @@ class LabelCate extends AuthController
      */
     public function index()
     {
-        return $this->success($this->services->getCateList());
+        return $this->success($this->services->getCateList(['type' => 0]));
     }
 
     /**
