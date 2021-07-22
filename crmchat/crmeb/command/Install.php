@@ -176,6 +176,7 @@ class Install extends Command
         [$account, $password] = $this->createAdmin();
 
         file_put_contents($installLockDir, time());
+        chown($installLockDir, 'www');
 
         $output->info('安装完成!!请妥善保管您的账号密码!');
         $output->info('账号:' . $account);
