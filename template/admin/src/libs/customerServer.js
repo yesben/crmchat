@@ -81,7 +81,8 @@ function customerServerStyle() {
     position: 'fixed',
     right: 0,
     'border-radius': '4px',
-    transition: '.3s'
+    transition: '.3s',
+    'z-index': 100
   }
 }
 

@@ -14,8 +14,21 @@
 
     <!-- 聊天内容开始 -->
     <div class="pc_customerServer_container_content">
+      <div class="productMessage_container" v-if="isShowProductModel">
+        <div class="productMessage_container_image">
+          <img :src="productMessage.image" alt="">
+        </div>
+        <div class="productMessage_container_content">
+          <div class="productMessage_container_content_title">{{productMessage.store_name}}</div>
+          <div class="productMessage_container_content_priceOrHandle">
+            <div>￥{{productMessage.price}}</div>
+            <div @click="sendProduct">发送客服</div>
+          </div>
+        </div>
+
+      </div>
       <happy-scroll size="1" resize hide-horizontal :scroll-top="scrollTop" @vertical-start="scrollHandler">
-        <div class="scroll_content" id="chat_scroll">
+        <div class="scroll_content" id="chat_scroll" :class="{ 'pt140': isShowProductModel }">
           <!-- 滑动到容器顶部时，动画加载 -->
           <Spin v-show="isLoad">
             <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
@@ -440,7 +453,64 @@ export default {
 .primary_color {
   color: #3875ea;
 }
-
+.productMessage_container {
+  // height: 94px;
+  width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  &_image {
+    margin-right: 12px;
+    img {
+      width: 77px;
+      height: 77px;
+    }
+  }
+  &_content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    &_title {
+      font-size: 14px;
+      color: #333;
+      height: 42px;
+      font-weight: 800;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      text-align: left !important;
+    }
+    &_priceOrHandle {
+      display: flex;
+      justify-content: space-between;
+      > div:nth-child(1) {
+        font-size: 18px;
+        color: #e93323;
+        text-align: left;
+      }
+      > div:nth-child(2) {
+        width: 65px;
+        height: 25px;
+        background: #e83323;
+        opacity: 1;
+        border-radius: 62px;
+        color: #fff;
+        font-size: 12px;
+        text-align: center;
+        line-height: 25px;
+        cursor: pointer;
+      }
+    }
+  }
+}
+.pt140 {
+  padding-bottom: 140px !important;
+}
 @keyframes ani-demo-spin {
   from {
     transform: rotate(0deg);
