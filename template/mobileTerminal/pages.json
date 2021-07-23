@@ -11,6 +11,18 @@
 			"style": {
 				"navigationBarTitleText": "例子"
 			}
+		},
+		{
+			"path": "pages/view/user/index/index",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		},
+		{
+			"path": "pages/view/user/setting/setting",
+			"style": {
+				"navigationBarTitleText": "设置"
+			}
 		}
 	],
 	"globalStyle": {
