@@ -31,7 +31,7 @@ function customerServerStyle() {
     padding: '8px 10px',
     'box-sizing': 'border-box',
     cursor: 'pointer',
-
+    'z-index': 99
   }
 
   this.connect_customerServer = {
@@ -78,10 +78,11 @@ function customerServerStyle() {
 
   this.iframe_content = {
     position: 'fixed',
+    'z-index': 999,
     right: 0,
     'border-radius': '4px',
     transition: '.3s',
-    'z-index': 100
+
   }
 }
 
@@ -146,6 +147,7 @@ function initCustomerServer(option) {
     this.iframeLayout = document.createElement('div');
     this.iframeLayout.setAttribute('id', 'iframe_content');
     this.setStyleOfCustomerServer(this.iframeLayout, customerServerStyleObject.iframe_content);
+    this.iframeLayout.style['z-index'] = 999;
     this.iframeLayout.innerHTML = iframeHtml;
     this.body.appendChild(this.iframeLayout);
 
@@ -177,7 +179,8 @@ function initCustomerServer(option) {
     let pcInitStyle = {
       width: '400px',
       bottom: '-645px',
-      height: '645px'
+      height: '645px',
+      'z-index': 999
     }
     // 判断设备的类型，是移动端或是pc端
     if(this.settingObj.deviceType == 'Mobile') {
@@ -256,7 +259,7 @@ initCustomerServer.prototype.setStyleOfCustomerServer = function(dom, styleObj) 
 
 
 
-export default initCustomerServer;
+// export default initCustomerServer;
 
 
 

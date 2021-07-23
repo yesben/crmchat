@@ -103,7 +103,7 @@
 <script>
 import { mapState } from 'vuex';
 import { adminAppCustomer, appReset } from '@/api/kefu';
-import initCustomerServer from '@/libs/customerServer';
+// import initCustomerServer from '@/libs/customerServer';
 
 
 
