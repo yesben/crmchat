@@ -89,10 +89,6 @@ function customerServerStyle() {
 const customerServerStyleObject = new customerServerStyle();
 
 
-
-
-
-
 function initCustomerServer(option) {
   this.settingObj = settingObj;
   this.settingObj.openUrl = `${option.openUrl || location.origin}/chat/index`; //服务器地址加路由, 若不传入则自动获取引入应用所在服务器的域名
@@ -259,7 +255,7 @@ initCustomerServer.prototype.setStyleOfCustomerServer = function(dom, styleObj) 
 
 
 
-// export default initCustomerServer;
+export default initCustomerServer;
 
 
 

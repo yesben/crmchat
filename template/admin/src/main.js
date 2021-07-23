@@ -62,12 +62,12 @@ import scroll from "@/libs/loading";
 
 // http://chat.lfmn.fun/customerServer.js
 
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "http://chat.lfmn.fun/customerServer.js";
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(hm, s);
-})()
+// (function() {
+//   var hm = document.createElement("script");
+//   hm.src = "http://chat.lfmn.fun/customerServer.js";
+//   var s = document.getElementsByTagName("script")[0];
+//   s.parentNode.insertBefore(hm, s);
+// })()
 
 
 import * as tools from "@/libs/tools";
