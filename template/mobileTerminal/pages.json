@@ -23,6 +23,12 @@
 			"style": {
 				"navigationBarTitleText": "设置"
 			}
+		},
+		{
+			"path": "pages/view/list/addbook",
+			"style": {
+				"navigationBarTitleText": "通讯录"
+			}
 		}
 	],
 	"globalStyle": {
