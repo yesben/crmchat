@@ -24,9 +24,13 @@ class Test
 {
     protected $app;
 
-    public function index()
+    public function index(Captcha $captcha)
     {
-        var_dump(Carbon::today()->startOfDay()->toDateTimeString(), Carbon::today()->endOfDay()->toDateTimeString());
+        $res = $captcha->create([], true);
+
+        echo '<img src="' . $res['img'] . '">';
+
+        dump($res['key']);
     }
 
     public function rule()
