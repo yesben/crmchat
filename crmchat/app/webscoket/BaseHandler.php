@@ -158,6 +158,7 @@ abstract class BaseHandler
                 $data['recored']['nickname'] = $_userInfo['nickname'];
                 $data['recored']['avatar']   = $_userInfo['avatar'];
 
+                $data['recored']['online'] = 1;
                 $this->manager->pushing($toUserFd, $response->message('mssage_num', [
                     'user_id' => $userId,
                     'num'     => $unMessagesCount,
