@@ -276,7 +276,9 @@ export default {
       self.isEmoji = false
     });
     this.bus.pageWs = Socket(true, getCookies('kefu_token'));
-    this.wsAgain();
+    setTimeout(() => {
+      this.wsAgain();
+    }, 400);
     this.header['Authori-zation'] = 'Bearer ' + getCookies('kefu_token');
     this.text = this.replace_em('[em-smiling_imp]')
   },
@@ -324,6 +326,7 @@ export default {
             }
           });
           if(data.recored.id) {
+            mp3.play();
             this.newRecored = data.recored;
           }
 

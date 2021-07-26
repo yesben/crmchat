@@ -255,7 +255,7 @@ export default {
         this.goodsConfig.buyList = []
         Promise.all[this.getUserInfo()]
         if(this.goodsConfig.type == 0) {
-          this.productCart()
+          // this.productCart()
         } else if(this.goodsConfig.type == 1) {
           this.productVisit()
         } else {

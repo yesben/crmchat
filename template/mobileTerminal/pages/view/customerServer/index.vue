@@ -34,9 +34,11 @@
 						</div>
 					</div>
 
-					<div class="emoji" v-else>
-						<div  v-for="(item, index) in emoji" :key="index"><i class="em" :class="item"></i></div>
-					</div>
+					<scroll-view  class="emoji" v-else scroll-y>
+						<div class="emoji-item" v-for="(item, index) in emoji" :key="index">
+							<i class="em" :class="item"></i>
+						</div>
+					</scroll-view>
 				</div>
 			</div>
 		</lay-out>

@@ -16,4 +16,7 @@
 	/*每个页面公共less */
 	@import url('./static/globalLess/index.less');
 	@import url('./static/globalLess/iconfont.css');
+	// 表情包
+	@import url('./static/emoji/emojione.css');
 </style>
+

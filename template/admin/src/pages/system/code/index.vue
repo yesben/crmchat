@@ -48,7 +48,7 @@
                   domId: 'customerServerTip',
                   token: '{{token.token}}'
                   sendUserData: {
-                    uid: 10,
+                    uid: '',
                     nickName: '张越',
                     phone: '13038593836'
                   },
@@ -124,7 +124,7 @@ export default {
       return this.isMobile ? 'top' : 'left'
     },
     linkUrl() {
-      return `${location.origin}/chat/index?uid=10&nickName=%E5%BC%A0%E8%B6%8A&phone=13038593836&key=1626851220262&type=getImgOrText&time=1626851220262&token=${this.token.token}&deviceType=Mobile&now=0.9937210994959702`;
+      return `${location.origin}/chat/index?token=${this.token.token}&deviceType=Mobile&now=0.9937210994959702`;
     }
   },
   data() {
