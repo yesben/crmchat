@@ -427,7 +427,7 @@ export default {
         this.bus.pageWs.then((ws) => {
           ws.send({
             data: {
-              id: this.userActive.to_user_id,
+              id: this.userActive ? this.userActive.to_user_id : this.userActive,
             },
             type: "to_chat",
           });
@@ -435,6 +435,14 @@ export default {
         this.getChatList()
       } else {
         window.document.title = this.kefuInfo.site_name
+        this.bus.pageWs.then((ws) => {
+          ws.send({
+            data: {
+              id: this.userActive ? this.userActive.to_user_id : this.userActive,
+            },
+            type: "to_chat",
+          });
+        });
       }
 
 

@@ -7,12 +7,6 @@
 			}
 		},
 		{
-			"path": "pages/view/example",
-			"style": {
-				"navigationBarTitleText": "例子"
-			}
-		},
-		{
 			"path": "pages/view/messageList/index",
 			"style": {
 				"navigationBarTitleText": "消息列表"

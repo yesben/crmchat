@@ -9,7 +9,25 @@
 	</view>
 </template>
 
-<script></script>
+<script>
+	export default {
+		data() {
+			return {
+				
+			}
+		},
+		created() {
+			this.getCurRoute();
+		},
+		methods:{
+			getCurRoute() {
+				let routes = getCurrentPages(); // 获取当前打开过的页面路由数组
+				let curRoute = routes[routes.length - 1].route // 获取当前路由
+				console.log(curRoute);
+			}
+		}
+	}
+</script>
 
 <style lang="less" scoped>
 .layout {

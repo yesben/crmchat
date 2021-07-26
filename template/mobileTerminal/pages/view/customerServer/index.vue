@@ -34,7 +34,7 @@
 						</div>
 					</div>
 
-					<scroll-view  class="emoji" v-else scroll-y>
+					<scroll-view  class="emoji" v-if="selectModel == 1" scroll-y>
 						<div class="emoji-item" v-for="(item, index) in emoji" :key="index">
 							<i class="em" :class="item"></i>
 						</div>
