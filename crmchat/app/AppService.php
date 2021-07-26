@@ -73,7 +73,7 @@ class AppService extends Service
     {
         return tap($config['key'], function ($key) {
             if (empty($key)) {
-                throw new MissingAppKeyException;
+                throw new MissingAppKeyException('Missing app key');
             }
         });
     }
