@@ -14,6 +14,7 @@ namespace app\controller;
 use app\Request;
 use crmeb\utils\Encrypter;
 use think\facade\Console;
+use think\helper\Str;
 
 class InstallController
 {
@@ -458,7 +459,7 @@ class InstallController
                         $rand       = rand(1000, 9999);
                         $time       = time();
                         $app_secret = md5('202116257358989495' . $time . $rand);
-                        $encrypter  = new Encrypter($appKey);
+                        $encrypter  = new Encrypter($this->parseKey($appKey), 'AES-256-CBC');
                         $token      = $encrypter->encrypt(json_encode([
                             'appid'      => '202116257358989495',
                             'app_secret' => $app_secret,
@@ -510,6 +511,19 @@ class InstallController
                     'powered' => $Powered
                 ]);
         }
+    }
+
+    /**
+     * @param string $key
+     * @return false|mixed|string
+     */
+    protected function parseKey(string $key)
+    {
+        if (Str::startsWith($key, $prefix = 'base64:')) {
+            $key = base64_decode(\crmeb\utils\Str::after($key, $prefix));
+        }
+
+        return $key;
     }
 
     /**
