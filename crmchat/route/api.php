@@ -29,7 +29,7 @@ Route::group('api', function () {
 
 //            Route::get('index', 'Test/index')->option(['real_name' => '测试地址']);
 
-//            Route::get('r', 'Test/rule')->option(['real_name' => '路由地址']);
+            Route::get('r', 'Test/rule')->option(['real_name' => '路由地址']);
 
         });
 
@@ -348,6 +348,8 @@ Route::group('api', function () {
         Route::group(function () {
 
             Route::post('login', 'Login/login')->name('kefuLogin');//账号登录
+            Route::get('key', 'Login/getLoginKey')->name('getLoginKey');//获取扫码登录key
+            Route::get('scan/:key', 'Login/scanLogin')->name('scanLogin');//检测扫码情况
             Route::get('config', 'Login/getAppid')->name('getAppid');//获取配置
 
             Route::group(function () {
@@ -362,6 +364,7 @@ Route::group('api', function () {
                 Route::get('record', 'User/recordList')->name('recordList');//和客服聊天过的用户
                 Route::get('info/:userId', 'User/userInfo')->name('getUserInfo');//用户详细信息
                 Route::get('label', 'User/getUserLabel')->name('getUserLabel');//用户标签
+                Route::get('label/all', 'User/getLabelAll')->name('getLabelAll');//所有用户标签
                 Route::put('label/:userId', 'User/setUserLabel')->name('setUserLabel');//设置用户标签
                 Route::get('group', 'User/getUserGroup')->name('getUserGroup');//退出登录
                 Route::put('group/:userId/:id', 'User/setUserGroup')->name('setUserGroup');//退出登录
@@ -380,6 +383,7 @@ Route::group('api', function () {
 
             Route::group('service', function () {
 
+                Route::post('code', 'Service/setLoginCode')->name('setLoginCode');//扫码登陆
                 Route::get('list', 'Service/getChatList')->name('getChatList');//聊天记录
                 Route::get('info', 'Service/getServiceInfo')->name('getServiceInfo');//客服详细信息
                 Route::get('speechcraft', 'Service/getSpeechcraftList')->name('getSpeechcraftList');//客服话术

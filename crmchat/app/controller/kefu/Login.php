@@ -15,6 +15,7 @@ namespace app\controller\kefu;
 use app\Request;
 use app\services\kefu\LoginServices;
 use app\validate\kefu\LoginValidate;
+use crmeb\services\CacheService;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
@@ -57,5 +58,31 @@ class Login extends AuthController
         $token = $this->services->authLogin($account, $password);
 
         return $this->success('登录成功', $token);
+    }
+
+    /**
+     * 获取登录唯一code
+     * @return mixed
+     */
+    public function getLoginKey()
+    {
+        $key = md5(time() . uniqid());
+        $time = time() + 600;
+        CacheService::set($key, 1, 600);
+        return $this->success(['key' => $key, 'time' => $time]);
+    }
+
+    /**
+     * 验证登录
+     * @param string $key
+     * @return mixed
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function scanLogin(string $key)
+    {
+        return $this->success($this->services->scanLogin($key));
     }
 }

@@ -18,6 +18,10 @@ use crmeb\exceptions\AuthException;
 use crmeb\services\CacheService;
 use crmeb\utils\ApiErrorCode;
 use crmeb\utils\JwtAuth;
+use Psr\SimpleCache\InvalidArgumentException;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\DbException;
+use think\db\exception\ModelNotFoundException;
 use think\exception\ValidateException;
 use Firebase\JWT\ExpiredException;
 
@@ -42,9 +46,9 @@ class LoginServices extends BaseServices
      * @param string $account
      * @param string $password
      * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
      */
     public function authLogin(string $account, string $password = null)
     {
@@ -75,10 +79,10 @@ class LoginServices extends BaseServices
      * 解析token
      * @param string $token
      * @return array
-     * @throws \Psr\SimpleCache\InvalidArgumentException
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
+     * @throws InvalidArgumentException
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
      */
     public function parseToken(string $token, int $code = 410003)
     {
@@ -127,5 +131,39 @@ class LoginServices extends BaseServices
         $adminInfo->type = $type;
 
         return $adminInfo->hidden(['password', 'ip', 'status']);
+    }
+
+    /**
+     * 检测有没有人扫描登录
+     * @param string $key
+     * @return array|int[]
+     * @throws InvalidArgumentException
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function scanLogin(string $key)
+    {
+        $hasKey = CacheService::has($key);
+        if ($hasKey === false) {
+            $status = 0;//不存在需要刷新二维码
+        } else {
+            $keyValue = CacheService::get($key);
+            if ($keyValue === '0') {
+                $status   = 1;//正在扫描中
+                $kefuInfo = $this->dao->get(['uniqid' => $key], ['account', 'uniqid']);
+                if ($kefuInfo) {
+                    $tokenInfo           = $this->authLogin($kefuInfo->account);
+                    $tokenInfo['status'] = 3;
+                    $kefuInfo->uniqid    = '';
+                    $kefuInfo->save();
+                    CacheService::delete($key);
+                    return $tokenInfo;
+                }
+            } else {
+                $status = 2;//没有扫描
+            }
+        }
+        return ['status' => $status];
     }
 }

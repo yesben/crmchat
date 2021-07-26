@@ -142,6 +142,16 @@ class User extends AuthController
     }
 
     /**
+     * 获取所有用户标签下面的用户
+     * @param ChatUserLabelServices $services
+     * @return mixed
+     */
+    public function getLabelAll(ChatUserLabelServices $services)
+    {
+        return $this->success($services->getUserLabel(0));
+    }
+
+    /**
      * 获取用户分组
      * @param ChatUserGroupServices $services
      * @return mixed
