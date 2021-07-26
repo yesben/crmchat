@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `eb_chat_service` (
 --
 
 INSERT INTO `eb_chat_service` (`id`, `appid`, `mer_id`, `user_id`, `online`, `account`, `password`, `avatar`, `nickname`, `phone`, `add_time`, `status`, `notify`, `customer`, `uniqid`) VALUES
-(10, '202116257358989495', 0, 794, 1, 'kefu', '$2y$10$Iv0RLY8c/X06Qr3q740z7eftEWn1PixEixvKO.wtjklk6P1KwoKIK', 'https://qiniu.crmeb.net/attach/2021/07/0c699202107201838374542.png', 'CRM 客服', '15594500000', 1626777835, 1, 0, 0, '');
+(10, '202116257358989495', 0, 1, 1, 'kefu', '$2y$10$Iv0RLY8c/X06Qr3q740z7eftEWn1PixEixvKO.wtjklk6P1KwoKIK', 'https://qiniu.crmeb.net/attach/2021/07/0c699202107201838374542.png', 'CRM 客服', '15594500000', 1626777835, 1, 0, 0, '');
 
 -- --------------------------------------------------------
 
