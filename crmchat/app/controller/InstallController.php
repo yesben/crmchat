@@ -12,6 +12,7 @@
 namespace app\controller;
 
 use app\Request;
+use crmeb\utils\Encrypter;
 use think\facade\Console;
 
 class InstallController
@@ -388,7 +389,7 @@ class InstallController
                         , 'eb_system_group'
                         , 'eb_system_group_data'
                         , 'eb_chat_service_speechcraft'
-                        , 'eb_cache');
+                        , 'eb_cache', 'eb_application');
                         foreach ($bl_table as $k => $v) {
                             $bl_table[$k] = str_replace('eb_', $dbPrefix, $v);
                         }
@@ -420,6 +421,8 @@ class InstallController
                     $strConfig = str_replace('#RB_PORT#', $rbport, $strConfig);
                     $strConfig = str_replace('#RB_PWD#', $rbpw, $strConfig);
                     $strConfig = str_replace('#RB_SELECT#', $rbselect, $strConfig);
+                    $appKey    = $this->generateRandomKey();
+                    $strConfig = str_replace('#APP_KEY#', $appKey, $strConfig);
 
                     //多项目部署配置
                     $cache_prefix     = $post['cache_prefix'] ?? '';
@@ -450,6 +453,32 @@ class InstallController
                         $site_url = '\'"https://' . app()->request->host(true) . '"\'';
                         $res2     = mysqli_query($conn, 'UPDATE `' . $dbPrefix . 'system_config` SET `value`=' . $site_url . ' WHERE `menu_name`="site_url"');
                     }
+
+                    if ($post['demo']) {
+                        $rand       = rand(1000, 9999);
+                        $time       = time();
+                        $app_secret = md5('202116257358989495' . $time . $rand);
+                        /** @var Encrypter $encrypter */
+                        $encrypter = app()->make(Encrypter::class);
+                        $token     = $encrypter->encrypt(json_encode([
+                            'appid'      => '202116257358989495',
+                            'app_secret' => $app_secret,
+                            'rand'       => $rand,
+                            'timestamp'  => $time,
+                        ]));
+
+                        $appSQL = "UPDATE  `{$dbPrefix}application` SET `token`= '" . $token . "',`app_secret`='" . $app_secret . "',`timestamp`= $time ,`rand`= $rand  WHERE `appid` = '202116257358989495'";
+                        $res    = mysqli_query($conn, $appSQL);
+                        if (!$res) {
+                            $message = '更新APP_TOKEN失败';
+                            $arr     = array('n' => 999998, 'msg' => $message);
+                            return $arr;
+                        }else{
+                            $message = '成功添加管理员<br />成功写入配置文件<br>安装完成．';
+                            $arr     = array('n' => 999998, 'msg' => $message);
+                        }
+                    }
+
                     if ($res) {
                         $message = '成功添加管理员<br />成功写入配置文件<br>安装完成．';
                         $arr     = array('n' => 999999, 'msg' => $message);
@@ -461,6 +490,8 @@ class InstallController
                     }
 
                 }
+
+
                 return view('/install/step4', [
                     'title'   => $Title,
                     'powered' => $Powered,
@@ -474,12 +505,22 @@ class InstallController
                 $this->installlog();
                 @touch($path . 'public/install/install.lock');
                 //生成key
-                Console::call('key');
+
                 return view('/install/step5', [
                     'title'   => $Title,
                     'powered' => $Powered
                 ]);
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function generateRandomKey()
+    {
+        return 'base64:' . base64_encode(
+                \crmeb\utils\Encrypter::generateKey(app()->config->get('app.cipher'))
+            );
     }
 
     //读取版本号
