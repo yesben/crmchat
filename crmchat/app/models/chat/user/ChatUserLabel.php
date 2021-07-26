@@ -44,9 +44,9 @@ class ChatUserLabel extends BaseModel
             ChatUser::class,
             ChatUserLabelAssist::class,
             'label_id',
-            'uid',
             'id',
-            'id'
+            'id',
+            'user_id'
         );
     }
 

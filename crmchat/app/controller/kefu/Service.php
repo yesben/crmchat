@@ -15,8 +15,10 @@ namespace app\controller\kefu;
 use app\Request;
 use app\services\chat\ChatServiceSpeechcraftServices;
 use app\services\kefu\KefuServices;
+use app\services\message\service\StoreServiceServices;
 use app\services\other\CategoryServices;
 use app\validate\kefu\SpeechcraftValidate;
+use crmeb\services\CacheService;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
@@ -309,5 +311,31 @@ class Service extends AuthController
         }
         $this->services->setTransfer($this->kefuInfo['appid'], $this->kefuInfo['user_id'], (int)$userId, (int)$kefuToUserId);
         return $this->success('转接成功');
+    }
+
+    /**
+     * 确认登录
+     * @param Request $request
+     * @param string $code
+     * @return mixed
+     */
+    public function setLoginCode(Request $request)
+    {
+        $code = $request->post('code');
+        if (!$code) {
+            return app('json')->fail('登录CODE不存在');
+        }
+        $cacheCode = CacheService::get($code);
+        if ($cacheCode === false || $cacheCode === null) {
+            return app('json')->fail('二维码已过期请重新扫描');
+        }
+        $userInfo = $this->services->get(['id' => $request->kefuId()]);
+        if (!$userInfo) {
+            return app('json')->fail('您不是客服无法登录');
+        }
+        $userInfo->uniqid = $code;
+        $userInfo->save();
+        CacheService::set($code, '0', 600);
+        return app('json')->success('登录成功');
     }
 }

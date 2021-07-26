@@ -90,5 +90,4 @@ class ChatUserLabelCateServices extends CategoryServices
         }
         return $labelAll;
     }
-
 }
