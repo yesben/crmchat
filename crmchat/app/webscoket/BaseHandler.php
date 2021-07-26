@@ -125,7 +125,9 @@ abstract class BaseHandler
                 }
             }
         }
-
+        //是否在线
+        $userOnline = isset($toUser['fd']);
+        //是否和当前用户对话
         $online       = $toUserFd && $toUser && $toUser['to_user_id'] == $userId;
         $data['type'] = $online ? 1 : 0;
         if ($msn_type == 5) {
@@ -148,7 +150,7 @@ abstract class BaseHandler
         $serviceRecored  = app()->make(ChatServiceRecordServices::class);
         $unMessagesCount = $logServices->getMessageNum(['user_id' => $userId, 'to_user_id' => $to_user_id, 'type' => 0, 'is_tourist' => $isTourist ? 1 : 0]);
         //记录当前用户和他人聊天记录
-        $data['recored'] = $serviceRecored->saveRecord($user['appid'], $userId, $to_user_id, $msn, $formType ?? 0, $msn_type, $unMessagesCount, $isTourist, $data['nickname'], $data['avatar'], $online);
+        $data['recored'] = $serviceRecored->saveRecord($user['appid'], $userId, $to_user_id, $msn, $formType ?? 0, $msn_type, $unMessagesCount, $isTourist, $data['nickname'], $data['avatar'], $userOnline);
         //是否在线
         if ($online) {
             $this->manager->pushing($toUserFd, $response->message('reply', $data)->getData());
@@ -158,7 +160,7 @@ abstract class BaseHandler
                 $data['recored']['nickname'] = $_userInfo['nickname'];
                 $data['recored']['avatar']   = $_userInfo['avatar'];
 
-                $data['recored']['online'] = 1;
+                $data['recored']['online'] = $userOnline;
                 $this->manager->pushing($toUserFd, $response->message('mssage_num', [
                     'user_id' => $userId,
                     'num'     => $unMessagesCount,
