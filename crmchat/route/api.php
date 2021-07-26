@@ -29,7 +29,7 @@ Route::group('api', function () {
 
 //            Route::get('index', 'Test/index')->option(['real_name' => '测试地址']);
 
-//            Route::get('r', 'Test/rule')->option(['real_name' => '路由地址']);
+            Route::get('r', 'Test/rule')->option(['real_name' => '路由地址']);
 
         });
 
@@ -200,15 +200,22 @@ Route::group('api', function () {
             AdminLogMiddleware::class
         ])->prefix('admin.file.');
 
+        Route::group('system', function () {
+            //系统日志
+            Route::get('log', 'system.Log/index')->name('SystemLog')->option(['real_name' => '系统日志']);
+            //系统日志管理员搜索条件
+            Route::get('log/search_admin', 'system.Log/search_admin')->option(['real_name' => '系统日志管理员搜索条件']);
+
+        })->middleware([
+            AdminAuthTokenMiddleware::class,
+            AdminCkeckRoleMiddleware::class,
+            AdminLogMiddleware::class
+        ]);
         /**
          * 系统设置维护 系统权限管理、系统菜单管理 系统配置 相关路由
          */
         Route::group('setting', function () {
 
-            //系统日志
-            Route::get('log', 'system.Log/index')->name('SystemLog')->option(['real_name' => '系统日志']);
-            //系统日志管理员搜索条件
-            Route::get('log/search_admin', 'system.Log/search_admin')->option(['real_name' => '系统日志管理员搜索条件']);
             //管理员退出登陆
             Route::get('admin/logout', 'system.Admin/logout')->name('SystemAdminLogout')->option(['real_name' => '退出登陆']);
             //修改管理员状态
@@ -348,6 +355,8 @@ Route::group('api', function () {
         Route::group(function () {
 
             Route::post('login', 'Login/login')->name('kefuLogin');//账号登录
+            Route::get('key', 'Login/getLoginKey')->name('getLoginKey');//获取扫码登录key
+            Route::get('scan/:key', 'Login/scanLogin')->name('scanLogin');//检测扫码情况
             Route::get('config', 'Login/getAppid')->name('getAppid');//获取配置
 
             Route::group(function () {
@@ -362,6 +371,7 @@ Route::group('api', function () {
                 Route::get('record', 'User/recordList')->name('recordList');//和客服聊天过的用户
                 Route::get('info/:userId', 'User/userInfo')->name('getUserInfo');//用户详细信息
                 Route::get('label', 'User/getUserLabel')->name('getUserLabel');//用户标签
+                Route::get('label/all', 'User/getLabelAll')->name('getLabelAll');//所有用户标签
                 Route::put('label/:userId', 'User/setUserLabel')->name('setUserLabel');//设置用户标签
                 Route::get('group', 'User/getUserGroup')->name('getUserGroup');//退出登录
                 Route::put('group/:userId/:id', 'User/setUserGroup')->name('setUserGroup');//退出登录
@@ -380,6 +390,7 @@ Route::group('api', function () {
 
             Route::group('service', function () {
 
+                Route::post('code', 'Service/setLoginCode')->name('setLoginCode');//扫码登陆
                 Route::get('list', 'Service/getChatList')->name('getChatList');//聊天记录
                 Route::get('info', 'Service/getServiceInfo')->name('getServiceInfo');//客服详细信息
                 Route::get('speechcraft', 'Service/getSpeechcraftList')->name('getSpeechcraftList');//客服话术

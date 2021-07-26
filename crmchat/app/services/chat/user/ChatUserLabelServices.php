@@ -43,7 +43,11 @@ class ChatUserLabelServices extends BaseServices
      */
     public function getUserLabel(int $userId)
     {
-        return $this->dao->getDataList(['user_id' => $userId], ['*'], 'id', 0, 0, ['user']);
+        return $this->dao->getDataList(['user_id' => $userId], ['*'], 'id', 0, 0, [
+            'user' => function ($query) {
+                $query->field(['nickname', 'id', 'avatar']);
+            }
+        ]);
     }
 
     /**

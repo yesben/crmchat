@@ -148,7 +148,7 @@ abstract class BaseHandler
         //用户向客服发送消息，判断当前客服是否在登录中
         /** @var ChatServiceRecordServices $serviceRecored */
         $serviceRecored  = app()->make(ChatServiceRecordServices::class);
-        $unMessagesCount = $logServices->getMessageNum(['user_id' => $userId, 'to_user_id' => $to_user_id, 'type' => 0, 'is_tourist' => $isTourist ? 1 : 0]);
+        $unMessagesCount = $logServices->getMessageNum(['user_id' => $userId, 'to_user_id' => $to_user_id]);
         //记录当前用户和他人聊天记录
         $data['recored'] = $serviceRecored->saveRecord($user['appid'], $userId, $to_user_id, $msn, $formType ?? 0, $msn_type, $unMessagesCount, $isTourist, $data['nickname'], $data['avatar'], $userOnline);
         //是否在线

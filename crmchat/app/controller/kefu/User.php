@@ -114,7 +114,7 @@ class User extends AuthController
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function recordList(string $nickname = '', $is_tourist = 0)
+    public function recordList(string $nickname = '', $is_tourist = '')
     {
         return $this->success($this->services->getServiceList($this->kefuInfo['appid'], (int)$this->kefuInfo['user_id'], $nickname, (int)$is_tourist));
     }
@@ -139,6 +139,16 @@ class User extends AuthController
     {
         $id = $this->request->get('id', 0);
         return $this->success($services->getLabelAll((int)$id));
+    }
+
+    /**
+     * 获取所有用户标签下面的用户
+     * @param ChatUserLabelServices $services
+     * @return mixed
+     */
+    public function getLabelAll(ChatUserLabelServices $services)
+    {
+        return $this->success($services->getUserLabel(0));
     }
 
     /**

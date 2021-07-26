@@ -98,6 +98,8 @@ class ChatServiceRecord extends BaseModel
      */
     public function searchIsTouristAttr($query, $value)
     {
-        $query->where('is_tourist', $value);
+        if ($value !== '') {
+            $query->where('is_tourist', $value);
+        }
     }
 }

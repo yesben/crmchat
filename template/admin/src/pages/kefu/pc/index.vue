@@ -276,7 +276,9 @@ export default {
       self.isEmoji = false
     });
     this.bus.pageWs = Socket(true, getCookies('kefu_token'));
-    this.wsAgain();
+    setTimeout(() => {
+      this.wsAgain();
+    }, 400);
     this.header['Authori-zation'] = 'Bearer ' + getCookies('kefu_token');
     this.text = this.replace_em('[em-smiling_imp]')
   },
@@ -324,6 +326,7 @@ export default {
             }
           });
           if(data.recored.id) {
+            mp3.play();
             this.newRecored = data.recored;
           }
 
@@ -424,7 +427,7 @@ export default {
         this.bus.pageWs.then((ws) => {
           ws.send({
             data: {
-              id: this.userActive.to_user_id,
+              id: this.userActive ? this.userActive.to_user_id : this.userActive,
             },
             type: "to_chat",
           });
@@ -432,6 +435,14 @@ export default {
         this.getChatList()
       } else {
         window.document.title = this.kefuInfo.site_name
+        this.bus.pageWs.then((ws) => {
+          ws.send({
+            data: {
+              id: this.userActive ? this.userActive.to_user_id : this.userActive,
+            },
+            type: "to_chat",
+          });
+        });
       }
 
 
