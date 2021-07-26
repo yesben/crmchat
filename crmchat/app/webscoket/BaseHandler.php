@@ -126,7 +126,7 @@ abstract class BaseHandler
             }
         }
         //是否在线
-        $userOnline = isset($toUser['fd']);
+        $userOnline = isset($toUser['fd']) ? 1 : 0;
         //是否和当前用户对话
         $online       = $toUserFd && $toUser && $toUser['to_user_id'] == $userId;
         $data['type'] = $online ? 1 : 0;
