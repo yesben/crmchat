@@ -458,9 +458,8 @@ class InstallController
                         $rand       = rand(1000, 9999);
                         $time       = time();
                         $app_secret = md5('202116257358989495' . $time . $rand);
-                        /** @var Encrypter $encrypter */
-                        $encrypter = app()->make(Encrypter::class);
-                        $token     = $encrypter->encrypt(json_encode([
+                        $encrypter  = new Encrypter($appKey);
+                        $token      = $encrypter->encrypt(json_encode([
                             'appid'      => '202116257358989495',
                             'app_secret' => $app_secret,
                             'rand'       => $rand,
@@ -473,7 +472,7 @@ class InstallController
                             $message = '更新APP_TOKEN失败';
                             $arr     = array('n' => 999998, 'msg' => $message);
                             return $arr;
-                        }else{
+                        } else {
                             $message = '成功添加管理员<br />成功写入配置文件<br>安装完成．';
                             $arr     = array('n' => 999998, 'msg' => $message);
                         }
