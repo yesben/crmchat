@@ -30,10 +30,11 @@ class wsSocket {
 
     init(opt) {
         let wsUrl = ''
-        let hostUrl = Setting.wsSocketUrl
-        if(sessionStorage.getItem("SERVER_TYPE") !== 'nginx') {
-            hostUrl = hostUrl + '/ws'
-        }
+        let hostUrl = wss(Setting.wsSocketUrl);
+
+        sessionStorage.getItem("SERVER_TYPE") ? hostUrl = hostUrl + '/ws' : hostUrl;
+
+
         if(opt.key == 1) {
             wsUrl = hostUrl + '?type=admin' + '&token=' + util.cookies.get("token")
         }
@@ -52,7 +53,7 @@ class wsSocket {
             wsUrl += '&tourist_uid=' + opt.tourist_uid
         }
         if(wsUrl) {
-            this.ws = new WebSocket(wss(wsUrl));
+            this.ws = new WebSocket(wsUrl);
             this.ws.onopen = this.onOpen.bind(this);
             this.ws.onerror = this.onError.bind(this);
             this.ws.onmessage = this.onMessage.bind(this);
