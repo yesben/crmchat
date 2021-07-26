@@ -11,6 +11,18 @@
 			"style": {
 				"navigationBarTitleText": "例子"
 			}
+		},
+		{
+			"path": "pages/view/messageList/index",
+			"style": {
+				"navigationBarTitleText": "消息列表"
+			}
+		},
+		{
+			"path": "pages/view/customerServer/index",
+			"style": {
+				"navigationBarTitleText": "客服工作台"
+			}
 		}
 	],
 	"globalStyle": {

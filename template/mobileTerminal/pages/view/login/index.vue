@@ -5,28 +5,25 @@
 		<!-- 头部背景图结束 -->
 		<div class="login_container_content">
 			<div class="login_container_content_title"><span>欢迎登录</span></div>
+
 			<div class="login_container_content_form">
-				
 				<div class="login_container_content_form_input">
-					<login-input placeholder="请输入账号">
-						<span slot="icon" class="iconfont">&#xe6bc;</span>
-					</login-input>
+					<login-input v-model="userName" type="text" placeholder="请输入账号"><span slot="icon" class="iconfont">&#xe6bc;</span></login-input>
 				</div>
-				
+
 				<div class="login_container_content_form_input">
-					<login-input placeholder="请输入密码">
-						<span slot="icon" class="iconfont">&#xe6bd;</span>
-					</login-input>
+					<login-input type="password" placeholder="请输入密码"><span slot="icon" class="iconfont">&#xe6bd;</span></login-input>
 				</div>
-				
 			</div>
-			<div class="login_container_content_handle"><div class="login_primary_button">登录</div></div>
+
+			<div class="login_container_content_handle"><div class="login_primary_button" @click="handleLogin">登录</div></div>
 		</div>
 	</div>
 </template>
 
 <script>
 import loginInput from './component/loginInput.vue';
+import { navigateTo } from 'pages/utils/uniApi.js' 
 export default {
 	components: {
 		loginInput
@@ -36,9 +33,13 @@ export default {
 			userName: ''
 		};
 	},
-	watch:{
+	watch: {
 		userName(val) {
-			console.log(val);
+		}
+	},
+	methods:{
+		handleLogin() {
+			navigateTo(2, '/pages/view/messageList/index');
 		}
 	}
 };
@@ -46,11 +47,45 @@ export default {
 
 <style scoped lang="less">
 .login_container {
-	width: 100%;
+	position: relative;
 	&_bg {
-		width: 100%;
 		&_image {
 			width: 100%;
+		}
+	}
+
+	&_content {
+		width: 642rpx;
+		padding: 54rpx 79rpx 120rpx 79rpx;
+		box-shadow: 0px 3px 20px rgba(0, 20, 41, 0.06);
+		box-sizing: border-box;
+		position: absolute;
+		top: 349rpx;
+		left: 0;
+		right: 0;
+		background: #fff;
+		margin: auto;
+		border-radius: 20rpx;
+		&_title {
+			text-align: center;
+			font-size: 21px;
+			font-weight: 600;
+			margin-bottom: 54rpx;
+		}
+		&_handle {
+			margin-top: 115rpx;
+		
+			.login_primary_button {
+				font-size: 15px;
+				width: 100%;
+				height: 82rpx;
+				background: @primaryBgColor;
+				border-radius: 41px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: #fff;
+			}
 		}
 	}
 }
