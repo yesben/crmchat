@@ -124,7 +124,7 @@ export default {
   },
   data() {
     return {
-      hdTabCur: 0,
+      hdTabCur: '',
       hdTab: [
         {
           key: '',
