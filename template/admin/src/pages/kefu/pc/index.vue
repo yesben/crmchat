@@ -3,7 +3,7 @@
     <div class="content-wrapper">
       <baseHeader :kefuInfo="kefuInfo" :online="online" @setOnline="setOnline" @search="bindSearch"></baseHeader>
       <div class="container">
-        <chatList @setDataId="setDataId" @changeType="changeType" :userOnline="userOnline" :newRecored="newRecored" :searchData="searchData"></chatList>
+        <chatList v-if="chatListModel" @setDataId="setDataId" @changeType="changeType" :userOnline="userOnline" :newRecored="newRecored" :searchData="searchData"></chatList>
         <div class="chat-content">
           <div class="chat-body">
 
@@ -177,6 +177,7 @@ export default {
   },
   data() {
     return {
+      chatListModel: false,
       isEmoji: false, // 是否显示表情弹框
       chatCon: '', // 输入框输入的聊天内容
       emojiGroup: chunk(emojiList, 20), // 表情列表 已20个一组进行分组
@@ -276,9 +277,7 @@ export default {
       self.isEmoji = false
     });
     this.bus.pageWs = Socket(true, getCookies('kefu_token'));
-    setTimeout(() => {
-      this.wsAgain();
-    }, 400);
+    this.wsAgain();
     this.header['Authori-zation'] = 'Bearer ' + getCookies('kefu_token');
     this.text = this.replace_em('[em-smiling_imp]')
   },
@@ -342,6 +341,7 @@ export default {
         // ws登录成功
         ws.$on("success", (data) => {
           this.isShow = true;
+          this.chatListModel = true;
         });
       })
         .catch((error) => {
@@ -535,9 +535,6 @@ export default {
           }, 300)
         }
       })
-
-
-
 
     },
     //滚动到顶部

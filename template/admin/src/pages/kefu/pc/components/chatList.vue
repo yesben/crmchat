@@ -127,13 +127,14 @@ export default {
       hdTabCur: 0,
       hdTab: [
         {
-          key: 0,
-          title: '用户列表'
+          key: '',
+          title: '会话列表'
         },
         {
           key: 1,
-          title: '游客列表'
+          title: '用户列表'
         }
+
       ],
       userList: [],
       curId: '',
@@ -179,6 +180,7 @@ export default {
     }
   },
   mounted() {
+
     this.bus.$on('change', data => {
       this.nickname = data
     })
@@ -214,7 +216,10 @@ export default {
             if(data.recored.is_tourist == this.hdTabCur) { this.userList.unshift(data.recored) }
           }
         })
+
         ws.$on('mssage_num', data => {
+          console.log(data.recored.is_tourist, this.hdTabCur, data.recored.id, this.curId);
+
           if(data.recored.id) {
             let status = false
             that.userList.forEach((el, index, arr) => {
@@ -232,11 +237,13 @@ export default {
             }
           }
 
+
           if(data.recored.is_tourist != this.hdTabCur && data.recored.id) {
             this.$Notice.info({
               title: this.hdTabCur ? '用户发来消息啦！' : '游客发来消息啦！'
             });
           }
+
         })
       });
     },

@@ -13,6 +13,24 @@
 			}
 		},
 		{
+			"path": "pages/view/list/addbook",
+			"style": {
+				"navigationBarTitleText": "通讯录"
+			}
+		},
+		{
+			"path": "pages/view/setTags/index",
+			"style": {
+				"navigationBarTitleText": "标签"
+			}
+		},
+		{
+			"path": "pages/view/setTags/addTag",
+			"style": {
+				"navigationBarTitleText": "新建标签"
+			}
+		},
+		{
 			"path": "pages/view/user/index/index",
 			"style": {
 				"navigationBarTitleText": "我的"
@@ -24,12 +42,7 @@
 				"navigationBarTitleText": "设置"
 			}
 		},
-		{
-			"path": "pages/view/list/addbook",
-			"style": {
-				"navigationBarTitleText": "通讯录"
-			}
-		},
+	
 		{
 			"path": "pages/view/customerServer/index",
 			"style": {
