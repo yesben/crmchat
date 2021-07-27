@@ -200,15 +200,22 @@ Route::group('api', function () {
             AdminLogMiddleware::class
         ])->prefix('admin.file.');
 
+        Route::group('system', function () {
+            //系统日志
+            Route::get('log', 'system.Log/index')->name('SystemLog')->option(['real_name' => '系统日志']);
+            //系统日志管理员搜索条件
+            Route::get('log/search_admin', 'system.Log/search_admin')->option(['real_name' => '系统日志管理员搜索条件']);
+
+        })->middleware([
+            AdminAuthTokenMiddleware::class,
+            AdminCkeckRoleMiddleware::class,
+            AdminLogMiddleware::class
+        ]);
         /**
          * 系统设置维护 系统权限管理、系统菜单管理 系统配置 相关路由
          */
         Route::group('setting', function () {
 
-            //系统日志
-            Route::get('log', 'system.Log/index')->name('SystemLog')->option(['real_name' => '系统日志']);
-            //系统日志管理员搜索条件
-            Route::get('log/search_admin', 'system.Log/search_admin')->option(['real_name' => '系统日志管理员搜索条件']);
             //管理员退出登陆
             Route::get('admin/logout', 'system.Admin/logout')->name('SystemAdminLogout')->option(['real_name' => '退出登陆']);
             //修改管理员状态
