@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<lay-out>
+		<lay-out isShowTap>
 			<div slot="header" class="header">
 				<div class="header_customer">
 					<div class="header_customer_avar"><image src="~static/image/customer/avar.png" mode=""></image></div>

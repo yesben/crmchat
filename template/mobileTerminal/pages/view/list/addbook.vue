@@ -1,33 +1,40 @@
 <template>
-	<view class="content">
-		<view class="search-content padding">
-			<view class="uni-input-wrapper">
-				<input class="uni-input" v-model="search" placeholder="搜索用户名称"/>
-			</view>
-		</view>
-		<!-- 通讯录导航 -->
-		<address-book :bookList="bookList" :letter="letter">
-			<template v-slot:addressBookList>
-			<view class="user-content">
-				<view class="user-list" v-for="item in bookList" :key="item.key">
-					<view class="number padding">{{item.key}}</view>
-					<view class="user" v-for="items in item.list" :key="items.id">
-						<view class="user-list-left">
-							<image :src="items.headImg" mode=""></image>
-						</view>
-						<view class="user-list-right">{{items.username}}</view>
+	<view class="container">
+		<lay-out isShowTap>
+			<div slot="content">
+				<view class="search-content padding">
+					<view class="uni-input-wrapper">
+						<input class="uni-input" v-model="search" placeholder="搜索用户名称"/>
 					</view>
 				</view>
-			</view>	
-			</template>
-		</address-book>
+				<!-- 通讯录导航 -->
+				<address-book :bookList="bookList" :letter="letter">
+					<template v-slot:addressBookList>
+					<view class="user-content">
+						<view class="user-list" v-for="item in bookList" :key="item.key">
+							<view class="number padding">{{item.key}}</view>
+							<view class="user" v-for="items in item.list" :key="items.id" @click="selectUser(items)">
+								<view class="user-list-left">
+									<image :src="items.headImg" mode=""></image>
+								</view>
+								<view class="user-list-right">{{items.username}}</view>
+							</view>
+						</view>
+					</view>	
+					</template>
+				</address-book>
+			</div>
+
+		</lay-out>
+		
+
 	</view>
 </template>
 
 <script>
 import AddressBook from '../../components/addressBookNavigation/addressBookNavigation'
 import {makePy} from '../../utils/utils'
-	
+import { navigateTo } from 'pages/utils/uniApi.js'; 
 export default{
 	components:{AddressBook},
 	data(){
@@ -118,6 +125,10 @@ export default{
 		this.letterSrot()
 	},
 	methods:{
+		selectUser(item) {
+			console.log(item);
+			navigateTo(1, '/pages/view/setTags/index', item);
+		},
 		// 对通讯录按字母顺序做排序
 		letterSrot(){
 			const sortList = []

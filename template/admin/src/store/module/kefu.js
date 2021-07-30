@@ -36,6 +36,7 @@ export default {
                             type: 'logout',
                             data: { uid: getCookies('kefu_uuid') }
                         });
+                        ws.onClose();
                     });
                     // localStorage.clear();
                     removeCookies('kefu_token')

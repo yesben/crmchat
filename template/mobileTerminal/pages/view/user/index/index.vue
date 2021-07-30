@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
 		
-		<lay-out>
+		<lay-out isShowTap>
 			<div slot="header"  style="height: 370rpx;">
 				<div class="header">
 					<div class='font'>我的</div>

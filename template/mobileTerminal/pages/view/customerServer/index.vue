@@ -2,11 +2,15 @@
 	<div class="container">
 		<lay-out>
 			<div slot="header" class="header">
-				<div class="header_left"><span class="iconfont">&#xe6c4;</span></div>
+				<div class="header_left" @click="goBackToMessageList"><span class="iconfont">&#xe6c4;</span></div>
 				<div class="header_center">用户名称</div>
 				<div class="header_right"><span class="iconfont">&#xe6e3;</span></div>
 			</div>
-			<div slot="content" class="content"></div>
+			<div slot="content" class="content">
+				<div class=""></div>
+				
+				
+			</div>
 
 			<div slot="bottom" class="footer" :class="{ translateY0: selectModel }">
 				<div class="footer_input">
@@ -47,19 +51,34 @@
 
 <script>
 import emoji from 'pages/utils/emoji.js';
+import { navigateBack, navigateTo } from 'pages/utils/uniApi.js';
 export default {
 	data() {
 		return {
 			pCont: '',
 			text: '',
 			selectModel: 0, // 1:选择表情 2: 功能选择（转接，上传图片）
-			emoji: []
+			emoji: [],
+			messageList: [
+				{
+					type: '1',
+					message: '这个订单怎么样了'
+				},
+				{
+					type: '2',
+					message: '这个订单不怎么样'
+				}
+			]
 		};
 	},
 	onLoad() {
 		this.emoji = emoji;
 	},
 	methods: {
+		// 头部方法，回到聊天列表页
+		goBackToMessageList() {
+			navigateTo(2, '/pages/view/messageList/index');
+		},
 		// 选择上传图片，转接
 		selectOption(item) {
 			this.selectModel = item;
