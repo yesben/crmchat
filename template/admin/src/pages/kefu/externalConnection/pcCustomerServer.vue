@@ -98,7 +98,7 @@
       </div>
       <!-- 输入框容器 -->
       <div class="pc_customerServer_container_footer_input" v-if="inputConType == 1">
-        <textarea v-model="userMessage" class="pc_customerServer_container_footer_input-textarea" rows="5" placeholder="请输入文字"></textarea>
+        <textarea v-model="userMessage" class="pc_customerServer_container_footer_input-textarea" rows="5" placeholder="请输入文字" @keydown.enter="sendText"></textarea>
       </div>
       <!-- 输入框容器结束 -->
 
@@ -141,7 +141,7 @@ export default {
   created() {
 
     // this.connentServer(); // 连接webSocket 服务 [mixins 方法]
-    // this.getUserRecord(); // 查看当前是否有客服在线 
+    // this.getUserRecord(); // 查看当前是否有客服在线
 
   },
   computed: {
@@ -173,7 +173,6 @@ export default {
     getScrollEnd() {
       console.log(321);
     },
-
     scrollHandler(e) {
       console.log('滑动到顶部了');
       this.isLoad = true;

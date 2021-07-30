@@ -99,7 +99,7 @@
               </div>
             </div>
             <div class="textarea-box" style="position:relative;">
-              <Input v-model="chatCon" type="textarea" :rows="4" @keydown.native="listen($event)" placeholder="请输入文字内容" @on-enter="bindEnter" style="font-size:14px" />
+              <Input v-model="chatCon" type="textarea" :rows="4" @keydown.enter="sendText" placeholder="请输入文字内容" @on-enter="bindEnter" style="font-size:14px" />
               <div class="send-btn"><Button class="btns" type="primary" :disabled="disabled" @click.stop="sendText">发送</Button></div>
             </div>
           </div>
@@ -358,14 +358,7 @@ export default {
     handleFormatError(file) {
       this.$Message.error("上传图片只能是 jpg、jpg、jpeg、gif 格式!");
     },
-    bindEnter(e) {
-      if(e.target.value == '') {
-        return this.$Message.error('请输入消息')
-      }
-      console.log(e.target.value)
-      this.sendMsg(e.target.value, 1)
-      this.chatCon = ''
-    },
+
     // 上传成功
     handleSuccess(res, file, fileList) {
       if(res.status === 200) {
@@ -376,10 +369,10 @@ export default {
       }
     },
     //订单详情
-    lookOrder(item) {
-      this.orderId = item.orderInfo.id
-      this.isOrder = true
-    },
+//    lookOrder(item) {
+//      this.orderId = item.orderInfo.id
+//      this.isOrder = true
+//    },
     setOnline(data) {
 
       Socket.then(ws => {
@@ -393,12 +386,12 @@ export default {
       this.online = data;
     },
     // 阻止浏览器默认换行操作
-    listen(e) {
-      if(e.keyCode == 13) {
-        e.preventDefault()
-        return false
-      }
-    },
+//    listen(e) {
+//      if(e.keyCode == 13) {
+//        e.preventDefault()
+//        return false
+//      }
+//    },
     // 输入框选择表情
     select(data) {
       let val = `[${data}]`
@@ -410,7 +403,7 @@ export default {
       str = str.replace(/\[em-([a-z_]*)\]/g, "<span class='em em-$1'/></span>");
       return str;
     },
-    // 获取是否游客
+    // 获取是否游客 获取会话列表
     changeType(data) {
       this.tourist = data
     },
