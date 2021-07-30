@@ -99,7 +99,7 @@
               </div>
             </div>
             <div class="textarea-box" style="position:relative;">
-              <Input v-model="chatCon" type="textarea" :rows="4" @keydown.enter="sendText" placeholder="请输入文字内容" @on-enter="bindEnter" style="font-size:14px" />
+              <Input v-model="chatCon" type="textarea" :rows="4" @keydown.enter="sendText" placeholder="请输入文字内容" @on-enter="sendText" style="font-size:14px" />
               <div class="send-btn"><Button class="btns" type="primary" :disabled="disabled" @click.stop="sendText">发送</Button></div>
             </div>
           </div>
