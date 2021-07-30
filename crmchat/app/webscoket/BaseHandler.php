@@ -117,16 +117,18 @@ abstract class BaseHandler
 
         $toUserFd = $this->getUserIdByFd($to_user_id);
 
-        $toUser = ['to_user_id' => -1];
+        $toUser    = ['to_user_id' => -1];
+        $fremaData = [];
         foreach ($toUserFd as $value) {
             if ($frem = $this->room->get($value)) {
+                $fremaData[] = $frem;
                 if ($frem['to_user_id'] == $userId) {
                     $toUser = $frem;
                 }
             }
         }
         //是否在线
-        $userOnline = isset($toUser['fd']) ? 1 : 0;
+        $userOnline = count($fremaData) ? 1 : 0;
         //是否和当前用户对话
         $online       = $toUserFd && $toUser && $toUser['to_user_id'] == $userId;
         $data['type'] = $online ? 1 : 0;
