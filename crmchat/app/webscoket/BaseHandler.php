@@ -250,7 +250,7 @@ abstract class BaseHandler
      */
     public function close(array $data = [], Response $response)
     {
-        $usreId = $data['user_id'] ?? 0;
+        $usreId = $data['data']['user_id'] ?? 0;
         if ($usreId) {
             /** @var ChatServiceRecordServices $service */
             $service = app()->make(ChatServiceRecordServices::class);
