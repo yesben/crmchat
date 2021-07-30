@@ -250,15 +250,27 @@ abstract class BaseHandler
      */
     public function close(array $data = [], Response $response)
     {
-        $usreId = $data['data']['user_id'] ?? 0;
+        $usreId   = $data['data']['user_id'] ?? 0;
+        $toUsreId = $data['data']['to_user_id'] ?? 0;
         if ($usreId) {
             /** @var ChatServiceRecordServices $service */
             $service = app()->make(ChatServiceRecordServices::class);
             $service->updateRecord(['to_user_id' => $usreId], ['online' => 0]);
-            $this->manager->pushing(array_keys($this->room->getKefuRoomAll()), $response->message('online', [
-                'online'  => 0,
-                'user_id' => $usreId
-            ]), $this->fd);
+
+            if ($toUsreId) {
+                $toUserFd  = $this->getUserIdByFd($toUsreId);
+                $fremaData = [];
+                foreach ($toUserFd as $value) {
+                    if ($frem = $this->room->get($value)) {
+                        $fremaData[] = $frem;
+                    }
+                }
+
+                $this->manager->pushing(array_column($fremaData, 'fd'), $response->message('online', [
+                    'online'  => 0,
+                    'user_id' => $usreId
+                ]), $this->fd);
+            }
         }
     }
 }
