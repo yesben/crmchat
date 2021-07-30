@@ -13,6 +13,7 @@ namespace app\controller\kefu;
 
 
 use app\Request;
+use app\services\chat\ChatServiceDialogueRecordServices;
 use app\services\chat\ChatServiceRecordServices;
 use app\services\chat\ChatServiceServices;
 use app\services\chat\ChatUserServices;
@@ -116,7 +117,7 @@ class User extends AuthController
      */
     public function recordList(string $nickname = '', $is_tourist = '')
     {
-        return $this->success($this->services->getServiceList($this->kefuInfo['appid'], (int)$this->kefuInfo['user_id'], $nickname, (int)$is_tourist));
+        return $this->success($this->services->getServiceList($this->kefuInfo['appid'], (int)$this->kefuInfo['user_id'], $nickname, $is_tourist));
     }
 
     /**
@@ -253,5 +254,15 @@ class User extends AuthController
         $res['dir'] = path_to_url($res['dir']);
         if (strpos($res['dir'], 'http') === false) $res['dir'] = $request->domain() . $res['dir'];
         return $this->success('图片上传成功!', ['name' => $res['name'], 'url' => $res['dir']]);
+    }
+
+    /**
+     * 获取当前客服所有没读条数
+     * @param ChatServiceDialogueRecordServices $services
+     * @return mixed
+     */
+    public function getMessageCount(ChatServiceDialogueRecordServices $services)
+    {
+        return $this->success(['count' => $services->getMessageNum(['user_id' => $this->kefuInfo['user_id'], 'type' => 0])]);
     }
 }
