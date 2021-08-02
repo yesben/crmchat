@@ -78,7 +78,7 @@ class User extends AuthController
 
         if ($data['password'] === '******') {
             unset($data['password']);
-        } else if ($data['password']) {
+        } else {
             $data['password'] = $services->passwordHash($data['password']);
         }
 
