@@ -1,29 +1,37 @@
 <template>
 	<view class="layout">
 		<div class="layout_header">
-			<div v-if="isShowHeader" class="global_title">
-				<div class="goBack" @click="goBack">
-					<span class="iconfont">&#xe6c4;</span>
-				</div>
-				<div class="title_message">{{ getCurRoute.$holder.navigationBarTitleText }}</div>
+			<div v-if="isShowHeader" class="global_title" :style="{ 'background-color': headerColor, color: headerTextColor }">
+				<div class="goBack" @click="goBack"><span class="iconfont">&#xe6c4;</span></div>
+				<div class="title_message">{{ titleName ? titleName : getCurRoute.$holder.navigationBarTitleText }}</div>
 			</div>
 			<slot v-else name="header"></slot>
 		</div>
 		<div class="layout_content">
 			<!-- <slot name="content"></slot> -->
-			<scroll-view :scroll-y="true" class="layout_content_scroll"><slot name="content"></slot></scroll-view>
+			<scroll-view
+				:scroll-y="true"
+				:refresher-enabled="refresherEnabled"
+				@refresherrefresh="refresherrefresh"
+				:refresher-triggered="refresherTriggered"
+				class="layout_content_scroll"
+				:scroll-top="scrollTop"
+			>
+				<slot name="content" class="slot-content"></slot>
+			</scroll-view>
 		</div>
-		<div class="layout_bottom">
+<!-- 		<div class="layout_bottom">
 			<div v-if="isShowTap" class="footer">
 				<div class="footer_item" v-for="(item, index) in footerData" :key="index" @click="toRouter(item)">
 					<div class="footer_item_image"><image :src="getCurRoute.route == item.path ? item.selectImage : item.unSelectImage" mode="widthFix"></image></div>
 					<div class="footer_item_tip">
 						<span>{{ item.title }}</span>
 					</div>
+					<div class="footer_message" v-if="item.id == 1 && unreadMessage">{{ unreadMessage }}</div>
 				</div>
 			</div>
 			<slot v-else name="bottom"></slot>
-		</div>
+		</div> -->
 	</view>
 </template>
 
@@ -31,6 +39,33 @@
 import { navigateTo, navigateBack } from '../utils/uniApi.js';
 export default {
 	props: {
+		// 标题名称
+		titleName: {
+			type: String,
+			default: '设置'
+		},
+		// 是否开启自定义下拉
+		refresherEnabled: {
+			type: Boolean,
+			default: false
+		},
+		// 下拉刷新状态
+		refresherTriggered: {
+			type: Boolean,
+			default: false
+		},
+		unreadMessage: {
+			type: Number | String,
+			default: 0
+		},
+		headerTextColor: {
+			type: String,
+			default: ''
+		},
+		headerColor: {
+			type: String,
+			default: ''
+		},
 		isShowHeader: {
 			type: Boolean,
 			default: false
@@ -38,7 +73,11 @@ export default {
 		isShowTap: {
 			type: Boolean,
 			default: false
-		}
+		},
+		scrollTop: {
+			type: Number,
+			default: 0
+		},
 	},
 	data() {
 		return {
@@ -63,14 +102,14 @@ export default {
 					selectImage: require('../../static/image/footer/staticSelect.png'),
 					unSelectImage: require('../../static/image/footer/staticUnSelect.png'),
 					id: 3,
-					path: ''
+					path: 'pages/view/statistics/index'
 				},
 				{
 					title: '我的',
 					selectImage: require('../../static/image/footer/mySelect.png'),
 					unSelectImage: require('../../static/image/footer/myUnSelect.png'),
 					id: 4,
-					path: 'pages/view/user/index/index'
+					path: 'pages/view/user/index'
 				}
 			]
 		};
@@ -84,6 +123,16 @@ export default {
 		}
 	},
 	methods: {
+		getScrollViewHeight() {
+		
+		},
+		scroll(e) {
+			// console.log(e);
+		},
+		// 自定义下拉被触发
+		refresherrefresh() {
+			this.$emit('refresherrefresh');
+		},
 		toRouter(item) {
 			navigateTo(3, '/' + item.path);
 		},
@@ -121,27 +170,38 @@ export default {
 	padding: 0 30rpx;
 	position: relative;
 	font-size: 16px;
-	font-weight: 600;
+	/* #ifdef APP-PLUS */
+	padding-top: 64rpx;
+	/* #endif */ 
+	// font-weight: 600;
 	.title_message {
 		position: absolute;
 		top: 50%;
+		/* #ifdef APP-PLUS */
+		top: 75%;
+		/* #endif */ 
 		left: 50%;
 		transform: translate(-50%, -50%);
-		
+	}
+	.goBack {
+		.iconfont {
+		}
 	}
 }
-
-
-
 
 .footer {
 	height: 98rpx;
 	padding: 0 65rpx;
+	/* #ifdef APP-PLUS */ 
+	padding-bottom: 65rpx;
+	
+	/* #endif */
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	box-shadow: 0px -3px 16px rgba(0, 33, 96, 0.04);
 	background: #fff;
+	position: relative;
 	&_item {
 		display: flex;
 		flex-direction: column;
@@ -157,6 +217,21 @@ export default {
 			color: #707070;
 			font-size: 22rpx;
 		}
+	}
+	&_message {
+		position: absolute;
+		top: 0;
+		left: 90rpx;
+		height: 30rpx;
+		padding: 4rpx 10rpx;
+		background: #f74c31;
+		opacity: 1;
+		border-radius: 16rpx;
+		color: #fff;
+		font-size: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 }
 </style>

@@ -2,12 +2,12 @@
 	<div class="container">
 		<lay-out isShowHeader>
 			<div slot="content" class="content">
-				<div class="handle_title" @click="createdTag">
+				<!-- 	<div class="handle_title" @click="createdTag">
 					<span class="iconfont">&#xe6c1;</span>
 					<span class="handle_title_message">新建标签</span>
-				</div>
+				</div> -->
 
-				<uni-swipe-action>
+				<!-- 				<uni-swipe-action>
 					<uni-swipe-action-item>
 						<div class="tag_container">
 							<div class="tag_container_name">
@@ -27,19 +27,53 @@
 							</div>
 						</template>
 					</uni-swipe-action-item>
-				</uni-swipe-action>
+				</uni-swipe-action> -->
+
+				<div class="tag_container" v-for="(item, index) in tagList" :key="index" @click="toTagDetils(item)">
+					<div class="tag_container_name">
+						<span class="name">{{item.label}}</span>
+						<span class="num" v-if="item.user.length">({{ item.user.length }})</span>
+					</div>
+					<div class="tag_container_user">
+						<div class="userList" v-if="item.user.length">
+							{{item.user.map(item=> item.nickname).join('，')}}
+						</div>
+					</div>
+				</div>
+				
 			</div>
 		</lay-out>
 	</div>
 </template>
 
 <script>
-	import { navigateTo } from 'pages/utils/uniApi.js';
+import { navigateTo, setStorage} from 'pages/utils/uniApi.js';
+import http from 'pages/api/index';
+import api from 'pages/api/api.js';
 export default {
 	data() {
-		return {};
+		return {
+			userData: {},
+			tagList: []
+		};
 	},
-	methods:{
+	onLoad(opt) {
+		this.userData = opt;
+		console.log(this.userData);
+		this.initData();
+	},
+	methods: {
+		initData() {
+			http(api.userLabe, { id: this.userData.user_id }).then(res => {
+				console.log(res);
+				this.tagList = res;
+			})
+		},
+		toTagDetils(item) {
+			setStorage('userTagData', item);
+			navigateTo(1, '/pages/view/setTags/addTag');
+			
+		},
 		createdTag() {
 			navigateTo(1, '/pages/view/setTags/addTag');
 		}

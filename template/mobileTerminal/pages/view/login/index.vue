@@ -8,11 +8,11 @@
 
 			<div class="login_container_content_form">
 				<div class="login_container_content_form_input">
-					<login-input v-model="userName" type="text" placeholder="请输入账号"><span slot="icon" class="iconfont">&#xe6bc;</span></login-input>
+					<login-input v-model="loginData.account" type="text" placeholder="请输入账号"><span slot="icon" class="iconfont">&#xe6bc;</span></login-input>
 				</div>
 
 				<div class="login_container_content_form_input">
-					<login-input type="password" placeholder="请输入密码"><span slot="icon" class="iconfont">&#xe6bd;</span></login-input>
+					<login-input v-model="loginData.password" type="password" placeholder="请输入密码"><span slot="icon" class="iconfont">&#xe6bd;</span></login-input>
 				</div>
 			</div>
 
@@ -23,23 +23,27 @@
 
 <script>
 import loginInput from './component/loginInput.vue';
-import { navigateTo } from 'pages/utils/uniApi.js' 
+import { navigateTo, setStorage, getStorage } from 'pages/utils/uniApi.js';
+import http from 'pages/api/index';
+import api from 'pages/api/api.js';
 export default {
 	components: {
 		loginInput
 	},
 	data() {
 		return {
-			userName: ''
+			loginData: {
+				account: '',
+				password: ''
+			}
 		};
 	},
-	watch: {
-		userName(val) {
-		}
-	},
-	methods:{
+	methods: {
 		handleLogin() {
-			navigateTo(2, '/pages/view/messageList/index');
+			http(api.login, this.loginData).then(res => {
+				setStorage('userData', res);
+				navigateTo(2, '/pages/view/messageList/index')
+			});
 		}
 	}
 };
@@ -74,7 +78,7 @@ export default {
 		}
 		&_handle {
 			margin-top: 115rpx;
-		
+
 			.login_primary_button {
 				font-size: 15px;
 				width: 100%;

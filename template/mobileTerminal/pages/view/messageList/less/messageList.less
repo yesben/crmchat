@@ -84,7 +84,7 @@
 			height: 30rpx;
 			transform: rotate(45deg);
 		}
-		
+
 		&_select {
 			display: flex;
 			flex-direction: column;
@@ -101,24 +101,24 @@
 					width: 12rpx;
 					height: 12rpx;
 					border-radius: 50%;
-					background: linear-gradient(180deg, #BCBCBC 0%, #919191 100%);
+					background: linear-gradient(180deg, #bcbcbc 0%, #919191 100%);
 				}
 				.tip_select {
-					background: linear-gradient(143deg, #27F2CB 0%, #14E3B4 100%);
-				} 
+					background: linear-gradient(143deg, #27f2cb 0%, #14e3b4 100%);
+				}
 				&_status {
 					flex: 1;
 					padding-left: 15rpx;
 					font-size: 14px;
 				}
 				&_icon {
-					color: #B9B9B9;
+					color: #b9b9b9;
 				}
 			}
 			&_line {
 				height: 1px;
 				width: 100%;
-				background: #F0F1F2;
+				background: #f0f1f2;
 			}
 		}
 	}
@@ -152,10 +152,11 @@
 
 	// 聊天内容
 	&_userMessgae {
-		padding: 23rpx 30rpx;
+		padding: 0 30rpx;
 		background: #fff;
 		&_item {
 			display: flex;
+			padding: 28rpx 0;
 			&_avar {
 				border-radius: 50%;
 				overflow: hidden;
@@ -172,6 +173,7 @@
 				display: flex;
 				flex-direction: column;
 				justify-content: space-between;
+				overflow: hidden;
 				&_user {
 					display: flex;
 					align-items: center;
@@ -183,9 +185,24 @@
 					}
 					&_form {
 						font-size: 20rpx;
+
+						padding: 0 5rpx;
+					}
+					.wchat {
 						background: rgba(56, 117, 234, 0.14);
 						color: rgba(56, 117, 234, 1);
-						padding: 0 5rpx;
+					}
+					.h5 {
+						background: rgba(255, 162, 0, 0.18);
+						color: #d08800;
+					}
+					.gozhonghao {
+						background: rgba(0, 186, 100, 0.14);
+						color: #00a219;
+					}
+					.pc {
+						color: #820adb;
+						background: rgba(133, 64, 227, 0.14);
 					}
 				}
 
@@ -193,6 +210,8 @@
 				&_message {
 					color: rgba(159, 159, 159, 1);
 					font-size: 12px;
+					width: 100%;
+					.overText;
 				}
 			}
 
@@ -220,4 +239,10 @@
 			}
 		}
 	}
+}
+.no_message {
+	text-align: center;
+	padding: 60rpx 0;
+	font-size: 14px;
+	color: #ccc;
 }

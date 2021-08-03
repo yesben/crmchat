@@ -1,204 +1,181 @@
 <template>
 	<view class="container">
 		<lay-out isShowTap>
+			<div slot="header">
+				<div class="header_content">
+					<div></div>
+					<div>客户列表</div>
+					<div @click="toTagList">
+						<span class="iconfont">&#xe6b6;</span>
+						<span>标签</span>
+					</div>
+				</div>
+			</div>
+			
+			
 			<div slot="content">
 				<view class="search-content padding">
-					<view class="uni-input-wrapper">
-						<input class="uni-input" v-model="search" placeholder="搜索用户名称"/>
-					</view>
+					<view class="uni-input-wrapper"><input class="uni-input" v-model="searchData.nickname" placeholder="搜索用户名称" /></view>
 				</view>
 				<!-- 通讯录导航 -->
 				<address-book :bookList="bookList" :letter="letter">
 					<template v-slot:addressBookList>
-					<view class="user-content">
-						<view class="user-list" v-for="item in bookList" :key="item.key">
-							<view class="number padding">{{item.key}}</view>
-							<view class="user" v-for="items in item.list" :key="items.id" @click="selectUser(items)">
-								<view class="user-list-left">
-									<image :src="items.headImg" mode=""></image>
+						<view class="user-content">
+							<view class="user-list" v-for="(item, index) in Object.keys(bookList)" :key="index">
+								<view class="number padding">{{ item }}</view>
+								<view class="user" v-for="(val, i) in bookList[item]" :key="i" @click="selectUser(val)">
+									<view class="user-list-left"><image :src="val.avatar" mode=""></image></view>
+									<view class="user-list-right">{{ val.nickname }}</view>
 								</view>
-								<view class="user-list-right">{{items.username}}</view>
 							</view>
 						</view>
-					</view>	
 					</template>
 				</address-book>
 			</div>
-
 		</lay-out>
-		
-
 	</view>
 </template>
 
 <script>
-import AddressBook from '../../components/addressBookNavigation/addressBookNavigation'
-import {makePy} from '../../utils/utils'
-import { navigateTo } from 'pages/utils/uniApi.js'; 
-export default{
-	components:{AddressBook},
-	data(){
-		return{
-			letter:["A", "B", "C", "D","E", "F", "G", "H","I", "J", "K", "L", "M", "N","O", "P", "Q", "R", "S", "T","U","V", "W", "X", "Y", "Z"],
-			list:[
-				{
-					id:1,
-					username:"a白小纯",
-					headImg:"../../../static/image/login/bg.png"
-				},
-				{
-					id:2,
-					username:"B罗小黑",
-					headImg:"../../../static/image/login/bg.png"
-				},
-				{
-					id:3,
-					username:"张楚岚",
-					headImg:"../../../static/image/login/bg.png"
-				},
-				{
-					id:4,
-					username:"冯宝宝",
-					headImg:"../../../static/image/login/bg.png"
-				},
-				{
-					id:5,
-					username:"五六七",
-					headImg:"../../../static/image/login/bg.png"
-				},
-				{
-					id:11,
-					username:"白月初",
-					headImg:"../../../static/image/login/bg.png"
-				},
-				{
-					id:22,
-					username:"王富贵",
-					headImg:"../../../static/image/login/bg.png"
-				},
-				{
-					id:33,
-					username:"叶修",
-					headImg:"../../../static/image/login/bg.png"
-				},
-				{
-					id:44,
-					username:"唐三",
-					headImg:"../../../static/image/login/bg.png"
-				},
-				{
-					id:55,
-					username:"林动",
-					headImg:"../../../static/image/login/bg.png"
-				},
-				{
-					id:12,
-					username:"魏无羡",
-					headImg:"../../../static/image/login/bg.png"
-				},
-				{
-					id:23,
-					username:"秦羽",
-					headImg:"../../../static/image/login/bg.png"
-				},
-				{
-					id:34,
-					username:"蛮吉",
-					headImg:"../../../static/image/login/bg.png"
-				},
-				{
-					id:45,
-					username:"荆天明",
-					headImg:"../../../static/image/login/bg.png"
-				},
-				{
-					id:56,
-					username:"武庚",
-					headImg:"../../../static/image/login/bg.png"
-				}
-			],
-			search:'',
-			bookList:[]
-		}
+import AddressBook from './addressBookNavigation/addressBookNavigation';
+import { makePy } from '../../utils/utils';
+import { navigateTo, getStorage } from 'pages/utils/uniApi.js';
+import http from 'pages/api/index';
+import api from 'pages/api/api.js';
+export default {
+	components: { AddressBook },
+	data() {
+		return {
+			letter: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+			list: [],
+			search: '',
+			bookList: {} || [],
+			customerServerData: {}, // 客服数据
+			searchData: {
+				nickname: ''
+			}
+		};
 	},
-	created() {
-		this.letterSrot()
+	onLoad() {
+		this.customerServerData = getStorage('userData').kefuInfo;
+		this.initData();
 	},
-	methods:{
+	methods: {
+		// 查询当前客服的客户列表
+		initData() {
+			
+			http(api.userList, this.searchData).then(res => {
+				this.bookList = res;
+			})
+		},
+		
+		toTagList() {
+			navigateTo(1, '/pages/view/setTags/index');
+		},
 		selectUser(item) {
-			console.log(item);
-			navigateTo(1, '/pages/view/setTags/index', item);
+			navigateTo(1, '/pages/view/customerServer/customerMessage', {user_id: item.to_user_id});
 		},
 		// 对通讯录按字母顺序做排序
-		letterSrot(){
-			const sortList = []
-			const list = this.list
+		letterSrot() {
+			const sortList = [];
+			const list = this.list;
 			this.letter.forEach(item => {
-				const obj = {}
-				obj.key = item
-				obj.list = []
-				for(let i = 0;i < list.length;i++){
-					if(item == makePy(list[i].username).substr(0,1)){
-						obj.list.push(list[i])
-						list.splice(i,1)
-						i--
+				const obj = {};
+				obj.key = item;
+				obj.list = [];
+				for (let i = 0; i < list.length; i++) {
+					if (item == makePy(list[i].username).substr(0, 1)) {
+						obj.list.push(list[i]);
+						list.splice(i, 1);
+						i--;
 					}
 				}
-				if(obj.list.length)
-					sortList.push(obj)
-			})
-			this.bookList = sortList
+				if (obj.list.length) sortList.push(obj);
+			});
+			this.bookList = sortList;
 		}
 	}
-}
+};
 </script>
 
 <style lang="less" scoped>
-@padding-l-r:30rpx;
-@padding-t-p:20rpx;
-@bgc-f:#FFFFFF;
-@fontSize:28rpx;
-@imgSize:64rpx;
-.padding{
+@padding-l-r: 30rpx;
+@padding-t-p: 20rpx;
+@bgc-f: #ffffff;
+@fontSize: 28rpx;
+@imgSize: 64rpx;
+.padding {
 	padding: @padding-t-p @padding-l-r;
 }
-.search-content{
+.search-content {
 	background-color: @bgc-f;
-	input{
+	input {
 		border: none;
-		background-color:#F5F6F9;
-		color: #C4C4C4;
+		background-color: #f5f6f9;
+		color: #c4c4c4;
 		font-size: @fontSize;
 		border-radius: 30rpx;
-		padding:@padding-t-p 0 @padding-t-p  @padding-l-r;
+		padding: @padding-t-p 0 @padding-t-p @padding-l-r;
 		text-align: center;
 	}
 }
-.user-content{
-	background-color: #EEEEEE;
-	.user-list{
-		.number{
+.user-content {
+	background-color: #eeeeee;
+	.user-list {
+		.number {
 			color: #666666;
-			font-size:@fontSize - 2rpx;
+			font-size: @fontSize - 2rpx;
 		}
-		.user{
+		.user {
 			background-color: @bgc-f;
 			display: flex;
 			align-items: center;
-			padding:@padding-t-p  @padding-l-r;
-			border-bottom: 1rpx solid #F0F2F7;
-			.user-list-left{
+			padding: @padding-t-p @padding-l-r;
+			border-bottom: 1rpx solid #f0f2f7;
+			.user-list-left {
 				width: @imgSize;
 				height: @imgSize;
 				padding-right: 20rpx;
-				image{
+				image {
 					width: @imgSize;
 					height: @imgSize;
 					border-radius: 50%;
 				}
 			}
-			.user-list-right{
+			.user-list-right {
 				color: #282828;
+			}
+		}
+	}
+}
+.header {
+
+	&_content {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		position: relative;
+		height: 96rpx;
+		background: @primaryBgColor;
+		padding: 0 30rpx;
+		/* #ifdef APP-PLUS */
+		padding-top: 64rpx;
+		 /* #endif */ 
+		color: #fff;
+		> div {
+			flex: 1;
+		}
+		> div:nth-child(2) {
+			text-align: center;
+			font-weight: bold;
+		}
+		> div:nth-child(3) {
+			font-size: 14px;
+			text-align: right;
+			.iconfont {
+				font-size: 14px;
+				margin-right: 8rpx;
+				font-weight: bold;
 			}
 		}
 	}

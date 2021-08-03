@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "客服工作台",
+  "usingComponents": {
+    "uni-popup": "/uni_modules/uni-popup/components/uni-popup/uni-popup",
+    "transfer": "/pages/view/customerServer/component/transfer",
+    "scripts-libary": "/pages/view/customerServer/component/scriptLibary"
+  }
+}

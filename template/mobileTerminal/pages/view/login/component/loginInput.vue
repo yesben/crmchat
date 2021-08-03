@@ -4,9 +4,9 @@
 			<slot name="icon"></slot>
 		</div>
 		<div class="input">
-			<input class="input_model" :placeholder="placeholder" :type="type" v-model="value"  @input="$emit('input', $event.target.value)" />
+			<input  class="input_model" :placeholder="placeholder" :type="type" v-model="value"  @input="$emit('input', $event.target.value)" />
 		</div>
-		<div class="clear" v-if="value" @click="value=''">
+		<div class="clear" v-if="value" @click="clear">
 			<span class="iconfont">&#xe6b5;</span>
 		</div>
 	</div>
@@ -34,7 +34,10 @@ export default {
 		};
 	},
 	methods:{
-		
+		clear() {
+			this.value = '';
+			this.$emit('input', '');
+		}
 	}
 };
 </script>

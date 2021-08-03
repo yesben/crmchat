@@ -1,58 +1,134 @@
 <template>
-	<view class='personal-data'>
-		<view class='list'>
-			<view class='item'>
-				<view>头像</view>
-				<view class="avatar-box" @click.stop='uploadpic'>
-					<image src="../../../../static/images/bguser.png"></image>
+	
+	<div class="container">
+		<lay-out  titleName="设置">
+			<div slot="content">
+				<view class='personal-data'>
+					<view class='list'>
+						<view class='item'>
+							<view>头像</view>
+							<view class="avatar-box" @click='uploadpic'>
+								<image :src="customerServerData.avatar"></image>
+							</view>
+						</view>
+						
+						<view class='item'>
+							<view>昵称</view>
+							<view class='input'><input v-model="customerServerData.nickname" type='text' placeholder="请输入客服名称"></input></view>
+						</view>
+						
+						<view class='item'>
+							<view>手机号</view>
+							<view class='input'>
+								<view class='input'><input v-model="customerServerData.phone" type='number' placeholder="请填写联系方式"></input></view>
+							</view>
+						</view>
+						
+						<view class="item">
+							<view>密码</view>
+							<!-- <view class="inputs" @click="edit">
+								<view>点击修改密码</view>
+								<img src="~static/images/right.png" alt="" class="iconfont">
+							</view> -->
+							<view class='input'>
+								<view class='input'><input v-model="customerServerData.password" type='number' placeholder="请输入密码"></input></view>
+							</view>
+						</view>
+				
+					</view>
+					<button class='modifyBnt' @click="handleEdit">保存修改</button>
+					<view class="logOut" @click="loginOut">退出登录</view>
 				</view>
-			</view>
-			<view class='item'>
-				<view>昵称</view>
-				<view class='input'><input type='text' value="随便写的名字"></input></view>
-			</view>
-			<view class='item'>
-				<view>手机号</view>
-				<view class='input'>
-					<view class='input'><input type='text' name='nickname' value="13000000000"></input></view>
-				</view>
-			</view>
-			
-			<view class="item">
-				<view>密码</view>
-				<view class="inputs" @click="edit">
-					<view>点击修改密码</view>
-					<img src="../../../../static/images/right.png" alt="" class="iconfont">
-				</view>
-			</view>
+			</div>
+		</lay-out>
+	</div>
+	
+	
+	
 
-		</view>
-		<button class='modifyBnt'>保存修改</button>
-		<view class="logOut ">退出登录</view>
-	</view>
 </template>
 
 <script>
+	import { navigateTo, chooseImage, pathToBase64 , getStorage, Toast, Modal} from 'pages/utils/uniApi.js';
+	import http from 'pages/api/index';
+	import api from 'pages/api/api.js';
 	export default {
-		
 		data() {
-			return {}
+			return {
+		
+				customerServerData: {}
+			}
 		},
-		onLoad() {
+		onLoad(opt) {
+			this.initData()
 		},
 		methods: {
 			edit(){
 				uni.navigateTo({
 					url:'/pages/view/example'
 				})
+			},
+			// 获取当前登录客服信息
+			initData() {
+				http(api.userUserInfo).then(res => {
+					this.customerServerData = res;
+					console.log(this.customerServerData);
+				});
+			},
+			// 修改头像
+			uploadpic() {
+				chooseImage(1).then(res => {
+					 uni.uploadFile({
+						 url: api.kefuUploadAvatar.url,
+						 filePath: res.tempFilePaths[0],
+						 formData: {
+							 // file: res.tempFilePaths[0],
+							 filename: 'file'
+						 },
+						 	header: {
+								 // #ifdef MP
+						 		"Content-Type": "multipart/form-data",
+								 // #endif
+						 		'Authori-zation': 'Bearer ' + getStorage('userData').token
+						 },
+						 success: (uploadFileRes) => {
+								let unloadResponse = JSON.parse(uploadFileRes.data);
+								if(unloadResponse.status == 200) {
+									this.customerServerData.avatar = unloadResponse.data.url;
+								}
+						 }
+					 })
+				})
+			},
+			// 确定修改
+			handleEdit() {
+			
+				let postData = this.customerServerData;
+				if(!postData.password) {
+					postData.password = '******'
+				}
+				http(api.putKefuUserUserInfo, postData).then(res => {
+					Toast('修改成功');
+					this.initData();
+				})
+			},
+			// 退出登录
+			loginOut() {
+				http(api.userLogout).then(res => {
+					Modal('温馨提示', '您确定要退出登录吗?').then(() => {
+						navigateTo(3, '/pages/view/login/index');
+					});
+				});
 			}
+
 		}
 	}
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 	.personal-data {
 		background-color: #fff;
+		padding-bottom: 60rpx;
 	}
 
 	.personal-data .title {
@@ -144,8 +220,9 @@
 	}
 
 	.personal-data .list {
-		margin-top: 15rpx;
+		// margin-top: 15rpx;
 		background-color: #fff;
+		
 	}
 
 	.personal-data .list .item {
