@@ -1,0 +1,58 @@
+<?php
+// +----------------------------------------------------------------------
+// | CRMEB [ CRMEB赋能开发者，助力企业发展 ]
+// +----------------------------------------------------------------------
+// | Copyright (c) 2016~2020 https://www.crmeb.com All rights reserved.
+// +----------------------------------------------------------------------
+// | Licensed CRMEB并不是自由软件，未经许可不能去掉CRMEB相关版权
+// +----------------------------------------------------------------------
+// | Author: CRMEB Team <admin@crmeb.com>
+// +----------------------------------------------------------------------
+
+namespace crmeb\services\uniPush\options;
+
+use crmeb\services\uniPush\OptionsBase;
+
+/**
+ * Class PushOptions
+ * @package crmeb\services\uniPush\options
+ */
+class PushOptions extends OptionsBase
+{
+
+    /**
+     * @var string
+     */
+    public $requestId;
+
+    /**
+     *
+     * @var array
+     */
+    public $settings = [];
+
+    /**
+     * @var array
+     */
+    public $audience = [];
+
+    /**
+     * @var array
+     */
+    public $pushMessage = [];
+
+    /**
+     * PushOptions constructor.
+     * @param string $requestId
+     * @param array $settings
+     * @param array $audience
+     * @param array $pushMessage
+     */
+    public function __construct(string $requestId = '', array $settings = [], array $audience = [], array $pushMessage = [])
+    {
+        $this->requestId   = $requestId;
+        $this->settings    = $settings;
+        $this->audience    = $audience;
+        $this->pushMessage = $pushMessage;
+    }
+}
