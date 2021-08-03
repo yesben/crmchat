@@ -124,7 +124,7 @@ export default {
       return this.isMobile ? 'top' : 'left'
     },
     linkUrl() {
-      return `${location.origin}/chat/index?token=${this.token.token}&deviceType=Mobile&now=0.9937210994959702`;
+      return `${location.origin}/chat/index?token=${this.token.token}&noCanClose=1`;
     }
   },
   data() {
@@ -277,8 +277,8 @@ export default {
               insertDomNode: '.getCode_container',
               token: this.token.token,
               sendUserData: {
-                uid: 10,
-                nickName: '张越',
+                uid: 20,
+                nickName: '邓中夏',
                 phone: '13038593836',
                 key: new Date().getTime(),
                 type: 'getImgOrText',

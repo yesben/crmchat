@@ -1,6 +1,6 @@
 import { mobileScoket } from '@/libs/socket';
 import { userRecord, serviceUpload } from '@/api/kefu';
-import { setSen, getSen } from '@/libs/util'
+import { setLoc, getLoc } from '@/libs/util'
 import Cookies from "js-cookie";
 
 var mp3 = require('@/assets/video/notice.wav');
@@ -30,19 +30,20 @@ export default {
     }
   },
   created() {
+
     // 获取url参数
     this.upperData = this.$route.query;
     // 更新token
-    if(this.upperData.token != getSen('mobile_token')) {
-      setSen('mobile_token', this.upperData.token);
+    if(this.upperData.token != getLoc('mobile_token')) {
+      setLoc('mobile_token', this.upperData.token);
     }
     // 将url参数存入缓存
     Object.keys(this.upperData).forEach(item => {
       if(this.upperData[item]) {
-        setSen(item, this.upperData[item]);
+        setLoc(item, this.upperData[item]);
       }
     });
-    this.getUserRecord(); // 查看当前是否有客服在线 
+    this.getUserRecord(); // 查看当前是否有客服在线, 建立socket连接
     // 获取从父页面传递过来的数据
     window.addEventListener("message", e => {
       // 获取图文数据
@@ -78,10 +79,46 @@ export default {
     }
   },
   methods: {
+    // 查看当前是否有客服在线, 若不在线，跳转到反馈界面
+    getUserRecord() {
+      let postData = {
+        uid: this.upperData.uid || getLoc('uid') || 0,
+        limit: 20,
+        // user_id: this.upperData.uid ? 0 : getLoc('user_id')
+        // idTo: '',
+        // toUserId: ''
+      }
 
+      userRecord(postData).then(res => {
+        if(res.status == 200) {
+          this.chatServerData = res.data;
+          this.goPageBottom();
+          let cookieData = {
+            nickname: '',
+            uid: '',
+            avatar: ''
+          };
+          if(res.data.is_tourist == 1) {
+            Object.keys(cookieData).forEach(item => {
+              setLoc(item, getLoc(item) ? getLoc(item) : res.data[item]);
+            })
+          };
+          this.goPageBottom(); // 滑动到页面底部
+          document.title = res.data.nickname ? `正在和${res.data.nickname}对话中 - ${this.chatServerData.site_name}` : '正在和游客对话中 - ' + this.chatServerData.site_name;
+          this.connentServer(); // 建立socket 链接
+        };
+        if(res.status == 400) {
+          this.$router.push({ name: 'customerOutLine' });
+        }
+      }).catch(rej => {
+        if(rej.status == 400) {
+          this.$router.push({ name: 'customerOutLine' });
+        }
+      })
+    },
     // 建立连接
     connentServer() {
-      let token = getSen('mobile_token');
+      let token = getLoc('mobile_token');
       this.bus.pageWs = mobileScoket(true, token);
       this.bus.pageWs.then((ws) => {
         // 发送消息监听函数
@@ -178,43 +215,7 @@ export default {
         ws.send(sendData);
       })
     },
-    // 查看当前是否有客服在线, 若不在线，跳转到反馈界面
-    getUserRecord() {
-      let postData = {
-        uid: this.upperData.uid || getSen('uid') || 0,
-        limit: 20,
-        // user_id: this.upperData.uid ? 0 : getSen('user_id')
-        // idTo: '',
-        // toUserId: ''
-      }
 
-      userRecord(postData).then(res => {
-        if(res.status == 200) {
-          this.chatServerData = res.data;
-          this.goPageBottom();
-          let cookieData = {
-            nickname: '',
-            uid: '',
-            avatar: ''
-          };
-          if(res.data.is_tourist == 1) {
-            Object.keys(cookieData).forEach(item => {
-              setSen(item, getSen(item) ? getSen(item) : res.data[item]);
-            })
-          };
-          this.goPageBottom(); // 滑动到页面底部
-          document.title = res.data.nickname ? `正在和${res.data.nickname}对话中 - ${this.chatServerData.site_name}` : '正在和游客对话中 - ' + this.chatServerData.site_name;
-          this.connentServer(); // 建立socket 链接
-        };
-        if(res.status == 400) {
-          this.$router.push({ name: 'customerOutLine' });
-        }
-      }).catch(rej => {
-        if(rej.status == 400) {
-          this.$router.push({ name: 'customerOutLine' });
-        }
-      })
-    },
     // 滑动到顶部
     scrollHandler(e) {
       this.isLoad = true;

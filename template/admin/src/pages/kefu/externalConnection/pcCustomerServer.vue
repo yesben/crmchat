@@ -1,12 +1,13 @@
 <template>
   <div class="pc_customerServer_container">
+
     <!-- 客服头部开始 -->
     <div class="pc_customerServer_container_header">
       <div class="pc_customerServer_container_header_title">
         <img :src="chatServerData.avatar" alt="">
         <span>{{chatServerData.to_user_nickname}}</span>
       </div>
-      <div class="pc_customerServer_container_header_handle" @click="closeIframe">
+      <div class="pc_customerServer_container_header_handle" @click="closeIframe" v-if="upperData.noCanClose != '1'">
         <span class="iconfont">&#xe6c5;</span>
       </div>
     </div>
@@ -98,7 +99,7 @@
       </div>
       <!-- 输入框容器 -->
       <div class="pc_customerServer_container_footer_input" v-if="inputConType == 1">
-        <textarea v-model="userMessage" class="pc_customerServer_container_footer_input-textarea" rows="5" placeholder="请输入文字"></textarea>
+        <textarea v-model="userMessage" @keyup.enter="sendText" class="pc_customerServer_container_footer_input-textarea" rows="5" placeholder="请输入文字"></textarea>
       </div>
       <!-- 输入框容器结束 -->
 
@@ -193,10 +194,17 @@ export default {
 .pc_customerServer_container {
   width: 100%;
   height: 100%;
+  max-width: 600px;
+  max-height: 808px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   background: #f5f5f5;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.2);
   &_header {
     display: flex;
     justify-content: space-between;
