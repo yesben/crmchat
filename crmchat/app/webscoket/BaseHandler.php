@@ -132,7 +132,7 @@ abstract class BaseHandler
         //是否和当前用户对话
         $online       = $toUserFd && $toUser && $toUser['to_user_id'] == $userId;
         $data['type'] = $online ? 1 : 0;
-        if ($msn_type == 5) {
+        if (in_array($msn_type, [5, 6])) {
             $data['other'] = json_encode($other);
         }
         $data              = $logServices->save($data);

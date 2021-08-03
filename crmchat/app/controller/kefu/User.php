@@ -78,7 +78,7 @@ class User extends AuthController
 
         if ($data['password'] === '******') {
             unset($data['password']);
-        } else {
+        } else if ($data['password'] !== '******' && $data['password']) {
             $data['password'] = $services->passwordHash($data['password']);
         }
 
@@ -264,5 +264,17 @@ class User extends AuthController
     public function getMessageCount(ChatServiceDialogueRecordServices $services)
     {
         return $this->success(['count' => $services->getMessageNum(['user_id' => $this->kefuInfo['user_id'], 'type' => 0])]);
+    }
+
+    /**
+     * 保存client_id
+     * @param ChatServiceServices $services
+     * @return mixed
+     */
+    public function updateService(ChatServiceServices $services)
+    {
+        $clientId = $this->request->post('client_id', '');
+        $services->update($this->kefuId, ['client_id' => $clientId]);
+        return $this->success();
     }
 }

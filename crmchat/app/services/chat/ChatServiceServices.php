@@ -165,15 +165,16 @@ class ChatServiceServices extends BaseServices
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function getRecord(string $appId, int $uid, int $idTo, int $limit = 10, int $toUserId = 0, int $cookieUid = 0)
+    public function getRecord(string $appId, array $user, int $idTo, int $limit = 10, int $toUserId = 0, int $cookieUid = 0)
     {
+        $uid = $user['uid'] ?? 0;
         /** @var ChatUserServices $userServices */
         $userServices = app()->make(ChatUserServices::class);
         $userInfo     = $userServices->get(['uid' => $uid, 'appid' => $appId]);
         if (!$uid || !$userInfo) {
             /** @var ApplicationServices $appService */
             $appService = app()->make(ApplicationServices::class);
-            $userInfo   = $appService->createUser($appId);
+            $userInfo   = $appService->createUser($appId, $user);
             $uid        = $userInfo['uid'];
             $userId     = $userInfo['id'];
         } else {
