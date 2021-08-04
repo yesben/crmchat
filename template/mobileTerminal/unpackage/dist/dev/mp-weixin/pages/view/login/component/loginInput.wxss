@@ -1,0 +1,93 @@
+@font-face {
+  font-family: 'pingfang';
+  src: url(/static/font/pingfang.ttf);
+}
+page.data-v-34fc204c,
+page.data-v-34fc204c {
+  margin: 0;
+  padding: 0;
+  font-family: 'pingfang';
+  width: 100%;
+  height: 100%;
+}
+._ul.data-v-34fc204c,
+._li.data-v-34fc204c {
+  list-style: none;
+}
+._a.data-v-34fc204c {
+  text-decoration: none;
+}
+._img.data-v-34fc204c {
+  display: block;
+}
+.cutLine.data-v-34fc204c {
+  height: 10px;
+  width: 100%;
+  background: #ededed;
+}
+.primary_button.data-v-34fc204c {
+  background: #d73748 !important;
+  opacity: 1;
+  color: #fff;
+}
+.title_identification.data-v-34fc204c {
+  width: 3px;
+  height: 17px;
+  background: #d73748;
+  opacity: 1;
+  border-radius: 3px;
+  display: inline-block;
+}
+.tip_bottom.data-v-34fc204c {
+  position: absolute;
+  bottom: 5px;
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
+  opacity: 1;
+  width: 100%;
+  text-align: center;
+  z-index: 100;
+}
+.parmary_color.data-v-34fc204c {
+  color: #d73748;
+  font-weight: 600;
+}
+.container.data-v-34fc204c {
+  width: 100%;
+  height: 100%;
+  background: #f6f6f6;
+}
+.overText.data-v-34fc204c {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.login_input.data-v-34fc204c {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  padding: 22rpx 0;
+  border-bottom: 1px solid #EDEDED;
+  font-size: 14px;
+}
+.login_input .title_icon.data-v-34fc204c {
+  margin-right: 12rpx;
+  color: #3875EA;
+}
+.login_input .input.data-v-34fc204c {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+          flex: 1;
+}
+.login_input .input_model.data-v-34fc204c {
+  border: none !important;
+  outline: none !important;
+}
+.login_input .clear.data-v-34fc204c {
+  opacity: 0.2;
+}
+

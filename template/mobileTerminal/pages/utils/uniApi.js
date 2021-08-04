@@ -473,3 +473,24 @@ export function unique(data) {
   }
   return data;
 }
+
+// 将&符号连接的字符串转换成对象
+export function parseToObject(queryString) {
+  // 使用 & 符号将查询字符串分割开
+  var parts = queryString.split("&");
+  // 遍历所有的 "key=value" 字符串结构
+  var obj = {};
+  for(var i = 0, len = parts.length; i < len; i++) {
+    // 使用 = 将 "key=value" 字符串分割开
+    var arr = parts[i].split("=");
+    // = 号前的内容是对象的属性名，= 号后的内容是对应属性的值
+    var
+      name = arr.shift(),
+      value = arr.join("=");
+    // 将属性添加到对象中
+    obj[name] = value;
+  }
+
+  // 返回创建好的对象
+  return obj;
+}

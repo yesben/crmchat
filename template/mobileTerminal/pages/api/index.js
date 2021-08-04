@@ -6,16 +6,20 @@ import {
 	navigateTo
 } from 'pages/utils/uniApi.js';
 
-function http(api, data, jsonModel = true) {
+function http(api, data) {
+	let url = api.url;
+	// 是否在url上挂载单独参数时，也可以传输数据 eg: /api/{12}/ false 代表可传输，true 代表不可传输
+	let canNotInputQuery = api.canNotInputQuery ? api.canNotInputQuery : false
+	if(api.queryKey instanceof Array && api.queryKey.length) {
+		url += api.queryKey.map(item => `/${data[item]}`).join('')
+	}	
+	
 	let post_data = {
-		url: api.url, //仅为示例，并非真实接口地址。
-		data: jsonModel ? {
-			companyId: getStorage('userData').companyId,
-			...data
-		} : [ ...data ],
+		url: url,
+		data: api.canNotInputQuery ? '': data,
 		header: {
 			'content-type': api.form ? 'application/x-www-form-urlencoded' : 'application/json',
-			'Authorization': 'bearer ' + ' ' + getStorage('userData').token
+			'Authori-zation': 'Bearer ' + getStorage('userData').token
 		},
 		method: api.method.toUpperCase(),
 		timeout: 3000,
@@ -27,17 +31,22 @@ function http(api, data, jsonModel = true) {
 		uni.request({
 			...post_data,
 			success: (data) => {
-				// 根据接口返回参后续进行封装
-				switch (data.data.code) {
-					case "200":
-						reslove(data.data.data ? data.data.data: true);
+				switch (data.data.status) {
+					case 200:
+						reslove(data.data.data);
 						break;
-					case "401":
-						navigateTo(3, '/pages/weighApp/login/index');
+					case 400:
+						Toast(data.data.msg)
+						reject(data.data);
 						break;
-					return;
+						case 410003:
+						Toast(data.data.msg);
+						setTimeout(() => {
+							navigateTo(2, '/pages/view/login/index');
+						}, 1000);
 					default:
-						Toast(data.data.data instanceof Array ? data.data.data.join(','): data.data.message ? data.data.message : data.data.msg);
+						Toast(data.data.msg)
+						reject(data.data);
 						break;
 				}
 			},
@@ -54,29 +63,5 @@ function http(api, data, jsonModel = true) {
 
 }
 
-// function checkOutCode(data) {
-// 	// 检查服务端数据
-// 	// if (data.data.code == '200' && data.statusCode == 200) {
-// 	//  if(!data.data.data) {
-// 	//   return true;
-// 	//  }
-// 	//  return data.data.data;
-// 	// } else {
-// 	//  Toast(data.data.msg);
-// 	// }
-// 	// return false;
-// 	// 检查服务端数据
-// 	switch (data.data.code) {
-// 		case "200":
-// 			return data.data.data ? data.data.data: true;
-// 		case "401":
-// 			navigateTo(3, '/pages/weighApp/login/index');
-// 		return;
-// 		default:
-// 			Toast(data.data.message ? data.data.message : data.data.msg);
-// 			break;
 
-// 	}
-// 	return false;
-// }
 export default http;

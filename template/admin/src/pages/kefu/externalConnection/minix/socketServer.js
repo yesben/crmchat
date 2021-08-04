@@ -1,6 +1,6 @@
 import { mobileScoket } from '@/libs/socket';
 import { userRecord, serviceUpload } from '@/api/kefu';
-import { setSen, getSen } from '@/libs/util'
+import { setLoc, getLoc } from '@/libs/util'
 import Cookies from "js-cookie";
 
 var mp3 = require('@/assets/video/notice.wav');
@@ -26,23 +26,37 @@ export default {
       unreadMessages: '',
       userKey: '',
       productMessage: {},
-      isShowProductModel: false // 是否显示携带商品
+      isShowProductModel: false, // 是否显示携带商品
+      copyFile: '', // 粘贴在输入框中的file文件
+      unReadMesage: 0, // 未读消息数
     }
   },
+  // 指令粘贴指令定义
+  directives: {
+    paste: {
+      bind(el, binding, vnode) {
+        el.addEventListener("paste", function(event) {
+          //这里直接监听元素的粘贴事件
+          binding.value(event);
+        });
+      },
+    },
+  },
   created() {
+
     // 获取url参数
     this.upperData = this.$route.query;
     // 更新token
-    if(this.upperData.token != getSen('mobile_token')) {
-      setSen('mobile_token', this.upperData.token);
+    if(this.upperData.token != getLoc('mobile_token')) {
+      setLoc('mobile_token', this.upperData.token);
     }
     // 将url参数存入缓存
     Object.keys(this.upperData).forEach(item => {
       if(this.upperData[item]) {
-        setSen(item, this.upperData[item]);
+        setLoc(item, this.upperData[item]);
       }
     });
-    this.getUserRecord(); // 查看当前是否有客服在线 
+    this.getUserRecord(); // 查看当前是否有客服在线, 建立socket连接
     // 获取从父页面传递过来的数据
     window.addEventListener("message", e => {
       // 获取图文数据
@@ -54,6 +68,11 @@ export default {
       if(e.data.type == 'openCustomeServer') {
         this.bus.pageWs.then((ws) => {
           ws.send({ type: 'to_chat', data: { id: this.chatServerData.to_user_id } });
+
+          if(this.unReadMesage) {
+            this.getUserRecord()
+          }
+
         })
       }
 
@@ -78,11 +97,51 @@ export default {
     }
   },
   methods: {
+    // 查看当前是否有客服在线, 若不在线，跳转到反馈界面
+    getUserRecord() {
+      let postData = {
+        uid: this.upperData.uid || getLoc('uid') || 0,
+        limit: 20,
+        nickName: this.upperData.nickName,
+        phone: this.upperData.phone,
+        sex: this.upperData.sex,
+        avatar: this.upperData.avatar
+      }
 
+      userRecord(postData).then(res => {
+        if(res.status == 200) {
+          this.chatServerData = res.data;
+          this.unReadMesage = 0;
+          this.goPageBottom();
+          let cookieData = {
+            nickname: '',
+            uid: '',
+            avatar: ''
+          };
+          if(res.data.is_tourist == 1) {
+
+            Object.keys(cookieData).forEach(item => {
+              setLoc(item, getLoc(item) ? getLoc(item) : res.data[item]);
+            })
+          };
+          this.goPageBottom(); // 滑动到页面底部
+          document.title = res.data.nickname ? `正在和${res.data.nickname}对话中 - ${this.chatServerData.site_name}` : '正在和游客对话中 - ' + this.chatServerData.site_name;
+          this.connentServer(); // 建立socket 链接
+        };
+        if(res.status == 400) {
+          this.$router.push({ name: 'customerOutLine' });
+        }
+      }).catch(rej => {
+        if(rej.status == 400) {
+          this.$router.push({ name: 'customerOutLine' });
+        }
+      })
+    },
     // 建立连接
     connentServer() {
-      let token = getSen('mobile_token');
-      this.bus.pageWs = mobileScoket(true, token);
+      let token = getLoc('mobile_token');
+      let formTerminal = this.upperData.deviceType == 'Mobile' ? 'h5' : 'pc'
+      this.bus.pageWs = mobileScoket(true, token, formTerminal);
       this.bus.pageWs.then((ws) => {
         // 发送消息监听函数
         ws.$on(["reply", "chat"], data => {
@@ -114,7 +173,9 @@ export default {
         ws.$on('mssage_num', data => {
           if(data.num > 0) {
             this.mp3.play();
+            this.unReadMesage = data.num;
           }
+
           parent.postMessage({ type: 'message_num', num: data.num }, "*");
         })
         // let num = 1;
@@ -149,13 +210,66 @@ export default {
       this.isShowProductModel = false;
       this.goPageBottom();
     },
+    //微信截图上传图片时触发
+    handleParse(e) {
+      console.log(e);
+      let file = null;
+      if(
+        e.clipboardData &&
+        e.clipboardData.items[0] &&
+        e.clipboardData.items[0].type &&
+        e.clipboardData.items[0].type.indexOf("image") > -1
+      ) {
+        //这里就是判断是否有粘贴进来的文件且文件为图片格式
+        file = e.clipboardData.items[0].getAsFile();
+      } else {
+        this.$message({
+          type: "warning",
+          message:
+            "上传的文件必须为图片且无法复制本地图片且无法同时复制多张图片",
+        });
+        return;
+      }
+      this.update(file);
+    },
+    update(e) {
+      // 上传照片
+      let file = e;
+      let param = new FormData(); // 创建form对象
+      param.append("filename", "file"); // 通过append向form对象添加数据进去
+      param.append("file", file); // 通过append向form对象添加数据进去
+      // 添加请求头
+      serviceUpload(param).then(res => {
+        if(res.status == 200) {
+          this.sendMsg(res.data.url, 3);
+          this.$refs['inputDiv'].innerText = '';
+        }
+      })
+
+    },
+    // 选择表情
+    select(item) {
+      if(this.$route.query.deviceType == 'Mobile') {
+        this.userMessage += `[${item}]`
+      } else {
+        // this.inputConType = 1;
+        this.$refs['inputDiv'].innerText += `[${item}]`
+        // this.$refs['inputDiv'].innerHTML += `<span class="em ${item}"></span>`
+      }
+
+    },
+
     // 文本发送
     sendText() {
-      if(this.userMessage) {
-        this.sendMsg(this.userMessage, 1);
+      let sendMessage = this.$refs['inputDiv'].innerText.replace(/(↵)/g, '\n');
+
+      if(sendMessage) {
+        this.sendMsg(sendMessage, 1);
+        this.$refs['inputDiv'].innerText = '';
       } else {
         this.$Message.error('请先输入信息，在进行发送');
       }
+
     },
     // type: 1 普通文本 2 图片
     sendMsg(msn, type, id) {
@@ -178,43 +292,7 @@ export default {
         ws.send(sendData);
       })
     },
-    // 查看当前是否有客服在线, 若不在线，跳转到反馈界面
-    getUserRecord() {
-      let postData = {
-        uid: this.upperData.uid || getSen('uid') || 0,
-        limit: 20,
-        // user_id: this.upperData.uid ? 0 : getSen('user_id')
-        // idTo: '',
-        // toUserId: ''
-      }
 
-      userRecord(postData).then(res => {
-        if(res.status == 200) {
-          this.chatServerData = res.data;
-          this.goPageBottom();
-          let cookieData = {
-            nickname: '',
-            uid: '',
-            avatar: ''
-          };
-          if(res.data.is_tourist == 1) {
-            Object.keys(cookieData).forEach(item => {
-              setSen(item, getSen(item) ? getSen(item) : res.data[item]);
-            })
-          };
-          this.goPageBottom(); // 滑动到页面底部
-          document.title = res.data.nickname ? `正在和${res.data.nickname}对话中 - ${this.chatServerData.site_name}` : '正在和游客对话中 - ' + this.chatServerData.site_name;
-          this.connentServer(); // 建立socket 链接
-        };
-        if(res.status == 400) {
-          this.$router.push({ name: 'customerOutLine' });
-        }
-      }).catch(rej => {
-        if(rej.status == 400) {
-          this.$router.push({ name: 'customerOutLine' });
-        }
-      })
-    },
     // 滑动到顶部
     scrollHandler(e) {
       this.isLoad = true;
@@ -249,15 +327,7 @@ export default {
       this.inputConType = 2;
       this.goPageBottom();
     },
-    // 选择表情
-    select(item) {
-      if(this.$route.query.deviceType == 'Mobile') {
-        this.userMessage += `[${item}]`
-      } else {
-        this.inputConType = 1;
-        this.userMessage += `[${item}]`
-      }
-    },
+
     // 上传图片
     uploadFile(e) {
       let data = {

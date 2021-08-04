@@ -10,7 +10,7 @@
 
 import axios from 'axios'
 import { Message } from 'iview'
-import { getCookies, removeCookies, getSen } from '@/libs/util'
+import { getCookies, removeCookies, getSen, getLoc } from '@/libs/util'
 import Setting from '@/setting'
 import router from '@/router';
 const service = axios.create({
@@ -35,7 +35,7 @@ service.interceptors.request.use(
         }
         const token = getCookies('token')
         const kefuToken = getCookies('kefu_token');
-        const mobileToken = getSen('mobile_token');
+        const mobileToken = getLoc('mobile_token');
 
         if(token || kefuToken || mobileToken) {
             config.headers['Authori-zation'] = config.mobile ? 'Bearer ' + mobileToken : config.kefu ? 'Bearer ' + kefuToken : 'Bearer ' + token;

@@ -124,7 +124,7 @@ export default {
       return this.isMobile ? 'top' : 'left'
     },
     linkUrl() {
-      return `${location.origin}/chat/index?token=${this.token.token}&deviceType=Mobile&now=0.9937210994959702`;
+      return `${location.origin}/chat/index?token=${this.token.token}&noCanClose=1`;
     }
   },
   data() {
@@ -277,12 +277,12 @@ export default {
               insertDomNode: '.getCode_container',
               token: this.token.token,
               sendUserData: {
-                uid: 10,
-                nickName: '张越',
+                uid: '20',
+                nickName: '邓中夏',
                 phone: '13038593836',
-                key: new Date().getTime(),
                 type: 'getImgOrText',
-                time: new Date().getTime(),
+                sex: '1',
+                avatar: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F4495e731345f73cb023b1d70197d50e7f451dbc91a88e-UU7MfN_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1629276024&t=9d1c5b297dc857ddd2d18c9580dde427'
               },
               productInfo: {
                 store_name: '蒙奇 D 路飞',

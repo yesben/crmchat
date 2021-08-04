@@ -8,11 +8,11 @@
 
 			<div class="login_container_content_form">
 				<div class="login_container_content_form_input">
-					<login-input v-model="userName" type="text" placeholder="请输入账号"><span slot="icon" class="iconfont">&#xe6bc;</span></login-input>
+					<login-input v-model="loginData.account" type="text" placeholder="请输入账号"><span slot="icon" class="iconfont">&#xe6bc;</span></login-input>
 				</div>
 
 				<div class="login_container_content_form_input">
-					<login-input type="password" placeholder="请输入密码"><span slot="icon" class="iconfont">&#xe6bd;</span></login-input>
+					<login-input v-model="loginData.password" type="password" placeholder="请输入密码"><span slot="icon" class="iconfont">&#xe6bd;</span></login-input>
 				</div>
 			</div>
 
@@ -23,23 +23,39 @@
 
 <script>
 import loginInput from './component/loginInput.vue';
-import { navigateTo } from 'pages/utils/uniApi.js' 
+import { navigateTo, setStorage, getStorage, Modal } from 'pages/utils/uniApi.js';
+import http from 'pages/api/index';
+import api from 'pages/api/api.js';
 export default {
 	components: {
 		loginInput
 	},
 	data() {
 		return {
-			userName: ''
+			loginData: {
+				account: '',
+				password: ''
+			},
+			cid: ''
 		};
 	},
-	watch: {
-		userName(val) {
-		}
+	onLoad() {
+		//#ifdef APP-PLUS
+		var info = plus.push.getClientInfo();
+		this.cid = info.clientid;
+		//#endif
 	},
-	methods:{
-		handleLogin() {
-			navigateTo(2, '/pages/view/messageList/index');
+	methods: {
+		async handleLogin() {
+			let loginRes = await http(api.login, { ...this.loginData, client_id: this.cid });
+			setStorage('userData', loginRes);
+			//#ifdef APP-PLUS
+			let userClient = await http(api.userClient, { client_id: this.cid });
+			if (userClient) {
+				setStorage('cid', this.cid);
+			}
+			//#endif
+			navigateTo(4, '/pages/view/messageList/index');
 		}
 	}
 };
@@ -74,7 +90,7 @@ export default {
 		}
 		&_handle {
 			margin-top: 115rpx;
-		
+
 			.login_primary_button {
 				font-size: 15px;
 				width: 100%;

@@ -12,29 +12,114 @@
 	padding: 0 30rpx;
 	position: relative;
 	color: #fff;
+	> div {
+		flex: 1;
+		text-align: center;
+	}
+	.header_left {
+		text-align: left;
+	}
 
 	&_center {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
+		// position: absolute;
+		// top: 50%;
+		// left: 50%;
+		// transform: translate(-50%, -50%);
 		font-weight: 600;
 		font-size: 16px;
+		white-space: nowrap;
+	}
+	.header_right {
+		text-align: right;
 	}
 }
 
 // 聊天对话框
 .content {
 	padding: 36rpx 30rpx;
+	&_list {
+		display: flex;
+		margin-bottom: 36rpx;
+		color: #282828;
+		font-weight: 600;
+		&_avar {
+			width: 80rpx;
+			height: 80rpx;
+			margin-right: 22rpx;
+			image {
+				width: 100%;
+			}
+		}
+
+		&_message {
+			max-width: 452rpx;
+			padding: 20rpx 28rpx;
+			background: #fff;
+			border-radius: 7px;
+			&_product {
+				.content_list_message_orderId {
+					padding-bottom: 15rpx;
+					border-bottom: 1px solid #eceff8;
+				}
+
+				.content_list_message_detils {
+					padding-top: 20rpx;
+					display: flex;
+					&_image {
+						width: 204rpx;
+						height: 204rpx;
+						border-radius: 6px;
+						overflow: hidden;
+						background: #eee;
+						image {
+							width: 100%;
+							height: 100%;
+						}
+					}
+					
+					&_value {
+						flex: 1;
+						padding-left: 16rpx;
+						display: flex;
+						flex-direction: column;
+						justify-content: space-between;
+					
+						&_shopPrice {
+							color: #F74C31;
+							margin-top: 10rpx;
+						}
+						.content_list_message_detils_value_shopMessag {
+							
+						}
+						
+						.content_list_message_detils_value_shopMessag_item {
+							display: flex;
+							
+						}
+						
+					}
+				}
+			}
+			
+			&_image {
+				max-width: 400rpx;
+				image {
+					max-width: 100%;
+				}
+			}
+		}
+	}
+	.right_box {
+		flex-direction: row-reverse;
+		.content_list_message {
+			margin-right: 20rpx;
+		}
+	}
 }
-
-
-
 
 .footer {
 	background: #f3f4f5;
-	transform: translateY(440rpx);
-	transition: 0.3s;
+padding-bottom: 20rpx;
 	&_input {
 		display: flex;
 		align-items: center;
@@ -85,12 +170,16 @@
 			.iconfont {
 				color: #e0e0e0;
 			}
+			.canSend {
+				color: @primaryColor;
+			}
 		}
 	}
 
 	&_option {
 		background: #fff;
 		height: 440rpx;
+		transition: 0.3s;
 		.option {
 			padding: 46rpx 65rpx;
 			box-sizing: border-box;
@@ -104,7 +193,7 @@
 				}
 				> div {
 					color: #282828;
-					font-size: 12rpx;
+					font-size: 14px;
 					font-weight: bold;
 				}
 			}
@@ -132,5 +221,10 @@
 }
 
 .translateY0 {
-	transform: translateY(0);
+	// transform: translateY(0);
+	top: 0;
+}
+
+.speechArtSelectEd {
+	color: @primaryColor;
 }

@@ -2,21 +2,24 @@
 	<div class="container">
 		<lay-out>
 			<div slot="header" class="header">
-				<div @click="cencel"><span>取消</span></div>
-				<div class="header_title"><span>新建标签</span></div>
+				<div @click="cencel"><span>返回</span></div>
+				<div class="header_title"><span>标签详情</span></div>
 				<div class="finish"><span>完成</span></div>
 			</div>
 
 			<div slot="content">
 				<div class="content">
 					<div class="content_tag"><span>标签名称</span></div>
-					<div class="content_input"><input type="text" placeholder="请输入标签名称" /></div>
+					<!-- <div class="content_input"><input type="text" placeholder="请输入标签名称" /></div> -->
+					<div class="content_input">
+						<span>{{tagsData.label}}</span>
+					</div>
 					<div class="content_tag"><span>标签成员</span></div>
 					<div class="content_group">
-						<div class="content_group_handle">
+					<!-- 	<div class="content_group_handle">
 							<span class="iconfont">&#xe6c1;</span>
 							<span>添加成员</span>
-						</div>
+						</div> -->
 						<view class="user-content">
 							<view class="user-list" v-for="item in canEachUserList" :key="item.key">
 								<div class="content_tag">
@@ -25,8 +28,8 @@
 								<uni-swipe-action v-for="items in item.list" :key="items.id">
 									<uni-swipe-action-item>
 										<view class="user" >
-											<view class="user-list-left"><image :src="items.headImg" mode=""></image></view>
-											<view class="user-list-right">{{ items.username }}</view>
+											<view class="user-list-left"><image :src="items.avatar" mode=""></image></view>
+											<view class="user-list-right">{{ items.nickname }}</view>
 										</view>
 									
 
@@ -45,7 +48,7 @@
 </template>
 
 <script>
-import { navigateTo, navigateBack } from 'pages/utils/uniApi.js';
+import { navigateTo, navigateBack, getStorage } from 'pages/utils/uniApi.js';
 import { makePy } from 'pages/utils/utils';
 export default {
 	data() {
@@ -127,11 +130,15 @@ export default {
 					headImg: '../../../static/image/login/bg.png'
 				}
 			],
-			canEachUserList: []
+			canEachUserList: [],
+			tagsData: {}
 		};
 	},
-	onLoad() {
-		this.canEachUserList = this.letterSrot(this.userList);
+	onLoad(opt) {
+	
+		this.tagsData = getStorage('userTagData');
+		console.log(this.tagsData);
+		this.canEachUserList = this.letterSrot(this.tagsData.user);
 	},
 	methods: {
 		cencel() {
@@ -147,7 +154,7 @@ export default {
 				obj.key = item;
 				obj.list = [];
 				for (let i = 0; i < list.length; i++) {
-					if (item == makePy(list[i].username).substr(0, 1)) {
+					if (item == makePy(list[i].nickname).substr(0, 1)) {
 						obj.list.push(list[i]);
 						list.splice(i, 1);
 						i--;
@@ -183,6 +190,7 @@ export default {
 		align-items: center;
 		justify-content: center;
 		color: #aaaaaa;
+		opacity: 0;
 	}
 }
 </style>
