@@ -137,4 +137,13 @@ class ChatService extends BaseModel
     {
         if ($value) $query->whereNotIn('uid', $value);
     }
+
+    /**
+     * @param Model $query
+     * @param $value
+     */
+    public function searchUserIdAttr($query, $value)
+    {
+        $query->where('user_id', $value);
+    }
 }

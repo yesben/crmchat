@@ -60,14 +60,10 @@ class SwooleWorkerStart implements ListenerInterface
     public function handle($event): void
     {
         if (0 == $this->server->worker_id) {
-            swoole_go(function () use ($event) {
-                $this->timer($event);
-            });
+            $this->timer($event);
         }
         if ($this->server->worker_id == ($this->config->get('swoole.server.options.worker_num')) && $this->config->get('swoole.websocket.enable', false)) {
-            swoole_go(function () {
-                $this->ping();
-            });
+            $this->ping();
         }
     }
 

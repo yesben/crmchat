@@ -124,14 +124,14 @@ export default {
   },
   data() {
     return {
-      hdTabCur: '',
+      hdTabCur: 1,
       hdTab: [
         {
-          key: '',
+          key: 1,
           title: '会话列表'
         },
         {
-          key: 1,
+          key: 0,
           title: '用户列表'
         }
 
@@ -263,7 +263,7 @@ export default {
         nickname: this.nickname,
         page: this.page,
         limit: this.limit,
-        is_tourist: this.hdTabCur
+        is_tourist: this.hdTabCur === 1 ? '' : 0
       }).then(res => {
         if(res.data.length > 0) {
           res.data[0].mssage_num = 0

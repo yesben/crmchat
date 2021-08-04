@@ -451,7 +451,8 @@ class InstallController
                     $res         = mysqli_query($conn, $addadminsql);
                     $res2        = true;
                     if (app()->request->host(true)) {
-                        $site_url = '\'"https://' . app()->request->host(true) . '"\'';
+                        $http     = app()->request->isSsl() ? 'https' : 'http';
+                        $site_url = '\'"' . $http . '://' . app()->request->host(true) . '"\'';
                         $res2     = mysqli_query($conn, 'UPDATE `' . $dbPrefix . 'system_config` SET `value`=' . $site_url . ' WHERE `menu_name`="site_url"');
                     }
 
