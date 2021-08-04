@@ -93,7 +93,11 @@ return is_win() ? [] : [
                 ['name' => 'user_id', 'type' => Table::TYPE_INT],
                 ['name' => 'to_user_id', 'type' => Table::TYPE_INT],
                 ['name' => 'tourist', 'type' => Table::TYPE_INT],
-                ['name' => 'appid', 'size' => 1024, 'type' => Table::TYPE_STRING]
+                ['name' => 'is_app', 'type' => Table::TYPE_INT],
+                ['name' => 'is_open', 'type' => Table::TYPE_INT],
+                ['name' => 'appid', 'size' => 1024, 'type' => Table::TYPE_STRING],
+                ['name' => 'client_id', 'size' => 1024, 'type' => Table::TYPE_STRING],
+                ['name' => 'is_close', 'type' => Table::TYPE_INT],
             ]
         ]
     ],

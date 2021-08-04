@@ -53,37 +53,12 @@ class PushMessage
      * @param string $cid
      * @return bool|string
      */
-    public function push(string $clientId)
+    public function push(PushOptions $option)
     {
-        $option              = new PushOptions();
-        $option->requestId   = $this->getNewRequestId();
-        $option->pushMessage = [
-            'notification' => [
-                'title' => '测试',
-                'body'  => '测试123456'
-            ]
-        ];
-        $option->audience    = [
-            'cid' => [
-                $clientId
-            ]
-        ];
-        return $this->abstractAPI->parsePost(self::PUSH_ONE_CID, [
-            'request_id'   => $option->requestId,
-            'audience'     => [
-                'cid' => [
-                    $clientId
-                ]
-            ],
-            'push_message' => [
-                'notification' => [
-                    'title'      => '测试',
-                    'body'       => '测试123456',
-                    'click_type' => 'payload',
-                    'payload'    => 'zxczxc'
-                ]
-            ]
-        ]);
+        if (!$option->requestId) {
+            $option->requestId = $this->getNewRequestId();
+        }
+        return $this->abstractAPI->parsePost(self::PUSH_ONE_CID, $option->toArray());
     }
 
     /**

@@ -12,6 +12,7 @@
 namespace crmeb\services\uniPush\options;
 
 use crmeb\services\uniPush\OptionsBase;
+use think\helper\Str;
 
 /**
  * Class PushOptions
@@ -55,4 +56,40 @@ class PushOptions extends OptionsBase
         $this->audience    = $audience;
         $this->pushMessage = $pushMessage;
     }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $publicData = get_object_vars($this);
+        $data       = [];
+        foreach ($publicData as $key => $value) {
+            if ($value) {
+                $data[Str::snake($key)] = $value;
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * @param PushMessageOptions $options
+     * @return $this
+     */
+    public function setPushMessage(PushMessageOptions $options)
+    {
+        $this->pushMessage = $options->toArray();
+        return $this;
+    }
+
+    /**
+     * @param mixed ...$clientId
+     * @return $this
+     */
+    public function setAudience(...$clientId)
+    {
+        $this->audience = ['cid' => $clientId];
+        return $this;
+    }
+
 }
