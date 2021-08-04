@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<lay-out ref="layOut" :scrollTop="scrollTop" refresherEnabled @refresherrefresh="refresherrefresh" :refresherTriggered="refresherTriggered">
+		<lay-out ref="layOut" :scrollTop="scrollTop" @goTop="goTop">
 			<div slot="header" class="header">
 				<div class="header_left" @click="goBackToMessageList"><span class="iconfont icon-fanhui"></span></div>
 				<div class="header_center">{{ userData.nickname }}</div>
@@ -55,7 +55,7 @@
 					<div class="footer_input_content mr18">
 						<textarea v-model="sendMessage" @input="textareaChange($event)" @focus="selectModel = 0" class="font" value="" placeholder="" />
 						<p v-html="pCont" class="font"></p>
-						<span class="iconfont" @click="sendText">&#xe6bb;</span>
+						<span class="iconfont" :class="{ 'canSend': sendMessage }" @click="sendText">&#xe6bb;</span>
 					</div>
 					<div class="footer_input_icon">
 						<span class="iconfont mr18" @click="selectOption(1)">&#xe6cb;</span>
@@ -121,7 +121,7 @@
 
 <script>
 import emoji from 'pages/utils/emoji.js';
-import { navigateBack, navigateTo, getStorage, serialize, chooseImage } from 'pages/utils/uniApi.js';
+import { navigateBack, navigateTo, getStorage, serialize, chooseImage, Toast } from 'pages/utils/uniApi.js';
 import transfer from './component/transfer.vue';
 import scriptsLibary from './component/scriptLibary.vue';
 import http from 'pages/api/index';
@@ -197,7 +197,7 @@ export default {
 							this.audioFun.play();
 						}
 						break;
-				
+
 					default:
 						break;
 				}
@@ -219,18 +219,23 @@ export default {
 			}).then(res => {
 				this.messageList = res.concat(this.messageList);
 				this.pageData.upperId = this.messageList.length ? this.messageList[0].id : 0;
-				this.refresherTriggered = false;
 			});
 		},
-		// 触发下拉刷新
-		refresherrefresh() {
+		// 滑动到顶部
+		goTop() {
 			this.refresherTriggered = true;
 			this.initData();
 		},
+
 		// 发送文本消息
 		sendText() {
-			this.sendMsg(this.sendMessage, 1);
-			this.sendMessage = '';
+			if (this.sendMessage) {
+				this.sendMsg(this.sendMessage, 1);
+				this.sendMessage = '';
+			} else {
+				return;
+				// Toast('请输入要发送的消息');
+			}
 		},
 		// 选择表情
 		sendEmoji(item) {
@@ -339,7 +344,7 @@ export default {
 		},
 		// 头部方法，回到聊天列表页
 		goBackToMessageList() {
-			navigateTo(2, '/pages/view/messageList/index');
+			navigateTo(4, '/pages/view/messageList/index');
 		},
 		// 查看用户详情
 		selectCustomerServer(item) {

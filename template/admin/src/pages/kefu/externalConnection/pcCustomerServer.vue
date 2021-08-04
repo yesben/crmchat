@@ -28,9 +28,8 @@
           </div>
         </div>
       </div>
-
       <happy-scroll size="1" resize hide-horizontal :scroll-top="scrollTop" @vertical-start="scrollHandler">
-        <div class="scroll_content" id="chat_scroll" :class="{ 'pt140': isShowProductModel }">
+        <div class="scroll_content" id="chat_scroll" :class="{ 'pt140': isShowProductModel || inputConType == 2 }">
           <!-- 滑动到容器顶部时，动画加载 -->
           <Spin v-show="isLoad">
             <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
@@ -88,7 +87,7 @@
     <div class="pc_customerServer_container_footer">
       <div class="pc_customerServer_container_footer_header">
         <div class="pc_customerServer_container_footer_header_handle">
-          <div @click="inputConType = 2">
+          <div @click="inputConType = 2;goPageBottom()">
             <img src="@/assets/images/customerServer/face.png" alt="">
           </div>
           <div>
@@ -98,8 +97,9 @@
         </div>
       </div>
       <!-- 输入框容器 -->
-      <div class="pc_customerServer_container_footer_input" v-if="inputConType == 1">
-        <textarea v-model="userMessage" @keyup.enter="sendText" class="pc_customerServer_container_footer_input-textarea" rows="5" placeholder="请输入文字"></textarea>
+      <div class="pc_customerServer_container_footer_input" @click="inputConType = 1">
+        <!-- <textarea v-model="userMessage" @keyup.enter="sendText" class="pc_customerServer_container_footer_input-textarea opacity0" rows="5" placeholder="请输入文字"></textarea> -->
+        <div v-paste="handleParse" ref="inputDiv" @keyup.enter="sendText" contenteditable class="pc_customerServer_container_footer_input-textarea" :class="{'readyEmojiHeight': inputConType == 2}"></div>
       </div>
       <!-- 输入框容器结束 -->
 
@@ -139,12 +139,6 @@ export default {
       inputConType: 1
     }
   },
-  created() {
-
-    // this.connentServer(); // 连接webSocket 服务 [mixins 方法]
-    // this.getUserRecord(); // 查看当前是否有客服在线 
-
-  },
   computed: {
     records() {
 
@@ -174,7 +168,6 @@ export default {
     getScrollEnd() {
       console.log(321);
     },
-
     scrollHandler(e) {
       console.log('滑动到顶部了');
       this.isLoad = true;
@@ -231,6 +224,7 @@ export default {
   &_content {
     flex: 1;
     overflow: hidden;
+
     .scroll_content {
       width: 100%;
       height: 100%;
@@ -388,12 +382,23 @@ export default {
         font-size: 14px;
         line-height: 16px;
       }
+      > div {
+        height: 90px;
+        max-height: 90px;
+        overflow: auto;
+      }
+      .opacity0 {
+        opacity: 0;
+      }
+      .readyEmojiHeight {
+        height: 40px;
+      }
     }
     &_emoji {
       display: grid;
       grid-template-columns: repeat(9, 1fr);
       margin-top: 10px;
-      max-height: 180px;
+      max-height: 150px;
       overflow-y: auto;
       .emoji-item {
         padding: 6px;

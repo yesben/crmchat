@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<lay-out isShowHeader>
+		<lay-out isShowHeader titleName="标签">
 			<div slot="content" class="content">
 				<!-- 	<div class="handle_title" @click="createdTag">
 					<span class="iconfont">&#xe6c1;</span>

@@ -29,6 +29,7 @@ class wsSocket {
     }
 
     init(opt) {
+        console.log(opt);
         let wsUrl = ''
         let hostUrl = wss(Setting.wsSocketUrl);
 
@@ -42,7 +43,7 @@ class wsSocket {
             wsUrl = hostUrl + `?type=kefu` + '&token=' + `${Cookies.get("kefu_token")}`;
         }
         if(opt.key == 3) {
-            wsUrl = `${hostUrl}?type=user&token=${opt.token}`;
+            wsUrl = `${hostUrl}?type=user&form=${opt.form}&token=${opt.token}`;
         }
 
 
@@ -103,7 +104,7 @@ class wsSocket {
 
 let promises = {};
 
-function createSocket(key, flag, token, tourist_uid, type) {
+function createSocket(key, flag, token, tourist_uid, type, form) {
     if(flag) promises[key] = null;
     if(!promises[key])
         promises[key] = new Promise((resolve, reject) => {
@@ -112,6 +113,7 @@ function createSocket(key, flag, token, tourist_uid, type) {
                 token,
                 tourist_uid,
                 type,
+                form,
                 open() {
                     resolve(ws);
                 },
@@ -135,4 +137,4 @@ function createSocket(key, flag, token, tourist_uid, type) {
 
 export const adminSocket = (flag, token) => createSocket(1, flag, token);
 export const Socket = (flag, token, tourist_uid, type) => createSocket(2, flag, token, tourist_uid, type);
-export const mobileScoket = (flag, token, tourist_uid, type) => createSocket(3, flag, token, tourist_uid, type);
+export const mobileScoket = (flag, token, form, tourist_uid, type,) => createSocket(3, flag, token, tourist_uid, type, form);

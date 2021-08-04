@@ -1,9 +1,9 @@
 <template>
-	<view>
+	<view >
 		<!-- 右边字母选择导航条 -->
 		<view
 			class="searchLetter touchClass"
-			:style="{ height: itemH * searchLetter.length + 'px', paddingRight: paddingRight + 'upx', width: searchLetterWidth + 'upx', top: letterPositionTop + 'upx' }"
+			:style="{ height: itemH * searchLetter.length + 'px', paddingRight: paddingRight + 'upx', width: searchLetterWidth + 'upx'}"
 		>
 			<view
 				v-for="(item, index) in searchLetter"
@@ -24,7 +24,7 @@
 		</block>
 
 		<!-- 通讯录列表 -->
-		<scroll-view scroll-y :style="{ height: usableHeight + 'px', top: scrollViewPositionTop + 'upx' }" :scrollTop="scrollTop"><slot name="addressBookList"></slot></scroll-view>
+		<scroll-view scroll-y :scrollTop="scrollTop"><slot name="addressBookList"></slot></scroll-view>
 	</view>
 </template>
 
@@ -100,7 +100,7 @@ export default {
 		tabHeight: {
 			type: Number,
 			default() {
-				return 50;
+				return 100;
 			}
 		},
 		//导航栏高度
@@ -122,7 +122,7 @@ export default {
 			isShowLetter: false,
 			showLetter: '',
 			scrollTop: 0,
-			badPageY: uni.upx2px(this.searchHeight + this.searchLetterTop),
+			badPageY: uni.upx2px(this.searchHeight + this.searchLetterTop + 220),
 			letterPositionTop: 0,
 			scrollViewPositionTop: 0
 		};
@@ -174,6 +174,7 @@ export default {
 		},
 		//点击选择
 		searchStart(e) {
+			console.log(e);
 			const pageY = e.touches[0].pageY - this.badPageY;
 			this.nowLetter(pageY);
 		},
@@ -229,22 +230,24 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
 .searchLetter {
 	position: fixed;
-	top: 0;
+	top: 280rpx;
 	right: 0;
-	bottom: 0;
-	margin: auto;
 	text-align: center;
 	display: flex;
 	flex-direction: column;
 	color: #666;
-	z-index: 1;
+	z-index: 99;
 }
 .touchClass {
 	color: #5a5a5a;
 	font-size: 28upx;
 }
+
+
+
 .showSlectedLetter {
 	background-color: rgba(0, 0, 0, 0.5);
 	display: flex;
@@ -254,7 +257,6 @@ export default {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);;
-	// margin: -100upx;
 	width: 100upx;
 	height: 100upx;
 	border-radius: 10upx;
@@ -263,7 +265,7 @@ export default {
 	color: #fff;
 }
 scroll-view {
-	position: fixed;
+	// position: fixed;
 	width: 100%;
 }
 </style>

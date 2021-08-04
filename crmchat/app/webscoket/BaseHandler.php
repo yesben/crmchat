@@ -117,16 +117,18 @@ abstract class BaseHandler
 
         $toUserFd = $this->getUserIdByFd($to_user_id);
 
-        $toUser = ['to_user_id' => -1];
+        $toUser    = ['to_user_id' => -1];
+        $fremaData = [];
         foreach ($toUserFd as $value) {
             if ($frem = $this->room->get($value)) {
+                $fremaData[] = $frem;
                 if ($frem['to_user_id'] == $userId) {
                     $toUser = $frem;
                 }
             }
         }
         //是否在线
-        $userOnline = isset($toUser['fd']);
+        $userOnline = count($fremaData) ? 1 : 0;
         //是否和当前用户对话
         $online       = $toUserFd && $toUser && $toUser['to_user_id'] == $userId;
         $data['type'] = $online ? 1 : 0;
@@ -148,7 +150,7 @@ abstract class BaseHandler
         //用户向客服发送消息，判断当前客服是否在登录中
         /** @var ChatServiceRecordServices $serviceRecored */
         $serviceRecored  = app()->make(ChatServiceRecordServices::class);
-        $unMessagesCount = $logServices->getMessageNum(['user_id' => $userId, 'to_user_id' => $to_user_id]);
+        $unMessagesCount = $logServices->getMessageNum(['user_id' => $userId, 'to_user_id' => $to_user_id, 'type' => 0]);
         //记录当前用户和他人聊天记录
         $data['recored'] = $serviceRecored->saveRecord($user['appid'], $userId, $to_user_id, $msn, $formType ?? 0, $msn_type, $unMessagesCount, $isTourist, $data['nickname'], $data['avatar'], $userOnline);
         //是否在线
@@ -161,9 +163,11 @@ abstract class BaseHandler
                 $data['recored']['avatar']   = $_userInfo['avatar'];
 
                 $data['recored']['online'] = $userOnline;
+                $allUnMessagesCount        = $logServices->getMessageNum(['user_id' => $userId, 'type' => 0]);
                 $this->manager->pushing($toUserFd, $response->message('mssage_num', [
                     'user_id' => $userId,
-                    'num'     => $unMessagesCount,
+                    'num'     => $unMessagesCount,//某个用户的未读条数
+                    'allNum'  => $allUnMessagesCount,//总未读条数
                     'recored' => $data['recored']
                 ])->getData());
 
@@ -246,15 +250,27 @@ abstract class BaseHandler
      */
     public function close(array $data = [], Response $response)
     {
-        $usreId = $data['user_id'] ?? 0;
+        $usreId   = $data['data']['user_id'] ?? 0;
+        $toUsreId = $data['data']['to_user_id'] ?? 0;
         if ($usreId) {
             /** @var ChatServiceRecordServices $service */
             $service = app()->make(ChatServiceRecordServices::class);
             $service->updateRecord(['to_user_id' => $usreId], ['online' => 0]);
-            $this->manager->pushing(array_keys($this->room->getKefuRoomAll()), $response->message('online', [
-                'online'  => 0,
-                'user_id' => $usreId
-            ]), $this->fd);
+
+            if ($toUsreId) {
+                $toUserFd  = $this->getUserIdByFd($toUsreId);
+                $fremaData = [];
+                foreach ($toUserFd as $value) {
+                    if ($frem = $this->room->get($value)) {
+                        $fremaData[] = $frem;
+                    }
+                }
+
+                $this->manager->pushing(array_column($fremaData, 'fd'), $response->message('online', [
+                    'online'  => 0,
+                    'user_id' => $usreId
+                ]), $this->fd);
+            }
         }
     }
 }

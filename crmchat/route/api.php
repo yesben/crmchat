@@ -369,6 +369,7 @@ Route::group('api', function () {
 
                 Route::get('list', 'User/getUserList')->name('getUserList');//获取当前客服的客户列表
                 Route::get('record', 'User/recordList')->name('recordList');//和客服聊天过的用户
+                Route::get('count', 'User/getMessageCount')->name('getMessageCount');//未读条数
                 Route::get('info/:userId', 'User/userInfo')->name('getUserInfo');//用户详细信息
                 Route::get('label', 'User/getUserLabel')->name('getUserLabel');//用户标签
                 Route::get('label/all', 'User/getLabelAll')->name('getLabelAll');//所有用户标签

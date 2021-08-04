@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === 'production') {
 	wsUrl = apiSetting.wsUrlDevelop
 }
 
-wsUrl += `?type=kefu&token=${getStorage('userData').token}`
+wsUrl += `?type=kefu`
 class Socket {
 	constructor() {
 		this.socketTask = null;
@@ -19,9 +19,10 @@ class Socket {
 
 	init() {
 		this.socketTask = uni.connectSocket({
-			url: wsUrl,
+			url: `${wsUrl}&token=${getStorage('userData').token}&form=app&client_id=${getStorage('cid')}`,
 			method: 'GET',
-			complete: () => {}
+			complete: (res) => {
+			}
 		})
 		return new Promise((reslove, reject) => {
 			this.socketTask.onOpen(() => {
@@ -44,13 +45,18 @@ class Socket {
 	onMessage(callback) {
 	  this.socketTask.onMessage(data => {
 			callback(JSON.parse(data.data));
+			console.log(data);
 		})
 	}
 
 
 	send(data) {
+		let that = this;
 		this.socketTask.send({
-			data: JSON.stringify(data)
+			data: JSON.stringify(data),
+			fail(res) {
+				that.init();
+			}
 		})
 	}
 

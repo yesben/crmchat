@@ -34,6 +34,14 @@
 								<view class='input'><input v-model="customerServerData.password" type='number' placeholder="请输入密码"></input></view>
 							</view>
 						</view>
+						
+						<view class="item" @click="editDominName">
+							<view>当前域名</view>
+							<view class="inputs" >
+								<view>{{dominName}}</view>
+								<img src="~static/images/right.png" alt="" class="iconfont">
+							</view>
+						</view>
 				
 					</view>
 					<button class='modifyBnt' @click="handleEdit">保存修改</button>
@@ -55,18 +63,23 @@
 	export default {
 		data() {
 			return {
-		
+				dominName: '',
 				customerServerData: {}
 			}
 		},
 		onLoad(opt) {
 			this.initData()
+			this.dominName = getStorage('dominName');
 		},
 		methods: {
 			edit(){
 				uni.navigateTo({
 					url:'/pages/view/example'
 				})
+			},
+			// 修改域名
+			editDominName() {
+				navigateTo(3, '/pages/view/dominName/index');
 			},
 			// 获取当前登录客服信息
 			initData() {

@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<lay-out isShowTap>
+		<lay-out noBottomHeight>
 			<div slot="header">
 				<div class="header_content">
 					<div></div>
@@ -10,13 +10,14 @@
 						<span>标签</span>
 					</div>
 				</div>
+				<view class="search-content padding">
+					<view class="uni-input-wrapper"><input class="uni-input" v-model="searchData.nickname" placeholder="搜索用户名称" /></view>
+				</view>
 			</div>
 			
 			
 			<div slot="content">
-				<view class="search-content padding">
-					<view class="uni-input-wrapper"><input class="uni-input" v-model="searchData.nickname" placeholder="搜索用户名称" /></view>
-				</view>
+			
 				<!-- 通讯录导航 -->
 				<address-book :bookList="bookList" :letter="letter">
 					<template v-slot:addressBookList>

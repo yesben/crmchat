@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<lay-out isShowTap>
+		<lay-out>
 			<div slot="header">
 				<div class="header">
 					<div class="font">我的</div>

@@ -1,6 +1,6 @@
 <template>
-	<view class="layout">
-		<div class="layout_header">
+	<view class="layout" :class="{'noBottomHeight': noBottomHeight }">
+		<div class="layout_header" >
 			<div v-if="isShowHeader" class="global_title" :style="{ 'background-color': headerColor, color: headerTextColor }">
 				<div class="goBack" @click="goBack"><span class="iconfont">&#xe6c4;</span></div>
 				<div class="title_message">{{ titleName ? titleName : getCurRoute.$holder.navigationBarTitleText }}</div>
@@ -16,11 +16,13 @@
 				:refresher-triggered="refresherTriggered"
 				class="layout_content_scroll"
 				:scroll-top="scrollTop"
+				@scrolltolower="scrolltolower"
+				@scrolltoupper="scrolltoupper"
 			>
 				<slot name="content" class="slot-content"></slot>
 			</scroll-view>
 		</div>
-<!-- 		<div class="layout_bottom">
+		<div class="layout_bottom">
 			<div v-if="isShowTap" class="footer">
 				<div class="footer_item" v-for="(item, index) in footerData" :key="index" @click="toRouter(item)">
 					<div class="footer_item_image"><image :src="getCurRoute.route == item.path ? item.selectImage : item.unSelectImage" mode="widthFix"></image></div>
@@ -31,7 +33,7 @@
 				</div>
 			</div>
 			<slot v-else name="bottom"></slot>
-		</div> -->
+		</div>
 	</view>
 </template>
 
@@ -39,6 +41,11 @@
 import { navigateTo, navigateBack } from '../utils/uniApi.js';
 export default {
 	props: {
+		// 是否减去底部高度
+		noBottomHeight: {
+			type:Boolean,
+			default: false
+		},
 		// 标题名称
 		titleName: {
 			type: String,
@@ -123,8 +130,13 @@ export default {
 		}
 	},
 	methods: {
-		getScrollViewHeight() {
-		
+		// 滑动到底部
+		scrolltolower() {
+			this.$emit('goBottom')
+		},
+		// 滑动到顶部
+		scrolltoupper() {
+			this.$emit('goTop');
 		},
 		scroll(e) {
 			// console.log(e);
@@ -152,6 +164,13 @@ export default {
 	flex-direction: column;
 	justify-content: space-between;
 }
+
+.noBottomHeight {
+	// height: calc(100% - 100rpx);
+	position: fixed;
+	top: 0;
+	left: 0;
+}
 .layout_header {
 	// padding-top: 10rpx;
 }
@@ -178,7 +197,7 @@ export default {
 		position: absolute;
 		top: 50%;
 		/* #ifdef APP-PLUS */
-		top: 75%;
+		top: 70%;
 		/* #endif */ 
 		left: 50%;
 		transform: translate(-50%, -50%);

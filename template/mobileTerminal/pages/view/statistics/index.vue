@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<lay-out isShowTap>
+		<lay-out>
 			<div slot="header" class="header">
 				<div class="title_name">统计</div>
 				<div class="statistics_list">

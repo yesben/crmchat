@@ -26,8 +26,21 @@ export default {
       unreadMessages: '',
       userKey: '',
       productMessage: {},
-      isShowProductModel: false // 是否显示携带商品
+      isShowProductModel: false, // 是否显示携带商品
+      copyFile: '', // 粘贴在输入框中的file文件
+      unReadMesage: 0, // 未读消息数
     }
+  },
+  // 指令粘贴指令定义
+  directives: {
+    paste: {
+      bind(el, binding, vnode) {
+        el.addEventListener("paste", function(event) {
+          //这里直接监听元素的粘贴事件
+          binding.value(event);
+        });
+      },
+    },
   },
   created() {
 
@@ -55,6 +68,11 @@ export default {
       if(e.data.type == 'openCustomeServer') {
         this.bus.pageWs.then((ws) => {
           ws.send({ type: 'to_chat', data: { id: this.chatServerData.to_user_id } });
+
+          if(this.unReadMesage) {
+            this.getUserRecord()
+          }
+
         })
       }
 
@@ -84,14 +102,16 @@ export default {
       let postData = {
         uid: this.upperData.uid || getLoc('uid') || 0,
         limit: 20,
-        // user_id: this.upperData.uid ? 0 : getLoc('user_id')
-        // idTo: '',
-        // toUserId: ''
+        nickName: this.upperData.nickName,
+        phone: this.upperData.phone,
+        sex: this.upperData.sex,
+        avatar: this.upperData.avatar
       }
 
       userRecord(postData).then(res => {
         if(res.status == 200) {
           this.chatServerData = res.data;
+          this.unReadMesage = 0;
           this.goPageBottom();
           let cookieData = {
             nickname: '',
@@ -99,6 +119,7 @@ export default {
             avatar: ''
           };
           if(res.data.is_tourist == 1) {
+
             Object.keys(cookieData).forEach(item => {
               setLoc(item, getLoc(item) ? getLoc(item) : res.data[item]);
             })
@@ -119,7 +140,8 @@ export default {
     // 建立连接
     connentServer() {
       let token = getLoc('mobile_token');
-      this.bus.pageWs = mobileScoket(true, token);
+      let formTerminal = this.upperData.deviceType == 'Mobile' ? 'h5' : 'pc'
+      this.bus.pageWs = mobileScoket(true, token, formTerminal);
       this.bus.pageWs.then((ws) => {
         // 发送消息监听函数
         ws.$on(["reply", "chat"], data => {
@@ -151,7 +173,9 @@ export default {
         ws.$on('mssage_num', data => {
           if(data.num > 0) {
             this.mp3.play();
+            this.unReadMesage = data.num;
           }
+
           parent.postMessage({ type: 'message_num', num: data.num }, "*");
         })
         // let num = 1;
@@ -186,13 +210,66 @@ export default {
       this.isShowProductModel = false;
       this.goPageBottom();
     },
+    //微信截图上传图片时触发
+    handleParse(e) {
+      console.log(e);
+      let file = null;
+      if(
+        e.clipboardData &&
+        e.clipboardData.items[0] &&
+        e.clipboardData.items[0].type &&
+        e.clipboardData.items[0].type.indexOf("image") > -1
+      ) {
+        //这里就是判断是否有粘贴进来的文件且文件为图片格式
+        file = e.clipboardData.items[0].getAsFile();
+      } else {
+        this.$message({
+          type: "warning",
+          message:
+            "上传的文件必须为图片且无法复制本地图片且无法同时复制多张图片",
+        });
+        return;
+      }
+      this.update(file);
+    },
+    update(e) {
+      // 上传照片
+      let file = e;
+      let param = new FormData(); // 创建form对象
+      param.append("filename", "file"); // 通过append向form对象添加数据进去
+      param.append("file", file); // 通过append向form对象添加数据进去
+      // 添加请求头
+      serviceUpload(param).then(res => {
+        if(res.status == 200) {
+          this.sendMsg(res.data.url, 3);
+          this.$refs['inputDiv'].innerText = '';
+        }
+      })
+
+    },
+    // 选择表情
+    select(item) {
+      if(this.$route.query.deviceType == 'Mobile') {
+        this.userMessage += `[${item}]`
+      } else {
+        // this.inputConType = 1;
+        this.$refs['inputDiv'].innerText += `[${item}]`
+        // this.$refs['inputDiv'].innerHTML += `<span class="em ${item}"></span>`
+      }
+
+    },
+
     // 文本发送
     sendText() {
-      if(this.userMessage) {
-        this.sendMsg(this.userMessage, 1);
+      let sendMessage = this.$refs['inputDiv'].innerText.replace(/(↵)/g, '\n');
+
+      if(sendMessage) {
+        this.sendMsg(sendMessage, 1);
+        this.$refs['inputDiv'].innerText = '';
       } else {
         this.$Message.error('请先输入信息，在进行发送');
       }
+
     },
     // type: 1 普通文本 2 图片
     sendMsg(msn, type, id) {
@@ -250,15 +327,7 @@ export default {
       this.inputConType = 2;
       this.goPageBottom();
     },
-    // 选择表情
-    select(item) {
-      if(this.$route.query.deviceType == 'Mobile') {
-        this.userMessage += `[${item}]`
-      } else {
-        this.inputConType = 1;
-        this.userMessage += `[${item}]`
-      }
-    },
+
     // 上传图片
     uploadFile(e) {
       let data = {

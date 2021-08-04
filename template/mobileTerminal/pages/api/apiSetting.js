@@ -1,9 +1,12 @@
+
+import { getStorage } from 'pages/utils/uniApi.js';
 const setting = {
-	developeApiUrl: 'http://chat.lfmn.fun/api/',
-	productionApiUrl: 'http://chat.lfmn.fun/api/',
+	// developeApiUrl: 'http://chat.lfmn.fun',
+	developeApiUrl: `http://${getStorage('dominName')}`,
+	productionApiUrl: `https://${getStorage('dominName')}`,
 	// productionApiUrl: location.origin + '/api' : '',
-	wsUrlDevelop: 'ws://chat.lfmn.fun/',
-	wsUrlProduction: 'ws://chat.lfmn.fun/',
+	wsUrlDevelop: `ws://${getStorage('dominName')}/`,
+	wsUrlProduction: `wss://${getStorage('dominName')}/`,
 	// wsUrlProduction: `ws:${location.hostname}`
 }
 

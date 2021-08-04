@@ -8,7 +8,18 @@ const api = {
 	userLogout: {
 		url: 'kefu/user/logout',
 		method: 'post'
+	},
+	// 发送CID
+	userClient: {
+		url: 'kefu/user/client',
+		method: 'put'
+	},
+	// 授权登录
+	serviceCode: {
+		url: 'kefu/service/code',
+		method: 'post'
 	}
+
 
 }
 export default api;

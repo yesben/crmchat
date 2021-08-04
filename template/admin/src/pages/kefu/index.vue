@@ -19,7 +19,7 @@
                 </Button>
               </FormItem>
             </Form>
-            <!-- <div class="qh_box" v-if="!isMobile" @click="bindScan"><span class="iconfont iconerweima2"></span></div> -->
+            <div class="qh_box" v-if="!isMobile" @click="bindScan"><span class="iconfont iconerweima2"></span></div>
           </div>
           <div :style="{display:loginType?'block':'none'}">
             <div class="page-account-top">

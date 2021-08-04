@@ -7,7 +7,8 @@
 				"app-plus": {
 					"navigationStyle": "custom",
 					"titleView": false,
-					"navigationBarTextStyle": "write"
+					"navigationBarTextStyle": "write",
+					"disableScroll": false
 				}
 			}
 		},
@@ -22,7 +23,28 @@
 				}
 			}
 		},
-
+		{
+			"path": "pages/view/authorizedLogin/index",
+			"style": {
+				"navigationBarTitleText": "授权登录",
+				"app-plus": {
+					"navigationStyle": "default",
+					"titleView": false,
+					"navigationBarTextStyle": "black"
+				}
+			}
+		},
+		{
+			"path": "pages/view/dominName/index",
+			"style": {
+				"navigationBarTitleText": "填写域名",
+				"app-plus": {
+					"navigationStyle": "custom",
+					"titleView": false,
+					"navigationBarTextStyle": "write"
+				}
+			}
+		},
 		{
 			"path": "pages/view/customerServer/script",
 			"style": {
@@ -41,20 +63,33 @@
 				"app-plus": {
 					"navigationStyle": "custom",
 					"titleView": false,
-					"navigationBarTextStyle": "write"
+					"navigationBarTextStyle": "write",
+					"disableScroll": false
 				}
 			}
 		},
 		{
 			"path": "pages/view/setTags/index",
 			"style": {
-				"navigationBarTitleText": "标签"
+				"navigationBarTitleText": "标签",
+				"app-plus": {
+					"navigationStyle": "custom",
+					"titleView": false,
+					"navigationBarTextStyle": "black",
+					"disableScroll": false
+				}
 			}
 		},
 		{
 			"path": "pages/view/setTags/addTag",
 			"style": {
-				"navigationBarTitleText": "新建标签"
+				"navigationBarTitleText": "标签详情",
+				"app-plus": {
+					"navigationStyle": "custom",
+					"titleView": false,
+					"navigationBarTextStyle": "black",
+					"disableScroll": false
+				}
 			}
 		},
 		{
@@ -64,7 +99,8 @@
 				"app-plus": {
 					"navigationStyle": "custom",
 					"titleView": false,
-					"navigationBarTextStyle": "write"
+					"navigationBarTextStyle": "write",
+					"disableScroll": false
 				}
 			}
 		},
@@ -75,7 +111,8 @@
 				"app-plus": {
 					"navigationStyle": "custom",
 					"titleView": false,
-					"navigationBarTextStyle": "write"
+					"navigationBarTextStyle": "write",
+					"disableScroll": false
 				}
 			}
 		},
@@ -98,7 +135,8 @@
 				"app-plus": {
 					"navigationStyle": "custom",
 					"titleView": false,
-					"navigationBarTextStyle": "write"
+					"navigationBarTextStyle": "write",
+					"disableScroll": false
 				}
 			}
 		},
@@ -127,8 +165,8 @@
 		"backgroundColor": "#F8F8F8"
 	},
 	"tabBar": {
-		"color": "#7A7E83",
-		"selectedColor": "#3cc51f",
+		"color": "#707070",
+		"selectedColor": "#707070",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"height": "50px",
@@ -137,14 +175,24 @@
 		"spacing": "3px",
 		"list": [{
 			"pagePath": "pages/view/messageList/index",
-			"iconPath": "static/image/footer/chatSelect.png",
-			"selectedIconPath": "static/image/footer/chatUnSelcect.png",
+			"iconPath": "static/image/footer/chatUnSelcect.png",
+			"selectedIconPath": "static/image/footer/chatSelect.png",
 			"text": "聊天"
 		}, {
 			"pagePath": "pages/view/list/addbook",
-			"iconPath": "static/image/footer/userselect.png",
-			"selectedIconPath": "static/image/footer/userUnselect.png",
-			"text": "接口"
+			"iconPath": "static/image/footer/userUnselect.png",
+			"selectedIconPath": "static/image/footer/userselect.png",
+			"text": "客户"
+		}, {
+			"pagePath": "pages/view/statistics/index",
+			"iconPath": "static/image/footer/staticUnSelect.png",
+			"selectedIconPath": "static/image/footer/staticSelect.png",
+			"text": "统计"
+		}, {
+			"pagePath": "pages/view/user/index",
+			"iconPath": "static/image/footer/myUnSelect.png",
+			"selectedIconPath": "static/image/footer/mySelect.png",
+			"text": "我的"
 		}]
 	}
 }

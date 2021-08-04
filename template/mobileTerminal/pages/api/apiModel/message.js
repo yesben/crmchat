@@ -59,6 +59,11 @@ const api  = {
 		method: 'get',
 		loading: true
 	},
+	// 获取客服未读条数
+	userCount: {
+		url: 'kefu/user/count',
+		method: 'get'
+	},
 	...customerServer
 };
 

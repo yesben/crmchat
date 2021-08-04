@@ -23,7 +23,7 @@
 
 <script>
 import loginInput from './component/loginInput.vue';
-import { navigateTo, setStorage, getStorage } from 'pages/utils/uniApi.js';
+import { navigateTo, setStorage, getStorage, Modal } from 'pages/utils/uniApi.js';
 import http from 'pages/api/index';
 import api from 'pages/api/api.js';
 export default {
@@ -35,15 +35,27 @@ export default {
 			loginData: {
 				account: '',
 				password: ''
-			}
+			},
+			cid: ''
 		};
 	},
+	onLoad() {
+		//#ifdef APP-PLUS
+		var info = plus.push.getClientInfo();
+		this.cid = info.clientid;
+		//#endif
+	},
 	methods: {
-		handleLogin() {
-			http(api.login, this.loginData).then(res => {
-				setStorage('userData', res);
-				navigateTo(2, '/pages/view/messageList/index')
-			});
+		async handleLogin() {
+			let loginRes = await http(api.login, { ...this.loginData, client_id: this.cid });
+			setStorage('userData', loginRes);
+			//#ifdef APP-PLUS
+			let userClient = await http(api.userClient, { client_id: this.cid });
+			if (userClient) {
+				setStorage('cid', this.cid);
+			}
+			//#endif
+			navigateTo(4, '/pages/view/messageList/index');
 		}
 	}
 };
