@@ -379,6 +379,7 @@ Route::group('api', function () {
                 Route::post('logout', 'User/logout')->name('logout');//退出登录
                 Route::get('userInfo', 'User/getKefuInfo')->name('getKefuInfo');//获取当前客服信息
                 Route::put('userInfo', 'User/updateKefu')->name('updateKefu');//修改当前客服信息
+                Route::put('client', 'User/updateService')->name('updateService');//修改当前客服client_id
 
             })->middleware(KefuAuthTokenMiddleware::class);
 

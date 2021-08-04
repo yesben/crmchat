@@ -43,6 +43,7 @@ class ChatService extends Migrator
         $table->addColumn('notify', 'boolean', ['limit' => 1, 'default' => 0, 'comment' => '订单通知1开启0关闭']);
         $table->addColumn('customer', 'boolean', ['limit' => 1, 'default' => 0, 'comment' => '是否展示统计管理']);
         $table->addColumn('uniqid', 'string', ['limit' => 35, 'default' => '', 'comment' => '扫码登录唯一值']);
+        $table->addColumn('client_id', 'string', ['limit' => 100, 'default' => '', 'comment' => 'clientID']);
         $table->addIndex('account');
         $table->addIndex('phone');
         $table->create();
