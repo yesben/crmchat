@@ -50,6 +50,7 @@ class PushMessage
     }
 
     /**
+     * 消息推送
      * @param string $cid
      * @return bool|string
      */

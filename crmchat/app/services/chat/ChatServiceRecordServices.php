@@ -103,9 +103,24 @@ class ChatServiceRecordServices extends BaseServices
      */
     public function saveRecord(string $appid, int $userId, int $toUserid, string $message, int $type, int $messageType, int $num, int $isTourist = 0, string $nickname = '', string $avatar = '', int $online = 0)
     {
+        switch ((int)$messageType) {
+            case ChatServiceDialogueRecordServices::MSN_TYPE_EMOT:
+                $message = '[表情]';
+                break;
+            case ChatServiceDialogueRecordServices::MSN_TYPE_IME:
+                $message = '[图片]';
+                break;
+            case ChatServiceDialogueRecordServices::MSN_TYPE_VOICE:
+                $message = '[音频]';
+                break;
+            case ChatServiceDialogueRecordServices::MSN_TYPE_ORDER:
+            case ChatServiceDialogueRecordServices::MSN_TYPE_GOODS:
+                $message = '[图文]' . ($message['other']['store_name'] ?? '');
+                break;
+        }
         $info = $this->dao->get(['appid' => $appid, 'user_id' => $toUserid, 'to_user_id' => $userId]);
         if ($info) {
-            $info->type         = $type;
+            $info->type = $type;
             $info->message      = $message;
             $info->message_type = $messageType;
             $info->update_time  = time();

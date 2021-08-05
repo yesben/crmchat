@@ -166,8 +166,9 @@ abstract class BaseHandler
             if (!$clientId) {
                 $clientId = $this->room->getClient($to_user_id);
             }
+            $fremaData = $fremaData[0] ?? ['is_open' => 1];
             //用户在线，可是没有和当前用户进行聊天，给当前用户发送未读条数
-            if ($toUserFd && $toUser['to_user_id'] != $userId && isset($toUser['is_open'])) {
+            if ($toUserFd && $toUser['to_user_id'] != $userId && $fremaData['is_open']) {
                 $data['recored']['nickname'] = $_userInfo['nickname'];
                 $data['recored']['avatar']   = $_userInfo['avatar'];
 
