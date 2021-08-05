@@ -135,6 +135,8 @@ abstract class BaseHandler
         $data['type'] = $online ? 1 : 0;
         if (in_array($msn_type, [5, 6])) {
             $data['other'] = json_encode($other);
+        } else {
+            $data['other'] = '';
         }
         $data              = $logServices->save($data);
         $data              = $data->toArray();
@@ -165,7 +167,7 @@ abstract class BaseHandler
                 $clientId = $this->room->getClient($to_user_id);
             }
             //用户在线，可是没有和当前用户进行聊天，给当前用户发送未读条数
-            if ($toUserFd && $toUser['to_user_id'] != $userId) {
+            if ($toUserFd && $toUser['to_user_id'] != $userId && isset($toUser['is_open'])) {
                 $data['recored']['nickname'] = $_userInfo['nickname'];
                 $data['recored']['avatar']   = $_userInfo['avatar'];
 
@@ -180,9 +182,9 @@ abstract class BaseHandler
                 ])->getData());
             } else if ($clientId) {
                 UniPush::dispatch([
-                    'userInfo'  => $_userInfo->toArray(),
-                    'client_id' => $clientId,
-                    'message'   => [
+                    ['nickname' => $data['nickname']],
+                    $clientId,
+                    [
                         'content'  => $msn,
                         'msn_type' => $data['msn_type'],
                         'other'    => is_string($data['other']) ?

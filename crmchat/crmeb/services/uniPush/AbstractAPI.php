@@ -148,6 +148,7 @@ class AbstractAPI
                 'timestamp' => $msectime,
                 'appkey'    => $this->appKey
             ]), ['content-type:application/json']);
+            $response = $response ? json_decode($response, true) : [];
             $data     = $response['data'] ?? [];
             if (!isset($data['token'])) {
                 throw new ApiException('获取token失败');

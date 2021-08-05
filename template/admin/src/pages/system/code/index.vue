@@ -46,7 +46,7 @@
               let option = {
                   openUrl: 'http://192.168.31.192:8080',
                   domId: 'customerServerTip',
-                  token: '{{token.token}}'
+                  token: '{{token.token}}',
                   sendUserData: {
                     uid: '',
                     nickName: '张越',
@@ -55,7 +55,7 @@
                   productInfo: {
                     store_name: '蒙奇 D 路飞',
                     stock: '库存',
-                    sales: '122', // 销量 
+                    sales: '122', // 销量
                     ficti: '10', // 赠送
                     price: '100',
                     image: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F4495e731345f73cb023b1d70197d50e7f451dbc91a88e-UU7MfN_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1629276024&t=9d1c5b297dc857ddd2d18c9580dde427'
@@ -287,7 +287,7 @@ export default {
               productInfo: {
                 store_name: '蒙奇 D 路飞',
                 stock: '库存',
-                sales: '122', // 销量 
+                sales: '122', // 销量
                 ficti: '10', // 赠送
                 price: '100',
                 image: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F4495e731345f73cb023b1d70197d50e7f451dbc91a88e-UU7MfN_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1629276024&t=9d1c5b297dc857ddd2d18c9580dde427'
