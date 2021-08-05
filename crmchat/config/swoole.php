@@ -81,7 +81,7 @@ return is_win() ? [] : [
         //自定义连接池
     ],
     'coroutine'  => [
-        'enable' => true,
+        'enable' => false,
         'flags'  => SWOOLE_HOOK_ALL | SWOOLE_HOOK_CURL,
     ],
     'tables'     => [//高性能内存数据库
