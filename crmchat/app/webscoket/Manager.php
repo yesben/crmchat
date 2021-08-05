@@ -112,6 +112,15 @@ class Manager extends Websocket
             $this->login($type, $uid, $fd);
         }
         $isApp = $form == 'app' ? 1 : 0;
+
+        if ($isApp) {
+            $this->nowRoom->clientAdd((string)$fd, [
+                'fd'        => $fd,
+                'client_id' => $clientId,
+                'type'      => $type,
+                'user_id'   => $uid
+            ]);
+        }
         $this->nowRoom->add($fd, $data['data']['appid'] ?? '', $uid, $isApp, $clientId);
         $this->pingService->createPing($fd, time(), $this->cache_timeout);
         $this->send($fd, $this->response->message('ping', ['now' => time()]));

@@ -45,11 +45,26 @@ class UniPush extends BaseJobs
         $messageOption->title = $userInfo['nickname'];
         switch ((int)($message['msn_type'] ?? 0)) {
             case ChatServiceDialogueRecordServices::MSN_TYPE_TXT:
+                $messageOption->body = $message['content'] ?? '';
                 break;
             case ChatServiceDialogueRecordServices::MSN_TYPE_EMOT:
+                $messageOption->body = '[表情]';
+                break;
+            case ChatServiceDialogueRecordServices::MSN_TYPE_IME:
+                $messageOption->body = '[图片]';
+                break;
+            case ChatServiceDialogueRecordServices::MSN_TYPE_VOICE:
+                $messageOption->body = '[音频]';
+                break;
+            case ChatServiceDialogueRecordServices::MSN_TYPE_GOODS:
+                $messageOption->body = '[图文]' . ($message['other']['store_name'] ?? '');
+                break;
+            case ChatServiceDialogueRecordServices::MSN_TYPE_ORDER:
+                $messageOption->body = '[图文]' . ($message['other']['store_name'] ?? '');
                 break;
         }
-        $messageOption->body = $message['content'] ?? '';
+        $messageOption->clickType = 'payload';
+        $messageOption->payload   = 'click_type';
         $option->setAudience($clientId);
         $option->setPushMessage($messageOption);
         $uniPush->push($option);

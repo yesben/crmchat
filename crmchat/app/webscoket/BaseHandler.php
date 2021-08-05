@@ -158,6 +158,12 @@ abstract class BaseHandler
         if ($online) {
             $this->manager->pushing($toUserFd, $response->message('reply', $data)->getData());
         } else {
+            /** @var ChatServiceServices $services */
+            $services = app()->make(ChatServiceServices::class);
+            $clientId = $services->value(['user_id' => $to_user_id, 'appid' => $user['appid']], 'client_id');
+            if (!$clientId) {
+                $clientId = $this->room->getClient($to_user_id);
+            }
             //用户在线，可是没有和当前用户进行聊天，给当前用户发送未读条数
             if ($toUserFd && $toUser['to_user_id'] != $userId) {
                 $data['recored']['nickname'] = $_userInfo['nickname'];
@@ -165,30 +171,27 @@ abstract class BaseHandler
 
                 $data['recored']['online'] = $userOnline;
                 $allUnMessagesCount        = $logServices->getMessageNum(['user_id' => $userId, 'type' => 0]);
-                if ($toUser['to_user_id'] === -1) {
-                    $fremaInfo = $fremaData[0] ?? null;
-                    if ($fremaInfo && $fremaInfo['is_close'] == 1 && $fremaInfo['client_id']) {
-                        UniPush::dispatch([
-                            'userInfo'  => $_userInfo->toArray(),
-                            'client_id' => $fremaInfo['client_id'],
-                            'message'   => [
-                                'content'  => $msn,
-                                'msn_type' => $data['msn_type'],
-                                'other'    => is_string($data['other']) ?
-                                    json_decode($data['other'], true) :
-                                    $data['other'],
-                            ]
-                        ]);
-                    }
-                } else {
-                    $this->manager->pushing($toUserFd, $response->message('mssage_num', [
-                        'user_id' => $userId,
-                        'num'     => $unMessagesCount,//某个用户的未读条数
-                        'allNum'  => $allUnMessagesCount,//总未读条数
-                        'recored' => $data['recored']
-                    ])->getData());
-                }
+
+                $this->manager->pushing($toUserFd, $response->message('mssage_num', [
+                    'user_id' => $userId,
+                    'num'     => $unMessagesCount,//某个用户的未读条数
+                    'allNum'  => $allUnMessagesCount,//总未读条数
+                    'recored' => $data['recored']
+                ])->getData());
+            } else if ($clientId) {
+                UniPush::dispatch([
+                    'userInfo'  => $_userInfo->toArray(),
+                    'client_id' => $clientId,
+                    'message'   => [
+                        'content'  => $msn,
+                        'msn_type' => $data['msn_type'],
+                        'other'    => is_string($data['other']) ?
+                            json_decode($data['other'], true) :
+                            $data['other'],
+                    ]
+                ]);
             }
+
         }
         return $response->message('chat', $data);
     }
