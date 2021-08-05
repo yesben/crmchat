@@ -374,6 +374,7 @@ Route::group('api', function () {
                 Route::get('label', 'User/getUserLabel')->name('getUserLabel');//用户标签
                 Route::get('label/all', 'User/getLabelAll')->name('getLabelAll');//所有用户标签
                 Route::put('label/:userId', 'User/setUserLabel')->name('setUserLabel');//设置用户标签
+                Route::delete('label/:userId/:labelId', 'User/delUserLabel')->name('delUserLabel');//删除单个用户标签
                 Route::get('group', 'User/getUserGroup')->name('getUserGroup');//退出登录
                 Route::put('group/:userId/:id', 'User/setUserGroup')->name('setUserGroup');//退出登录
                 Route::post('logout', 'User/logout')->name('logout');//退出登录

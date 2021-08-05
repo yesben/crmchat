@@ -215,6 +215,25 @@ class User extends AuthController
     }
 
     /**
+     * 删除单个标签下的人
+     * @param ChatUserLabelAssistServices $services
+     * @param $userId
+     * @param $labelId
+     * @return mixed
+     */
+    public function delUserLabel(ChatUserLabelAssistServices $services, $userId, $labelId)
+    {
+        if (!$labelId || !$userId) {
+            return $this->fail('缺少参数');
+        }
+        if ($services->delete(['user_id' => $userId, 'label_id' => $labelId])) {
+            return $this->success('删除成功');
+        } else {
+            return $this->fail('删除失败');
+        }
+    }
+
+    /**
      * 退出登陆
      * @return mixed
      */
