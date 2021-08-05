@@ -277,4 +277,30 @@ class User extends AuthController
         $services->update($this->kefuId, ['client_id' => $clientId]);
         return $this->success();
     }
+
+    /**
+     * 修改用户信息
+     * @param ChatUserServices $services
+     * @param $userId
+     * @return mixed
+     */
+    public function updateUser(ChatUserServices $services, $userId)
+    {
+        $data   = $this->request->postMore([
+            ['nickname', ''],
+            ['sex', ''],
+            ['phone', ''],
+            ['remarks', ''],
+        ]);
+        $update = [];
+        foreach ($data as $key => $val) {
+            if ($val) {
+                $update[$key] = $val;
+            }
+        }
+        if ($update) {
+            $services->update($userId, $update);
+        }
+        return $this->success('修改成功');
+    }
 }

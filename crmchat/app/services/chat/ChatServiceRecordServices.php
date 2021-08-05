@@ -120,7 +120,7 @@ class ChatServiceRecordServices extends BaseServices
         }
         $info = $this->dao->get(['appid' => $appid, 'user_id' => $toUserid, 'to_user_id' => $userId]);
         if ($info) {
-            $info->type = $type;
+            $info->type         = $type;
             $info->message      = $message;
             $info->message_type = $messageType;
             $info->update_time  = time();
