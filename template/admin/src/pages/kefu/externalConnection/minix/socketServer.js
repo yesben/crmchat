@@ -261,11 +261,16 @@ export default {
 
     // 文本发送
     sendText() {
-      let sendMessage = this.$refs['inputDiv'].innerText.replace(/(↵)/g, '\n');
+      let sendMessage;
+      if(this.$route.query.deviceType == 'Mobile') {
+        sendMessage = this.userMessage;
+      } else {
+        sendMessage = this.$refs['inputDiv'].innerText.replace(/(↵)/g, '\n');
+      }
 
       if(sendMessage) {
         this.sendMsg(sendMessage, 1);
-        this.$refs['inputDiv'].innerText = '';
+        this.$refs['inputDiv'] ? this.$refs['inputDiv'].innerText = '' : this.userMessage = '';
       } else {
         this.$Message.error('请先输入信息，在进行发送');
       }
