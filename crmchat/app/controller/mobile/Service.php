@@ -60,6 +60,7 @@ class Service extends AuthController
             ['phone', ''],
             ['sex', ''],
             ['avatar', ''],
+            ['openid', ''],
         ]);
 
         return app('json')->successful($this->services->getRecord($this->appId, $user, $idTo, $limit, $toUserId, (int)$cookieUid));

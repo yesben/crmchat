@@ -127,6 +127,7 @@ class ApplicationServices extends BaseServices
         $nickname = $userData['nickname'] ?? '';
         $avatar   = $userData['avatar'] ?? '';
         $phone    = $userData['phone'] ?? '';
+        $openid   = $userData['openid'] ?? '';
 
         $redis = CacheService::redisHandler();
         if ($userInfo = $redis->get($appid . '-' . $uid)) {
@@ -139,6 +140,7 @@ class ApplicationServices extends BaseServices
             $userInfo->nickname = $nickname;
             $userInfo->avatar   = $avatar;
             $userInfo->phone    = $phone;
+            $userInfo->openid   = $openid;
             $userInfo->save();
 
             $redis->set($appid . '-' . $uid, $userInfo->toArray(), 86400);
@@ -164,6 +166,7 @@ class ApplicationServices extends BaseServices
                 'avatar'     => $avatar,
                 'phone'      => $phone,
                 'appid'      => $appid,
+                'openid'     => $openid,
                 'is_tourist' => $isTourist,
             ]);
             if (!$userInfo) {
