@@ -34,6 +34,14 @@ class ChatUserDao extends BaseDao
     }
 
     /**
+     * @return mixed
+     */
+    public function max(array $where)
+    {
+        return $this->getModel()->where($where)->max('uid');
+    }
+
+    /**
      * 获取用户列表
      * @param array $where
      * @param string $field

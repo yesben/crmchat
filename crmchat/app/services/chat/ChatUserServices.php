@@ -26,6 +26,7 @@ use crmeb\services\FormBuilder as Form;
  * Class ChatUserServices
  * @package app\services\chat
  * @method getUserList(array $where, string $field = '*') 获取用户列表
+ * @method max(array $where)
  */
 class ChatUserServices extends BaseServices
 {
