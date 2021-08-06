@@ -146,7 +146,7 @@ class ApplicationServices extends BaseServices
         } else {
             $isTourist = 0;
             //游客模式
-            if ($uid === 0) {
+            if ((int)$uid === 0) {
                 $isTourist = 1;
                 mt_srand();
                 $rand1 = mt_rand(10, 99);
