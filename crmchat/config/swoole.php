@@ -85,7 +85,7 @@ return is_win() ? [] : [
         'flags'  => SWOOLE_HOOK_ALL | SWOOLE_HOOK_CURL,
     ],
     'tables'     => [//高性能内存数据库
-        'user' => [
+        'user'   => [
             'size'    => 2048,
             'columns' => [
                 ['name' => 'fd', 'type' => Table::TYPE_INT],
@@ -93,7 +93,20 @@ return is_win() ? [] : [
                 ['name' => 'user_id', 'type' => Table::TYPE_INT],
                 ['name' => 'to_user_id', 'type' => Table::TYPE_INT],
                 ['name' => 'tourist', 'type' => Table::TYPE_INT],
-                ['name' => 'appid', 'size' => 1024, 'type' => Table::TYPE_STRING]
+                ['name' => 'is_app', 'type' => Table::TYPE_INT],
+                ['name' => 'is_open', 'type' => Table::TYPE_INT],
+                ['name' => 'appid', 'size' => 1024, 'type' => Table::TYPE_STRING],
+                ['name' => 'client_id', 'size' => 1024, 'type' => Table::TYPE_STRING],
+                ['name' => 'is_close', 'type' => Table::TYPE_INT],
+            ]
+        ],
+        'client' => [
+            'size'    => 2048,
+            'columns' => [
+                ['name' => 'fd', 'type' => Table::TYPE_INT],
+                ['name' => 'client_id', 'size' => 1024, 'type' => Table::TYPE_STRING],
+                ['name' => 'user_id', 'type' => Table::TYPE_INT],
+                ['name' => 'type', 'size' => 1024, 'type' => Table::TYPE_STRING],
             ]
         ]
     ],

@@ -11,6 +11,7 @@
 
 namespace app\webscoket;
 
+use app\jobs\UniPush;
 use app\services\chat\ChatServiceDialogueRecordServices;
 use app\services\chat\ChatServiceRecordServices;
 use app\services\chat\ChatServiceServices;
@@ -115,7 +116,7 @@ abstract class BaseHandler
         $data['appid']    = $appId;
         $data['user_id']  = $userId;
 
-        $toUserFd = $this->getUserIdByFd($to_user_id);
+        $toUserFd = $this->manager->getUserIdByFds($to_user_id);
 
         $toUser    = ['to_user_id' => -1];
         $fremaData = [];
@@ -157,6 +158,12 @@ abstract class BaseHandler
         if ($online) {
             $this->manager->pushing($toUserFd, $response->message('reply', $data)->getData());
         } else {
+            /** @var ChatServiceServices $services */
+            $services = app()->make(ChatServiceServices::class);
+            $clientId = $services->value(['user_id' => $to_user_id, 'appid' => $user['appid']], 'client_id');
+            if (!$clientId) {
+                $clientId = $this->room->getClient($to_user_id);
+            }
             //用户在线，可是没有和当前用户进行聊天，给当前用户发送未读条数
             if ($toUserFd && $toUser['to_user_id'] != $userId) {
                 $data['recored']['nickname'] = $_userInfo['nickname'];
@@ -164,14 +171,27 @@ abstract class BaseHandler
 
                 $data['recored']['online'] = $userOnline;
                 $allUnMessagesCount        = $logServices->getMessageNum(['user_id' => $userId, 'type' => 0]);
+
                 $this->manager->pushing($toUserFd, $response->message('mssage_num', [
                     'user_id' => $userId,
                     'num'     => $unMessagesCount,//某个用户的未读条数
                     'allNum'  => $allUnMessagesCount,//总未读条数
                     'recored' => $data['recored']
                 ])->getData());
-
+            } else if ($clientId) {
+                UniPush::dispatch([
+                    'userInfo'  => $_userInfo->toArray(),
+                    'client_id' => $clientId,
+                    'message'   => [
+                        'content'  => $msn,
+                        'msn_type' => $data['msn_type'],
+                        'other'    => is_string($data['other']) ?
+                            json_decode($data['other'], true) :
+                            $data['other'],
+                    ]
+                ]);
             }
+
         }
         return $response->message('chat', $data);
     }
@@ -188,7 +208,7 @@ abstract class BaseHandler
         $res      = $this->room->get($this->fd);
         if ($res) {
             $userId = $res['user_id'];
-            $this->updateTabelField($userId, $toUserId);
+            $this->manager->updateTabelField($userId, $toUserId);
 
             //不是游客进入记录
             if (!$res['tourist'] && $toUserId) {
@@ -204,33 +224,21 @@ abstract class BaseHandler
     }
 
     /**
-     * @param int $userId
-     * @param int $toUserId
-     * @param string $field
+     * @param array $data
+     * @param Response $response
+     * @return \think\response\Json
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function updateTabelField(int $userId, int $toUserId, string $field = 'to_user_id')
+    public function open(array $data = [], Response $response)
     {
-        $fds = $this->getUserIdByFd($userId);
-        foreach ($fds as $fd) {
-            $this->room->update($fd, $field, $toUserId);
+        $open = $data['open'] ?? 0;
+        $res  = $this->room->get($this->fd);
+        if ($res) {
+            $userId = $res['user_id'];
+            $this->manager->updateTabelField($userId, $open, 'is_open');
         }
+        return $response->message('open', ['message' => 'ok']);
     }
-
-    /**
-     * @param int $userId
-     * @return array
-     * @throws \Psr\SimpleCache\InvalidArgumentException
-     */
-    public function getUserIdByFd(int $userId)
-    {
-        $toUserFd = [];
-        foreach (['user', 'kefu'] as $type) {
-            $toUserFd = array_merge($toUserFd, $this->manager->getUserIdByFd($userId, $type) ?: []);
-        }
-        return array_merge(array_unique($toUserFd));
-    }
-
 
     /**
      * 测试原样返回
@@ -258,7 +266,7 @@ abstract class BaseHandler
             $service->updateRecord(['to_user_id' => $usreId], ['online' => 0]);
 
             if ($toUsreId) {
-                $toUserFd  = $this->getUserIdByFd($toUsreId);
+                $toUserFd  = $this->manager->getUserIdByFds($toUsreId);
                 $fremaData = [];
                 foreach ($toUserFd as $value) {
                     if ($frem = $this->room->get($value)) {

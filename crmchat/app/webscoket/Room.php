@@ -79,9 +79,92 @@ class Room
      * 获取表实例
      * @return SwooleTable
      */
-    public function getTable()
+    public function getTable(string $tableName = 'user')
     {
         return app()->make(Table::class)->get('user');
+    }
+
+    /**
+     * 添加
+     * @param string $fd
+     * @param array $data
+     * @return mixed
+     */
+    public function clientAdd(string $fd, array $data)
+    {
+        $this->cache->sadd('client', $fd);
+        return $this->getTable('client')->set($fd, $data);
+    }
+
+    /**
+     * 获取
+     * @param string $fd
+     * @return mixed
+     */
+    public function clientGet(string $fd)
+    {
+        return $this->getTable('client')->get($fd);
+    }
+
+    /**
+     * 删除
+     * @param string $fd
+     * @return mixed
+     */
+    public function clientDel(string $fd)
+    {
+        $this->cache->sRem('client', $fd);
+        return $this->getTable('client')->del($fd);
+    }
+
+
+    /**
+     * 根据uid获取client_id信息
+     * @param int $userId
+     * @return mixed|null
+     */
+    public function getClient(int $userId)
+    {
+        $list   = $this->cache->sMembers('client');
+        $client = [];
+        foreach ($list as $item) {
+            $client[] = $this->clientGet($item);
+        }
+        foreach ($client as $value) {
+            if ($value['user_id'] == $userId) {
+                return $value;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 修改
+     * @param string $fd
+     * @param $field
+     * @param null $value
+     * @return bool|mixed
+     */
+    public function clientUpdate(string $fd, $field, $value = null)
+    {
+        $res = true;
+        if (is_array($field)) {
+            $res = $this->getTable('client')->set($fd, $field);
+        } else if (!is_array($field) && $value !== null) {
+            $data = $this->getTable('client')->get($fd);
+            if (!$data) {
+                return false;
+            }
+            if (is_array($field)) {
+                foreach ($field as $key) {
+                    $data[$key] = $value[$key] ?? 0;
+                }
+            } else {
+                $data[$field] = $value;
+            }
+            $res = $this->getTable('client')->set($fd, $data);
+        }
+        return $res;
     }
 
     /**
@@ -92,10 +175,10 @@ class Room
      * @param int $tourist 是否为游客
      * @return mixed
      */
-    public function add(string $key, string $appid, int $userId = 0, int $toUserId = 0, int $tourist = 0)
+    public function add(string $key, string $appid, int $userId = 0, int $isApp = 0, string $clientId = '', int $toUserId = 0, int $tourist = 0)
     {
         $nowkey = $this->tableFdPrefix . $key;
-        $data   = ['fd' => $key, 'appid' => $appid, 'type' => $this->type ?: 'user', 'user_id' => $userId, 'to_user_id' => $toUserId, 'tourist' => $tourist];
+        $data   = ['fd' => $key, 'is_open' => 1, 'client_id' => $clientId, 'appid' => $appid, 'is_app' => $isApp, 'type' => $this->type ?: 'user', 'user_id' => $userId, 'to_user_id' => $toUserId, 'tourist' => $tourist];
         $res    = $this->getTable()->set($nowkey, $data);
         $this->cache->sAdd(self::USER_INFO_FD_PRE, $key . '=' . $userId);
         $this->delRepeatUidFd($userId, $key);

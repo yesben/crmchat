@@ -85,8 +85,10 @@ class Manager extends Websocket
      */
     public function onOpen($fd, \think\Request $request)
     {
-        $type  = $request->get('type');
-        $token = $request->get('token');
+        $type     = $request->get('type');
+        $form     = $request->get('form');
+        $clientId = $request->get('client_id', '');
+        $token    = $request->get('token');
         if (!$token || !in_array($type, self::USER_TYPE)) {
             return $this->server->close($fd);
         }
@@ -106,10 +108,20 @@ class Manager extends Websocket
         $uid = $data['data']['uid'] ?? 0;
 
         if ($uid) {
+            $this->deleteCloneFd($uid);
             $this->login($type, $uid, $fd);
         }
+        $isApp = $form == 'app' ? 1 : 0;
 
-        $this->nowRoom->add($fd, $data['data']['appid'] ?? '', $uid);
+        if ($isApp) {
+            $this->nowRoom->clientAdd((string)$fd, [
+                'fd'        => $fd,
+                'client_id' => $clientId,
+                'type'      => $type,
+                'user_id'   => $uid
+            ]);
+        }
+        $this->nowRoom->add($fd, $data['data']['appid'] ?? '', $uid, $isApp, $clientId);
         $this->pingService->createPing($fd, time(), $this->cache_timeout);
         $this->send($fd, $this->response->message('ping', ['now' => time()]));
         return $this->send($fd, $this->response->success());
@@ -141,6 +153,50 @@ class Manager extends Websocket
         $key = '_ws_' . $type;
         $this->cache->expire($key, 1800);
         $this->cache->expire($key . $uid, 1800);
+    }
+
+    /**
+     *
+     * @param int $userId
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function deleteCloneFd(int $userId)
+    {
+        $fds = $this->getUserIdByFds($userId);
+        foreach ($fds as $fd) {
+            $data = $this->nowRoom->get($fd);
+            if ($data) {
+                $this->nowRoom->type($data['type'])->del($fd);
+            }
+        }
+    }
+
+    /**
+     * @param int $userId
+     * @return array
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function getUserIdByFds(int $userId)
+    {
+        $toUserFd = [];
+        foreach (['user', 'kefu'] as $type) {
+            $toUserFd = array_merge($toUserFd, $this->getUserIdByFd($userId, $type) ?: []);
+        }
+        return array_merge(array_unique($toUserFd));
+    }
+
+    /**
+     * @param int $userId
+     * @param int $toUserId
+     * @param string $field
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function updateTabelField(int $userId, int $toUserId, string $field = 'to_user_id')
+    {
+        $fds = $this->getUserIdByFds($userId);
+        foreach ($fds as $fd) {
+            $this->nowRoom->update($fd, $field, $toUserId);
+        }
     }
 
     public function logout($type, $uid, $fd)
@@ -252,7 +308,13 @@ class Manager extends Websocket
         if ($this->nowRoom->exist($fd)) {
             $data = $this->nowRoom->get($tabfd);
             $this->logout($data['type'], $data['user_id'], $fd);
-            $this->nowRoom->type($data['type'])->del($tabfd);
+            if (!$data['is_app'] && !$data['client_id']) {
+                $this->nowRoom->type($data['type'])->del($tabfd);
+            } else {
+                $this->updateTabelField($data['user_id'], 0);
+                $this->updateTabelField($data['user_id'], 1, 'is_close');
+                $this->updateTabelField($data['user_id'], 0, 'is_open');
+            }
             $this->exec($data['type'], 'close', [$fd, null, ['data' => $data], $this->response]);
         }
         $this->pingService->removePing($fd);

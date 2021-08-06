@@ -29,21 +29,31 @@ use think\db\exception\ModelNotFoundException;
  */
 class ChatServiceDialogueRecordServices extends BaseServices
 {
+    //文本消息类型
+    const MSN_TYPE_TXT = 1;
+    //表情消息类型
+    const MSN_TYPE_EMOT = 2;
+    //图片消息类型
+    const MSN_TYPE_IME = 3;
+    //音频消息类型
+    const MSN_TYPE_VOICE = 4;
+    //商品链接消息类型
+    const MSN_TYPE_GOODS = 5;
+    //订单信息消息类型
+    const MSN_TYPE_ORDER = 6;
+
     /**
      * 消息类型
      * @var array  1=文字 2=表情 3=图片 4=语音 5 = 商品链接 6 = 订单类型
      */
-    const MSN_TYPE = [1, 2, 3, 4, 5, 6];
-
-    /**
-     * 商品链接消息类型
-     */
-    const MSN_TYPE_GOODS = 5;
-
-    /**
-     * 订单信息消息类型
-     */
-    const MSN_TYPE_ORDER = 6;
+    const MSN_TYPE = [
+        self::MSN_TYPE_TXT,
+        self::MSN_TYPE_EMOT,
+        self::MSN_TYPE_IME,
+        self::MSN_TYPE_VOICE,
+        self::MSN_TYPE_GOODS,
+        self::MSN_TYPE_ORDER
+    ];
 
     /**
      * ChatServiceDialogueRecordServices constructor.
