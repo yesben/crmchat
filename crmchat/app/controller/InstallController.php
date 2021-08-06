@@ -234,6 +234,7 @@ class InstallController
                     if (mysqli_connect_errno($conn)) {
                         return 0;
                     } else {
+                        mysqli_query($conn, "SET GLOBAL sql_mode='NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'");
                         $result  = mysqli_query($conn, "SELECT @@global.sql_mode");
                         $result  = $result->fetch_array();
                         $version = mysqli_get_server_info($conn);
