@@ -14,6 +14,7 @@ namespace crmeb\services\uniPush;
 
 use crmeb\exceptions\ApiException;
 use crmeb\services\HttpService;
+use crmeb\utils\Collection;
 use think\facade\Cache;
 
 /**
@@ -133,6 +134,40 @@ class AbstractAPI
     }
 
     /**
+     * 以JSON形式发送post请求
+     * @param string $url
+     * @param array $data
+     * @param array $header
+     * @return Collection
+     * @throws \Exception
+     */
+    public function parseJSON(string $url, array $data, array $header = [])
+    {
+        return $this->curl($url, $data, $header, 'post', true);
+    }
+
+    /**
+     * curl请求
+     * @param string $url
+     * @param array $data
+     * @param array $header
+     * @param string|null $method
+     * @return Collection
+     * @throws \Exception
+     */
+    protected function curl(string $url, array $data, array $header = [], string $method = null, bool $json = false)
+    {
+        $header   = $json ? array_merge(['content-type:application/json'], $header) : $header;
+        $method   = $method ?: 'post';
+        $response = $this->http->request($this->url($url), $method, $json ? json_encode($data) : $data, $header);
+        $response = json_decode($response, true);
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw new \Exception('Failed to parse JSON: :' . json_last_error_msg());
+        }
+        return new Collection($response);
+    }
+
+    /**
      * 获取token
      * @return mixed
      * @throws \Psr\SimpleCache\InvalidArgumentException
@@ -143,13 +178,12 @@ class AbstractAPI
         $token = $this->cache->get($name);
         if (!$token) {
             $msectime = $this->getMsectime();
-            $response = $this->http->postRequest($this->url('auth'), json_encode([
+            $response = $this->parseJSON('auth', [
                 'sign'      => $this->getSign($msectime),
                 'timestamp' => $msectime,
                 'appkey'    => $this->appKey
-            ]), ['content-type:application/json']);
-            $response = $response ? json_decode($response, true) : [];
-            $data     = $response['data'] ?? [];
+            ]);
+            $data     = $response->data;
             if (!isset($data['token'])) {
                 throw new ApiException('获取token失败');
             }
@@ -165,18 +199,19 @@ class AbstractAPI
      * post请求
      * @param string $url
      * @param array $data
-     * @return bool|string
+     * @return Collection
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function parsePost(string $url, array $data)
     {
-        return $this->http($this->url($url), $data, 'post');
+        return $this->http($url, $data);
     }
 
     /**
-     * get请求
      * @param string $url
      * @param array $data
-     * @return bool|string
+     * @return Collection
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function parseGet(string $url, array $data)
     {
@@ -187,15 +222,15 @@ class AbstractAPI
      * @param string $url
      * @param array $data
      * @param string $method
-     * @return bool|string
+     * @return Collection
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function http(string $url, array $data, string $method = 'post')
     {
         $token  = $this->getToken();
         $header = [
-            'content-type:application/json;charset=utf-8',
             'token:' . $token
         ];
-        return $this->http->request($url, $method, json_encode($data), $header);
+        return $this->curl($url, $data, $header, $method, true);
     }
 }

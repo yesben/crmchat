@@ -51,8 +51,9 @@ class PushMessage
 
     /**
      * 消息推送
-     * @param string $cid
-     * @return bool|string
+     * @param PushOptions $option
+     * @return \crmeb\utils\Collection
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function push(PushOptions $option)
     {
