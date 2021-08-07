@@ -1,0 +1,79 @@
+<template>
+    <div class="content">
+        <p class="font-w">使用简介</p>
+        <p class="text-i">A链接可以在网页中或内容中添加A链接使用，可以在自己站点使用，也可以发布的外站使用，或者自己生成链接二维码使用;</p>
+        <Divider />
+        <p class="typetitle">第一种，自动识别浏览器A链接使用</p>
+
+        <div class="fenlei">
+            <div class="code-content-wrap">
+        <textarea id="NormalCodeTextarea1" class="code" rows="4">{{siteUrl}}/chat/index?noCanClose=1&token={{tokeninfo.token}}</textarea>
+                <div class="other-wrap">
+                    <a class="btn btn-blue btn-large mr10" :href="linkUrl3" target="_blank">点击体验</a>
+                    <a @click="getCopy('NormalCodeTextarea1')" class="btn btn-blue btn-large" href="javascript:void(0);"><span>复制代码</span></a>
+                </div>
+            </div>
+
+        </div>
+        <p class="typetitle">第二种，PC端A链接使用</p>
+        <div  class="fenlei">
+            <div class="code-content-wrap">
+        <textarea id="NormalCodeTextarea2" class="code" rows="4">{{siteUrl}}/chat/pc?noCanClose=1&token={{tokeninfo.token}}</textarea>
+                <div class="other-wrap">
+                    <a class="btn btn-blue btn-large mr10" :href="linkUrl1" target="_blank">点击体验</a>
+                    <a @click="getCopy('NormalCodeTextarea2')" class="btn btn-blue btn-large" href="javascript:void(0);"><span>复制代码</span></a>
+                </div>
+            </div>
+
+        </div>
+        <p class="typetitle">第三种，移动端A链接使用</p>
+        <div  class="fenlei">
+            <div class="code-content-wrap">
+        <textarea id="NormalCodeTextarea3" class="code" rows="4">{{siteUrl}}/chat/mobile?noCanClose=1&token={{tokeninfo.token}}</textarea>
+            <div class="other-wrap">
+                <a class="btn btn-blue btn-large mr10" :href="linkUrl2" target="_blank">点击体验</a>
+                <a @click="getCopy('NormalCodeTextarea3')" class="btn btn-blue btn-large" href="javascript:void(0);"><span>复制代码</span></a>
+            </div>
+            </div>
+
+        </div>
+        <div  class="fenlei">
+            <p class="font-w">小贴士</p>
+            <p class="text-i">如果点击体验，提示客服不在线，请进入客服点击进入客服登录一个账号再试。</p>
+            <p class="text-i">如需更换token，请在设置中重新获取。</p>
+
+        </div>
+    </div>
+</template>
+<script>
+
+export default{
+    name: 'alink',
+
+    props: {
+        tokeninfo:{},
+        siteUrl:'',
+        cgetCopy:{}
+    },
+    computed: {
+        linkUrl1() {
+            return `${location.origin}/chat/index?token=${this.tokeninfo.token}&noCanClose=1`;
+        },
+        linkUrl2() {
+            return `${location.origin}/chat/index?token=${this.tokeninfo.token}&noCanClose=1&deviceType=Mobile`;
+        },
+        linkUrl3() {
+            return `${location.origin}/chat/index?token=${this.tokeninfo.token}&noCanClose=1`;
+        }
+    },
+    mounted() {
+
+    },
+    methods: {
+        getCopy(id) {
+            this.cgetCopy(id);
+        },
+    }
+}
+</script>
+
