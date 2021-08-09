@@ -57,13 +57,13 @@ export default{
     },
     computed: {
         linkUrl1() {
-            return `${location.origin}/chat/index?token=${this.tokeninfo.token}&noCanClose=1`;
+            return `${location.origin}/chat/index?token=${this.tokeninfo.token_md5}&noCanClose=1`;
         },
         linkUrl2() {
-            return `${location.origin}/chat/index?token=${this.tokeninfo.token}&noCanClose=1&deviceType=Mobile`;
+            return `${location.origin}/chat/index?token=${this.tokeninfo.token_md5}&noCanClose=1&deviceType=Mobile`;
         },
         linkUrl3() {
-            return `${location.origin}/chat/index?token=${this.tokeninfo.token}&noCanClose=1`;
+            return `${location.origin}/chat/index?token=${this.tokeninfo.token_md5}&noCanClose=1`;
         }
     },
     mounted() {
