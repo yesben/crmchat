@@ -70,7 +70,7 @@
 </script>
 <style lang="stylus">
   .number{
-    font-size 30px;
+    font-size: 30px;
     margin-bottom: 10px;
   }
   .iconColor{
