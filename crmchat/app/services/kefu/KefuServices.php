@@ -106,7 +106,18 @@ class KefuServices extends BaseServices
             /** @var ChatServiceRecordServices $serviceRecord */
             $serviceRecord = app()->make(ChatServiceRecordServices::class);
             $info          = $serviceRecord->get(['user_id' => $kfuUserId, 'to_user_id' => $userId], ['type', 'message_type', 'is_tourist', 'avatar', 'nickname']);
-            $record        = $serviceRecord->saveRecord($appid, $userId, $kefuToUserId, $messageData['msn'] ?? '', $info['type'] ?? 1, $messageData['message_type'] ?? 1, $num, $info['is_tourist'] ?? 0, $info['nickname'] ?? "", $info['avatar'] ?? '');
+            $record        = $serviceRecord->saveRecord(
+                $appid,
+                $userId,
+                $kefuToUserId,
+                $messageData['msn'] ?? '',
+                $info['type'] ?? 1,
+                $messageData['message_type'] ?? 1,
+                0,
+                $info['is_tourist'] ?? 0,
+                $info['nickname'] ?? "",
+                $info['avatar'] ?? ''
+            );
             $res           = $auxiliaryServices->saveAuxliary(['binding_id' => $kfuUserId, 'relation_id' => $userId]);
             if (!$res && !$record) {
                 throw new ValidateException('转接客服失败');

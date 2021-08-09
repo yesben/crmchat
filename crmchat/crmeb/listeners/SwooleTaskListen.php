@@ -53,7 +53,7 @@ class SwooleTaskListen implements ListenerInterface
             }
         } else {
             foreach ($userId as $id) {
-                $fds = Manager::userFd(array_search($data['type'], Manager::USER_TYPE), $id);
+                $fds = Manager::userFd($data['type'], $id);
                 foreach ($fds as $fd) {
                     if (!in_array($fd, $except) && $server->isEstablished($fd))
                         $server->push((int)$fd, json_encode($data['data']));
