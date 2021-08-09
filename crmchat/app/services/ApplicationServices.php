@@ -189,6 +189,9 @@ class ApplicationServices extends BaseServices
      */
     public function parseToken(string $token, array $other = [])
     {
+        if (strlen($token) === 32) {
+            $token = $this->dao->value(['token_md5' => $token], 'token');
+        }
         /** @var Encrypter $encrypter */
         $encrypter = app()->make(Encrypter::class);
 

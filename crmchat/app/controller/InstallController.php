@@ -500,20 +500,15 @@ class InstallController
                     'data'    => json_encode($post)
                 ]);
             case '5':
-                $ip             = $this->get_client_ip();
-                $host           = $_SERVER['HTTP_HOST'];
-                $curent_version = $this->getversion();
-                $version        = trim($curent_version['version']);
                 $this->installlog();
                 @touch($path . 'public/install/install.lock');
                 //生成key
-
                 return view('/install/step5', [
                     'title'   => $Title,
                     'powered' => $Powered,
                     'ip'      => request()->ip(),
                     'host'    => request()->host(),
-                    'version' => $version
+                    'version' => get_crmeb_version()
                 ]);
         }
     }
