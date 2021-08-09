@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-top: 20px;">
     <!--统计-->
     <statistics></statistics>
     <!--统计图标-->

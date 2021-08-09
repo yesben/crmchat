@@ -64,7 +64,7 @@ import scroll from "@/libs/loading";
 
 // (function() {
 //   var hm = document.createElement("script");
-//   hm.src = "http://chat.lfmn.fun/customerServer.js";
+//   hm.src = "http://192.168.31.192:8081/customerServer.js";
 //   var s = document.getElementsByTagName("script")[0];
 //   s.parentNode.insertBefore(hm, s);
 // })()

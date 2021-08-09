@@ -9,13 +9,11 @@ var base64ImageObject = {
   putItAway: 'data:image/png;base64,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'
 }
 const settingObj = {
-  wssUrl: 'wss://pro.crmeb.net/adminapi',
   domId: 'customerServerTip',
   openUrl: `${location.origin}/chat/index`,
-  deviceType: '',
-  httpUrl: 'http://chat.lfmn.fun/',
+  deviceType: '', // 打开端
   token: '',
-  insertDomNode: 'body'
+  insertDomNode: 'body' // 插入的目标dom， vue必穿，否则将插入至body中
 };
 
 function customerServerStyle() {
@@ -93,11 +91,12 @@ function initCustomerServer(option) {
   this.settingObj = settingObj;
   this.settingObj.openUrl = `${option.openUrl || location.origin}/chat/index`; //服务器地址加路由, 若不传入则自动获取引入应用所在服务器的域名
   this.settingObj.domId = option.customerServerTip || 'customerServerTip';
-  this.settingObj.insertDomNode = option.insertDomNode || 'body'
+  this.settingObj.insertDomNode = option.insertDomNode || 'body' // 插入的标签
   this.settingObj.token = option.token; // token为必填项
   // 判断当前环境下的设备是pc端 || 移动端, 将客户信息挂载到iframe的链接上
   this.setMatchMedia = () => {
     const matchMedia = window.matchMedia;
+    // 自动判断启动端 pc 或是 移动
     if(matchMedia('(max-width: 600px)').matches) {
       this.settingObj.deviceType = 'Mobile';
     } else if(matchMedia('(max-width: 992px)').matches) {
@@ -105,13 +104,23 @@ function initCustomerServer(option) {
     } else {
       this.settingObj.deviceType = 'Desktop';
     };
+
+    // 若用户通过 type 指定，则使用type指定的参数
+    if(option.type) {
+      this.settingObj.deviceType = option.type;
+    }
+
+
     // 获取客服相关参数
+    this.settingObj.openUrl += `?deviceType=${this.settingObj.deviceType}`;
     let customerServerData = '';
     if(option.sendUserData && Object.keys(option.sendUserData).length) {
       customerServerData = toParams(option.sendUserData);
-      this.settingObj.openUrl += `?${customerServerData}&token=${this.settingObj.token}&deviceType=${this.settingObj.deviceType}`;
+      this.settingObj.openUrl += `${customerServerData}`;
     }
+
   }
+
 
   // 创建 联系客服小弹窗按钮（点击时打开聊天界面）,创建iframe容器 并将iframe添加至body中
   this.createCustomerServerContainer = () => {
@@ -131,8 +140,9 @@ function initCustomerServer(option) {
     </div>
     `;
     let iframeHtml = `
-    <iframe src="${this.settingObj.openUrl}&now=${Math.random()}" frameborder="0" class="iframe_contanier" style="width:100%; height:100%;"></iframe>
+    <iframe src="${this.settingObj.openUrl}&token=${this.settingObj.token}" frameborder="0" class="iframe_contanier" style="width:100%; height:100%;"></iframe>
   `;
+
 
     var app = document.createElement('div');
     app.setAttribute('id', 'app');
@@ -149,6 +159,17 @@ function initCustomerServer(option) {
 
     // 获取联系客服按钮dom对象
     this.connentServerDom = document.querySelector(`#${settingObj.domId}`);
+
+    // 判断联系客服按钮是否默认展示
+
+    if(!option.isShowTip) {
+      this.connentServerDom.style.display = 'none';
+    }
+
+
+
+
+
     // 获取 iframe 弹框dom对象，便于后期数据交互
     this.iframe_contanier = document.querySelector('.iframe_contanier');
 
@@ -251,227 +272,24 @@ initCustomerServer.prototype.setStyleOfCustomerServer = function(dom, styleObj) 
   Object.keys(styleObj).forEach(item => {
     dom['style'][item] = styleObj[item]
   })
+};
+
+initCustomerServer.prototype.getOpenUrl = function() {
+  return this.settingObj.openUr;
 }
+
 
 
 
 export default initCustomerServer;
 
+// let useCustomerServer = new initCustomerServer(option);
+// useCustomerServer.init();
 
 
 
 
 
-
-
-// 将token获取并携带
-// let scriptToken = document.querySelector('#customerServer').getAttribute('token');
-// window.testGetFatherData.token = scriptToken;
-
-
-// 判断设备类型
-// const matchMedia = window.matchMedia;
-// if(matchMedia('(max-width: 600px)').matches) {
-//   settingObj.deviceType = 'Mobile';
-// } else if(matchMedia('(max-width: 992px)').matches) {
-//   settingObj.deviceType = 'Tablet';
-// } else {
-//   settingObj.deviceType = 'Desktop';
-// };
-// // 获取客服相关参数
-// let customerServerData = '';
-// if(window.testGetFatherData && Object.keys(window.testGetFatherData)) {
-//   customerServerData = toParams(window.testGetFatherData);
-//   settingObj.openUrl += `?${customerServerData}&deviceType=${settingObj.deviceType}`;
-// }
-
-
-// const html = `
-//     <div class="customerServer_container" id="${settingObj.domId}">
-//       <div class="connect_customerServer">
-//         <div class="connect_customerServer_con">
-//           <img class="connect_customerServer_con_img" src="${base64ImageObject.message}"></img>
-//           <span>联系客服</span>
-//         </div>
-//         <div class="connect_customerServer_open">
-//           <img class="connect_customerServer_open_img" src="${base64ImageObject.open}"></img>
-//         </div>
-//       </div>
-//       <div class="connent_count"></div>
-//     </div>
-// `;
-
-// const iframeHtml = `
-//     <iframe src="${settingObj.openUrl}&now=${Math.random()}" frameborder="0" class="iframe_contanier" style="width:100%; height:100%;"></iframe>
-//   `;
-
-
-// window.onload = function() {
-
-//   // 界面右下角联系客服dom
-//   var app = document.createElement('div');
-//   app.setAttribute('id', 'app');
-//   app.innerHTML = html;
-
-
-//   var body = document.querySelector('body');
-//   body.appendChild(app);
-
-//   // iframe dom
-//   var iframe = document.createElement('div');
-//   iframe.setAttribute('id', 'iframe_content');
-//   iframe.innerHTML = iframeHtml;
-
-//   Object.keys(iframe_content_css).forEach(item => {
-//     iframe.style[item] = iframe_content_css[item]
-//   })
-//   // 初始化移动端，以及pc端聊天框样式时，使用定位将其隐藏
-//   // 移动端初始化样式
-//   let mobileInitStyle = {
-//     width: '100%',
-//     // height: (window.innerHeight - 50) + 'px',
-//     height: '100%',
-//     top: '100%',
-//     left: 0
-//   }
-//   // pc端初始化样式
-//   let pcInitStyle = {
-//     width: '400px',
-//     bottom: '-645px',
-//     height: '645px'
-//   }
-
-//   if(settingObj.deviceType == 'Mobile') {
-//     Object.keys(mobileInitStyle).forEach(item => {
-//       iframe.style[item] = mobileInitStyle[item];
-//     });
-//   } else {
-//     Object.keys(pcInitStyle).forEach(item => {
-//       iframe.style[item] = pcInitStyle[item];
-//     });
-//   }
-
-
-//   var connent_count = document.querySelector('.connent_count');
-//   Object.keys(connent_count_css).forEach(item => {
-//     connent_count.style[item] = connent_count_css[item]
-//   })
-
-//   var connentCount = document.querySelector('.connent_count'); // 维度消息数dom节点
-//   connentCount.style.display = 'none';
-
-
-//  ----------------
-//   // 接收来自iframe中的参数
-//   window.addEventListener("message", e => {
-//     // 关闭弹框
-//     if(e.data.type == 'closeWindow') {
-//       if(settingObj.deviceType == 'Mobile') {
-//         iframe.style.top = '100%';
-//       } else {
-//         iframe.style.bottom = '-645px';
-//         iframe.style.opacity = '0';
-//       }
-//     }
-//     // 收取未读消息
-
-//     if(e.data.type == 'message_num') {
-//       if(e.data.num > 0) {
-//         connentCount.style.display = 'flex';
-//       } else {
-//         connentCount.style.display = 'none';
-//       }
-//       connentCount.innerHTML = e.data.num;
-//     }
-
-//   });
-
-
-
-//   // 获取联系客服按钮id
-//   var connentServerDom = document.querySelector(`#${settingObj.domeId}`);
-//   // 样式引入
-//   Object.keys(customerServer_container_css).forEach(item => {
-//     connentServerDom.style[item] = customerServer_container_css[item];
-//   })
-
-//   // connect_customerServer 样式
-//   var connect_customerServer = document.querySelector('.connect_customerServer');
-//   Object.keys(connect_customerServer_css).forEach(item => {
-//     connect_customerServer.style[item] = connect_customerServer_css[item];
-//   })
-
-//   // connect_customerServer_con 样式
-
-//   var connect_customerServer_con = document.querySelector('.connect_customerServer_con');
-//   Object.keys(connect_customerServer_con_css).forEach(item => {
-//     connect_customerServer_con.style[item] = connect_customerServer_con_css[item];
-//   })
-
-//   var connect_customerServer_con_img = document.querySelector('.connect_customerServer_con img');
-//   Object.keys(connect_customerServer_con_img_css).forEach(item => {
-//     connect_customerServer_con_img.style[item] = connect_customerServer_con_img_css[item]
-//   })
-
-//   var connect_customerServer_open = document.querySelector('.connect_customerServer_open');
-//   Object.keys(connect_customerServer_open_css).forEach(item => {
-//     connect_customerServer_open.style[item] = connect_customerServer_open_css[item];
-//   })
-
-//   var connect_customerServer_open_img = document.querySelector('.connect_customerServer_open img');
-//   Object.keys(connect_customerServer_open_img_css).forEach(item => {
-//     connect_customerServer_open_img.style[item] = connect_customerServer_open_img_css[item]
-//   })
-
-
-
-
-
-//   // 联系客服 小标签操作 -- 展示联系客服弹窗
-//   connentServerDom.addEventListener('click', getCustomeServer);
-//   var canCustomerServerType = true; // 是否可以打开客服聊天框
-//   body.appendChild(iframe);
-
-//   function getCustomeServer() {
-
-
-
-//     if(canCustomerServerType) {
-//       if(settingObj.deviceType == 'Mobile') {
-//         iframe.style.top = '0';
-//       } else {
-//         iframe.style.bottom = 0;
-//         iframe.style.opacity = '1';
-//       }
-//     }
-
-
-//     canCustomerServerType = true;
-//     var iframe_contanier;
-
-//     iframe_contanier = document.querySelector('.iframe_contanier');
-//     iframe_contanier.contentWindow.postMessage(testGetFatherData, "*"); // 传送图文数据
-//     iframe_contanier.contentWindow.postMessage({ type: 'openCustomeServer' }, "*"); //通知iframe 打开了客服弹框
-//   }
-
-
-//   // 如果用户浏览网页超过10秒，则开始进行websocket链接，构造 iframe 聊天框
-//   // var timer = null;
-//   // var count = 0;
-//   // timer = setInterval(() => {
-//   //   count++;
-//   //   console.log(count);
-//   //   // 如果计数大于10 或者 客服服务已经创建，则清空计数器
-//   //   if(count > 10 || document.body.querySelector('.iframe_contanier')) {
-//   //     clearInterval(timer);
-//   //     count = 0;
-//   //     getCustomeServer({ canOpen: false });
-//   //   }
-
-//   // }, 1000);
-
-
-// }
 // 生成指定范围内的随机数
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -513,7 +331,6 @@ function ajax(options) {
 
 
 // 将Object 改装成以 & 符号连接的字符串
-
 function toParams(param) {
   var result = ""
   for(let name in param) {
@@ -521,6 +338,7 @@ function toParams(param) {
       result += "&" + name + "=" + encodeURI(param[name]);
     }
   }
+
   return result.substring(1)
 }
 

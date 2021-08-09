@@ -1,5 +1,6 @@
 <template>
   <div class="redirect_container">
+    asdasdsa
   </div>
 </template>
 <script>
@@ -18,6 +19,7 @@ export default {
     // 重定向方法，判断是否是移动端环境，跳转对应界面
     redirect() {
       const token = this.$route.query.token;
+
       setLoc('mobile_token', token);
       if(this.$route.query.deviceType == "Mobile") {
         this.$router.push({ name: 'customerServerMobile', query: this.$route.query })
