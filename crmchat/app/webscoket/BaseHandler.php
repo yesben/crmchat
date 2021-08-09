@@ -173,7 +173,11 @@ abstract class BaseHandler
                 $data['recored']['avatar']   = $_userInfo['avatar'];
 
                 $data['recored']['online'] = $userOnline;
-                $allUnMessagesCount        = $logServices->getMessageNum(['user_id' => $userId, 'type' => 0]);
+                $allUnMessagesCount        = $logServices->getMessageNum([
+                    'appid'      => $user['appid'],
+                    'to_user_id' => $to_user_id,
+                    'type'       => 0
+                ]);
 
                 $this->manager->pushing($toUserFd, $response->message('mssage_num', [
                     'user_id' => $userId,

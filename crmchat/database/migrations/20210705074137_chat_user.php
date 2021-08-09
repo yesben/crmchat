@@ -32,6 +32,7 @@ class ChatUser extends Migrator
         $table->addColumn('uid', 'integer', ['limit' => 10, 'default' => 0, 'comment' => '用户UID']);
         $table->addColumn('group_id', 'integer', ['limit' => 10, 'default' => 0, 'comment' => '用户分组']);
         $table->addColumn('nickname', 'string', ['limit' => 50, 'default' => '', 'comment' => '用户昵称']);
+        $table->addColumn('openid', 'string', ['limit' => 50, 'default' => '', 'comment' => 'openid']);
         $table->addColumn('avatar', 'string', ['limit' => 255, 'default' => '', 'comment' => '头像']);
         $table->addColumn('phone', 'string', ['limit' => 11, 'default' => '', 'comment' => '手机号']);
         $table->addColumn('last_ip', 'string', ['limit' => 16, 'default' => '', 'comment' => '访问ip']);

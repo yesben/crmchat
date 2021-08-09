@@ -282,7 +282,7 @@ class User extends AuthController
      */
     public function getMessageCount(ChatServiceDialogueRecordServices $services)
     {
-        return $this->success(['count' => $services->getMessageNum(['appid' => $this->kefuInfo['appid'], 'user_id' => $this->kefuInfo['user_id'], 'type' => 0])]);
+        return $this->success(['count' => $services->getMessageNum(['appid' => $this->kefuInfo['appid'], 'to_user_id' => $this->kefuInfo['user_id'], 'type' => 0])]);
     }
 
     /**
@@ -318,6 +318,11 @@ class User extends AuthController
             }
         }
         if ($update) {
+
+            if (isset($data['phone']) && preg_match('/^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/', $data['phone'])) {
+                $data['is_tourist'] = 0;
+            }
+
             $services->update($userId, $update);
         }
         return $this->success('修改成功');

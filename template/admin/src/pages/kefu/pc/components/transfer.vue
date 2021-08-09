@@ -18,7 +18,7 @@
     <div class="list-wrapper">
       <div class="user-item" v-for="(item,index) in labelLists" :key="index" @click="bindActive(item)">
         <img v-lazy="item.avatar" alt="">
-        <p class="line1">{{item.wx_name}}</p>
+        <p class="line1">{{item.nickname}}</p>
       </div>
     </div>
   </div>
@@ -58,7 +58,7 @@ export default {
       // this.$emit('transferPeople',item)
       serviceTransfer({
         user_id: this.userUid,
-        kefuToUid: item.uid
+        kefuToUserId: item.user_id
       }).then(res => {
         this.$Message.success(res.msg)
         this.$emit('close')
