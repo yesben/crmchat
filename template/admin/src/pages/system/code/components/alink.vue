@@ -7,7 +7,7 @@
 
         <div class="fenlei">
             <div class="code-content-wrap">
-        <textarea id="NormalCodeTextarea1" class="code" rows="4">{{siteUrl}}/chat/index?noCanClose=1&token={{tokeninfo.token_md5}}</textarea>
+        <textarea id="NormalCodeTextarea1" class="code" rows="1">{{siteUrl}}/chat/index?noCanClose=1&token={{tokeninfo.token_md5}}</textarea>
                 <div class="other-wrap">
                     <a class="btn btn-blue btn-large mr10" :href="linkUrl3" target="_blank">点击体验</a>
                     <a @click="getCopy('NormalCodeTextarea1')" class="btn btn-blue btn-large" href="javascript:void(0);"><span>复制代码</span></a>
@@ -18,7 +18,7 @@
         <p class="typetitle">第二种，PC端A链接使用</p>
         <div  class="fenlei">
             <div class="code-content-wrap">
-        <textarea id="NormalCodeTextarea2" class="code" rows="4">{{siteUrl}}/chat/pc?noCanClose=1&token={{tokeninfo.token_md5}}</textarea>
+        <textarea id="NormalCodeTextarea2" class="code" rows="1">{{siteUrl}}/chat/pc?noCanClose=1&token={{tokeninfo.token_md5}}</textarea>
                 <div class="other-wrap">
                     <a class="btn btn-blue btn-large mr10" :href="linkUrl1" target="_blank">点击体验</a>
                     <a @click="getCopy('NormalCodeTextarea2')" class="btn btn-blue btn-large" href="javascript:void(0);"><span>复制代码</span></a>
@@ -29,7 +29,7 @@
         <p class="typetitle">第三种，移动端A链接使用</p>
         <div  class="fenlei">
             <div class="code-content-wrap">
-        <textarea id="NormalCodeTextarea3" class="code" rows="4">{{siteUrl}}/chat/mobile?noCanClose=1&token={{tokeninfo.token_md5}}</textarea>
+        <textarea id="NormalCodeTextarea3" class="code" rows="1">{{siteUrl}}/chat/mobile?noCanClose=1&token={{tokeninfo.token_md5}}</textarea>
             <div class="other-wrap">
                 <a class="btn btn-blue btn-large mr10" :href="linkUrl2" target="_blank">点击体验</a>
                 <a @click="getCopy('NormalCodeTextarea3')" class="btn btn-blue btn-large" href="javascript:void(0);"><span>复制代码</span></a>
