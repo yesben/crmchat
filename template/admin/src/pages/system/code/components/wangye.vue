@@ -12,7 +12,7 @@
 <script>
     var option = {
         openUrl: '{{siteUrl}}',
-        token: '{{tokeninfo.token}}'
+        token: '{{tokeninfo.token_md5}}'
     };
     var canCustomerServer = new initCustomerServer(option);
     canCustomerServer.init();
@@ -46,7 +46,7 @@
         <textarea id="NormalCodeTextarea3" class="code textarea" rows="9">
 this.canCustomerServer = new initCustomerServer({
     openUrl: "{{siteUrl}}", // 打开客服聊天框的地址，即：部署后台管理系统的地址
-    token: {{tokeninfo.token}},
+    token: {{tokeninfo.token_md5}},
 });
 this.canCustomerServer.init();
         </textarea>
