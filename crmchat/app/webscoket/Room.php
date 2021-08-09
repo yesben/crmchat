@@ -375,7 +375,7 @@ class Room
      */
     public function getKefuRoomAll()
     {
-        return $this->getRoomAll('kefu');
+        return $this->cache->sMembers('_ws_kefu');
     }
 
     /**

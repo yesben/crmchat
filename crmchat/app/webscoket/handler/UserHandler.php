@@ -128,6 +128,11 @@ class UserHandler extends BaseHandler
         }
         $this->manager->login($frame['type'], $userInfo['id'], $this->fd);
 
+        $this->manager->pushing($this->room->getKefuRoomAll(), $response->message('user_online', [
+            'user_id' => $userInfo['id'],
+            'online'  => 1
+        ])->getData(), $this->fd);
+
         return $response->success('ok');
     }
 
