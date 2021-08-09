@@ -20,8 +20,19 @@ export default {
     redirect() {
       const token = this.$route.query.token;
 
+      console.log(this.$route.query);
+
       setLoc('mobile_token', token);
+      if(this.$route.query.deviceType == "pc") {
+        this.$router.push({ name: 'customerServerPc', query: this.$route.query });
+        return;
+      }
+
       if(this.$route.query.deviceType == "Mobile") {
+        this.$router.push({ name: 'customerServerMobile', query: this.$route.query })
+        return;
+      }
+      if(this.isMobile) {
         this.$router.push({ name: 'customerServerMobile', query: this.$route.query })
       } else {
         this.$router.push({ name: 'customerServerPc', query: this.$route.query });

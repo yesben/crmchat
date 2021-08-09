@@ -82,7 +82,12 @@
       </happy-scroll>
     </div>
     <!-- 聊天内容结束 -->
-
+    <!-- 表情及图片容器 -->
+    <div class="pc_customerServer_container_footer_emoji" v-if="inputConType == 2">
+      <div class="emoji-item" v-for="(emoji, index) in emojiList" :key="index">
+        <i class="em" :class="emoji" @click.stop="select(emoji)"></i>
+      </div>
+    </div>
     <!-- 内容输入开始 -->
     <div class="pc_customerServer_container_footer">
       <div class="pc_customerServer_container_footer_header">
@@ -96,6 +101,7 @@
           </div>
         </div>
       </div>
+
       <!-- 输入框容器 -->
       <div class="pc_customerServer_container_footer_input" @click="inputConType = 1">
         <!-- <textarea v-model="userMessage" @keyup.enter="sendText" class="pc_customerServer_container_footer_input-textarea opacity0" rows="5" placeholder="请输入文字"></textarea> -->
@@ -103,12 +109,6 @@
       </div>
       <!-- 输入框容器结束 -->
 
-      <!-- 表情及图片容器 -->
-      <div class="pc_customerServer_container_footer_emoji" v-if="inputConType == 2">
-        <div class="emoji-item" v-for="(emoji, index) in emojiList" :key="index">
-          <i class="em" :class="emoji" @click.stop="select(emoji)"></i>
-        </div>
-      </div>
       <!-- 表情及图片容器结束 -->
       <!-- 相关操作 -- 点击发送 -->
       <div class="pc_customerServer_container_footer_handle">
@@ -395,11 +395,14 @@ export default {
       }
     }
     &_emoji {
+      max-width: 420px;
       display: grid;
       grid-template-columns: repeat(9, 1fr);
-      margin-top: 10px;
+      padding-top: 10px;
       max-height: 150px;
       overflow-y: auto;
+      background: #fff;
+
       .emoji-item {
         padding: 6px;
         display: flex;

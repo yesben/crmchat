@@ -112,7 +112,7 @@ function initCustomerServer(option) {
 
 
     // 获取客服相关参数
-    this.settingObj.openUrl += `?deviceType=${this.settingObj.deviceType}`;
+    this.settingObj.openUrl += `?deviceType=${this.settingObj.deviceType}&`;
     let customerServerData = '';
     if(option.sendUserData && Object.keys(option.sendUserData).length) {
       customerServerData = toParams(option.sendUserData);

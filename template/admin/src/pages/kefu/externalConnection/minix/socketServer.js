@@ -257,7 +257,7 @@ export default {
       if(this.$route.query.deviceType == 'Mobile') {
         this.userMessage += `[${item}]`
       } else {
-        // this.inputConType = 1;
+        this.inputConType = 1;
         this.$refs['inputDiv'].innerText += `[${item}]`
         // this.$refs['inputDiv'].innerHTML += `<span class="em ${item}"></span>`
       }
@@ -267,7 +267,7 @@ export default {
     // 文本发送
     sendText() {
       let sendMessage;
-      if(this.$route.query.deviceType == 'Mobile') {
+      if(!this.$refs['inputDiv']) {
         sendMessage = this.userMessage;
       } else {
         sendMessage = this.$refs['inputDiv'].innerText.replace(/(↵)/g, '\n');
@@ -278,7 +278,10 @@ export default {
         this.$refs['inputDiv'] ? this.$refs['inputDiv'].innerText = '' : this.userMessage = '';
       } else {
         this.$Message.error('请先输入信息，在进行发送');
+
       }
+
+
 
     },
     // type: 1 普通文本 2 图片
