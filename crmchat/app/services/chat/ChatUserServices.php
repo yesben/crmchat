@@ -48,9 +48,9 @@ class ChatUserServices extends BaseServices
     public function getKefuSum(string $appid = '')
     {
         $all          = $this->dao->count(['appid' => $appid]);
-        $toDayKefu    = $this->dao->count(['time' => 'today', 'appid' => $appid, 'is_tourist' => 1]);
+        $toDayKefu    = $this->dao->count(['time' => 'today', 'appid' => $appid, 'is_tourist' => 0]);
         $month        = $this->dao->count(['time' => 'month', 'appid' => $appid]);
-        $toDayTourist = $this->dao->count(['time' => 'today', 'appid' => $appid, 'is_tourist' => 0]);
+        $toDayTourist = $this->dao->count(['time' => 'today', 'appid' => $appid, 'is_tourist' => 1]);
         return compact('all', 'toDayKefu', 'month', 'toDayTourist');
     }
 

@@ -114,7 +114,7 @@ return is_win() ? [] : [
     'queue'      => [
         'enable'  => true,
         'workers' => [
-            'CRMEB' => [],
+            'CRMEB_CHAT' => [],
         ],
     ],
     //每个worker里需要预加载以共用的实例
