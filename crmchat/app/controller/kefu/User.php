@@ -282,7 +282,7 @@ class User extends AuthController
      */
     public function getMessageCount(ChatServiceDialogueRecordServices $services)
     {
-        return $this->success(['count' => $services->getMessageNum(['user_id' => $this->kefuInfo['user_id'], 'type' => 0])]);
+        return $this->success(['count' => $services->getMessageNum(['appid' => $this->kefuInfo['appid'], 'user_id' => $this->kefuInfo['user_id'], 'type' => 0])]);
     }
 
     /**
