@@ -45,21 +45,19 @@ class JwtAuth
      */
     public function getToken(int $id, string $type, array $params = []): array
     {
-        $host = app()->request->host();
-        $time = time();
-        $exp_time = strtotime('+ 7day');
-        if (app()->request->isApp()) {
-            $exp_time = strtotime('+ 30day');
-        }
-        $params += [
+        $host    = app()->request->host();
+        $time    = time();
+        $expTime = strtotime('+ 30day');
+
+        $params        += [
             'iss' => $host,
             'aud' => $host,
             'iat' => $time,
             'nbf' => $time,
-            'exp' => $exp_time,
+            'exp' => $expTime,
         ];
         $params['jti'] = compact('id', 'type');
-        $token = JWT::encode($params, Env::get('app.app_key', $this->app_key));
+        $token         = JWT::encode($params, Env::get('app.app_key', $this->app_key));
 
         return compact('token', 'params');
     }
@@ -99,8 +97,8 @@ class JwtAuth
     public function createToken(int $id, string $type, array $params = [])
     {
         $tokenInfo = $this->getToken($id, $type, $params);
-        $exp = $tokenInfo['params']['exp'] - $tokenInfo['params']['iat'] + 60;
-        $res = CacheService::setTokenBucket(md5($tokenInfo['token']), ['uid' => $id, 'type' => $type, 'token' => $tokenInfo['token'], 'exp' => $exp], (int)$exp);
+        $exp       = $tokenInfo['params']['exp'] - $tokenInfo['params']['iat'] + 60;
+        $res       = CacheService::setTokenBucket(md5($tokenInfo['token']), ['uid' => $id, 'type' => $type, 'token' => $tokenInfo['token'], 'exp' => $exp], (int)$exp);
         if (!$res) {
             throw new AdminException(ApiErrorCode::ERR_SAVE_TOKEN);
         }

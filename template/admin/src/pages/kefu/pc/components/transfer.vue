@@ -59,7 +59,7 @@ export default {
       // this.$emit('transferPeople',item)
       serviceTransfer({
         user_id: this.userUid,
-        kefuToUid: item.id
+        kefuToUserId: item.user_id
       }).then(res => {
         this.$Message.success(res.msg)
         this.$emit('close')

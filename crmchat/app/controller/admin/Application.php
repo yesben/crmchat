@@ -82,12 +82,13 @@ class Application extends AuthController
         /** @var Encrypter $encrypter */
         $encrypter = app()->make(Encrypter::class);
 
-        $data['token'] = $encrypter->encrypt(json_encode([
+        $data['token']     = $encrypter->encrypt(json_encode([
             'appid'      => $appInfo->appid,
             'app_secret' => $data['app_secret'],
             'rand'       => $rand,
             'timestamp'  => $time,
         ]));
+        $data['token_md5'] = md5($data['token']);
         $this->services->update($id, $data);
 
         return $this->success($data);
@@ -114,13 +115,13 @@ class Application extends AuthController
         /** @var Encrypter $encrypter */
         $encrypter = app()->make(Encrypter::class);
 
-        $data['token'] = $encrypter->encrypt(json_encode([
+        $data['token']     = $encrypter->encrypt(json_encode([
             'appid'      => $data['appid'],
             'app_secret' => $data['app_secret'],
             'rand'       => $rand,
             'timestamp'  => $time,
         ]));
-
+        $data['token_md5'] = md5($data['token']);
         $data['is_delete'] = 0;
         if (!$data['icon']) {
             return $this->fail('请选择应用图标');

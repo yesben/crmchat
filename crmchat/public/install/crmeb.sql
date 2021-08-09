@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `eb_application` (
   `timestamp` int(10) NOT NULL DEFAULT '0' COMMENT 'TOKEN生成时间戳',
   `rand` int(4) NOT NULL DEFAULT '0' COMMENT 'TOKEN携带随机数',
   `token` varchar(500) NOT NULL DEFAULT '' COMMENT 'TOKEN',
+  `token_md5` varchar(32) NOT NULL DEFAULT '' COMMENT '短TOKEN',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` timestamp NULL DEFAULT NULL
@@ -31,8 +32,8 @@ CREATE TABLE IF NOT EXISTS `eb_application` (
 -- 转存表中的数据 `eb_application`
 --
 
-INSERT INTO `eb_application` (`id`, `name`, `appid`, `app_secret`, `icon`, `introduce`, `timestamp`, `rand`, `token`, `is_delete`, `create_time`, `update_time`) VALUES
-(3, '客服', '202116257358989495', 'da52ac13388dbbfe45f34315f580e31e', 'https://qiniu.crmeb.net/attach/2021/07/069e7202107011810578311.png', '', 1625735898, 9495, 'eyJpdiI6Im1oNThXdWZSY250QkhuTm4wdXJkeFE9PSIsInZhbHVlIjoiM2lDMEFNdERZYWlLZmJhRnBMVVE4NG1IbTIwRlBEU3MxajdVSEplUHNYWDlEbHdCdHJsUWFSY0pIRlpIMjN4NHhneXpGaXJ4ZzYxTDRSdVJWVWJVdWxWcndmaGNnRWd1L1l2NmJ3U0VQQ0V2Ry96ZmNLeDNKRWtjVVFLZkVSbzgzd21pWVlCcjAxaUhmNEpSUC9aUGkzMm1VR3I2ZCtUc2pLamcrNGpVL29RPSIsIm1hYyI6IjlmMWFhZDlhY2UxYjRjYzFhMTAwODE5MzJjNDM3MWMxNGJiZjJjZjhhZTI5ODc3OWMxMDZlODRiYjFkZTI3M2EifQ==', 0, '2021-07-08 09:18:18', '2021-07-08 09:18:18');
+INSERT INTO `eb_application` (`id`, `name`, `appid`, `app_secret`, `icon`, `introduce`, `timestamp`, `rand`, `token`, `token_md5`, `is_delete`, `create_time`, `update_time`) VALUES
+(3, '客服', '202116257358989495', 'da52ac13388dbbfe45f34315f580e31e', 'https://qiniu.crmeb.net/attach/2021/07/069e7202107011810578311.png', '', 1625735898, 9495, 'eyJpdiI6Im1oNThXdWZSY250QkhuTm4wdXJkeFE9PSIsInZhbHVlIjoiM2lDMEFNdERZYWlLZmJhRnBMVVE4NG1IbTIwRlBEU3MxajdVSEplUHNYWDlEbHdCdHJsUWFSY0pIRlpIMjN4NHhneXpGaXJ4ZzYxTDRSdVJWVWJVdWxWcndmaGNnRWd1L1l2NmJ3U0VQQ0V2Ry96ZmNLeDNKRWtjVVFLZkVSbzgzd21pWVlCcjAxaUhmNEpSUC9aUGkzMm1VR3I2ZCtUc2pLamcrNGpVL29RPSIsIm1hYyI6IjlmMWFhZDlhY2UxYjRjYzFhMTAwODE5MzJjNDM3MWMxNGJiZjJjZjhhZTI5ODc3OWMxMDZlODRiYjFkZTI3M2EifQ==','2f9eac61b216208cac9c1f0859070a8b',0, '2021-07-08 09:18:18', '2021-07-08 09:18:18');
 
 -- --------------------------------------------------------
 
@@ -191,6 +192,7 @@ CREATE TABLE IF NOT EXISTS `eb_chat_user` (
   `uid` int(10) NOT NULL DEFAULT '0' COMMENT '用户UID',
   `group_id` int(10) NOT NULL DEFAULT '0' COMMENT '分组',
   `nickname` varchar(50) NOT NULL DEFAULT '' COMMENT '用户昵称',
+  `openid` varchar(50) NOT NULL DEFAULT '' COMMENT 'openid',
   `avatar` varchar(255) NOT NULL DEFAULT '' COMMENT '头像',
   `phone` varchar(11) NOT NULL DEFAULT '' COMMENT '手机号',
   `last_ip` varchar(16) NOT NULL DEFAULT '' COMMENT '访问ip',

@@ -73,6 +73,7 @@ class KefuServices extends BaseServices
     {
         /** @var ChatServiceDialogueRecordServices $service */
         $service = app()->make(ChatServiceDialogueRecordServices::class);
+        $service->update(['to_user_id' => $userId, 'user_id' => $toUserId], ['type' => 1]);
         [$page, $limit] = $this->getPageValue();
         return array_reverse($service->tidyChat($service->getServiceChatList(['chat' => [$userId, $toUserId]], $limit, $upperId)));
     }
@@ -119,7 +120,7 @@ class KefuServices extends BaseServices
             }
             /** @var ChatServiceRecordServices $serviceRecord */
             $serviceRecord = app()->make(ChatServiceRecordServices::class);
-            $info          = $serviceRecord->get(['user_id' => $kfuUserId, 'to_uid' => $userId], ['type', 'message_type', 'is_tourist', 'avatar', 'nickname']);
+            $info          = $serviceRecord->get(['user_id' => $kfuUserId, 'to_user_id' => $userId], ['type', 'message_type', 'is_tourist', 'avatar', 'nickname']);
             $record        = $serviceRecord->saveRecord($appid, $userId, $kefuToUserId, $messageData['msn'] ?? '', $info['type'] ?? 1, $messageData['message_type'] ?? 1, $num, $info['is_tourist'] ?? 0, $info['nickname'] ?? "", $info['avatar'] ?? '');
             $res           = $res && $auxiliaryServices->saveAuxliary(['binding_id' => $kfuUserId, 'relation_id' => $userId]);
             if (!$res && !$record) {
@@ -137,7 +138,7 @@ class KefuServices extends BaseServices
             //给转接的客服发送消息通知
             SwooleTaskService::kefu()->type('transfer')->to($kefuToUserId)->data(['recored' => $record, 'kefuInfo' => $keufInfo])->push();
             //告知用户对接此用户聊天
-            $keufToInfo = $this->dao->get(['uid' => $kefuToUserId], ['avatar', 'nickname']);
+            $keufToInfo = $this->dao->get(['user_id' => $kefuToUserId], ['avatar', 'nickname']);
             SwooleTaskService::user()->type('to_transfer')->to($userId)->data(['toUid' => $kefuToUserId, 'avatar' => $keufToInfo['avatar'] ?? '', 'nickname' => $keufToInfo['nickname'] ?? ''])->push();
         } catch (\Exception $e) {
         }

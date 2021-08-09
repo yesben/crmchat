@@ -311,9 +311,9 @@ class Manager extends Websocket
             if (!$data['is_app'] && !$data['client_id']) {
                 $this->nowRoom->type($data['type'])->del($tabfd);
             } else {
-                $this->updateTabelField($data['user_id'], 0);
-                $this->updateTabelField($data['user_id'], 1, 'is_close');
-                $this->updateTabelField($data['user_id'], 0, 'is_open');
+                $this->nowRoom->update($fd, 'to_user_id', 0);
+                $this->nowRoom->update($fd, 'is_close', 1);
+                $this->nowRoom->update($fd, 'is_open', 0);
             }
             $this->exec($data['type'], 'close', [$fd, null, ['data' => $data], $this->response]);
         }

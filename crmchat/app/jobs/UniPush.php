@@ -19,16 +19,24 @@ use crmeb\services\uniPush\PushMessage;
 use crmeb\traits\QueueTrait;
 use app\services\chat\ChatServiceDialogueRecordServices;
 
+/**
+ * 消息发送队列
+ * Class UniPush
+ * @package app\jobs
+ */
 class UniPush extends BaseJobs
 {
 
     use QueueTrait;
 
-    public function doJob($jobsData)
+    /**
+     * @param $userInfo
+     * @param $clientId
+     * @param $message
+     * @return bool
+     */
+    public function doJob($userInfo, $clientId, $message)
     {
-        $userInfo = $jobsData['userInfo'] ?? [];
-        $clientId = $jobsData['client_id'] ?? null;
-        $message  = $jobsData['message'] ?? [];
         if (!$clientId) {
             return true;
         }

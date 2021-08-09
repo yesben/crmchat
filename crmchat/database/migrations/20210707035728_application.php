@@ -37,6 +37,7 @@ class Application extends Migrator
         $table->addColumn('timestamp', 'integer', ['limit' => 10, 'default' => 0, 'comment' => 'TOKEN生成时间戳']);
         $table->addColumn('rand', 'integer', ['limit' => 4, 'default' => 0, 'comment' => 'TOKEN携带随机数']);
         $table->addColumn('token', 'string', ['limit' => 500, 'default' => '', 'comment' => 'TOKEN']);
+        $table->addColumn('token_md5', 'string', ['limit' => 32, 'default' => '', 'comment' => 'TOKEN MD5']);
         $table->addColumn('is_delete', 'boolean', ['limit' => 1, 'default' => 0, 'comment' => '是否删除']);
         $table->addTimestamps();
         $table->create();

@@ -234,6 +234,7 @@ class InstallController
                     if (mysqli_connect_errno($conn)) {
                         return 0;
                     } else {
+                        mysqli_query($conn, "SET GLOBAL sql_mode='NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'");
                         $result  = mysqli_query($conn, "SELECT @@global.sql_mode");
                         $result  = $result->fetch_array();
                         $version = mysqli_get_server_info($conn);
@@ -499,17 +500,15 @@ class InstallController
                     'data'    => json_encode($post)
                 ]);
             case '5':
-                $ip             = $this->get_client_ip();
-                $host           = $_SERVER['HTTP_HOST'];
-                $curent_version = $this->getversion();
-                $version        = trim($curent_version['version']);
                 $this->installlog();
                 @touch($path . 'public/install/install.lock');
                 //生成key
-
                 return view('/install/step5', [
                     'title'   => $Title,
-                    'powered' => $Powered
+                    'powered' => $Powered,
+                    'ip'      => request()->ip(),
+                    'host'    => request()->host(),
+                    'version' => get_crmeb_version()
                 ]);
         }
     }

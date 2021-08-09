@@ -113,12 +113,14 @@ class Service extends AuthController
                 $userInfo->save();
                 $res->user_id = $userInfo->id;
             } else {
+                $uid          = $services->max(['appid' => $data['appid']]) + 1;
                 $userInfo     = $services->save([
                     'phone'     => $data['phone'],
                     'nickname'  => $data['nickname'],
                     'avatar'    => $data['avatar'],
                     'is_delete' => 0,
                     'type'      => 0,
+                    'uid'       => $uid,
                     'appid'     => $data['appid'],
                 ]);
                 $res->user_id = $userInfo->id;

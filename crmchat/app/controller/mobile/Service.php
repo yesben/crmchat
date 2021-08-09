@@ -47,11 +47,12 @@ class Service extends AuthController
      */
     public function getRecordList()
     {
-        [$idTo, $limit, $toUserId, $cookieUid] = $this->request->getMore([
+        [$idTo, $limit, $toUserId, $cookieUid, $kefuUd] = $this->request->getMore([
             ['idTo', 0],
             ['limit', 10],
             ['toUserId', 0],
-            ['cookieUid', 0]
+            ['cookieUid', 0],
+            ['kefu_id', 0]
         ], true);
 
         $user = $this->request->getMore([
@@ -60,9 +61,10 @@ class Service extends AuthController
             ['phone', ''],
             ['sex', ''],
             ['avatar', ''],
+            ['openid', ''],
         ]);
 
-        return app('json')->successful($this->services->getRecord($this->appId, $user, $idTo, $limit, $toUserId, (int)$cookieUid));
+        return app('json')->successful($this->services->getRecord($this->appId, $user, $idTo, $limit, $toUserId, (int)$cookieUid, (int)$kefuUd));
     }
 
     /**

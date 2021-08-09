@@ -11,6 +11,7 @@
 
 namespace app\controller\admin;
 
+use crmeb\traits\Help;
 use think\facade\Validate;
 
 /**
@@ -19,6 +20,7 @@ use think\facade\Validate;
  */
 abstract class AuthController
 {
+    use Help;
 
     /**
      * 当前登陆管理员信息
@@ -72,28 +74,6 @@ abstract class AuthController
         $this->adminId   = $this->request->adminId();
         $this->adminInfo = $this->request->adminInfo();
         $this->auth      = $this->request->adminInfo['rule'] ?? [];
-    }
-
-    /**
-     * 成功返回
-     * @param string $msg
-     * @param array|null $data
-     * @return mixed
-     */
-    protected function success($msg = 'ok', ?array $data = [])
-    {
-        return app('json')->success($msg, $data);
-    }
-
-    /**
-     * 错误返回
-     * @param string $msg
-     * @param array|null $data
-     * @return mixed
-     */
-    protected function fail($msg = 'error', ?array $data = [])
-    {
-        return app('json')->fail($msg, $data);
     }
 
     /**

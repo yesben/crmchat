@@ -165,7 +165,7 @@ class ChatServiceServices extends BaseServices
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function getRecord(string $appId, array $user, int $idTo, int $limit = 10, int $toUserId = 0, int $cookieUid = 0)
+    public function getRecord(string $appId, array $user, int $idTo, int $limit = 10, int $toUserId = 0, int $cookieUid = 0, int $kefuId = 0)
     {
         $uid = $user['uid'] ?? 0;
         /** @var ChatUserServices $userServices */
@@ -181,6 +181,10 @@ class ChatServiceServices extends BaseServices
             $userId = $userInfo->id;
         }
 
+        $toUserId = $this->dao->count(['appid' => $appId, 'status' => 1, 'user_id' => $toUserId]) ? $toUserId : 0;
+        if (!$toUserId && $kefuId) {
+            $toUserId = $this->dao->value(['appid' => $appId, 'status' => 1, 'id' => $kefuId], 'user_id');
+        }
         if (!$toUserId) {
             $serviceInfoList = $this->getServiceList(['appid' => $appId, 'status' => 1, 'online' => 1]);
             if (!count($serviceInfoList)) {

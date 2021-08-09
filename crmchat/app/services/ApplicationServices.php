@@ -127,6 +127,7 @@ class ApplicationServices extends BaseServices
         $nickname = $userData['nickname'] ?? '';
         $avatar   = $userData['avatar'] ?? '';
         $phone    = $userData['phone'] ?? '';
+        $openid   = $userData['openid'] ?? '';
 
         $redis = CacheService::redisHandler();
         if ($userInfo = $redis->get($appid . '-' . $uid)) {
@@ -139,6 +140,7 @@ class ApplicationServices extends BaseServices
             $userInfo->nickname = $nickname;
             $userInfo->avatar   = $avatar;
             $userInfo->phone    = $phone;
+            $userInfo->openid   = $openid;
             $userInfo->save();
 
             $redis->set($appid . '-' . $uid, $userInfo->toArray(), 86400);
@@ -146,7 +148,7 @@ class ApplicationServices extends BaseServices
         } else {
             $isTourist = 0;
             //游客模式
-            if ($uid === 0) {
+            if ((int)$uid === 0) {
                 $isTourist = 1;
                 mt_srand();
                 $rand1 = mt_rand(10, 99);
@@ -164,6 +166,7 @@ class ApplicationServices extends BaseServices
                 'avatar'     => $avatar,
                 'phone'      => $phone,
                 'appid'      => $appid,
+                'openid'     => $openid,
                 'is_tourist' => $isTourist,
             ]);
             if (!$userInfo) {
@@ -186,6 +189,9 @@ class ApplicationServices extends BaseServices
      */
     public function parseToken(string $token, array $other = [])
     {
+        if (strlen($token) === 32) {
+            $token = $this->dao->value(['token_md5' => $token], 'token');
+        }
         /** @var Encrypter $encrypter */
         $encrypter = app()->make(Encrypter::class);
 

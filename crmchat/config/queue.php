@@ -24,7 +24,7 @@ return [
         ],
         'redis'    => [
             'driver'     => 'redis',
-            'queue'      => Env::get('queue.listen_name','CRMEB'),
+            'queue'      => Env::get('queue.listen_name','CRMEB_CHAT'),
             'son_queue'  => Env::get('queue.listen_name_batch','BATCH-CRMEB'),
             'host'       => Env::get('redis.redis_hostname', '127.0.0.1'),
             'port'       => Env::get('redis.port', 6379),

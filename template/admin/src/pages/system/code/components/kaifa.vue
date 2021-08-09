@@ -22,7 +22,8 @@
                 <textarea id="NormalCodeTextarea2" class="code" rows="30">
 var option = {
     openUrl: "{{siteUrl}}", // 打开客服聊天框的地址，即：部署后台管理系统的地址，若未填写，则自动获取当前服务器的地址
-    token: {{tokeninfo.token}}, // token,与后台交互的凭证
+    token: {{tokeninfo.token_md5}}, // token,与后台交互的凭证
+    kefuid:'',//默认为空自动对接客服，可填写指定客服ID
     isShowTip: true, // 初始化成功后，界面右下角会自动创建 “联系客服按钮”， 如无需默认展示，则填写false即可,默认为true
     domId: 'customerServerTip',//展示在页面右下角联系客服的dom的id，可根据id获取到dom后自行修改样式, 默认为customerServerTip
     insertDomNode: '.getCode_container', // SPA应用必填，html文件单独引入选填，表示插入客服弹窗的 dom节点，一般为当前界面的根节点，默认为body

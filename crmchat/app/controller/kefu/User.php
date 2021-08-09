@@ -215,6 +215,25 @@ class User extends AuthController
     }
 
     /**
+     * 删除单个标签下的人
+     * @param ChatUserLabelAssistServices $services
+     * @param $userId
+     * @param $labelId
+     * @return mixed
+     */
+    public function delUserLabel(ChatUserLabelAssistServices $services, $userId, $labelId)
+    {
+        if (!$labelId || !$userId) {
+            return $this->fail('缺少参数');
+        }
+        if ($services->delete(['user_id' => $userId, 'label_id' => $labelId])) {
+            return $this->success('删除成功');
+        } else {
+            return $this->fail('删除失败');
+        }
+    }
+
+    /**
      * 退出登陆
      * @return mixed
      */
@@ -263,7 +282,7 @@ class User extends AuthController
      */
     public function getMessageCount(ChatServiceDialogueRecordServices $services)
     {
-        return $this->success(['count' => $services->getMessageNum(['user_id' => $this->kefuInfo['user_id'], 'type' => 0])]);
+        return $this->success(['count' => $services->getMessageNum(['appid' => $this->kefuInfo['appid'], 'to_user_id' => $this->kefuInfo['user_id'], 'type' => 0])]);
     }
 
     /**
@@ -276,5 +295,36 @@ class User extends AuthController
         $clientId = $this->request->post('client_id', '');
         $services->update($this->kefuId, ['client_id' => $clientId]);
         return $this->success();
+    }
+
+    /**
+     * 修改用户信息
+     * @param ChatUserServices $services
+     * @param $userId
+     * @return mixed
+     */
+    public function updateUser(ChatUserServices $services, $userId)
+    {
+        $data   = $this->request->postMore([
+            ['nickname', ''],
+            ['sex', ''],
+            ['phone', ''],
+            ['remarks', ''],
+        ]);
+        $update = [];
+        foreach ($data as $key => $val) {
+            if ($val) {
+                $update[$key] = $val;
+            }
+        }
+        if ($update) {
+
+            if (isset($data['phone']) && preg_match('/^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/', $data['phone'])) {
+                $data['is_tourist'] = 0;
+            }
+
+            $services->update($userId, $update);
+        }
+        return $this->success('修改成功');
     }
 }

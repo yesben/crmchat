@@ -32,7 +32,6 @@ class ChatServiceDialogueRecordDao extends BaseDao
     {
         //清楚去年的聊天记录
         $this->removeChat();
-        $this->removeYesterDayChat();
     }
 
     /**

@@ -118,4 +118,9 @@ class ChatUser extends BaseModel
             $query->where('sex', $value);
         }
     }
+
+    public function searchIsTouristAttr($query, $value)
+    {
+        $query->where('is_tourist', $value);
+    }
 }

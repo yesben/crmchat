@@ -13,6 +13,7 @@ namespace app\controller\kefu;
 
 
 use crmeb\basic\BaseModel;
+use crmeb\traits\Help;
 use think\App;
 use think\Request;
 
@@ -22,6 +23,8 @@ use think\Request;
  */
 abstract class AuthController
 {
+    use Help;
+
     /**
      * @var int
      */
@@ -68,27 +71,5 @@ abstract class AuthController
         if ($this->request->hasMacro('kefuInfo')) {
             $this->kefuInfo = $this->request->kefuInfo();
         }
-    }
-
-    /**
-     * 成功返回
-     * @param string $msg
-     * @param array|null $data
-     * @return mixed
-     */
-    protected function success($msg = 'ok', ?array $data = [])
-    {
-        return app('json')->success($msg, $data);
-    }
-
-    /**
-     * 错误返回
-     * @param string $msg
-     * @param array|null $data
-     * @return mixed
-     */
-    protected function fail($msg = 'error', ?array $data = [])
-    {
-        return app('json')->fail($msg, $data);
     }
 }

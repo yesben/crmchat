@@ -211,11 +211,11 @@ export default {
         {
           title: '客服名称',
           key: 'nickname',
-          minWidth: 120
+          minWidth: 60
         },
         {
-          title: '客服头像',
-          slot: 'avatar',
+          title: '客服账号',
+          key: 'account',
           minWidth: 60
         },
         // {
