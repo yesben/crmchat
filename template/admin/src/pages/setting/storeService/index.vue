@@ -209,7 +209,7 @@ export default {
           width: 80
         },
         {
-          title: '微信用户名称',
+          title: '客服名称',
           key: 'nickname',
           minWidth: 120
         },
@@ -218,11 +218,11 @@ export default {
           slot: 'avatar',
           minWidth: 60
         },
-        {
-          title: '客服名称',
-          key: 'wx_name',
-          minWidth: 120
-        },
+        // {
+        //   title: '客服名称',
+        //   key: 'wx_name',
+        //   minWidth: 120
+        // },
         {
           title: '客服状态',
           slot: 'status',

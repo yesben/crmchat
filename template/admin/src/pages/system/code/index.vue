@@ -471,19 +471,6 @@ export default {
             this.token = res.data.list[0];
 
 
-            // js 引入
-            // (function() {
-            //   var hm = document.createElement("script");
-            //   hm.src = "../../../libs/customerServer/customerServer.js";
-            //   var s = document.getElementsByTagName("script")[0];
-            //   s.parentNode.insertBefore(hm, s);
-            // })();
-            // (function() {
-            //   var hm = document.createElement("script");
-            //   hm.src = "http://192.168.31.192:8081/customerServer.js";
-            //   var s = document.getElementsByTagName("script")[0];
-            //   s.parentNode.insertBefore(hm, s);
-            // })();
             var option = {
 
               openUrl: location.origin,
@@ -492,14 +479,15 @@ export default {
               insertDomNode: '.getCode_container',
               token: this.token.token,
               isShowTip: true, // true 展示 false 不展示
-              // sendUserData: {
-              // uid: '',
-              //   nickName: '',
-              //   phone: '',
-              //   type: '',
-              //   sex: '1',
-              //   avatar: ''
-              // },
+              sendUserData: {
+                uid: '',
+                nickName: '',
+                phone: '',
+                type: '',
+                sex: '1',
+                avatar: '',
+                openid: ''
+              },
               // productInfo: {
               //   store_name: '蒙奇 D 路飞',
               //   stock: '库存',

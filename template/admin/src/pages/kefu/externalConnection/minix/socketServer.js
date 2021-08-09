@@ -105,7 +105,8 @@ export default {
         nickName: this.upperData.nickName,
         phone: this.upperData.phone,
         sex: this.upperData.sex,
-        avatar: this.upperData.avatar
+        avatar: this.upperData.avatar,
+        openid: this.upperData.openid
       }
 
       userRecord(postData).then(res => {
@@ -164,7 +165,8 @@ export default {
                 uid: this.chatServerData.uid,
                 nickname: this.chatServerData.nickname,
                 avatar: this.chatServerData.avatar,
-                phone: this.userMessage.phone ? this.userMessage.phone : this.chatServerData.phone
+                phone: this.userMessage.phone ? this.userMessage.phone : this.chatServerData.phone,
+                openid: this.upperData.openid
               }
             })
           })
@@ -178,6 +180,9 @@ export default {
 
           parent.postMessage({ type: 'message_num', num: data.num }, "*");
         })
+
+
+
         // let num = 1;
         // setInterval(() => {
         //   parent.postMessage({ type: 'message_num', num: num++ }, "*");
