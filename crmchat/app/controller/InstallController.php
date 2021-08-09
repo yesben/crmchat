@@ -510,7 +510,10 @@ class InstallController
 
                 return view('/install/step5', [
                     'title'   => $Title,
-                    'powered' => $Powered
+                    'powered' => $Powered,
+                    'ip'      => $ip,
+                    'host'    => $host,
+                    'version' => $version
                 ]);
         }
     }
