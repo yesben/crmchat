@@ -211,7 +211,12 @@ export default {
         {
           title: '用户名称',
           key: 'nickname',
-          minWidth: 120
+          minWidth: 60
+        },
+        {
+          title: '客服账号',
+          key: 'account',
+          minWidth: 60
         },
         {
           title: '客服头像',
