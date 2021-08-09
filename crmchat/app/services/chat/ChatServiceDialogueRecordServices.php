@@ -25,7 +25,9 @@ use think\db\exception\ModelNotFoundException;
  * @method getServiceList(array $where, int $page, int $limit, array $field = ['*']) 获取聊天记录并分页
  * @method saveAll(array $data) 插入数据
  * @method getMessageNum(array $where) 获取聊天记录条数
- * @method getMessageList(array $where)
+ * @method getMessageList(array $where, int $page, int $limit) 获取聊天记录列表
+ * @method getMessageCount(array $where) 获取聊天记录总条数
+ * @method getMessageOne(array $where) 获取最新的一条数据
  */
 class ChatServiceDialogueRecordServices extends BaseServices
 {

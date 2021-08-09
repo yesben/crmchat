@@ -135,10 +135,39 @@ class ChatServiceDialogueRecordDao extends BaseDao
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function getMessageList(array $where)
+    public function getMessageList(array $where, int $page = 0, int $limit = 0)
     {
         return $this->search(['chat' => $where['chat']])->when(isset($where['add_time']) && $where['add_time'], function ($query) use ($where) {
             $query->where('add_time', '>', $where['add_time']);
+        })->when($page && $limit, function ($query) use ($page, $limit) {
+            $query->page($page, $limit);
         })->select()->toArray();
+    }
+
+    /**
+     * 获得总条数
+     * @param array $where
+     * @return int
+     */
+    public function getMessageCount(array $where)
+    {
+        return $this->search(['chat' => $where['chat']])->when(isset($where['add_time']) && $where['add_time'], function ($query) use ($where) {
+            $query->where('add_time', '>', $where['add_time']);
+        })->count();
+    }
+
+    /**
+     * 获取一条
+     * @param array $where
+     * @return array|\think\Model|null
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function getMessageOne(array $where)
+    {
+        return $this->search(['chat' => $where['chat']])->when(isset($where['add_time']) && $where['add_time'], function ($query) use ($where) {
+            $query->where('add_time', '>', $where['add_time']);
+        })->order('id', 'desc')->find();
     }
 }

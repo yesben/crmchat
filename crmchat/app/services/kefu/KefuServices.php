@@ -13,6 +13,7 @@ namespace app\services\kefu;
 
 
 use app\dao\chat\ChatServiceDao;
+use app\jobs\ServiceTransfer;
 use app\services\chat\ChatServiceAuxiliaryServices;
 use app\services\chat\ChatServiceDialogueRecordServices;
 use app\services\chat\ChatServiceRecordServices;
@@ -93,38 +94,28 @@ class KefuServices extends BaseServices
         /** @var ChatServiceAuxiliaryServices $auxiliaryServices */
         $auxiliaryServices = app()->make(ChatServiceAuxiliaryServices::class);
         /** @var ChatServiceDialogueRecordServices $service */
-        $service = app()->make(ChatServiceDialogueRecordServices::class);
-        $addTime = $auxiliaryServices->value(['binding_id' => $kfuUserId, 'relation_id' => $userId], 'update_time');
-        $list    = $service->getMessageList(['chat' => [$kfuUserId, $userId], 'add_time' => $addTime]);
-        $data    = [];
-        foreach ($list as $item) {
-            if ($item['to_user_id'] == $kfuUserId) {
-                $item['to_user_id'] = $kefuToUserId;
-            }
-            if ($item['user_id'] == $kfuUserId) {
-                $item['user_id'] = $kefuToUserId;
-            }
-            $item['add_time'] = time();
-            unset($item['id']);
-            $data[] = $item;
-        }
-        $record = $this->transaction(function () use ($data, $appid, $service, $kfuUserId, $userId, $kefuToUserId, $auxiliaryServices) {
-            if ($data) {
-                $num         = count($data) - 1;
-                $messageData = $data[$num] ?? [];
-                $res         = $service->saveAll($data);
-            } else {
-                $num         = 0;
-                $res         = true;
-                $messageData = [];
-            }
+        $service     = app()->make(ChatServiceDialogueRecordServices::class);
+        $addTime     = $auxiliaryServices->value(['binding_id' => $kfuUserId, 'relation_id' => $userId], 'update_time');
+        $where       = ['chat' => [$kfuUserId, $userId], 'add_time' => $addTime];
+        $messageData = $service->getMessageOne($where);
+        $messageData = $messageData ? $messageData->toArray() : [];
+        $count       = $service->getMessageCount($where);
+        $limit       = 100;
+        $pageNum     = $count ? ceil($count / $limit) : 0;
+        $record      = $this->transaction(function () use ($where, $limit, $pageNum, $messageData, $appid, $service, $kfuUserId, $userId, $kefuToUserId, $auxiliaryServices) {
             /** @var ChatServiceRecordServices $serviceRecord */
             $serviceRecord = app()->make(ChatServiceRecordServices::class);
             $info          = $serviceRecord->get(['user_id' => $kfuUserId, 'to_user_id' => $userId], ['type', 'message_type', 'is_tourist', 'avatar', 'nickname']);
             $record        = $serviceRecord->saveRecord($appid, $userId, $kefuToUserId, $messageData['msn'] ?? '', $info['type'] ?? 1, $messageData['message_type'] ?? 1, $num, $info['is_tourist'] ?? 0, $info['nickname'] ?? "", $info['avatar'] ?? '');
-            $res           = $res && $auxiliaryServices->saveAuxliary(['binding_id' => $kfuUserId, 'relation_id' => $userId]);
+            $res           = $auxiliaryServices->saveAuxliary(['binding_id' => $kfuUserId, 'relation_id' => $userId]);
             if (!$res && !$record) {
                 throw new ValidateException('转接客服失败');
+            }
+            //同步聊天消息
+            if ($pageNum) {
+                for ($i = 1; $i <= $pageNum; $i++) {
+                    ServiceTransfer::dispatch([$where, $kfuUserId, $kefuToUserId, $i, $limit]);
+                }
             }
             return $record;
         });
