@@ -192,6 +192,18 @@ class Room
     }
 
     /**
+     * 删除对应列
+     * @param string $type
+     * @param $userId
+     * @param $fd
+     */
+    public function deleteFd(string $type, $userId, $fd)
+    {
+        $this->cache->sRem(self::USER_INFO_FD_PRE, $fd . '=' . $userId);
+        $this->cache->sRem(self::USER_INFO_FD_PRE . '_' . $type, $fd . '=' . $userId);
+    }
+
+    /**
      * 修改数据
      * @param string $key
      * @param null $field

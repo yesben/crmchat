@@ -307,6 +307,8 @@ class Manager extends Websocket
         $tabfd = (string)$fd;
         if ($this->nowRoom->exist($fd)) {
             $data = $this->nowRoom->get($tabfd);
+            $this->cache->sRem('client', $fd);
+            $this->nowRoom->deleteFd($data['type'], $data['user_id'], $fd);
             $this->logout($data['type'], $data['user_id'], $fd);
             if (!$data['is_app'] && !$data['client_id']) {
                 $this->nowRoom->type($data['type'])->del($tabfd);
