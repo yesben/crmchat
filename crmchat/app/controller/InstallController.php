@@ -511,8 +511,8 @@ class InstallController
                 return view('/install/step5', [
                     'title'   => $Title,
                     'powered' => $Powered,
-                    'ip'      => $ip,
-                    'host'    => $host,
+                    'ip'      => request()->ip(),
+                    'host'    => request()->host(),
                     'version' => $version
                 ]);
         }
