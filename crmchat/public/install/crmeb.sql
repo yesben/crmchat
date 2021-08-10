@@ -901,12 +901,6 @@ ALTER TABLE `eb_chat_user_label_assist`
   ADD KEY `uid_id` (`user_id`);
 
 --
--- Indexes for table `eb_migrations`
---
-ALTER TABLE `eb_migrations`
-  ADD PRIMARY KEY (`version`);
-
---
 -- Indexes for table `eb_system_admin`
 --
 ALTER TABLE `eb_system_admin`
