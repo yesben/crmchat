@@ -155,7 +155,19 @@ abstract class BaseHandler
         $serviceRecored  = app()->make(ChatServiceRecordServices::class);
         $unMessagesCount = $logServices->getMessageNum(['user_id' => $userId, 'to_user_id' => $to_user_id, 'type' => 0]);
         //记录当前用户和他人聊天记录
-        $data['recored'] = $serviceRecored->saveRecord($user['appid'], $userId, $to_user_id, $msn, $formType ?? 0, $msn_type, $unMessagesCount, (int)$isTourist, $data['nickname'], $data['avatar'], $userOnline);
+        $data['recored'] = $serviceRecored->saveRecord(
+            $user['appid'],
+            $userId,
+            $to_user_id,
+            $msn,
+            $formType ?? 0,
+            $msn_type,
+            $unMessagesCount,
+            (int)$isTourist,
+            $data['nickname'],
+            $data['avatar'],
+            $userOnline
+        );
         //是否在线
         if ($online) {
             $this->manager->pushing($toUserFd, $response->message('reply', $data)->getData());

@@ -153,9 +153,13 @@ class ApplicationServices extends BaseServices
                 mt_srand();
                 $rand1 = mt_rand(10, 99);
                 mt_srand();
-                $rand2         = mt_rand(1000, 9999);
-                $uid           = date('Y') . $rand1 . $rand2;
-                $nickname      = '游客' . $uid;
+                $rand2 = mt_rand(1000, 9999);
+                $uid   = date('Y') . $rand1 . $rand2;
+            }
+            if (!$nickname) {
+                $nickname = '游客' . $uid;
+            }
+            if (!$avatar) {
                 $touristAvatar = sys_config('tourist_avatar');
                 $avatar        = Arr::getArrayRandKey(is_array($touristAvatar) ? $touristAvatar : []);
                 $avatar        = link_url($avatar);
