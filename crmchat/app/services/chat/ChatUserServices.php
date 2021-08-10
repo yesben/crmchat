@@ -136,6 +136,21 @@ class ChatUserServices extends BaseServices
     }
 
     /**
+     * @param string $time
+     * @return array
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws \think\db\exception\DbException
+     */
+    public function getKefuMobileStatistics(string $time)
+    {
+        return [
+            'tourist' => $this->dao->getKefuMobileStatisticsList($time, 1),
+            'list'    => $this->dao->getKefuMobileStatisticsList($time, 0),
+        ];
+    }
+
+    /**
      * 获取统计数据
      * @param int $id
      * @param int $year

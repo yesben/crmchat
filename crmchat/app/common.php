@@ -11,10 +11,12 @@
 
 // 应用公共文件
 
+use Carbon\Carbon;
 use think\exception\ValidateException;
 use crmeb\services\FormBuilder as Form;
 use crmeb\services\UploadService;
 use Swoole\Coroutine;
+use think\Model;
 use function Swoole\Coroutine\run;
 
 if (!function_exists('is_win')) {
@@ -1024,6 +1026,55 @@ if (!function_exists('swoole_go')) {
             Coroutine::create(function () use ($fn) {
                 $fn();
             });
+        }
+    }
+}
+
+if (!function_exists('time_model')) {
+
+    /**
+     * @param Model $query
+     * @param $value
+     * @param string $field
+     * @return mixed
+     */
+    function time_model($query, $value, string $field)
+    {
+        switch ($value) {
+            case 'today':
+            case 'week':
+            case 'month':
+            case 'year':
+            case 'yesterday':
+            case 'last year':
+            case 'last week':
+            case 'last month':
+                $query->whereTime($field, $value);
+                break;
+            case 'quarter'://本季度
+                $query->whereBetween($field, [Carbon::today()->startOfQuarter()->toDateTimeString(), Carbon::today()->endOfQuarter()->toDateTimeString()]);
+                break;
+            default:
+                if (false !== strstr($value, '-')) {
+                    [$startTime, $endTime] = explode('-', $value);
+                    $startTime = str_replace('/', '-', trim($startTime));
+                    $endTime   = str_replace('/', '-', trim($endTime));
+                    if ($startTime && $endTime && $startTime != $endTime) {
+                        $query->whereBetween($field, [$startTime, $endTime]);
+                    } else if ($startTime && $endTime && $startTime == $endTime) {
+                        $query->whereBetween($field, [$startTime, date('Y-m-d H:i:s', strtotime($endTime) + 86400)]);
+                    } else if (!$startTime && $endTime) {
+                        $query->whereTime($field, '<', $endTime);
+                    } else if ($startTime && !$endTime) {
+                        $query->whereTime($field, '>=', $startTime);
+                    }
+                } elseif (preg_match('/^lately+[1-9]{1,3}/', $value)) {
+                    //最近天数 lately[1-9] 任意天数
+                    $day = (int)str_replace('lately', '', $value);
+                    if ($day) {
+                        $query->whereBetween($field, [Carbon::today()->subDays($day)->toDateTimeString(), Carbon::today()->toDateTimeString()]);
+                    }
+                }
         }
     }
 }
