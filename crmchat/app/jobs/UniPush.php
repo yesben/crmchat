@@ -18,6 +18,7 @@ use crmeb\services\uniPush\options\PushOptions;
 use crmeb\services\uniPush\PushMessage;
 use crmeb\traits\QueueTrait;
 use app\services\chat\ChatServiceDialogueRecordServices;
+use think\facade\Log;
 
 /**
  * 消息发送队列
@@ -71,11 +72,13 @@ class UniPush extends BaseJobs
                 $messageOption->body = '[图文]' . ($message['other']['store_name'] ?? '');
                 break;
         }
-        $messageOption->clickType = 'payload';
-        $messageOption->payload   = 'click_type';
+        $messageOption->clickType    = 'payload';
+        $messageOption->payload      = 'click_type';
+        $messageOption->channelLevel = 4;
         $option->setAudience($clientId);
         $option->setPushMessage($messageOption);
         $uniPush->push($option);
+        Log::error('unipush数据:' . json_encode($option->toArray()));
         return true;
     }
 }

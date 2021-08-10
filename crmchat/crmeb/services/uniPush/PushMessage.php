@@ -22,6 +22,10 @@ class PushMessage
 
     //向单个用户推送消息，可根据cid指定用户
     const PUSH_ONE_CID = 'push/single/cid';
+    //获取推送结果
+    const REPORT_PUSH_TASK = 'report/push/task/';
+    //获取24个小时在线用户数
+    const ONLINE_USER = '/report/online_user';
 
     /**
      * @var AbstractAPI
@@ -61,6 +65,28 @@ class PushMessage
             $option->requestId = $this->getNewRequestId();
         }
         return $this->abstractAPI->parsePost(self::PUSH_ONE_CID, $option->toArray());
+    }
+
+    /**
+     * 获取推送结果
+     * @param array $taskid
+     * @return \crmeb\utils\Collection
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function task(array $taskid)
+    {
+        return $this->abstractAPI->parseGet(self::REPORT_PUSH_TASK . implode(',', $taskid));
+    }
+
+
+    /**
+     * 获取24个小时在线用户数
+     * @return \crmeb\utils\Collection
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function onlineUser()
+    {
+        return $this->abstractAPI->parseGet(self::ONLINE_USER);
     }
 
     /**

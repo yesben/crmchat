@@ -99,9 +99,11 @@ class AbstractAPI
      * @param string $path
      * @return string
      */
-    public function url(string $path = '')
+    protected function url(string $path = '')
     {
-        return $this->resolvBaseUrl() . ($path ? '/' . $path : '');
+        $baseUrl = $this->resolvBaseUrl();
+        $base    = strstr($path, 'http') === false;
+        return ($base ? $baseUrl : '') . ($path ? $base ? '/' . $path : $path : '');
     }
 
     /**
@@ -196,6 +198,30 @@ class AbstractAPI
     }
 
     /**
+     * @return mixed
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function getAuthToken()
+    {
+        $name  = 'UNI_PUSH_TOKEN';
+        $token = $this->cache->get($name);
+        if (!$token) {
+            $data = $this->curl('http://stor.crmeb.net/api/open/token', [
+                'host'    => request()->host(),
+                'version' => get_crmeb_version()
+            ]);
+            if (!isset($data['token'])) {
+                throw new ApiException('获取token失败');
+            }
+            if ($data['token']) {
+                $this->cache->set($name, $data['token'], 3600);
+                $token = $data['token'];
+            }
+        }
+        return $token;
+    }
+
+    /**
      * post请求
      * @param string $url
      * @param array $data
@@ -213,9 +239,9 @@ class AbstractAPI
      * @return Collection
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function parseGet(string $url, array $data)
+    public function parseGet(string $url, array $data = [])
     {
-        return $this->http($this->url($url), $data, 'get');
+        return $this->http($url, $data, 'get');
     }
 
     /**
@@ -227,7 +253,8 @@ class AbstractAPI
      */
     public function http(string $url, array $data, string $method = 'post')
     {
-        $token  = $this->getToken();
+//        $token  = $this->getToken();//本地
+        $token  = $this->getAuthToken();//远程
         $header = [
             'token:' . $token
         ];
