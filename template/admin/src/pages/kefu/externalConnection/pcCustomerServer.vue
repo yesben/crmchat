@@ -1,8 +1,7 @@
 <template>
 
   <div class="pc_customerServer">
-    <div class="pc_customerServer_container max-width_con" :class="{'max-width_advertisement': upperData.noCanClose == 1}">
-
+    <div class="pc_customerServer_container max-width_con" :class="{'max-width_advertisement': upperData.noCanClose == 1 || upperData.position == `center`}">
       <!-- 客服头部开始 -->
       <div class="pc_customerServer_container_header">
         <div class="pc_customerServer_container_header_title">
@@ -111,7 +110,8 @@
             <!-- 输入框容器 -->
             <div class="pc_customerServer_container_footer_input" @click="inputConType = 1">
               <!-- <textarea v-model="userMessage" @keyup.enter="sendText" class="pc_customerServer_container_footer_input-textarea opacity0" rows="5" placeholder="请输入文字"></textarea> -->
-              <div v-paste="handleParse" ref="inputDiv" @keyup.enter="sendText" contenteditable class="pc_customerServer_container_footer_input-textarea" :class="{'readyEmojiHeight': inputConType == 2}"></div>
+              <div v-paste="handleParse" ref="inputDiv" @keyup.enter="sendText" contenteditable class="pc_customerServer_container_footer_input-textarea" :class="{'readyEmojiHeight': inputConType == 2}">
+              </div>
             </div>
             <!-- 输入框容器结束 -->
             <!-- 表情及图片容器结束 -->
@@ -130,9 +130,10 @@
           <!-- 内容输入结束 -->
         </div>
 
-        <div class="pc_customerServer_container_advertisement" v-if="upperData.noCanClose == '1'">
+        <div class="pc_customerServer_container_advertisement" v-if="upperData.noCanClose == '1' || upperData.position == `center`">
           <div class="advertisement">
-            <div v-html="advertisement"></div>
+            <!-- <div v-html="advertisement"></div> -->
+            <img width="100%" src="https://store.crmeb.net/uploads/attach/2020/12/20201231/c565baae2e7b8a87ed39f095fddadfb7.jpg" alt="">
           </div>
         </div>
       </div>
@@ -208,36 +209,40 @@ export default {
 }
 .max-width_advertisement {
   max-width: 1140px;
-  border-radius: 8px;
+  // border-radius: 8px;
 }
 .pc_customerServer_container {
   width: 100%;
   height: 100%;
-  max-height: 808px;
+  max-height: 654px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: #f5f5f5;
+  // background: #f5f5f5;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.2);
+  // box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
   overflow: hidden;
+  // box-shadow: 1px 1px 15px 0px rgba(0, 0, 0, 0.3);
   &_header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(270deg, #1890ff 0%, #3875ea 100%);
-    padding: 10px 14px;
+    background: linear-gradient(270deg, #1890ff, #3875ea);
+    padding: 8px 14px;
+    box-sizing: border-box;
+    height: 50px;
     font-size: 16px;
     color: #fff;
     &_title {
       display: flex;
       align-items: center;
       img {
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
         margin-right: 10px;
       }
@@ -282,9 +287,9 @@ export default {
           &_text {
             max-width: 60%;
             word-wrap: break-word;
-            background: #fff;
-            padding: 14px;
-            font-size: 14px;
+            background: #f5f5f5;
+            padding: 7px 14px;
+            font-size: 15px;
             border-radius: 4px;
           }
           &_img {
@@ -295,8 +300,8 @@ export default {
             }
           }
           .chart_list_item_imgOrText {
-            background: #fff;
-            padding: 10px;
+            background: #ccc;
+            padding: 4px 10px;
             border-radius: 8px;
             width: 226px;
             box-sizing: border-box;
@@ -330,8 +335,8 @@ export default {
             }
             .chart_list_item_text {
               text-align: right;
-              background: #3875ea;
-              color: #fff;
+              background: #cde0ff;
+              color: #000000;
             }
             .chart_list_item_img {
               text-align: right;
@@ -377,6 +382,7 @@ export default {
     background: #fff;
     padding: 14px 18px;
     min-height: 180px;
+    border-top: 1px solid #ececec;
     &_header {
       &_handle {
         display: flex;
@@ -385,8 +391,8 @@ export default {
           margin-right: 19px;
           position: relative;
           img {
-            width: 22px;
-            height: 22px;
+            width: 18px;
+            height: 18px;
           }
           .type_file {
             position: absolute;
@@ -486,15 +492,16 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-right: 1px solid #ccc;
+    border-right: 1px solid #ececec;
   }
   .pc_customerServer_container_advertisement {
     background: #fff;
     .advertisement {
-      width: 311px;
+      width: 259px;
       padding: 10px;
       padding-right: 20px;
       box-sizing: border-box;
+      overflow-y: auto;
     }
   }
 }
