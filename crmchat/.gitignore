@@ -1,6 +1,5 @@
 /.git
 /.idea
-/runtime
 /backup
 /public/uploads
 *.log
