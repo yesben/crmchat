@@ -679,3 +679,16 @@ export function serviceAdv() {
     mobile: true
   })
 }
+
+/*
+  修改用户信息
+*/
+
+export function updateUserData(userId, data) {
+  return request({
+    url: `user/updateUser/${userId}`,
+    method: 'put',
+    kefu: true,
+    data
+  })
+}

@@ -1,7 +1,8 @@
 <template>
 
   <div class="pc_customerServer">
-    <div class="pc_customerServer_container max-width_con" :class="{'max-width_advertisement': upperData.noCanClose == 1 || upperData.windowStyle == `center`}">
+    <div class="fixed" v-if="upperData.noCanClose == 1"></div>
+    <div class="pc_customerServer_container max-width_con" :class="{'max-width_advertisement': upperData.noCanClose == 1 || upperData.position == `center`}">
       <!-- 客服头部开始 -->
       <div class="pc_customerServer_container_header">
         <div class="pc_customerServer_container_header_title">
@@ -132,7 +133,7 @@
 
         <div class="pc_customerServer_container_advertisement" v-if="upperData.noCanClose == '1' || upperData.windowStyle == `center`">
           <div class="advertisement">
-             <div v-html="advertisement"></div>
+            <div v-html="advertisement"></div>
           </div>
         </div>
       </div>
@@ -208,7 +209,6 @@ export default {
 }
 .max-width_advertisement {
   max-width: 840px;
-
 }
 .pc_customerServer_container {
   width: 100%;
@@ -217,7 +217,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  // background: #f5f5f5;
+  background: #fff;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -567,6 +567,15 @@ export default {
       }
     }
   }
+}
+
+.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
 }
 .pt140 {
   padding-bottom: 140px !important;

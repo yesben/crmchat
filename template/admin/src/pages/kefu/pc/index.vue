@@ -335,6 +335,7 @@ export default {
         });
         // 用户上线提醒广播
         ws.$on("user_online", (data) => {
+          console.log(data);
           this.userOnline = data;
         });
         // 用户未读消息条数更改
@@ -352,9 +353,10 @@ export default {
             this.newRecored = data.recored;
           }
 
-
-
         });
+
+
+
         ws.$on("timeout", (data) => {
           setTimeout(() => {
             this.isShow = false;
@@ -398,7 +400,7 @@ export default {
     //    },
     setOnline(data) {
 
-      Socket.then(ws => {
+      this.bus.pageWs.then(ws => {
         ws.send({
           data: {
             online: data
