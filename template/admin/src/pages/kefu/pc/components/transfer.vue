@@ -52,6 +52,7 @@ export default {
         uid: this.userUid
       }).then(res => {
         this.labelLists = res.data.list
+        console.log(this.labelLists);
       })
     },
     bindActive(item) {

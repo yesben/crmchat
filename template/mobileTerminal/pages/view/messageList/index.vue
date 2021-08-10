@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
 		<lay-out noBottomHeight @goBottom="goBottom" @goTop="goTop">
-			<div slot="header" >
+			<div slot="header">
 				<div class="header">
 					<div class="header_customer" @click="setOnlineStatus">
 						<div class="header_customer_avar"><image :src="customerServerData.avatar" mode=""></image></div>
@@ -15,11 +15,9 @@
 							</div>
 						</div>
 					</div>
-					
+
 					<!-- #ifdef MP || APP-PLUS -->
-					<div class="header_handle" @click="handleScanCode">
-						<div class="iconfont font">&#xe6c1;</div>
-					</div>
+					<div class="header_handle" @click="handleScanCode"><div class="iconfont font">&#xe6c1;</div></div>
 					<!-- #endif -->
 					<div class="header_checkout_status" v-if="customerServerHandleModel">
 						<div class="header_checkout_status_sanjiao"></div>
@@ -32,7 +30,7 @@
 						</div>
 					</div>
 				</div>
-		<!-- 搜索框 -->
+				<!-- 搜索框 -->
 				<div class="content_search">
 					<div class="content_search_box">
 						<div class="icon" @click="searchUser"><span class="iconfont">&#xe6bf;</span></div>
@@ -42,7 +40,6 @@
 			</div>
 
 			<div slot="content" class="content">
-		
 				<!-- 聊天列表 -->
 				<div class="content_userMessgae">
 					<div class="content_userMessgae_item" @click="connentServerForUser(item)" v-for="(item, index) in userList" :key="index">
@@ -138,7 +135,7 @@ export default {
 			audioFun: '' // 音频对象
 		};
 	},
-	onLoad() {
+	onShow() {
 		if (!this.scoket.connectStatus) {
 			this.scoket.init().then(res => {
 				res.onMessage(data => {
@@ -158,26 +155,27 @@ export default {
 				});
 			});
 		}
-		
 
-		this.customerServerData = getStorage('userData').kefuInfo;
-		this.initData();
-		
+		if (getStorage('userData')) {
+			this.customerServerData = getStorage('userData').kefuInfo;
+			this.pageData.page = 1;
+			this.initData();
+		} else {
+			navigateTo(3, '/pages/view/login/index');
+		}
+
 		// app端调用存cid接口
 		//#ifdef APP-PLUS
-			var info = plus.push.getClientInfo();
-			var cid = info.clientid;
-			http(api.userClient, { client_id: cid }).then(res => {
-				setStorage('cid', cid)
-			})
+		var info = plus.push.getClientInfo();
+		var cid = info.clientid;
+		http(api.userClient, { client_id: cid }).then(res => {
+			setStorage('cid', cid);
+		});
 		//#endif
-
 
 		this.initAudio();
 	},
-	watch: {
-	
-	},
+	watch: {},
 	methods: {
 		// 初始化音频
 		initAudio() {
@@ -197,15 +195,14 @@ export default {
 					this.userList = res;
 				}
 			});
-			
+
 			// 获取客服未读条数
 			http(api.userCount).then(res => {
 				uni.setTabBarBadge({
 					index: 0,
 					text: res.count ? String(res.count) : 0 // 设置为数值，右下角则不在显示
 				});
-			})
-			
+			});
 		},
 		// 滑动到页面底部
 		goBottom() {
@@ -256,15 +253,12 @@ export default {
 			// let str = "http://192.168.31.192:8081/pages/users/scan_login/index?key=463aca66113f65396dc28e3f0041a2f2";
 			uni.scanCode({
 				onlyFromCamera: true, // 是否只允许相机扫码，不允许相机选择图片
-				success: function (res) {
+				success: function(res) {
 					console.log(res);
-					navigateTo(1, '/pages/view/authorizedLogin/index', { key: res.result.split('=')[1] })
+					navigateTo(1, '/pages/view/authorizedLogin/index', { key: res.result.split('=')[1] });
 				},
-				fail:() => {
-					
-				}
-				
-			})
+				fail: () => {}
+			});
 		},
 		// 退出登录
 		loginOut() {

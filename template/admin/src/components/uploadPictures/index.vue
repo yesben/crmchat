@@ -2,164 +2,80 @@
   <div class="Modal">
     <Row class="colLeft">
       <Col :xl="6" :lg="6" :md="6" :sm="6" :xs="24" class="colLeft">
-        <div class="Nav">
-          <div class="input">
-            <Input
-              search
-              enter-button
-              placeholder="请输入分类名称"
-              v-model="uploadName.name"
-              style="width: 90%"
-              @on-search="changePage"
-            />
-          </div>
-          <div class="trees-coadd">
-            <div class="scollhide">
-              <div class="trees">
-                <Tree
-                  :data="treeData"
-                  :render="renderContent"
-                  class="treeBox"
-                  ref="tree"
-                ></Tree>
-              </div>
+      <div class="Nav">
+        <div class="input">
+          <Input search enter-button placeholder="请输入分类名称" v-model="uploadName.name" style="width: 90%" @on-search="changePage" />
+        </div>
+        <div class="trees-coadd">
+          <div class="scollhide">
+            <div class="trees">
+              <Tree :data="treeData" :render="renderContent" class="treeBox" ref="tree"></Tree>
             </div>
           </div>
         </div>
+      </div>
       </Col>
       <Col :xl="18" :lg="18" :md="18" :sm="18" :xs="24" class="colLeft">
-        <div class="conter">
-          <div class="bnt acea-row row-middle">
-            <Col span="24">
-              <Button
-                type="primary"
-                :disabled="checkPicList.length === 0"
-                @click="checkPics"
-                class="mr10"
-                v-if="isShow!==0"
-                >使用选中图片</Button
-              >
-              <Upload
-                :show-upload-list="false"
-                :action="fileUrl"
-                class="mr10 mb10"
-                :before-upload="beforeUpload"
-                :data="uploadData"
-                :headers="header"
-                :multiple="true"
-                :on-success="handleSuccess"
-                style="margin-top: 1px; display: inline-block"
-              >
-                <Button type="primary">上传图片</Button>
-              </Upload>
-              <!--<Button type="success" @click.stop="add" class="mr10">添加分类</Button>-->
-              <Button
-                type="error"
-                class="mr10"
-                :disabled="checkPicList.length === 0"
-                @click.stop="editPicList('图片')"
-                >删除图片</Button
-              >
-              <i-select
-                :value="pids"
-                placeholder="图片移动至"
-                style="width: 160px"
-                class="treeSel"
-              >
-                <i-option
-                  v-for="(item, index) of list"
-                  :value="item.value"
-                  :key="index"
-                  style="display: none"
-                >
-                  {{ item.title }}
-                </i-option>
-                <Tree
-                  :data="treeData2"
-                  :render="renderContentSel"
-                  ref="reference"
-                  class="treeBox"
-                ></Tree>
-              </i-select>
-            </Col>
-          </div>
-          <div class="pictrueList acea-row">
-            <Row :gutter="24" class="conter">
-              <div v-show="isShowPic" class="imagesNo">
-                <Icon type="ios-images" size="60" color="#dbdbdb" />
-                <span class="imagesNo_sp">图片库为空</span>
-              </div>
-              <div class="acea-row mb10">
-                <div
-                  class="pictrueList_pic mr10 mb10"
-                  v-for="(item, index) in pictrueList"
-                  :key="index"
-                  @mouseenter="enterMouse(item)"
-                  @mouseleave="enterMouse(item)"
-                >
-                  <p class="number" v-if="item.num > 0">
-                    <Badge :count="item.num" type="error" :offset="[11, 12]">
-                      <a href="#" class="demo-badge"></a>
-                    </Badge>
-                  </p>
-                  <img
-                    :class="item.isSelect ? 'on' : ''"
-                    v-lazy="item.satt_dir"
-                    @click.stop="changImage(item, index, pictrueList)"
-                  />
-                  <div
-                    style="
+      <div class="conter">
+        <div class="bnt acea-row row-middle">
+          <Col span="24">
+          <Button type="primary" :disabled="checkPicList.length === 0" @click="checkPics" class="mr10" v-if="isShow!==0">使用选中图片</Button>
+          <Upload :show-upload-list="false" :action="fileUrl" class="mr10 mb10" :before-upload="beforeUpload" :data="uploadData" :headers="header" :multiple="true" :on-success="handleSuccess" style="margin-top: 1px; display: inline-block">
+            <Button type="primary">上传图片</Button>
+          </Upload>
+          <!--<Button type="success" @click.stop="add" class="mr10">添加分类</Button>-->
+          <Button type="error" class="mr10" :disabled="checkPicList.length === 0" @click.stop="editPicList('图片')">删除图片</Button>
+          <i-select :value="pids" placeholder="图片移动至" style="width: 160px" class="treeSel">
+            <i-option v-for="(item, index) of list" :value="item.value" :key="index" style="display: none">
+              {{ item.title }}
+            </i-option>
+            <Tree :data="treeData2" :render="renderContentSel" ref="reference" class="treeBox"></Tree>
+          </i-select>
+          </Col>
+        </div>
+        <div class="pictrueList acea-row">
+          <Row :gutter="24" class="conter">
+            <div v-show="isShowPic" class="imagesNo">
+              <Icon type="ios-images" size="60" color="#dbdbdb" />
+              <span class="imagesNo_sp">图片库为空</span>
+            </div>
+            <div class="acea-row mb10">
+              <div class="pictrueList_pic mr10 mb10" v-for="(item, index) in pictrueList" :key="index" @mouseenter="enterMouse(item)" @mouseleave="enterMouse(item)">
+                <p class="number" v-if="item.num > 0">
+                  <Badge :count="item.num" type="error" :offset="[11, 12]">
+                    <a href="#" class="demo-badge"></a>
+                  </Badge>
+                </p>
+                <img :class="item.isSelect ? 'on' : ''" v-lazy="item.satt_dir" @click.stop="changImage(item, index, pictrueList)" />
+                <div style="
                       display: flex;
                       align-items: center;
                       justify-content: space-between;
-                    "
-                    @mouseenter="enterLeave(item)"
-                    @mouseleave="enterLeave(item)"
-                  >
-                    <p style="width: 80%" v-if="!item.isEdit">
-                      {{ item.editName }}
-                    </p>
-                    <Input
-                      size="small"
-                      style="width: 80%"
-                      type="text"
-                      v-model="item.real_name"
-                      v-else
-                      @on-blur="bindTxt(item)"
-                    />
-                    <span
-                      class="iconfont iconbianji1"
-                      @click="item.isEdit = !item.isEdit"
-                      v-if="item.isShowEdit"
-                    ></span>
-                  </div>
-                  <div
-                    class="nameStyle"
-                    v-show="item.realName && item.real_name"
-                  >
-                    {{ item.real_name }}
-                  </div>
+                    " @mouseenter="enterLeave(item)" @mouseleave="enterLeave(item)">
+                  <p style="width: 80%" v-if="!item.isEdit">
+                    {{ item.editName }}
+                  </p>
+                  <Input size="small" style="width: 80%" type="text" v-model="item.real_name" v-else @on-blur="bindTxt(item)" />
+                  <span class="iconfont iconbianji1" @click="item.isEdit = !item.isEdit" v-if="item.isShowEdit"></span>
+                </div>
+                <div class="nameStyle" v-show="item.realName && item.real_name">
+                  {{ item.real_name }}
                 </div>
               </div>
-              <!--<Col class="mb20" v-bind="gridPic"-->
-              <!--v-for="(item, index) in pictrueList" :key="index" >-->
-              <!--<div class="pictrueList_pic">-->
-              <!--<img :class="item.isSelect ? 'on': '' " v-lazy="item.satt_dir"-->
-              <!--@click.stop="changImage(item, index, pictrueList)"/>-->
-              <!--</div>-->
-              <!--</Col>-->
-            </Row>
-          </div>
-          <div class="footer acea-row row-right">
-            <Page
-              :total="total"
-              show-elevator
-              show-total
-              @on-change="pageChange"
-              :page-size="fileData.limit"
-            />
-          </div>
+            </div>
+            <!--<Col class="mb20" v-bind="gridPic"-->
+            <!--v-for="(item, index) in pictrueList" :key="index" >-->
+            <!--<div class="pictrueList_pic">-->
+            <!--<img :class="item.isSelect ? 'on': '' " v-lazy="item.satt_dir"-->
+            <!--@click.stop="changImage(item, index, pictrueList)"/>-->
+            <!--</div>-->
+            <!--</Col>-->
+          </Row>
         </div>
+        <div class="footer acea-row row-right">
+          <Page :total="total" show-elevator show-total @on-change="pageChange" :page-size="fileData.limit" />
+        </div>
+      </div>
       </Col>
     </Row>
   </div>
@@ -250,7 +166,7 @@ export default {
     // 树状图
     renderContent(h, { root, node, data }) {
       let operate = [];
-      if (data.pid == 0) {
+      if(data.pid == 0) {
         operate.push(
           h(
             "div",
@@ -266,7 +182,7 @@ export default {
           )
         );
       }
-      if (data.id !== "") {
+      if(data.id !== "") {
         operate.push(
           h(
             "div",
@@ -483,7 +399,7 @@ export default {
         value,
         title,
       });
-      if (this.ids.length) {
+      if(this.ids.length) {
         this.pids = value;
         this.getMove();
       } else {
@@ -492,7 +408,7 @@ export default {
       let selected = this.$refs.reference.$el.querySelectorAll(
         ".ivu-tree-title-selected"
       );
-      for (let i = 0; i < selected.length; i++) {
+      for(let i = 0; i < selected.length; i++) {
         selected[i].className = "ivu-tree-title";
       }
       e.path[0].className = "ivu-tree-title  ivu-tree-title-selected"; // 当前点击的元素
@@ -542,7 +458,7 @@ export default {
       // console.log('sss333',data);
       event.preventDefault();
       data.flag = !data.flag;
-      if (data.flag2) {
+      if(data.flag2) {
         data.flag2 = false;
       }
     },
@@ -557,7 +473,7 @@ export default {
       let selected = this.$refs.tree.$el.querySelectorAll(
         ".ivu-tree-title-selected"
       );
-      for (let i = 0; i < selected.length; i++) {
+      for(let i = 0; i < selected.length; i++) {
         selected[i].className = "ivu-tree-title";
       }
       e.path[0].className = "ivu-tree-title  ivu-tree-title-selected"; // 当前点击的元素
@@ -648,8 +564,8 @@ export default {
             this.editName(el);
           });
           this.pictrueList = res.data.list;
-
-          if (this.pictrueList.length) {
+          console.log(this.pictrueList);
+          if(this.pictrueList.length) {
             this.isShowPic = false;
           } else {
             this.isShowPic = true;
@@ -678,7 +594,7 @@ export default {
         pid: this.treeId,
       };
       let promise = new Promise((resolve) => {
-        this.$nextTick(function () {
+        this.$nextTick(function() {
           resolve(true);
         });
       });
@@ -686,7 +602,7 @@ export default {
     },
     // 上传成功
     handleSuccess(res, file, fileList) {
-      if (res.status === 200) {
+      if(res.status === 200) {
         this.$Message.success(res.msg);
         this.getFileList();
       } else {
@@ -700,13 +616,13 @@ export default {
     // 选中图片
     changImage(item, index, row) {
       let activeIndex = 0;
-      if (!item.isSelect) {
+      if(!item.isSelect) {
         item.isSelect = true;
         this.checkPicList.push(item);
       } else {
         item.isSelect = false;
         this.checkPicList.map((el, index) => {
-          if (el.att_id == item.att_id) {
+          if(el.att_id == item.att_id) {
             activeIndex = index;
           }
         });
@@ -718,9 +634,9 @@ export default {
         this.ids.push(item.att_id);
       });
       this.pictrueList.map((el, i) => {
-        if (el.isSelect) {
+        if(el.isSelect) {
           this.checkPicList.filter((el2, j) => {
-            if (el.att_id == el2.att_id) {
+            if(el.att_id == el2.att_id) {
               el.num = j + 1;
             }
           });
@@ -731,13 +647,13 @@ export default {
     },
     // 点击使用选中图片
     checkPics() {
-      if (this.isChoice === "单选") {
-        if (this.checkPicList.length > 1)
+      if(this.isChoice === "单选") {
+        if(this.checkPicList.length > 1)
           return this.$Message.warning("最多只能选一张图片");
         this.$emit("getPic", this.checkPicList[0]);
       } else {
         let maxLength = this.$route.query.maxLength;
-        if (
+        if(
           maxLength != undefined &&
           this.checkPicList.length > Number(maxLength)
         )
@@ -747,9 +663,10 @@ export default {
       }
     },
     editName(item) {
-      let it = item.real_name.split(".");
+      let it = item.real_name ? item.real_name.split(".") : item.name.split(".");
       let it1 = it[1] == undefined ? [] : it[1];
       let len = it[0].length + it1.length;
+
       item.editName =
         len < 10
           ? item.real_name
@@ -757,7 +674,7 @@ export default {
     },
     // 修改图片文字上传
     bindTxt(item) {
-      if (item.real_name == "") {
+      if(item.real_name == "") {
         this.$Message.error("请填写内容");
       }
       fileUpdateApi(item.att_id, {

@@ -29,7 +29,6 @@ class wsSocket {
     }
 
     init(opt) {
-        console.log(opt);
         let wsUrl = ''
         let hostUrl = wss(Setting.wsSocketUrl);
 

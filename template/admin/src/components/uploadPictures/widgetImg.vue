@@ -1,8 +1,8 @@
 <template>
-    <div class="box">
-        <upload-from :isChoice="isChoiceD" @getPicD = "getPicD" :gridPic="gridPic" :gridBtn="gridBtn" v-if="this.$route.query.fodder === 'dialog' || this.$route.query.type === 'many'"></upload-from>
-        <upload-from :isChoice="isChoice" @getPic="getPic" :gridPic="gridPic" :gridBtn="gridBtn" v-else></upload-from>
-    </div>
+  <div class="box">
+    <upload-from :isChoice="isChoiceD" @getPicD="getPicD" :gridPic="gridPic" :gridBtn="gridBtn" v-if="this.$route.query.fodder === 'dialog' || this.$route.query.type === 'many'"></upload-from>
+    <upload-from :isChoice="isChoice" @getPic="getPic" :gridPic="gridPic" :gridBtn="gridBtn" v-else></upload-from>
+  </div>
 </template>
 
 <script>
@@ -11,7 +11,7 @@ import '../../../public/UEditor/dialogs/internal'
 export default {
   name: 'widgetImg',
   components: { uploadFrom },
-  data () {
+  data() {
     return {
       isChoice: '单选',
       isChoiceD: '多选',
@@ -31,29 +31,29 @@ export default {
       }
     }
   },
-  mounted () {
-    console.log(this.$route.query.fodder)
+  mounted() {
+    console.log(this.$route.query)
   },
   methods: {
-    getPicD (pc) {
-      if (this.$route.query.fodder === 'dialog') {
+    getPicD(pc) {
+      if(this.$route.query.fodder === 'dialog') {
         let str = ''
-        for (let i = 0; i < pc.length; i++) {
-            nowEditor.editor.execCommand('insertimage', { src: pc[i].att_dir })
+        for(let i = 0; i < pc.length; i++) {
+          nowEditor.editor.execCommand('insertimage', { src: pc[i].att_dir })
         }
         nowEditor.dialog.close(true)
       } else {
         let pcs = window.form_create_helper.get(this.$route.query.fodder) || [];
-        pc = pc.map( item => {
+        pc = pc.map(item => {
           return item.att_dir;
         });
         let concatPc = pcs.concat(pc);
         let pcList = Array.from(new Set(concatPc));
-        form_create_helper.set(this.$route.query.fodder,pcList);
+        form_create_helper.set(this.$route.query.fodder, pcList);
         form_create_helper.close(this.$route.query.fodder)
       }
     },
-    getPic (pc) {
+    getPic(pc) {
       form_create_helper.set(this.$route.query.fodder, pc.satt_dir)
       form_create_helper.close(this.$route.query.fodder)
     }
@@ -73,7 +73,8 @@ export default {
 </script>
 
 <style scoped lang="stylus">
- .box
-    width 100%
-    background #fff
+.box {
+  width: 100%;
+  background: #fff;
+}
 </style>

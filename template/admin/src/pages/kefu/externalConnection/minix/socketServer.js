@@ -105,7 +105,8 @@ export default {
         nickName: this.upperData.nickName,
         phone: this.upperData.phone,
         sex: this.upperData.sex,
-        avatar: this.upperData.avatar
+        avatar: this.upperData.avatar,
+        openid: this.upperData.openid
       }
 
       userRecord(postData).then(res => {
@@ -164,7 +165,8 @@ export default {
                 uid: this.chatServerData.uid,
                 nickname: this.chatServerData.nickname,
                 avatar: this.chatServerData.avatar,
-                phone: this.userMessage.phone ? this.userMessage.phone : this.chatServerData.phone
+                phone: this.userMessage.phone ? this.userMessage.phone : this.chatServerData.phone,
+                openid: this.upperData.openid
               }
             })
           })
@@ -178,6 +180,9 @@ export default {
 
           parent.postMessage({ type: 'message_num', num: data.num }, "*");
         })
+
+
+
         // let num = 1;
         // setInterval(() => {
         //   parent.postMessage({ type: 'message_num', num: num++ }, "*");
@@ -252,7 +257,7 @@ export default {
       if(this.$route.query.deviceType == 'Mobile') {
         this.userMessage += `[${item}]`
       } else {
-        // this.inputConType = 1;
+        this.inputConType = 1;
         this.$refs['inputDiv'].innerText += `[${item}]`
         // this.$refs['inputDiv'].innerHTML += `<span class="em ${item}"></span>`
       }
@@ -262,7 +267,7 @@ export default {
     // 文本发送
     sendText() {
       let sendMessage;
-      if(this.$route.query.deviceType == 'Mobile') {
+      if(!this.$refs['inputDiv']) {
         sendMessage = this.userMessage;
       } else {
         sendMessage = this.$refs['inputDiv'].innerText.replace(/(↵)/g, '\n');
@@ -273,7 +278,10 @@ export default {
         this.$refs['inputDiv'] ? this.$refs['inputDiv'].innerText = '' : this.userMessage = '';
       } else {
         this.$Message.error('请先输入信息，在进行发送');
+
       }
+
+
 
     },
     // type: 1 普通文本 2 图片

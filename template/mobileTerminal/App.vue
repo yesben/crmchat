@@ -33,7 +33,6 @@ export default {
 		// 获取域名, 若没有域名，自动跳转到填写域名界面
 		getDomainName() {
 			let dominName = getStorage('dominName');
-			console.log(dominName);
 			if(!dominName) {
 				navigateTo(2, '/pages/view/dominName/index');
 			}

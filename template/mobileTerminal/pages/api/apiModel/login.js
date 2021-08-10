@@ -2,7 +2,8 @@ const api = {
 	// 客服登录
 	login: {
 		url: 'kefu/login',
-		method: 'post'	
+		method: 'post',
+		loading: true
 	},
 	// 退出登录
 	userLogout: {

@@ -1,9 +1,14 @@
 <template>
   <div class="chatList">
+    <div class="search_box">
+      <Input prefix="ios-search" placeholder="搜索用户名称" @on-enter="bindSearch" @on-change="inputChange" />
+
+    </div>
     <div class="tab-head">
       <div class="item" :class="{active:item.key == hdTabCur}" v-for="(item, index) in hdTab" :key="index" @click="changeTab(item)">{{item.title}}</div>
     </div>
     <div class="scroll-box">
+
       <vue-scroll :ops="ops" @handle-scroll="handleScroll" v-if="userList.length>0">
         <div class="chat-item" v-for="(item,index) in userList" :key="index" :class="{active:curId == item.id}" @click="selectUser(item)">
           <div class="avatar">
@@ -188,6 +193,15 @@ export default {
     this.wsStart();
   },
   methods: {
+    // 搜索
+    bindSearch(e) {
+      this.$emit('search', e.target.value);
+    },
+    // inputChange
+    inputChange(e) {
+      console.log(e.target.value)
+      this.bus.$emit('change', e.target.value)
+    },
     wsStart() {
       let that = this
       this.bus.pageWs.then(ws => {
@@ -218,7 +232,6 @@ export default {
         })
 
         ws.$on('mssage_num', data => {
-          console.log(data.recored.is_tourist, this.hdTabCur, data.recored.id, this.curId);
 
           if(data.recored.id) {
             let status = false
@@ -458,6 +471,10 @@ export default {
 
 .chart-scroll {
   margin-top: -10px;
+}
+
+.search_box {
+  margin: 10px 5px 0 5px;
 }
 </style>
 
