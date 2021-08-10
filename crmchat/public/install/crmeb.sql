@@ -1,10 +1,5 @@
 
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
-
-
 
 -- --------------------------------------------------------
 
@@ -213,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `eb_chat_user` (
 --
 
 INSERT INTO `eb_chat_user` (`id`, `uid`, `group_id`, `nickname`, `avatar`, `phone`, `last_ip`, `appid`, `remarks`, `is_delete`, `is_kefu`, `is_tourist`, `type`, `sex`, `create_time`, `update_time`) VALUES
-(1, 0, 0, 'CRM 客服', 'https://qiniu.crmeb.net/attach/2021/07/0c699202107201838374542.png', '15594500000', '', '202116257358989495', '', 0, 0, 0, 0, 0, '2021-07-20 10:43:56', '2021-07-20 10:43:56');
+(1, 1, 0, 'CRM 客服', 'https://qiniu.crmeb.net/attach/2021/07/0c699202107201838374542.png', '15594500000', '', '202116257358989495', '', 0, 0, 0, 0, 0, '2021-07-20 10:43:56', '2021-07-20 10:43:56');
 
 -- --------------------------------------------------------
 

@@ -147,8 +147,8 @@ abstract class BaseHandler
         $userService      = app()->make(ChatUserServices::class);
         $_userInfo        = $userService->getUserInfo($data['user_id'], ['nickname', 'avatar', 'is_tourist']);
         $isTourist        = $_userInfo['is_tourist'];
-        $data['nickname'] = $_userInfo['nickname'];
-        $data['avatar']   = $_userInfo['avatar'];
+        $data['nickname'] = $_userInfo['nickname'] ?? '';
+        $data['avatar']   = $_userInfo['avatar'] ?? '';
 
         //用户向客服发送消息，判断当前客服是否在登录中
         /** @var ChatServiceRecordServices $serviceRecored */
