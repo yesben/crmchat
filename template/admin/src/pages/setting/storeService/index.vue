@@ -209,7 +209,7 @@ export default {
           width: 80
         },
         {
-          title: '用户名称',
+          title: '客服名称',
           key: 'nickname',
           minWidth: 60
         },
@@ -218,11 +218,11 @@ export default {
           key: 'account',
           minWidth: 60
         },
-        {
-          title: '客服头像',
-          slot: 'avatar',
-          minWidth: 60
-        },
+        // {
+        //   title: '客服名称',
+        //   key: 'wx_name',
+        //   minWidth: 120
+        // },
         {
           title: '客服状态',
           slot: 'status',
@@ -421,7 +421,10 @@ export default {
       // this.modals = true;
       // this.formValidate.data = '';
       // this.getListService();
-      this.$modalForm(kefuaddApi()).then(() => this.getList())
+      this.$modalForm(kefuaddApi()).then(() => {
+        this.getList();
+        console.log(1223);
+      })
     },
     // 全选
     onSelectTab(selection) {

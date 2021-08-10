@@ -1,14 +1,14 @@
 <template>
   <div class="kefu-layouts">
     <div class="content-wrapper">
-      <baseHeader :kefuInfo="kefuInfo" :online="online" @setOnline="setOnline" @search="bindSearch"></baseHeader>
+      <baseHeader :kefuInfo="kefuInfo" :online="online" @setOnline="setOnline"></baseHeader>
       <div class="container">
-        <chatList v-if="chatListModel" @setDataId="setDataId" @changeType="changeType" :userOnline="userOnline" :newRecored="newRecored" :searchData="searchData"></chatList>
+        <chatList v-if="chatListModel" @setDataId="setDataId" @search="bindSearch" @changeType="changeType" :userOnline="userOnline" :newRecored="newRecored" :searchData="searchData"></chatList>
         <div class="chat-content">
           <div class="chat-body">
 
             <happy-scroll size="5" resize hide-horizontal :scroll-top="scrollTop" @vertical-start="scrollHandler">
-              <div style="width: 600px; padding:20px" id="chat_scroll" ref="scrollBox">
+              <div style="width: 600px; padding:20px;" id="chat_scroll" ref="scrollBox">
                 <Spin v-show="isLoad">
                   <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
                   <div>Loading</div>
@@ -279,7 +279,25 @@ export default {
     this.bus.pageWs = Socket(true, getCookies('kefu_token'));
     this.wsAgain();
     this.header['Authori-zation'] = 'Bearer ' + getCookies('kefu_token');
-    this.text = this.replace_em('[em-smiling_imp]')
+    this.text = this.replace_em('[em-smiling_imp]');
+
+    console.log(this.$route);
+
+    window.onbeforeunload = (e) => {
+      if(this.$route.name == "kefu_pc_list") {
+        e = e || window.event;
+        // 兼容IE8和Firefox 4之前的版本
+        if(e) {
+          e.returnValue = '您确定要离开吗？';
+        }
+        // Chrome, Safari, Firefox 4+, Opera 12+ , IE 9+
+        return '您确定要离开吗?';
+      } else {
+        window.onbeforeunload = null
+      }
+    };
+
+
   },
   methods: {
     // 建立scoket 连接
@@ -369,10 +387,10 @@ export default {
       }
     },
     //订单详情
-//    lookOrder(item) {
-//      this.orderId = item.orderInfo.id
-//      this.isOrder = true
-//    },
+    //    lookOrder(item) {
+    //      this.orderId = item.orderInfo.id
+    //      this.isOrder = true
+    //    },
     setOnline(data) {
 
       Socket.then(ws => {
@@ -386,12 +404,12 @@ export default {
       this.online = data;
     },
     // 阻止浏览器默认换行操作
-//    listen(e) {
-//      if(e.keyCode == 13) {
-//        e.preventDefault()
-//        return false
-//      }
-//    },
+    //    listen(e) {
+    //      if(e.keyCode == 13) {
+    //        e.preventDefault()
+    //        return false
+    //      }
+    //    },
     // 输入框选择表情
     select(data) {
       let val = `[${data}]`
@@ -405,7 +423,8 @@ export default {
     },
     // 获取是否游客 获取会话列表
     changeType(data) {
-      this.tourist = data
+      this.tourist = data;
+      console.log(this.tourist);
     },
     // 获取列表用户信息
     setDataId(data) {
@@ -617,9 +636,12 @@ textarea.ivu-input {
       width: 600px;
       height: 100%;
       border-right: 1px solid #ECECEC;
+      display: flex;
+      flex-direction: column;
 
       .chat-body {
-        height: 530px;
+        max-height: 530px;
+        flex: 1;
 
         .chat-item {
           margin-bottom: 10px;

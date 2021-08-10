@@ -92,14 +92,18 @@
             <textarea @focus="textareaInput" class="font" @input="textareaChange($event)" v-model='userMessage' placeholder="请输入内容"></textarea>
             <p class="font" v-html='pCont'></p>
           </div>
-          <div class="mobel_customerServer_container_footer_input_send" @click="sendText">
+          <!-- <div class="mobel_customerServer_container_footer_input_send" @click="sendText">
             <span class="iconfont primary_color">&#xe6bb;</span>
-          </div>
+          </div> -->
         </div>
 
         <!-- 选择表情 -->
         <div class="mobel_customerServer_container_footer_emoji" @click="selectEmoji">
           <span class="iconfont ">&#xe6cb;</span>
+        </div>
+        <!-- 发送消息 -->
+        <div class="sendMessage" :class="{'sendMessage-primary': userMessage}">
+          <div @click="sendText">发送</div>
         </div>
       </div>
       <!-- 表情及图片容器 -->
@@ -378,11 +382,12 @@ export default {
       flex: 1;
       margin: 0 9px;
       background: #fff;
-      border-radius: 32px;
+      border-radius: 4px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       box-sizing: border-box;
+      // line-height: 28px;
 
       &_con {
         flex: 1;
@@ -427,7 +432,16 @@ export default {
       align-items: center;
       font-size: 24px;
     }
-
+    .sendMessage {
+      background: #ccc;
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-left: 8px;
+      color: #fff;
+    }
+    .sendMessage-primary {
+      background: #3875ea;
+    }
     &_emojiList {
       width: 100%;
       height: 0;

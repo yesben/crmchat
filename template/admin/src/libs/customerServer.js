@@ -32,6 +32,23 @@ function customerServerStyle() {
     'z-index': 99
   }
 
+  this.customerServer_container_mobile = {
+    position: 'fixed',
+    right: 0,
+    top: '500px',
+    margin: 'auto',
+    width: '40px',
+    height: '40px',
+    background: 'linear-gradient(270deg, #1890FF 0%, #3875EA 100%)',
+    'border-radius': '50%',
+    'z-index': 998
+
+  };
+  this.customerServer_container_mobile_image = {
+    width: '100%',
+    height: 'auto',
+  }
+
   this.connect_customerServer = {
     display: 'flex',
     'align-items': 'center',
@@ -100,10 +117,12 @@ function initCustomerServer(option) {
     if(matchMedia('(max-width: 600px)').matches) {
       this.settingObj.deviceType = 'Mobile';
     } else if(matchMedia('(max-width: 992px)').matches) {
-      this.settingObj.deviceType = 'Tablet';
+      this.settingObj.deviceType = 'pc';
     } else {
-      this.settingObj.deviceType = 'Desktop';
+      this.settingObj.deviceType = 'pc';
     };
+
+    console.log(this.settingObj.deviceType);
 
     // 若用户通过 type 指定，则使用type指定的参数
     if(option.type) {
@@ -112,7 +131,7 @@ function initCustomerServer(option) {
 
 
     // 获取客服相关参数
-    this.settingObj.openUrl += `?deviceType=${this.settingObj.deviceType}`;
+    this.settingObj.openUrl += `?deviceType=${this.settingObj.deviceType}&`;
     let customerServerData = '';
     if(option.sendUserData && Object.keys(option.sendUserData).length) {
       customerServerData = toParams(option.sendUserData);
@@ -125,19 +144,26 @@ function initCustomerServer(option) {
   // 创建 联系客服小弹窗按钮（点击时打开聊天界面）,创建iframe容器 并将iframe添加至body中
   this.createCustomerServerContainer = () => {
     // 联系客服按钮dom结构
-    let html = `
-    <div class="customerServer_container" id="${this.settingObj.domId}">
-      <div class="connect_customerServer">
-        <div class="connect_customerServer_con">
-          <img class="connect_customerServer_con_img" src="${base64ImageObject.message}"></img>
-          <span>联系客服</span>
-        </div>
-        <div class="connect_customerServer_open">
-          <img class="connect_customerServer_open_img" src="${base64ImageObject.open}"></img>
-        </div>
-      </div>
+    let htmlMobile = `
+    <div class="customerServer_container_mobile" id="${this.settingObj.domId}">
+      <img class="customerServer_container_mobile_image" src="${base64ImageObject.message}"></img>
       <div class="connent_count"></div>
     </div>
+    `;
+
+    let html = `
+      <div class="customerServer_container" id="${this.settingObj.domId}">
+        <div class="connect_customerServer">
+          <div class="connect_customerServer_con">
+            <img class="connect_customerServer_con_img" src="${base64ImageObject.message}"></img>
+            <span>联系客服</span>
+          </div>
+          <div class="connect_customerServer_open">
+            <img class="connect_customerServer_open_img" src="${base64ImageObject.open}"></img>
+          </div>
+        </div>
+        <div class="connent_count"></div>
+      </div>
     `;
     let iframeHtml = `
     <iframe src="${this.settingObj.openUrl}&token=${this.settingObj.token}" frameborder="0" class="iframe_contanier" style="width:100%; height:100%;"></iframe>
@@ -146,9 +172,70 @@ function initCustomerServer(option) {
 
     var app = document.createElement('div');
     app.setAttribute('id', 'app');
-    app.innerHTML = html;
+
+    var posX;
+    var posY;
+
+
+
+    if(this.settingObj.deviceType == 'Mobile') {
+      app.innerHTML = htmlMobile;
+    } else {
+      app.innerHTML = html;
+    }
+
+
+
+
+
     this.body = document.querySelector(this.settingObj.insertDomNode);
     this.body.appendChild(app);
+
+
+    var fwuss = document.querySelector('.customerServer_container_mobile');
+    var maxW = document.body.clientWidth - 50;
+    var maxH = document.body.clientHeight - 50;
+
+    var oL, oT;
+    if(this.settingObj.deviceType == 'Mobile') {
+      fwuss.addEventListener('touchstart', (e) => {
+
+        var ev = e || window.event;
+        var touch = ev.targetTouches[0];
+        // oL = touch.clientX - fwuss.offsetLeft;
+        oT = touch.clientY - fwuss.offsetTop;
+
+        document.addEventListener("touchmove", defaultEvent, false);
+      })
+      fwuss.addEventListener('touchmove', (e) => {
+        var ev = e || window.event;
+        var touch = ev.targetTouches[0];
+        var oLeft = touch.clientX - oL;
+        var oTop = touch.clientY - oT;
+        if(oLeft < 0) {
+          oLeft = 0;
+        } else if(oLeft >= maxW) {
+          oLeft = maxW;
+        }
+        if(oTop < 0) {
+          oTop = 0;
+        } else if(oTop >= maxH) {
+          oTop = maxH;
+        }
+        fwuss.style.left = oLeft + 'px';
+        fwuss.style.top = oTop + 'px';
+      });
+
+      fwuss.addEventListener('touchend', function() {
+        document.removeEventListener("touchmove", defaultEvent);
+      });
+
+      function defaultEvent(e) {
+        e.preventDefault();
+      }
+    }
+
+
     // 创建完毕后，添加样式，样式可以从外部传入
     this.iframeLayout = document.createElement('div');
     this.iframeLayout.setAttribute('id', 'iframe_content');

@@ -1,21 +1,21 @@
 <template>
   <div class="getCode_container">
-  <div class="content">
-    <Tabs value="name1">
-      <TabPane label="网页内嵌" name="name1">
-        <wangye :tokeninfo="token" :siteUrl="siteUrl" :cgetCopy='getCopy'></wangye>
-      </TabPane>
-      <TabPane label="超链接" name="name2">
-        <alink :tokeninfo="token" :siteUrl="siteUrl" :cgetCopy='getCopy'></alink>
-      </TabPane>
-      <TabPane label="定制开发" name="name3">
-        <kaifa :tokeninfo="token" :siteUrl="siteUrl" :cgetCopy='getCopy'></kaifa>
-      </TabPane>
-      <TabPane label="重置token" name="name4">
-        <setting :tokeninfo="token" :siteUrl="siteUrl" :cgetCopy='getCopy' :cresetToken="resetToken"></setting>
-      </TabPane>
-    </Tabs>
-  </div>
+    <div class="content">
+      <Tabs value="name1">
+        <TabPane label="网页内嵌" name="name1">
+          <wangye :tokeninfo="token" :siteUrl="siteUrl" :cgetCopy='getCopy'></wangye>
+        </TabPane>
+        <TabPane label="超链接" name="name2">
+          <alink :tokeninfo="token" :siteUrl="siteUrl" :cgetCopy='getCopy'></alink>
+        </TabPane>
+        <TabPane label="定制开发" name="name3">
+          <kaifa :tokeninfo="token" :siteUrl="siteUrl" :cgetCopy='getCopy'></kaifa>
+        </TabPane>
+        <TabPane label="重置token" name="name4">
+          <setting :tokeninfo="token" :siteUrl="siteUrl" :cgetCopy='getCopy' :cresetToken="resetToken"></setting>
+        </TabPane>
+      </Tabs>
+    </div>
     <Modal v-model="canfrime" title="提示" @on-ok="confirme" @on-cancel="cancel">
       <div class="ivu-modal-confirm">
         <img src="@/assets/images/warring.png" alt="">
@@ -38,13 +38,13 @@ import setting from './components/setting';
 
 
 export default {
-    name: 'setting_user',
-    components: {
-        alink,
-        wangye,
-        kaifa,
-        setting
-    },
+  name: 'setting_user',
+  components: {
+    alink,
+    wangye,
+    kaifa,
+    setting
+  },
   computed: {
     ...mapState('media', [
       'isMobile'
@@ -162,109 +162,109 @@ export default {
 </script>
 
 <style>
-  .content {
-    width: 100%;
-    color: #323437;
-    background: #ffffff;
-    margin-top: 18px;
-    font-size: 13px;
-    padding: 10px;
-  }
+.content {
+  width: 100%;
+  color: #323437;
+  background: #ffffff;
+  margin-top: 18px;
+  font-size: 13px;
+  padding: 10px;
+}
 
-  .ivu-modal-confirm {
-    display: flex;
-    align-items: center;
-  }
-  .ivu-modal-confirm img {
-    width: 40px;
-    height: 40px;
-    margin-right: 30px;
-  }
+.ivu-modal-confirm {
+  display: flex;
+  align-items: center;
+}
+.ivu-modal-confirm img {
+  width: 40px;
+  height: 40px;
+  margin-right: 30px;
+}
 
-  .font-w {
-    font-weight: 800;
-    margin: 10px 0;
-  }
+.font-w {
+  font-weight: 800;
+  margin: 10px 0;
+}
 
-  .text-i {
-    text-indent: 2em;
-  }
+.text-i {
+  text-indent: 2em;
+}
 
-  .content > p {
-    margin-bottom: 6px;
-  }
+.content > p {
+  margin-bottom: 6px;
+}
 
-  .code-content-wrap {
-    clear: both;
-    border: 1px solid #e4e4e4;
-    border-radius: 3px;
-    padding: 12px 17px;
-    background-color: #f8f8f8;
-  }
+.code-content-wrap {
+  clear: both;
+  border: 1px solid #e4e4e4;
+  border-radius: 3px;
+  padding: 12px 17px;
+  background-color: #f8f8f8;
+}
 
-  .other-wrap {
-    margin: 4px 0;
-    text-align:right;
-  }
+.other-wrap {
+  margin: 4px 0;
+  text-align: right;
+}
 
-  .textarea {
-    border: none;
-    /* height: 40px; */
-    width: 100%;
-    outline: 0;
-    resize: none;
-    background-color: #f8f8f8;
-    font-family: Arial;
-    color: #323437;
-    line-height: 24px;
-    text-align: left;
-  }
+.textarea {
+  border: none;
+  /* height: 40px; */
+  width: 100%;
+  outline: 0;
+  resize: none;
+  background-color: #f8f8f8;
+  font-family: Arial;
+  color: #323437;
+  line-height: 24px;
+  text-align: left;
+}
 
-  .code {
-    border: none;
-    /* height: 40px; */
-    width: 100%;
-    outline: 0;
-    resize: none;
-    background-color: #f8f8f8;
-    font-family: Arial;
-    color: #323437;
-    line-height: 24px;
-    text-align: left;
-  }
+.code {
+  border: none;
+  /* height: 40px; */
+  width: 100%;
+  outline: 0;
+  resize: none;
+  background-color: #f8f8f8;
+  font-family: Arial;
+  color: #323437;
+  line-height: 24px;
+  text-align: left;
+}
 
-  .btn {
-    display: inline-block;
-    zoom: 1;
-    padding: 6px 16px;
-    border: 1px solid #d9dbdc;
-    border-radius: 2px;
-    line-height: 1;
-    color: #323437;
-    cursor: pointer;
-    outline: 0;
-  }
+.btn {
+  display: inline-block;
+  zoom: 1;
+  padding: 6px 16px;
+  border: 1px solid #d9dbdc;
+  border-radius: 2px;
+  line-height: 1;
+  color: #323437;
+  cursor: pointer;
+  outline: 0;
+}
 
-  .btn.btn-blue {
-    color: #fff;
-    background-color: #4f97e7;
-    border-color: #3085e3;
-  }
+.btn.btn-blue {
+  color: #fff;
+  background-color: #4f97e7;
+  border-color: #3085e3;
+}
 
-  .setting-highlight {
-    color: #f15755;
-    margin-left: 5px;
-    line-height: 30px;
-  }
-  .fenlei{
-    margin: 10px 0;
-    border: 1px solid #eee;
-    padding: 30px;
-    padding-bottom: 10px;
-    border-radius: 6px;
-  }
-  .typetitle{
-    padding: 4px 7px;
-    font-size: 18px;
-  }
+.setting-highlight {
+  color: #f15755;
+  margin-left: 5px;
+  line-height: 30px;
+}
+.fenlei {
+  margin: 10px 0;
+  border: 1px solid #eee;
+  padding: 30px;
+  padding-bottom: 10px;
+  border-radius: 6px;
+}
+.typetitle {
+  padding: 4px 7px;
+  font-size: 18px;
+}
 </style>

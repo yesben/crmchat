@@ -23,7 +23,7 @@
           </div>
           <div :style="{display:loginType?'block':'none'}">
             <div class="page-account-top">
-              <div class="page-account-top-logo">微信扫码登录</div>
+              <div class="page-account-top-logo">APP扫码登录</div>
             </div>
             <div class="code-box">
               <div class="qrcode" ref="qrCodeUrl"></div>

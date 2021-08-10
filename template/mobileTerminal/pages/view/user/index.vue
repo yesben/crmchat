@@ -15,8 +15,20 @@
 			</div>
 			<div slot="content" class="content">
 				<div class="content_box" @click="setting">
-					<image src="~static/images/set.png" mode=""></image>
+					<div><span class="iconfont">&#xe6fa;</span></div>
 					<div class="text">设置</div>
+					<div><image src="~static/images/right.png" alt=""></image></div>
+				</div>
+				<div class="line"></div>
+				<div class="content_box" @click="setting">
+					<div><span class="iconfont">&#xe6f9;</span></div>
+					<div class="text">域名设置</div>
+					<div><image src="~static/images/right.png" alt=""></image></div>
+				</div>
+				<div class="line"></div>
+				<div class="content_box" @click="setting">
+					<div><span class="iconfont">&#xe6f8;</span></div>
+					<div class="text">退出登录</div>
 					<div><image src="~static/images/right.png" alt=""></image></div>
 				</div>
 			</div>
@@ -47,7 +59,7 @@ export default {
 		},
 		// 设置
 		setting() {
-			navigateTo(1,'/pages/view/user/setting/setting', this.customerServerData);
+			navigateTo(1, '/pages/view/user/setting/setting', this.customerServerData);
 		}
 	}
 };
@@ -102,15 +114,23 @@ export default {
 .content {
 	width: 690rpx;
 	margin: 0 auto;
-
-	padding-top: 70rpx;
+	margin-top: 70rpx;
+	background: #fff;
+	.line {
+		width: 80%;
+		height: 1px;
+		background: #eeeeee;
+		position: relative;
+		left: 20%;
+	}
 	.content_box {
-		height: 88rpx;
+		padding: 28rpx 30rpx;
+		// height: 88rpx;
 		background: #ffffff;
 		border-radius: 12rpx;
-		margin-bottom: 24rpx;
+		// margin-bottom: 24rpx;
 		display: flex;
-		justify-content: left;
+		justify-content: space-between;
 		align-items: center;
 		.text {
 			width: 84%;
@@ -118,7 +138,6 @@ export default {
 		image {
 			width: 33rpx;
 			height: 33rpx;
-			margin: 0rpx 15rpx;
 		}
 	}
 }
