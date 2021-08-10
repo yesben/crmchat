@@ -283,6 +283,10 @@ abstract class BaseHandler
             /** @var ChatServiceRecordServices $service */
             $service = app()->make(ChatServiceRecordServices::class);
             $service->updateRecord(['to_user_id' => $usreId], ['online' => 0]);
+            
+            /** @var ChatServiceServices $service */
+            $service = app()->make(ChatServiceServices::class);
+            $service->update(['user_id' => $usreId], ['online' => 0]);
 
             if ($toUsreId) {
                 $toUserFd  = $this->manager->getUserIdByFds($toUsreId);

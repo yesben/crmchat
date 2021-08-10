@@ -109,21 +109,24 @@ class UserHandler extends BaseHandler
         }
 
         $this->room->update($this->fd, 'user_id', $userInfo['id']);
+        
+        /** @var ChatServiceRecordServices $service */
+        $service = app()->make(ChatServiceRecordServices::class);
+        $service->update(['to_user_id' => $userInfo['id']], ['online' => 1]);
 
         $toUserId = $data['to_user_id'] ?? 0;
         if ($toUserId) {
             $userId = $userInfo['id'];
             $this->room->update($this->fd, 'to_user_id', $toUserId);
-
             //不是游客进入记录
             if (!$frame['tourist']) {
-                /** @var ChatServiceRecordServices $service */
-                $service = app()->make(ChatServiceRecordServices::class);
                 $service->update(['user_id' => $userId, 'to_user_id' => $toUserId], ['mssage_num' => 0]);
                 /** @var ChatServiceDialogueRecordServices $logServices */
                 $logServices = app()->make(ChatServiceDialogueRecordServices::class);
                 $logServices->update(['user_id' => $toUserId, 'to_user_id' => $userId], ['type' => 1]);
             }
+
+
             $this->manager->pushing($this->fd, $response->message('mssage_num', ['user_id' => $toUserId, 'num' => 0, 'recored' => (object)[]])->getData());
         }
         $this->manager->login($frame['type'], $userInfo['id'], $this->fd);
