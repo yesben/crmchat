@@ -9,6 +9,8 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 
+use app\http\middleware\AllowOriginMiddleware;
+use app\http\middleware\InstallMiddleware;
 use app\http\middleware\kefu\KefuAuthTokenMiddleware;
 use think\facade\Config;
 use think\facade\Route;
@@ -91,4 +93,4 @@ Route::group('api', function () {
 
     })->prefix('kefu.');
 
-});
+})->middleware([AllowOriginMiddleware::class, InstallMiddleware::class]);
