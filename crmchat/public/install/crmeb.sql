@@ -306,13 +306,13 @@ CREATE TABLE IF NOT EXISTS `eb_system_attachment` (
 --
 
 INSERT INTO `eb_system_attachment` (`att_id`, `name`, `att_dir`, `satt_dir`, `att_size`, `att_type`, `pid`, `time`, `image_type`, `module_type`, `real_name`) VALUES
-(1, '客服图标', 'https://qiniu.crmeb.net/attach/2021/07/0c699202107201838374542.png', 'https://qiniu.crmeb.net/attach/2021/07/0c699202107201838374542.png', '', '', 0, 0, 1, 1, ''),
-(2, '客服logo', 'https://qiniu.crmeb.net/attach/2021/07/caa3e202107201838361256.png', 'https://qiniu.crmeb.net/attach/2021/07/caa3e202107201838361256.png', '', '', 0, 0, 1, 1, ''),
-(3, '图标', 'https://qiniu.crmeb.net/attach/2021/07/45f9c202107201838358522.png', 'https://qiniu.crmeb.net/attach/2021/07/45f9c202107201838358522.png', '', '', 0, 0, 1, 1, ''),
-(49, '客服头像1', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/fcc758713087632dc785fff3d37db928.png', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/fcc758713087632dc785fff3d37db928.png', '', '', 0, 0, 1, 1, ''),
-(50, '客服头像二', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/d4398c5d36757c1b1ed1f21202bea1c0.png', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/d4398c5d36757c1b1ed1f21202bea1c0.png', '', '', 0, 0, 1, 1, ''),
-(51, '客服头像三', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/1b244797f8b86b4cc0665d75d160aa30.png', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/1b244797f8b86b4cc0665d75d160aa30.png', '', '', 0, 0, 1, 1, ''),
-(52, '客服头像四', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/1f05bd27a6af2da438dc2bb689995fc5.png', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/1f05bd27a6af2da438dc2bb689995fc5.png', '', '', 0, 0, 1, 1, '');
+(1, '客服图标', 'https://qiniu.crmeb.net/attach/2021/07/0c699202107201838374542.png', 'https://qiniu.crmeb.net/attach/2021/07/0c699202107201838374542.png', '', '', 0, 0, 1, 1, '客服图标'),
+(2, '客服logo', 'https://qiniu.crmeb.net/attach/2021/07/caa3e202107201838361256.png', 'https://qiniu.crmeb.net/attach/2021/07/caa3e202107201838361256.png', '', '', 0, 0, 1, 1, '客服logo'),
+(3, '图标', 'https://qiniu.crmeb.net/attach/2021/07/45f9c202107201838358522.png', 'https://qiniu.crmeb.net/attach/2021/07/45f9c202107201838358522.png', '', '', 0, 0, 1, 1, '图标'),
+(49, '客服头像1', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/fcc758713087632dc785fff3d37db928.png', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/fcc758713087632dc785fff3d37db928.png', '', '', 0, 0, 1, 1, '客服头像一'),
+(50, '客服头像二', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/d4398c5d36757c1b1ed1f21202bea1c0.png', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/d4398c5d36757c1b1ed1f21202bea1c0.png', '', '', 0, 0, 1, 1, '客服头像二'),
+(51, '客服头像三', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/1b244797f8b86b4cc0665d75d160aa30.png', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/1b244797f8b86b4cc0665d75d160aa30.png', '', '', 0, 0, 1, 1, '客服头像三'),
+(52, '客服头像四', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/1f05bd27a6af2da438dc2bb689995fc5.png', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/1f05bd27a6af2da438dc2bb689995fc5.png', '', '', 0, 0, 1, 1, '客服头像四');
 
 -- --------------------------------------------------------
 
