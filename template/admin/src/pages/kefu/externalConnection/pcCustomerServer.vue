@@ -500,8 +500,8 @@ export default {
     .advertisement {
       padding: 10px;
       box-sizing: border-box;
-      height: 600px;
-      overflow-y: scroll;
+      max-height: 600px;
+      overflow-y: auto;
       img {
         max-width: 100%;
       }
