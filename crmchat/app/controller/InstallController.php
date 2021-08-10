@@ -468,9 +468,9 @@ class InstallController
                             'rand'       => $rand,
                             'timestamp'  => $time,
                         ]));
-
-                        $appSQL = "UPDATE  `{$dbPrefix}application` SET `token`= '" . $token . "',`app_secret`='" . $app_secret . "',`timestamp`= $time ,`rand`= $rand  WHERE `appid` = '202116257358989495'";
-                        $res    = mysqli_query($conn, $appSQL);
+                        $tokenMd5   = md5($token);
+                        $appSQL     = "UPDATE  `{$dbPrefix}application` SET `token_md5` = '" . $tokenMd5 . "', `token`= '" . $token . "',`app_secret`='" . $app_secret . "',`timestamp`= $time ,`rand`= $rand  WHERE `appid` = '202116257358989495'";
+                        $res        = mysqli_query($conn, $appSQL);
                         if (!$res) {
                             $message = '更新APP_TOKEN失败';
                             $arr     = array('n' => 999998, 'msg' => $message);
