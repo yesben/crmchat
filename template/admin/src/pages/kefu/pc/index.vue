@@ -100,12 +100,17 @@
             </div>
             <div class="textarea-box" style="position:relative;">
               <Input v-model="chatCon" type="textarea" :rows="4" @keydown.enter="sendText" placeholder="请输入文字内容" @on-enter="sendText" style="font-size:14px" />
-              <div class="send-btn"><Button class="btns" type="primary" :disabled="disabled" @click.stop="sendText">发送</Button></div>
+              <div class="send-btn">
+                <Button class="btns" type="primary" :disabled="disabled" @click.stop="sendText">发送</Button>
+              </div>
             </div>
           </div>
         </div>
-        <div>
+        <div class="right_menu">
           <rightMenu :isTourist="tourist" :uid="userActive.to_user_id" :webType="userActive.type" @bindPush="bindPush"></rightMenu>
+          <div class="crmchat_link" @click="tolink">
+            <span>CRMChat开源客服系统</span>
+          </div>
         </div>
       </div>
       <!-- 用户标签 -->
@@ -599,7 +604,13 @@ export default {
     // 客服转接确定
     transferOk() {
 
+    },
+
+    tolink() {
+      window.open('http://github.crmeb.net/u/CRMChat');
     }
+
+
   }
 }
 </script>
@@ -863,8 +874,8 @@ textarea.ivu-input {
   justify-content: flex-end;
   margin-top: 10px;
   margin-right: 10px;
-  width: 80px;
 
+  // width: 80px;
   .btns {
     width: 100%;
     background: #3875EA;
@@ -917,6 +928,29 @@ textarea.ivu-input {
 .isMsgbox {
   >>> .ivu-modal-body {
     padding: 0;
+  }
+}
+
+.right_menu {
+  position: relative;
+
+  .crmchat_link {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    text-align: center;
+    transition: 0.3s;
+    cursor: pointer;
+
+    span {
+      color: #ccc;
+    }
+
+    span:hover {
+      color: #007aff;
+    }
   }
 }
 </style>

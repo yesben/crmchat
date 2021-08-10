@@ -667,3 +667,15 @@ export function appReset(id) {
     method: 'put'
   })
 }
+
+/*
+  获取客服广告
+*/
+
+export function serviceAdv() {
+  return request({
+    url: '/service/adv',
+    method: 'get',
+    mobile: true
+  })
+}
