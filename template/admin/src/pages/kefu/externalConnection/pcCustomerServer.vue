@@ -208,6 +208,7 @@ export default {
 }
 .max-width_advertisement {
   max-width: 1140px;
+  border-radius: 8px;
 }
 .pc_customerServer_container {
   width: 100%;
