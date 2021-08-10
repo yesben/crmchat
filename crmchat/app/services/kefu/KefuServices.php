@@ -114,7 +114,7 @@ class KefuServices extends BaseServices
                 $info['type'] ?? 1,
                 $messageData['message_type'] ?? 1,
                 0,
-                $info['is_tourist'] ?? 0,
+                (int)($info['is_tourist'] ?? 0),
                 $info['nickname'] ?? "",
                 $info['avatar'] ?? ''
             );
