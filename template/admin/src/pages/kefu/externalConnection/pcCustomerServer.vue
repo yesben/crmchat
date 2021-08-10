@@ -1,125 +1,144 @@
 <template>
-  <div class="pc_customerServer_container">
 
-    <!-- 客服头部开始 -->
-    <div class="pc_customerServer_container_header">
-      <div class="pc_customerServer_container_header_title">
-        <img :src="chatServerData.avatar" alt="">
-        <span>{{chatServerData.to_user_nickname}}</span>
-      </div>
-      <div class="pc_customerServer_container_header_handle" @click="closeIframe" v-if="upperData.noCanClose != '1'">
-        <span class="iconfont">&#xe6c5;</span>
-      </div>
-    </div>
-    <!-- 客服头部结束 -->
+  <div class="pc_customerServer">
+    <div class="pc_customerServer_container max-width_con" :class="{'max-width_advertisement': upperData.noCanClose == 1}">
 
-    <!-- 聊天内容开始 -->
-    <div class="pc_customerServer_container_content">
-
-      <div class="productMessage_container" v-if="isShowProductModel">
-        <div class="productMessage_container_image">
-          <img :src="productMessage.image" alt="">
+      <!-- 客服头部开始 -->
+      <div class="pc_customerServer_container_header">
+        <div class="pc_customerServer_container_header_title">
+          <img :src="chatServerData.avatar" alt="">
+          <span>{{chatServerData.to_user_nickname}}</span>
         </div>
-        <div class="productMessage_container_content">
-          <div class="productMessage_container_content_title">{{productMessage.store_name}}</div>
-          <div class="productMessage_container_content_priceOrHandle">
-            <div>￥{{productMessage.price}}</div>
-            <div @click="sendProduct">发送客服</div>
-          </div>
+        <div class="pc_customerServer_container_header_handle" @click="closeIframe" v-if="upperData.noCanClose != '1'">
+          <span class="iconfont">&#xe6c5;</span>
         </div>
       </div>
-      <happy-scroll size="1" resize hide-horizontal :scroll-top="scrollTop" @vertical-start="scrollHandler">
-        <div class="scroll_content" id="chat_scroll" :class="{ 'pt140': isShowProductModel || inputConType == 2 }">
-          <!-- 滑动到容器顶部时，动画加载 -->
-          <Spin v-show="isLoad">
-            <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
-            <div>Loading</div>
-          </Spin>
-          <!-- 动画结束 -->
+      <!-- 客服头部结束 -->
 
-          <!-- 聊天内容列表 -->
-          <div class="chart_list">
+      <div class="layout_content">
 
-            <div class="chart_list_item" v-for="(item, index) in records" :key="index">
-
-              <div class="chart_list_item_time" v-show="item.show">{{item.time}}</div>
-              <div class="chart_list_item_content" :class="{'right-box': item.user_id == chatServerData.user_id}">
-                <div class="chart_list_item_avatar">
-                  <img :src="item.avatar" alt="">
+        <div class="layout_customerServer_content">
+          <!-- 聊天内容开始 -->
+          <div class="pc_customerServer_container_content">
+            <div class="productMessage_container" v-if="isShowProductModel">
+              <div class="productMessage_container_image">
+                <img :src="productMessage.image" alt="">
+              </div>
+              <div class="productMessage_container_content">
+                <div class="productMessage_container_content_title">{{productMessage.store_name}}</div>
+                <div class="productMessage_container_content_priceOrHandle">
+                  <div>￥{{productMessage.price}}</div>
+                  <div @click="sendProduct">发送客服</div>
                 </div>
-                <!-- 文字及表情信息 -->
-                <div class="chart_list_item_text" v-if="item.msn_type <= 2">
-                  <span v-html="replace_em(item.msn)"></span>
-                </div>
-                <!-- 图片信息 -->
-                <div class="chart_list_item_img" v-if="item.msn_type == 3">
-                  <img v-lazy="item.msn" />
-                </div>
+              </div>
+            </div>
+            <happy-scroll size="1" resize hide-horizontal :scroll-top="scrollTop" @vertical-start="scrollHandler">
+              <div class="scroll_content" id="chat_scroll" :class="{ 'pt140': isShowProductModel || inputConType == 2 }">
+                <!-- 滑动到容器顶部时，动画加载 -->
+                <Spin v-show="isLoad">
+                  <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
+                  <div>Loading</div>
+                </Spin>
+                <!-- 动画结束 -->
 
-                <!-- 图文信息 -->
-                <div class="chart_list_item_imgOrText" v-if="item.msn_type == 5">
-                  <div class="order-wrapper">
-                    <div class="img-box">
-                      <img :src="item.other.image" alt="">
-                    </div>
-                    <div class="order-info">
-                      <div class="price-box">
-                        <div class="num">¥ {{item.other.price}}</div>
-                        <!-- <a herf="javascript:;" class="more" @click.stop="lookGoods(item)">查看商品 ></a> -->
+                <!-- 聊天内容列表 -->
+                <div class="chart_list">
+
+                  <div class="chart_list_item" v-for="(item, index) in records" :key="index">
+
+                    <div class="chart_list_item_time" v-show="item.show">{{item.time}}</div>
+                    <div class="chart_list_item_content" :class="{'right-box': item.user_id == chatServerData.user_id}">
+                      <div class="chart_list_item_avatar">
+                        <img :src="item.avatar" alt="">
                       </div>
-                      <div class="name">{{item.other.store_name}}</div>
+                      <!-- 文字及表情信息 -->
+                      <div class="chart_list_item_text" v-if="item.msn_type <= 2">
+                        <span v-html="replace_em(item.msn)"></span>
+                      </div>
+                      <!-- 图片信息 -->
+                      <div class="chart_list_item_img" v-if="item.msn_type == 3">
+                        <img v-lazy="item.msn" />
+                      </div>
+
+                      <!-- 图文信息 -->
+                      <div class="chart_list_item_imgOrText" v-if="item.msn_type == 5">
+                        <div class="order-wrapper">
+                          <div class="img-box">
+                            <img :src="item.other.image" alt="">
+                          </div>
+                          <div class="order-info">
+                            <div class="price-box">
+                              <div class="num">¥ {{item.other.price}}</div>
+                              <!-- <a herf="javascript:;" class="more" @click.stop="lookGoods(item)">查看商品 ></a> -->
+                            </div>
+                            <div class="name">{{item.other.store_name}}</div>
+                          </div>
+
+                        </div>
+                      </div>
+
                     </div>
 
                   </div>
                 </div>
-
+                <!-- 聊天内容列表结束 -->
               </div>
+            </happy-scroll>
 
+          </div>
+          <!-- 聊天内容结束 -->
+
+          <!-- 表情及图片容器 -->
+          <div class="pc_customerServer_container_footer_emoji" v-if="inputConType == 2">
+            <div class="emoji-item" v-for="(emoji, index) in emojiList" :key="index">
+              <i class="em" :class="emoji" @click.stop="select(emoji)"></i>
             </div>
           </div>
-          <!-- 聊天内容列表结束 -->
-        </div>
-      </happy-scroll>
-    </div>
-    <!-- 聊天内容结束 -->
-    <!-- 表情及图片容器 -->
-    <div class="pc_customerServer_container_footer_emoji" v-if="inputConType == 2">
-      <div class="emoji-item" v-for="(emoji, index) in emojiList" :key="index">
-        <i class="em" :class="emoji" @click.stop="select(emoji)"></i>
-      </div>
-    </div>
-    <!-- 内容输入开始 -->
-    <div class="pc_customerServer_container_footer">
-      <div class="pc_customerServer_container_footer_header">
-        <div class="pc_customerServer_container_footer_header_handle">
-          <div @click="inputConType = 2;goPageBottom()">
-            <img src="@/assets/images/customerServer/face.png" alt="">
+          <!-- 内容输入开始 -->
+          <div class="pc_customerServer_container_footer">
+            <div class="pc_customerServer_container_footer_header">
+              <div class="pc_customerServer_container_footer_header_handle">
+                <div @click="inputConType = 2;goPageBottom()">
+                  <img src="@/assets/images/customerServer/face.png" alt="">
+                </div>
+                <div>
+                  <img src="@/assets/images/customerServer/picture.png" alt="">
+                  <input type="file" class="type_file" @change="uploadFile">
+                </div>
+              </div>
+            </div>
+
+            <!-- 输入框容器 -->
+            <div class="pc_customerServer_container_footer_input" @click="inputConType = 1">
+              <!-- <textarea v-model="userMessage" @keyup.enter="sendText" class="pc_customerServer_container_footer_input-textarea opacity0" rows="5" placeholder="请输入文字"></textarea> -->
+              <div v-paste="handleParse" ref="inputDiv" @keyup.enter="sendText" contenteditable class="pc_customerServer_container_footer_input-textarea" :class="{'readyEmojiHeight': inputConType == 2}"></div>
+            </div>
+            <!-- 输入框容器结束 -->
+            <!-- 表情及图片容器结束 -->
+            <!-- 相关操作 -- 点击发送 -->
+            <div class="pc_customerServer_container_footer_handle">
+              <div class="crmchat_link" @click="tolink" v-if="upperData.noCanClose != '1'">
+                <span>CRMChat开源客服系统</span>
+              </div>
+              <div class="pc_customerServer_container_footer_handle_send" @click="sendText">
+                <span>发送</span>
+              </div>
+            </div>
+            <!-- 相关操作结束 -->
+
           </div>
-          <div>
-            <img src="@/assets/images/customerServer/picture.png" alt="">
-            <input type="file" class="type_file" @change="uploadFile">
+          <!-- 内容输入结束 -->
+        </div>
+
+        <div class="pc_customerServer_container_advertisement" v-if="upperData.noCanClose == '1'">
+          <div class="advertisement">
+            <div v-html="advertisement"></div>
           </div>
         </div>
       </div>
 
-      <!-- 输入框容器 -->
-      <div class="pc_customerServer_container_footer_input" @click="inputConType = 1">
-        <!-- <textarea v-model="userMessage" @keyup.enter="sendText" class="pc_customerServer_container_footer_input-textarea opacity0" rows="5" placeholder="请输入文字"></textarea> -->
-        <div v-paste="handleParse" ref="inputDiv" @keyup.enter="sendText" contenteditable class="pc_customerServer_container_footer_input-textarea" :class="{'readyEmojiHeight': inputConType == 2}"></div>
-      </div>
-      <!-- 输入框容器结束 -->
-
-      <!-- 表情及图片容器结束 -->
-      <!-- 相关操作 -- 点击发送 -->
-      <div class="pc_customerServer_container_footer_handle">
-        <div class="pc_customerServer_container_footer_handle_send" @click="sendText">
-          <span>发送</span>
-        </div>
-      </div>
-      <!-- 相关操作结束 -->
-
     </div>
-    <!-- 内容输入结束 -->
+
   </div>
 </template>
 <script>
@@ -141,7 +160,6 @@ export default {
   },
   computed: {
     records() {
-
       return this.chatServerData.serviceList.map((item, index) => {
         item.time = this.$moment(item.add_time * 1000).format('MMMDo H:mm')
         if(index) {
@@ -162,6 +180,7 @@ export default {
     }
   },
   methods: {
+
     getScrollTop() {
       console.log(123);
     },
@@ -184,10 +203,16 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.max-width_con {
+  max-width: 600px;
+}
+.max-width_advertisement {
+  max-width: 1140px;
+  border-radius: 8px;
+}
 .pc_customerServer_container {
   width: 100%;
   height: 100%;
-  max-width: 600px;
   max-height: 808px;
   display: flex;
   flex-direction: column;
@@ -198,12 +223,13 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
   &_header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background: linear-gradient(270deg, #1890ff 0%, #3875ea 100%);
-    padding: 18px 14px;
+    padding: 10px 14px;
     font-size: 16px;
     color: #fff;
     &_title {
@@ -238,6 +264,7 @@ export default {
             display: flex;
             align-items: center;
             padding: 8px;
+            box-sizing: border-box;
           }
 
           &_avatar {
@@ -353,6 +380,7 @@ export default {
     &_header {
       &_handle {
         display: flex;
+
         > div {
           margin-right: 19px;
           position: relative;
@@ -415,6 +443,23 @@ export default {
       display: flex;
       align-items: center;
       justify-content: flex-end;
+      position: relative;
+      .crmchat_link {
+        position: absolute;
+        left: 0;
+        text-align: center;
+        width: 100%;
+        transition: 0.3s;
+        z-index: 99;
+        cursor: pointer;
+        span {
+          color: #ccc;
+        }
+
+        span:hover {
+          color: #007aff;
+        }
+      }
       &_send {
         width: 56px;
         height: 26px;
@@ -425,7 +470,31 @@ export default {
         align-items: center;
         justify-content: center;
         cursor: pointer;
+        position: relative;
+        z-index: 100;
       }
+    }
+  }
+}
+
+.layout_content {
+  flex: 1;
+  display: flex;
+  // justify-content: space-between;
+  .layout_customerServer_content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid #ccc;
+  }
+  .pc_customerServer_container_advertisement {
+    background: #fff;
+    .advertisement {
+      width: 311px;
+      padding: 10px;
+      padding-right: 20px;
+      box-sizing: border-box;
     }
   }
 }
