@@ -71,6 +71,11 @@
               </div>
 
             </div>
+
+            <div class="crmchat_link" @click="tolink">
+              <span>CRMChat开源客服系统</span>
+            </div>
+
           </div>
           <!-- 聊天内容列表结束 -->
         </div>
@@ -541,5 +546,19 @@ export default {
 /deep/ .happy-scroll-content {
   width: 100%;
   box-sizing: border-box;
+}
+.crmchat_link {
+  text-align: center;
+  width: 100%;
+  transition: 0.3s;
+  z-index: 99;
+  cursor: pointer;
+  span {
+    color: #ccc;
+  }
+
+  span:hover {
+    color: #007aff;
+  }
 }
 </style>

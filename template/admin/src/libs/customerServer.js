@@ -130,13 +130,19 @@ function initCustomerServer(option) {
     }
 
 
-    // 获取客服相关参数
+    // 获取客服客户相关参数
     this.settingObj.openUrl += `?deviceType=${this.settingObj.deviceType}&`;
     let customerServerData = '';
     if(option.sendUserData && Object.keys(option.sendUserData).length) {
       customerServerData = toParams(option.sendUserData);
-      this.settingObj.openUrl += `${customerServerData}`;
+      this.settingObj.openUrl += `${customerServerData}&`;
     }
+
+    if(option.windowStyle) {
+      this.settingObj.openUrl += `position=${option.windowStyle}`
+    }
+
+
 
   }
 
@@ -301,8 +307,47 @@ function initCustomerServer(option) {
   // 打开客服聊天框
   this.getCustomeServer = () => {
 
+    let mobel = '';
     if(this.settingObj.deviceType == 'Mobile') {
       this.iframeLayout.style.top = '0';
+    } else if(option.windowStyle == 'center') {
+      this.setStyleOfCustomerServer(this.iframeLayout, {
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        margin: 'auto',
+        width: '730px',
+        display: 'block',
+        transition: 'none',
+        'border-radius': '8px',
+        overflow: 'hidden',
+        'box-shadow': '1px 1px 15px 0px rgba(0, 0, 0, 0.3)'
+      });
+
+      mobel = document.createElement('div');
+      this.setStyleOfCustomerServer(mobel, {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        'z-index': '200',
+        background: 'rgba(0, 0, 0, 0.4)',
+        display: 'block',
+      })
+      // this.body.appendChild(mobel);
+      mobel.addEventListener('click', () => {
+        if(option.windowStyle == 'center') {
+          this.body.removeChild(mobel);
+          this.setStyleOfCustomerServer(this.iframeLayout, {
+            display: 'none'
+          });
+        }
+      })
+
+
+
     } else {
       this.iframeLayout.style.bottom = 0;
       this.iframeLayout.style.opacity = '1';
@@ -313,6 +358,11 @@ function initCustomerServer(option) {
       if(e.data.type == 'closeWindow') {
         if(this.settingObj.deviceType == 'Mobile') {
           this.iframeLayout.style.top = '100%';
+        } else if(option.windowStyle == 'center') {
+          this.setStyleOfCustomerServer(this.iframeLayout, {
+            display: 'none'
+          });
+          this.body.removeChild(mobel);
         } else {
           this.iframeLayout.style.bottom = '-645px';
           this.iframeLayout.style.opacity = '0';

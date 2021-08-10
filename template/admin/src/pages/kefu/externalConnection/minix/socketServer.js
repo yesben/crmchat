@@ -63,7 +63,9 @@ export default {
       // 获取图文数据
       if(e.data.type == 'getImgOrText') {
         this.userKey = e.data.key;
-        this.productMessage = e.data.productInfo;
+        if(e.data.productInfo) {
+          this.productMessage = e.data.productInfo;
+        }
       }
 
       if(e.data.type == 'openCustomeServer') {
