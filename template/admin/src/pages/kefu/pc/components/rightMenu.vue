@@ -54,6 +54,16 @@
             </div>
           </div>
 
+          <div class="label-list" @click.stop="isEditRemark = true;remarkValue = activeUserInfo.remarks;">
+            <span>备注</span>
+            <div class="con">
+              <div class="">{{activeUserInfo.remarks}}</div>
+            </div>
+            <div class="right-icon">
+              <Icon type="ios-arrow-forward" size="14" />
+            </div>
+          </div>
+
         </div>
         <!-- <div class="user-info">
           <div class="item">
@@ -107,6 +117,14 @@
       </p>
       <user-group v-if="isUserGroup" @close="usergroupClose" :userGroup="userGroupList" :activeUserInfo="activeUserInfo" @selectGroup="selectGroup" @handleSelectGroup="handleSelectGroup"></user-group>
     </Modal>
+
+    <Modal v-model="isEditRemark" title="请输入用户备注" width="320" class="none-radius">
+      <Input v-model="remarkValue" placeholder="请输入备注"></Input>
+      <div slot="footer">
+        <Button @click="isEditRemark=false">取消</Button>
+        <Button type="primary" @click="handlyEditRemark">确定</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -120,7 +138,8 @@ import {
   orderEdit, orderRecord,
   productCart, productHot,
   productVisit, userGroupApi,
-  putGroupApi
+  putGroupApi,
+  updateUserData
 } from '@/api/kefu'
 import empty from "../../components/empty";
 import dayjs from 'dayjs'
@@ -183,6 +202,8 @@ export default {
   data() {
     return {
       copyGroupId: '',
+      isEditRemark: false, // 修改备注
+      remarkValue: '',
       isUserGroup: false, // 是否展示分组
       userGroupList: [],
       model1: '',
@@ -290,6 +311,21 @@ export default {
 
   },
   methods: {
+    // 修改备注
+    handlyEditRemark() {
+      console.log(this.activeUserInfo);
+      if(!this.remarkValue) {
+        this.$Message.error('请填写用户备注');
+        return;
+      }
+      updateUserData(this.activeUserInfo.id, { remarks: this.remarkValue }).then(res => {
+        this.$Message.success('修改成功');
+        this.getUserInfo();
+        this.remarkValue = '';
+        this.isEditRemark = false
+      })
+    },
+
     // 用户分组弹框关闭
     usergroupClose() {
       this.activeUserInfo.group_id = this.copyGroupId;
