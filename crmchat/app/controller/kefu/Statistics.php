@@ -13,6 +13,7 @@ namespace app\controller\kefu;
 
 
 use app\services\chat\ChatServiceRecordServices;
+use app\services\chat\ChatUserServices;
 
 /**
  * Class Statistics
@@ -35,28 +36,18 @@ class Statistics extends AuthController
      * 客户统计
      * @return mixed
      */
-    public function sum()
+    public function sum(ChatUserServices $services)
     {
-        return $this->success($this->services->getKefuSum((int)$this->kefuInfo['user_id']));
+        return $this->success($services->getKefuSum($this->kefuInfo['appid']));
     }
 
     /**
      * 客户首页统计
      * @return mixed
      */
-    public function index()
+    public function index(ChatUserServices $services)
     {
-        $year  = $this->request->get('year', date('Y'));
-        $month = $this->request->get('month', date('m'));
-        if ($month <= 0 || $month > 12) {
-            return $this->fail('月份错误');
-        }
-        if ($year[0] > 2) {
-            return $this->fail('年份错误');
-        }
-        if (strlen($year) > 4) {
-            return $this->fail('年份错误');
-        }
-        return $this->success($this->services->getKefuStatistics((int)$this->kefuInfo['user_id'], (int)$year, (int)$month));
+        $time = $this->request->get('time', '');
+        return $this->success($services->getKefuMobileStatistics($time));
     }
 }

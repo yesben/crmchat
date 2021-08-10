@@ -87,4 +87,43 @@ class ChatUserDao extends BaseDao
             ->select()->toArray();
     }
 
+    /**
+     * 搜索用户统计
+     * @param string $time
+     * @param int $isTourist
+     * @return array
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws \think\db\exception\DbException
+     */
+    public function getKefuMobileStatisticsList(string $time, int $isTourist = 0)
+    {
+        if (in_array($time, ['today', 'yesterday'])) {
+            $fieldTime = "DATE_FORMAT(create_time,'%Y-%m-%d %H') as time";
+        } else if (in_array($time, ['quarter', 'year'])) {
+            $fieldTime = "DATE_FORMAT(create_time,'%Y-%m') as time";
+        } else if (in_array($time, ['week', 'month', 'last week', 'last month'])) {
+            $fieldTime = "DATE_FORMAT(create_time,'%Y-%m-%d') as time";
+        } elseif (preg_match('/^lately+[1-9]{1,3}/', $time)) {
+            $day = (int)str_replace('lately', '', $time);
+            if ($day > 90 && $day < 365) {
+                $fieldTime = "DATE_FORMAT(create_time,'%Y-%m') as time";
+            } elseif ($day > 365) {
+                $fieldTime = "DATE_FORMAT(create_time,'%Y') as time";
+            } elseif ($day < 30) {
+                $fieldTime = "DATE_FORMAT(create_time,'%Y-%m-%d') as time";
+            } elseif ($day <= 1) {
+                $fieldTime = "DATE_FORMAT(create_time,'%Y-%m-%d %H') as time";
+            } else {
+                $fieldTime = "DATE_FORMAT(create_time,'%Y-%m-%d') as time";
+            }
+        } elseif (strstr($time, '-') !== false) {
+            $fieldTime = "DATE_FORMAT(create_time,'%Y-%m-%d') as time";
+        }
+        return $this->search()->where('is_tourist', $isTourist)->when(true, function ($query) use ($time) {
+            $time = $time ?: 'today';
+            time_model($query, $time, 'create_time');
+        })->field([$fieldTime, 'count(*) as number'])->group('time')->select()->toArray();
+    }
+
 }
