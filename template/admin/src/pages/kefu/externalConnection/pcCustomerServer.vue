@@ -499,10 +499,12 @@ export default {
     background: #fff;
     .advertisement {
       padding: 10px;
-      padding-right: 20px;
       box-sizing: border-box;
       height: 600px;
       overflow-y: scroll;
+      img {
+        max-width: 100%;
+      }
     }
   }
 }
