@@ -19,12 +19,13 @@
         <div  class="fenlei">
             <p class="font-w">在所需使用crmChat服务的文件中，实例化 initCustomerServer 对象, 调用对象的 init 方法，开始加载crmChat服务</p>
             <div class="code-content-wrap">
-                <textarea id="NormalCodeTextarea2" class="code" rows="30">
+                <textarea id="NormalCodeTextarea2" class="code" rows="35">
 var option = {
     openUrl: "{{siteUrl}}", // 打开客服聊天框的地址，即：部署后台管理系统的地址，若未填写，则自动获取当前服务器的地址
     token: {{tokeninfo.token_md5}}, // token,与后台交互的凭证
     kefuid:'',//默认为空自动对接客服，可填写指定客服ID
     isShowTip: true, // 初始化成功后，界面右下角会自动创建 “联系客服按钮”， 如无需默认展示，则填写false即可,默认为true
+    windowStyle:'min',//默认 min 右下角小弹窗， normal 普通中间弹窗样式
     domId: 'customerServerTip',//展示在页面右下角联系客服的dom的id，可根据id获取到dom后自行修改样式, 默认为customerServerTip
     insertDomNode: '.getCode_container', // SPA应用必填，html文件单独引入选填，表示插入客服弹窗的 dom节点，一般为当前界面的根节点，默认为body
     //设置客户信息
@@ -48,13 +49,17 @@ var option = {
     }
 };
 var canCustomerServer = new initCustomerServer(option);
+//样式设置说明
+
+
+
 canCustomerServer.init();
 // 调用打开客服弹窗的方法，如果isShowTip为false，就使用这个函数，当然也可以使用A链接
 canCustomerServer.getCustomeServer();
 
                 </textarea>
 
-                <p class="font-w">A链接参数说明</p>
+                <p class="font-w">超链接参数说明</p>
                 <p class="text-i">
                     <br>token:与后台交互的凭证
                 <br>deviceType:手动适应浏览器类型Mobile移动端
