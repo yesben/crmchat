@@ -1,7 +1,7 @@
 <template>
 
   <div class="pc_customerServer">
-    <div class="pc_customerServer_container max-width_con" :class="{'max-width_advertisement': upperData.noCanClose == 1 || upperData.position == `center`}">
+    <div class="pc_customerServer_container max-width_con" :class="{'max-width_advertisement': upperData.noCanClose == 1 || upperData.windowStyle == `center`}">
       <!-- 客服头部开始 -->
       <div class="pc_customerServer_container_header">
         <div class="pc_customerServer_container_header_title">
@@ -117,7 +117,7 @@
             <!-- 表情及图片容器结束 -->
             <!-- 相关操作 -- 点击发送 -->
             <div class="pc_customerServer_container_footer_handle">
-              <div class="crmchat_link" @click="tolink" v-if="upperData.noCanClose != '1'">
+              <div class="crmchat_link" @click="tolink">
                 <span>CRMChat开源客服系统</span>
               </div>
               <div class="pc_customerServer_container_footer_handle_send" @click="sendText">
@@ -130,10 +130,9 @@
           <!-- 内容输入结束 -->
         </div>
 
-        <div class="pc_customerServer_container_advertisement" v-if="upperData.noCanClose == '1' || upperData.position == `center`">
+        <div class="pc_customerServer_container_advertisement" v-if="upperData.noCanClose == '1' || upperData.windowStyle == `center`">
           <div class="advertisement">
-            <!-- <div v-html="advertisement"></div> -->
-            <img width="100%" src="https://store.crmeb.net/uploads/attach/2020/12/20201231/c565baae2e7b8a87ed39f095fddadfb7.jpg" alt="">
+             <div v-html="advertisement"></div>
           </div>
         </div>
       </div>
@@ -208,8 +207,8 @@ export default {
   max-width: 600px;
 }
 .max-width_advertisement {
-  max-width: 1140px;
-  // border-radius: 8px;
+  max-width: 840px;
+
 }
 .pc_customerServer_container {
   width: 100%;
@@ -223,10 +222,9 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  // box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 1px 15px 0px rgba(0, 0, 0, 0.3);
   border-radius: 8px;
   overflow: hidden;
-  // box-shadow: 1px 1px 15px 0px rgba(0, 0, 0, 0.3);
   &_header {
     display: flex;
     justify-content: space-between;
@@ -450,6 +448,7 @@ export default {
       align-items: center;
       justify-content: flex-end;
       position: relative;
+      bottom: 10px;
       .crmchat_link {
         position: absolute;
         left: 0;
@@ -478,6 +477,7 @@ export default {
         cursor: pointer;
         position: relative;
         z-index: 100;
+        margin: 0 20px 20px 0;
       }
     }
   }
@@ -495,13 +495,14 @@ export default {
     border-right: 1px solid #ececec;
   }
   .pc_customerServer_container_advertisement {
+    width: 260px;
     background: #fff;
     .advertisement {
-      width: 259px;
       padding: 10px;
       padding-right: 20px;
       box-sizing: border-box;
-      overflow-y: auto;
+      height: 600px;
+      overflow-y: scroll;
     }
   }
 }
@@ -511,7 +512,7 @@ export default {
 }
 
 .productMessage_container {
-  // height: 94px;
+  height: 94px;
   width: 100%;
   padding: 12px;
   box-sizing: border-box;

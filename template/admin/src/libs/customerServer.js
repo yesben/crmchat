@@ -13,7 +13,7 @@ const settingObj = {
   openUrl: `${location.origin}/chat/index`,
   deviceType: '', // 打开端
   token: '',
-  insertDomNode: 'body' // 插入的目标dom， vue必穿，否则将插入至body中
+  insertDomNode: 'body', // 插入的目标dom， vue必穿，否则将插入至body中
 };
 
 function customerServerStyle() {
@@ -122,8 +122,6 @@ function initCustomerServer(option) {
       this.settingObj.deviceType = 'pc';
     };
 
-    console.log(this.settingObj.deviceType);
-
     // 若用户通过 type 指定，则使用type指定的参数
     if(option.type) {
       this.settingObj.deviceType = option.type;
@@ -139,7 +137,7 @@ function initCustomerServer(option) {
     }
 
     if(option.windowStyle) {
-      this.settingObj.openUrl += `position=${option.windowStyle}`
+      this.settingObj.openUrl += `windowStyle=${option.windowStyle}`
     }
 
 
@@ -290,7 +288,9 @@ function initCustomerServer(option) {
       width: '400px',
       bottom: '-645px',
       height: '645px',
-      'z-index': 999
+      'z-index': 999,
+        'box-shadow': '1px 1px 15px 0px rgba(0, 0, 0, 0.3)'
+
     }
     // 判断设备的类型，是移动端或是pc端
     if(this.settingObj.deviceType == 'Mobile') {
@@ -334,7 +334,8 @@ function initCustomerServer(option) {
         height: '100%',
         'z-index': '200',
         background: 'rgba(0, 0, 0, 0.4)',
-        display: 'block',
+        display: 'block'
+
       })
       // this.body.appendChild(mobel);
       mobel.addEventListener('click', () => {

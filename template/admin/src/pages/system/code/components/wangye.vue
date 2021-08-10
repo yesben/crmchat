@@ -95,7 +95,7 @@ export default {
         insertDomNode: '.getCode_container',
         token: this.tokeninfo.token_md5,
         isShowTip: true, // true 展示 false 不展示
-        windowStyle: 'center', // 仅仅pc端有效，在页面中间弹出
+        windowStyle: '', // center 仅仅pc端有效，在页面中间弹出
         // sendUserData: {
         // uid: '',
         //   nickName: '',

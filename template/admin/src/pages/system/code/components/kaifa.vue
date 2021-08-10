@@ -25,7 +25,7 @@ var option = {
     token: {{tokeninfo.token_md5}}, // token,与后台交互的凭证
     kefuid:'',//默认为空自动对接客服，可填写指定客服ID
     isShowTip: true, // 初始化成功后，界面右下角会自动创建 “联系客服按钮”， 如无需默认展示，则填写false即可,默认为true
-    windowStyle:'min',//默认 min 右下角小弹窗， normal 普通中间弹窗样式
+    windowStyle:'center',//默认空 右下角小弹窗， center 普通中间弹窗样式
     domId: 'customerServerTip',//展示在页面右下角联系客服的dom的id，可根据id获取到dom后自行修改样式, 默认为customerServerTip
     insertDomNode: '.getCode_container', // SPA应用必填，html文件单独引入选填，表示插入客服弹窗的 dom节点，一般为当前界面的根节点，默认为body
     //设置客户信息
