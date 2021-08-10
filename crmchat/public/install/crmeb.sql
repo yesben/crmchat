@@ -254,20 +254,6 @@ CREATE TABLE IF NOT EXISTS `eb_chat_user_label_assist` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `eb_migrations`
---
-
-CREATE TABLE IF NOT EXISTS `eb_migrations` (
-  `version` bigint(20) NOT NULL,
-  `migration_name` varchar(100) DEFAULT NULL,
-  `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `end_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `breakpoint` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
 -- 表的结构 `eb_system_admin`
 --
 
