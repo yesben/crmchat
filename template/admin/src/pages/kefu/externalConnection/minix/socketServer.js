@@ -106,7 +106,8 @@ export default {
         phone: this.upperData.phone,
         sex: this.upperData.sex,
         avatar: this.upperData.avatar,
-        openid: this.upperData.openid
+        openid: this.upperData.openid,
+        kefu_id:this.upperData.kefu_id || 0
       }
 
       userRecord(postData).then(res => {
@@ -335,7 +336,7 @@ export default {
     textareaInput() {
       this.inputConType = 1;
     },
-    // 打开选择表情弹框 
+    // 打开选择表情弹框
     selectEmoji() {
       this.inputConType = 2;
       this.goPageBottom();
