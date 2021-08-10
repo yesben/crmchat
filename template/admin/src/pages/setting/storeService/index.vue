@@ -421,7 +421,10 @@ export default {
       // this.modals = true;
       // this.formValidate.data = '';
       // this.getListService();
-      this.$modalForm(kefuaddApi()).then(() => this.getList())
+      this.$modalForm(kefuaddApi()).then(() => {
+        this.getList();
+        console.log(1223);
+      })
     },
     // 全选
     onSelectTab(selection) {

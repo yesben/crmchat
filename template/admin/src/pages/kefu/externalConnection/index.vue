@@ -1,6 +1,6 @@
 <template>
   <div class="redirect_container">
-    asdasdsa
+
   </div>
 </template>
 <script>
@@ -23,7 +23,7 @@ export default {
       console.log(this.$route.query);
 
       setLoc('mobile_token', token);
-      if(this.$route.query.deviceType == "pc") {
+      if(this.$route.query.deviceType == "pc" || this.$route.query.deviceType == "Desktop") {
         this.$router.push({ name: 'customerServerPc', query: this.$route.query });
         return;
       }

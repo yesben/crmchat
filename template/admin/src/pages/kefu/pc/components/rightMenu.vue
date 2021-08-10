@@ -246,7 +246,7 @@ export default {
   },
   watch: {
     uid(nVal, oVal) {
-      if(nVal != oVal && this.isTourist == 0) {
+      if(nVal != oVal) {
         this.orderConfig.page = 1
         this.isOrderScroll = true
         this.orderList = []
@@ -264,11 +264,11 @@ export default {
       }
     },
     isTourist(nVal, oVal) {
-      if(nVal == 1) {
-        this.activeUserInfo = ''
-        this.orderList = []
-        this.goodsConfig.buyList = []
-      }
+      // if(nVal == 1) {
+      this.activeUserInfo = ''
+      this.orderList = []
+      this.goodsConfig.buyList = []
+      // }
     }
   },
   mounted() {
@@ -285,7 +285,6 @@ export default {
     }
     userGroupApi().then(res => {
       this.userGroupList = res.data;
-      console.log(this.userGroupList);
     })
 
   },
@@ -352,9 +351,7 @@ export default {
     getUserInfo() {
       userInfo(this.uid).then(res => {
         this.activeUserInfo = res.data;
-        console.log(this.activeUserInfo);
         this.copyGroupId = this.activeUserInfo.group_id;
-        console.log(this.activeUserInfo);
       }).catch(error => {
         this.activeUserInfo = ''
       })
@@ -587,6 +584,7 @@ color #6440C2, &.routine {
   .label-list {
     position: relative;
     display: flex;
+    margin-bottom: 10px;
 
     span {
       width: 70px;

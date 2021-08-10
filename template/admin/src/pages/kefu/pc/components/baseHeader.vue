@@ -2,7 +2,7 @@
   <div class="base-header">
 
     <div class="left-wrapper">
-      <Input class="search_box" prefix="ios-search" placeholder="搜索用户名称" @on-enter="bindSearch" @on-change="inputChange" />
+      <!-- <Input class="search_box" prefix="ios-search" placeholder="搜索用户名称" @on-enter="bindSearch" @on-change="inputChange" /> -->
 
       <div class="user_info">
         <img v-lazy="kefuInfo.avatar" alt="">
@@ -156,8 +156,8 @@ export default {
     .user_info {
       display: flex;
       align-items: center;
-      margin-left: 30px;
 
+      // margin-left: 30px;
       img {
         width: 40px;
         height: 40px;
