@@ -20,7 +20,7 @@
             <Input v-model="userFrom.nickname" placeholder="请输入" element-id="nickname" clearable>
             <Select v-model="field_key" slot="prepend" style="width: 80px">
               <Option value="all">全部</Option>
-              <Option value="uid">ID</Option>
+              <Option value="id">ID</Option>
               <Option value="phone">手机号</Option>
               <Option value="nickname">用户昵称</Option>
             </Select>
@@ -41,9 +41,10 @@
             </Col>
             <Col v-bind="grid">
             <FormItem label="用户标签：" label-for="label_id">
-              <Select v-model="label_id" placeholder="请选择" element-id="label_id" clearable>
-                <Option value="all">全部</Option>
-                <Option :value="item.id" v-for="(item, index) in labelLists" :key="index">{{item.label_name}}</Option>
+              <Select multiple @on-change="changeLabel" v-model="label_id" placeholder="请选择" element-id="label_id" clearable>
+                <OptionGroup :label="item.label" v-for="(item,index) in selectLabel" :key="index">
+                  <Option :value="v.id" v-for="(v,k) in item.options" :key="k">{{v.label}}</Option>
+                </OptionGroup>
               </Select>
             </FormItem>
             </Col>
@@ -71,7 +72,16 @@
             <FormItem label="选择时间：" label-for="user_time">
               <DatePicker :editable="false" @on-change="onchangeTime" :value="timeVal" format="yyyy/MM/dd" type="datetimerange" placement="bottom-start" placeholder="自定义时间" style="width: 300px;" class="mr20" :options="options"></DatePicker>
             </FormItem>
+
             </Col>
+              <Col v-bind="grid">
+                <FormItem label="用户来源：" label-for="group_id">
+                  <Select v-model="user_type" placeholder="请选择" element-id="user_type" clearable>
+                    <Option value="all">全部</Option>
+                    <Option :value="item.value" v-for="(item, index) in selectType" :key="index">{{item.label}}</Option>
+                  </Select>
+                </FormItem>
+              </Col>
             </Col>
           </template>
           <Col span="6" class="ivu-text-right userFrom">
@@ -123,10 +133,12 @@
             {{groupListObj[row.group_id]}}
           </div>
         </template>
-
-        <template slot-scope="{ row, index }" slot="isMember">
-          <div>{{row.isMember?'是':'否'}}</div>
+        <template slot-scope="{ row, index }" slot="label">
+          <div v-for="item in row.label">
+             <span>{{item.label}}</span>
+          </div>
         </template>
+
         <template slot-scope="{ row, index }" slot="action">
           <a @click="edit(row)">编辑</a>
           <Divider type="vertical" />
@@ -181,7 +193,7 @@ import userLabel from "../../../components/userLabel";
 import userGroup from './components/userGroup'; // 用户分组
 import labelGroup from './components/labelGroup';
 import { mapState } from 'vuex';
-import { userList, getUserData, isShowApi, userSetGroup, userGroupApi, userSetLabelApi, userLabelApi, userSynchro, putUserLabel, userBatchGroupApi } from '@/api/user';
+import { userList, getUserData,getUserLabelAllApi, isShowApi, userSetGroup, userGroupApi, userSetLabelApi, userLabelApi, userSynchro, putUserLabel, userBatchGroupApi } from '@/api/user';
 import { agentSpreadApi } from '@/api/agent'
 import editFrom from '../../../components/from/from';
 import sendFrom from '@/components/sendCoupons/index';
@@ -309,27 +321,21 @@ export default {
       loading: false,
       total: 0,
       userFrom: {
-        label_id: '',
+        label_id: [],
         user_type: '',
         status: '',
         sex: '',
-        is_promoter: '',
-        isMember: '',
-        pay_count: '',
-        user_time_type: '',
-        user_time: '',
+        time: '',
         nickname: '',
-        province: '',
         page: 1,
         limit: 15,
-        level: '',
         group_id: '',
         field_key: '',
       },
       field_key: '',
       level: '',
       group_id: '',
-      label_id: '',
+      label_id: [],
       user_time_type: '',
       pay_count: '',
       columns: [
@@ -349,8 +355,13 @@ export default {
           minWidth: 60
         },
         {
-          title: '姓名',
+          title: '昵称',
           slot: 'nickname',
+          minWidth: 150
+        },
+        {
+          title: '备注昵称',
+          key: 'remark_nickname',
           minWidth: 150
         },
         {
@@ -366,6 +377,11 @@ export default {
         {
           title: '用户来源',
           key: 'type',
+          minWidth: 100
+        },
+        {
+          title: '用户标签',
+          slot: 'label',
           minWidth: 100
         },
         {
@@ -389,7 +405,16 @@ export default {
         page: 1,
         limit: ''
       },
-      labelLists: []
+      labelLists: [],
+      selectLabel:[],
+      selectType:[
+        {label:'PC',value:0},
+        {label:'微信',value:1},
+        {label:'小程序',value:2},
+        {label:'H5',value:3},
+        {label:'APP',value:4},
+      ],
+      user_type:'all'
     }
   },
   computed: {
@@ -409,9 +434,14 @@ export default {
   mounted() {
     this.userGroup();
     this.groupLists();
+    this.getUserLabelAll()
   },
   methods: {
-
+    getUserLabelAll(){
+      getUserLabelAllApi().then(res=>{
+        this.selectLabel = res.data
+      })
+    },
     onceGetList() {
       this.getList();
     },
@@ -551,7 +581,7 @@ export default {
     // 具体日期
     onchangeTime(e) {
       this.timeVal = e;
-      this.userFrom.user_time = this.timeVal.join('-');
+      this.userFrom.time = this.timeVal.join('-');
     },
     // 操作
     changeMenu(row, name, index) {
@@ -632,15 +662,15 @@ export default {
     },
     // 会员列表
     getList() {
-      this.userFrom.user_type = this.userFrom.user_type || '';
+      if(this.user_type === 'all'){
+        this.userFrom.user_type = '';
+      }else{
+        this.userFrom.user_type = this.user_type
+      }
       this.userFrom.status = this.userFrom.status || '';
       this.userFrom.sex = this.userFrom.sex || '';
-      this.userFrom.is_promoter = this.userFrom.is_promoter || '';
-      this.userFrom.pay_count = this.pay_count === 'all' ? '' : this.pay_count;
-      this.userFrom.user_time_type = this.user_time_type === 'all' ? '' : this.user_time_type;
-      this.userFrom.label_id = this.label_id === 'all' ? '' : this.label_id;
+      this.userFrom.label_id = this.label_id === 'all' ? '' : this.label_id.join(',');
       this.userFrom.field_key = this.field_key === 'all' ? '' : this.field_key;
-      this.userFrom.level = this.level === 'all' ? '' : this.level;
       this.userFrom.group_id = this.group_id === 'all' ? '' : this.group_id;
       this.loading = true;
       userList(this.userFrom).then(async res => {
@@ -670,24 +700,17 @@ export default {
         user_type: '',
         status: '',
         sex: '',
-        is_promoter: '',
-        pay_count: '',
-        user_time_type: '',
-        user_time: '',
+        time: '',
         nickname: '',
         field_key: '',
-        level: '',
         group_id: '',
         label_id: '',
         page: 1, // 当前页
         limit: 20 // 每页显示条数
       };
       this.field_key = '';
-      this.level = '';
       this.group_id = '';
       this.label_id = '';
-      this.user_time_type = '';
-      this.pay_count = '';
       this.timeVal = [];
       this.getList();
     },

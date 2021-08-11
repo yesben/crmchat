@@ -307,6 +307,7 @@ class User extends AuthController
     {
         $data   = $this->request->postMore([
             ['nickname', ''],
+            ['remark_nickname', ''],
             ['sex', ''],
             ['phone', ''],
             ['remarks', ''],

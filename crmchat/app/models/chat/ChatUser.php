@@ -118,6 +118,32 @@ class ChatUser extends BaseModel
     }
 
     /**
+     * @param $value
+     * @return string
+     */
+    public function getTypeAttr($value)
+    {
+        switch ((int)$value) {
+            case 0:
+                $name = 'PC';
+                break;
+            case 1:
+                $name = '微信公众号';
+                break;
+            case 2:
+                $name = '小程序';
+                break;
+            case 3:
+                $name = 'H5';
+                break;
+            case 4:
+                $name = 'APP';
+                break;
+        }
+        return $name;
+    }
+
+    /**
      * @param Model $query
      * @param $value
      */

@@ -143,7 +143,7 @@ class ChatUserDao extends BaseDao
             time_model($query, $time, 'create_time');
         })->when(isset($where['nickname']) && $where['nickname'], function ($query) use ($where) {
             if (isset($where['field_key']) && $where['field_key'] && in_array($where['field_key'], ['id', 'phone', 'nickname'])) {
-                $query->whereLike($where['field_key'], '%' . $where['nickname'] . '%');
+                $query->where($where['field_key'], $where['nickname']);
             } else {
                 $query->where('nickname|id|phone', 'like', '%' . $where['nickname'] . '%');
             }

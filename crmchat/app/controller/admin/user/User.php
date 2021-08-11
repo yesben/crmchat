@@ -65,8 +65,8 @@ class User extends AuthController
     {
         $list = $services->getLabelAll(0);
         foreach ($list as &$item) {
-            $item['children'] = $item['label'];
-            foreach ($item['children'] as &$value) {
+            $item['options'] = $item['label'];
+            foreach ($item['options'] as &$value) {
                 $value['value'] = $value['id'];
             }
             $item['label'] = $item['name'];
