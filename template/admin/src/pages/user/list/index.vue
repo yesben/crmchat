@@ -3,11 +3,11 @@
     <div class="i-layout-page-header">
       <div class="i-layout-page-header">
         <span class="ivu-page-header-title">用户管理</span>
-<!--        <div>-->
-<!--          <Tabs @on-click="onClickTab">-->
-<!--            <TabPane :label="item.name" :name="item.type" v-for="(item,index) in headeNum" :key="index" />-->
-<!--          </Tabs>-->
-<!--        </div>-->
+        <!-- <div>
+          <Tabs @on-click="onClickTab">
+            <TabPane :label="item.name" :name="item.type" v-for="(item,index) in headeNum" :key="index" />
+          </Tabs>
+        </div> -->
       </div>
     </div>
     <Card :bordered="false" dis-hover class="ivu-mt listbox">
@@ -124,9 +124,9 @@
           </div>
         </template>
 
-<!--        <template slot-scope="{ row, index }" slot="isMember">-->
-<!--          <div>{{row.isMember?'是':'否'}}</div>-->
-<!--        </template>-->
+        <template slot-scope="{ row, index }" slot="isMember">
+          <div>{{row.isMember?'是':'否'}}</div>
+        </template>
         <template slot-scope="{ row, index }" slot="action">
           <a @click="edit(row)">编辑</a>
           <Divider type="vertical" />
@@ -156,9 +156,11 @@
     <Modal v-model="modal13" scrollable title="发送消息" width="1200" height="800" footer-hide class="modelBox">
       <news-category v-if="modal13" :isShowSend="isShowSend" :userIds="user_ids" :scrollerHeight="scrollerHeight" :contentTop="contentTop" :contentWidth="contentWidth" :maxCols="maxCols"></news-category>
     </Modal>
+
     <Modal v-model="labelShow" scrollable title="请选择用户标签" :closable="false" width="320" :footer-hide="true">
-      <userLabel :uid="labelActive.uid" @close="labelClose" @onceGetList="userGroup"></userLabel>
+      <userLabel v-if="labelShow" :uid="labelActive.uid" @close="labelClose" @onceGetList="userGroup"></userLabel>
     </Modal>
+
     <Modal v-model="setUserGroupModel" scrollable title="请选择用户分组" :closable="false" width="320" :footer-hide="true">
       <user-group v-if="setUserGroupModel" :activeUserInfo="activeUserInfo" :userGroup="getUserGroup" @handleSelectGroup="handleSelectGroup" @close="setUserGroupModel=false"></user-group>
     </Modal>
@@ -311,11 +313,16 @@ export default {
         user_type: '',
         status: '',
         sex: '',
-        time: '',
+        is_promoter: '',
+        isMember: '',
+        pay_count: '',
+        user_time_type: '',
+        user_time: '',
         nickname: '',
         province: '',
         page: 1,
         limit: 15,
+        level: '',
         group_id: '',
         field_key: '',
       },
@@ -357,8 +364,8 @@ export default {
           minWidth: 100
         },
         {
-          title: '用户类型',
-          key: 'user_type',
+          title: '用户来源',
+          key: 'type',
           minWidth: 100
         },
         {
@@ -544,7 +551,7 @@ export default {
     // 具体日期
     onchangeTime(e) {
       this.timeVal = e;
-      this.userFrom.time = this.timeVal.join('-');
+      this.userFrom.user_time = this.timeVal.join('-');
     },
     // 操作
     changeMenu(row, name, index) {
@@ -628,8 +635,12 @@ export default {
       this.userFrom.user_type = this.userFrom.user_type || '';
       this.userFrom.status = this.userFrom.status || '';
       this.userFrom.sex = this.userFrom.sex || '';
+      this.userFrom.is_promoter = this.userFrom.is_promoter || '';
+      this.userFrom.pay_count = this.pay_count === 'all' ? '' : this.pay_count;
+      this.userFrom.user_time_type = this.user_time_type === 'all' ? '' : this.user_time_type;
       this.userFrom.label_id = this.label_id === 'all' ? '' : this.label_id;
       this.userFrom.field_key = this.field_key === 'all' ? '' : this.field_key;
+      this.userFrom.level = this.level === 'all' ? '' : this.level;
       this.userFrom.group_id = this.group_id === 'all' ? '' : this.group_id;
       this.loading = true;
       userList(this.userFrom).then(async res => {
@@ -659,17 +670,24 @@ export default {
         user_type: '',
         status: '',
         sex: '',
-        time: '',
+        is_promoter: '',
+        pay_count: '',
+        user_time_type: '',
+        user_time: '',
         nickname: '',
         field_key: '',
+        level: '',
         group_id: '',
         label_id: '',
         page: 1, // 当前页
         limit: 20 // 每页显示条数
       };
       this.field_key = '';
+      this.level = '';
       this.group_id = '';
       this.label_id = '';
+      this.user_time_type = '';
+      this.pay_count = '';
       this.timeVal = [];
       this.getList();
     },

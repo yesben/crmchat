@@ -493,7 +493,7 @@ export default {
       height: 550px;
       overflow-y: auto;
       img {
-        max-width: 100%;
+        max-width: 100% !important;
       }
     }
     .crmchat_link {
@@ -602,12 +602,14 @@ export default {
   width: 100%;
   box-sizing: border-box;
 }
-
 </style>
 <style lang="less">
-  .advertisement{
-    img,p,div,span {
-      max-width: 100%;
-    }
+.advertisement {
+  img,
+  p,
+  div,
+  span {
+    max-width: 100%;
   }
+}
 </style>
