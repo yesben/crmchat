@@ -6,11 +6,11 @@
         <p class="typetitle">第一步，引入js</p>
         <div class="fenlei">
             <div class="code-content-wrap">
-                <textarea id="NormalCodeTextarea1" class="code" rows="1">
+                <textarea id="NormalCodeTextareakaifa1" class="code" rows="1">
 <script src="{{siteUrl}}/customerServer.js"></script>
             </textarea>
             <div class="other-wrap">
-                <a @click="getCopy('NormalCodeTextarea1')" class="btn btn-blue btn-large" href="javascript:void(0);"><span>复制代码</span></a>
+                <a @click="getCopy('NormalCodeTextareakaifa1')" class="btn btn-blue btn-large" href="javascript:void(0);"><span>复制代码</span></a>
             </div>
             </div>
 
@@ -19,7 +19,7 @@
         <div  class="fenlei">
             <p class="font-w">在所需使用crmChat服务的文件中，实例化 initCustomerServer 对象, 调用对象的 init 方法，开始加载crmChat服务</p>
             <div class="code-content-wrap">
-                <textarea id="NormalCodeTextarea2" class="code" rows="35">
+                <textarea id="NormalCodeTextareakaifa2" class="code" rows="35">
 var option = {
     openUrl: "{{siteUrl}}", // 打开客服聊天框的地址，即：部署后台管理系统的地址，若未填写，则自动获取当前服务器的地址
     token: {{tokeninfo.token_md5}}, // token,与后台交互的凭证
@@ -69,7 +69,7 @@ canCustomerServer.getCustomeServer();
                 <br>kefuid:客服ID
                 </p>
                 <div class="other-wrap">
-                    <a @click="getCopy('NormalCodeTextarea2')" class="btn btn-blue btn-large" href="javascript:void(0);"><span>复制代码</span></a>
+                    <a @click="getCopy('NormalCodeTextareakaifa2')" class="btn btn-blue btn-large" href="javascript:void(0);"><span>复制代码</span></a>
                 </div>
             </div>
 
@@ -88,14 +88,15 @@ canCustomerServer.getCustomeServer();
         props: {
             tokeninfo:{},
             siteUrl:'',
-            cgetCopy:{},
+//            cgetCopy:{},
         },
         mounted() {
 
         },
         methods: {
             getCopy(id) {
-                this.cgetCopy(id);
+//                this.cgetCopy(id);
+                this.$emit('cgetCopy',id);
             }
 
         }

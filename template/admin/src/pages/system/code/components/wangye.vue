@@ -79,7 +79,7 @@ export default {
   props: {
     tokeninfo: {},
     siteUrl: '',
-    cgetCopy: {}
+//    cgetCopy: {}
   },
   mounted() {
 
@@ -123,7 +123,8 @@ export default {
       this.canCustomerServer.getCustomeServer(); // 点击调取客服弹框
     },
     getCopy(id) {
-      this.cgetCopy(id);
+//      this.cgetCopy(id);
+        this.$emit('cgetCopy',id);
     },
   }
 }
