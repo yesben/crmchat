@@ -78,13 +78,13 @@ class HttpService
      * @param int $timeout
      * @return bool|string
      */
-    public static function request($url, $method = 'get', $data = array(), $header = false, $timeout = 15)
+    public static function request($url, $method = 'get', $data = array(), $header = false, $timeout = 15, bool $code = false)
     {
-        self::$status = null;
+        self::$status    = null;
         self::$curlError = null;
         self::$headerStr = null;
 
-        $curl = curl_init($url);
+        $curl   = curl_init($url);
         $method = strtoupper($method);
         //请求方式
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
@@ -110,9 +110,12 @@ class HttpService
         self::$curlError = curl_error($curl);
 
         list($content, $status) = [curl_exec($curl), curl_getinfo($curl), curl_close($curl)];
-        self::$status = $status;
+        self::$status    = $status;
         self::$headerStr = trim(substr($content, 0, $status['header_size']));
-        $content = trim(substr($content, $status['header_size']));
+        $content         = trim(substr($content, $status['header_size']));
+        if ($code) {
+            return $content;
+        }
         return (intval($status["http_code"]) === 200) ? $content : false;
     }
 

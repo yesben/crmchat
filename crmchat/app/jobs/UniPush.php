@@ -13,6 +13,8 @@ namespace app\jobs;
 
 
 use crmeb\basic\BaseJobs;
+use crmeb\services\uniPush\options\AndroidOptions;
+use crmeb\services\uniPush\options\IosOptions;
 use crmeb\services\uniPush\options\PushMessageOptions;
 use crmeb\services\uniPush\options\PushOptions;
 use crmeb\services\uniPush\PushMessage;
@@ -77,6 +79,14 @@ class UniPush extends BaseJobs
         $messageOption->channelLevel = 4;
         $option->setAudience($clientId);
         $option->setPushMessage($messageOption);
+        $ios              = new IosOptions();
+        $ios->body        = $messageOption->body;
+        $ios->title       = $messageOption->title;
+        $android          = new AndroidOptions();
+        $android->body    = $messageOption->body;
+        $android->title   = $messageOption->title;
+        $android->payload = $android->title;
+        $option->setPushChannel($android, $ios);
         $uniPush->push($option);
         Log::error('unipush数据:' . json_encode($option->toArray()));
         return true;

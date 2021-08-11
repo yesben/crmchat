@@ -99,6 +99,8 @@ class User extends AuthController
             ['nickname', ''],
             ['group_id', 0],
             ['remarks', ''],
+            ['remark_nickname', ''],
+            ['phone', ''],
         ]);
         if (!$data['avatar']) {
             return $this->fail('用户头像必须填写');
@@ -107,12 +109,19 @@ class User extends AuthController
             return $this->fail('用户昵称必须填写');
         }
 
-        $avatar = $this->services->value(['id' => $id], 'avatar');
+        $userInfo = $this->services->get(['id' => $id], ['avatar', 'nickname']);
 
         $this->services->update($id, $data);
 
-        if ($data['avatar'] != $avatar) {
-            $services->update(['to_user_id' => $id], ['avatar' => $data['avatar']]);
+        $update = [];
+        if ($data['avatar'] != $userInfo->avatar) {
+            $update['avatar'] = $data['avatar'];
+        }
+        if ($data['nickname'] != $userInfo->nickname) {
+            $update['nickname'] = $data['nickname'];
+        }
+        if ($update) {
+            $services->update(['to_user_id' => $id], $update);
         }
 
         return $this->success('修改成功');

@@ -12,7 +12,36 @@
 namespace crmeb\services\uniPush\options;
 
 
-class PushChannelOptions
+use crmeb\services\uniPush\OptionsBase;
+use think\helper\Str;
+
+/**
+ * Class IosOptions
+ * @package crmeb\services\uniPush\options
+ */
+class IosOptions extends OptionsBase
 {
 
+
+    public $title;
+
+    public $body;
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $publicData = get_object_vars($this);
+        $data       = [];
+        foreach ($publicData as $key => $value) {
+            $data[Str::snake($key)] = $value;
+        }
+
+        return [
+            'aps' => [
+                'alert' => $data
+            ]
+        ];
+    }
 }

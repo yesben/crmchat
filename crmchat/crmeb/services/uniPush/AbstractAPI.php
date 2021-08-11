@@ -161,7 +161,7 @@ class AbstractAPI
     {
         $header   = $json ? array_merge(['content-type:application/json'], $header) : $header;
         $method   = $method ?: 'post';
-        $response = $this->http->request($this->url($url), $method, $json ? json_encode($data) : $data, $header);
+        $response = $this->http->request($this->url($url), $method, $json ? json_encode($data) : $data, $header, 15, true);
         $response = json_decode($response, true);
         if (JSON_ERROR_NONE !== json_last_error()) {
             throw new \Exception('Failed to parse JSON: :' . json_last_error_msg());
@@ -206,10 +206,11 @@ class AbstractAPI
         $name  = 'UNI_PUSH_TOKEN';
         $token = $this->cache->get($name);
         if (!$token) {
-            $data = $this->curl('http://stor.crmeb.net/api/open/token', [
+            $data = $this->curl('https://store.crmeb.net/api/open/token', [
                 'host'    => request()->host(),
                 'version' => get_crmeb_version()
             ]);
+            $data = $data->data;
             if (!isset($data['token'])) {
                 throw new ApiException('获取token失败');
             }

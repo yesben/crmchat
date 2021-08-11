@@ -105,6 +105,8 @@ class ChatUserServices extends BaseServices
         $rule         = [
             Form::frameImage('avatar', '用户头像', $this->url('admin/widget.images/index.html', ['fodder' => 'avatar', 'big' => 1]), $userInfo->getAttr('avatar'))->icon('ios-image')->width('950px')->height('420px'),
             Form::input('nickname', '用户昵称', $userInfo->getAttr('nickname')),
+            Form::input('remark_nickname', '备注昵称', $userInfo->getAttr('remark_nickname')),
+            Form::input('phone', '手机号', $userInfo->getAttr('phone')),
             Form::select('group_id', '用户分组', $userInfo->getAttr('group_id'))->options($option),
             Form::textarea('remarks', '用户备注', $userInfo->getAttr('remarks')),
         ];
