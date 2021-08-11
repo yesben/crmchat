@@ -1,36 +1,27 @@
+<h1 align="center">CRM Chat</h1> 
 
+## 项目简介
 
+  本系统(CRMChat)是采用Swoole4+Tp6+Redis+Vue+Mysql开发的独立高性能客服系统，客服系统用户端支持Pc端、移动端、小程序、文章中接入客服，利用超链接、网页内嵌、二维码、定制对接等方式让网上所有通道都可以快速通过本系统联系到商家，商家端支持Pc端、移动端（App）随时随地接收到用户的各种咨询，商家可以添加话术库、也可以对用户进行分组、加标签、加备注进行管理，是一款互联网链接商家的一个桥梁，也是商家客户管理的工具，本开源项目遵循最开放的木兰协议，可以随意使用。商家端APP也不用您自己辛苦上架了，我们提供App工具可以直接下载配置使用。在使用过程中遇到问题随时留言，也欢迎各位大神参与本项目一起完善！！！
+> 如果对您有帮助，您可以点右上角 "Star" 支持一下 谢谢！
 
-<p align="center" >
-    <img src="https://images.gitee.com/uploads/images/2018/1214/151026_2299df23_892944.gif" />
-</p>
-
-<h1 align="center">CRM-CHAT</h1> 
-
-
-如果对您有帮助，您可以点右上角 "Star" 支持一下 谢谢！
-
-> 基于 TP6+Swoole4 开发 
-  运行环境要求PHP7.1 ~ 7.4。不支持windows环境运行
-
-
-# 安装文档
+### 安装文档
 #### PHP扩展安装文档 <a target="_blank" href='https://gitee.com/ZhongBangKeJi/CRMChat/wikis/pages/preview?sort_id=4266819&doc_id=1539498'>点击查看</a>
 #### 站点配置文档  <a target="_blank" href='https://gitee.com/ZhongBangKeJi/CRMChat/wikis/pages/preview?sort_id=4266852&doc_id=1539498'>点击查看</a>
 #### 运行服务文档  <a target="_blank" href='https://gitee.com/ZhongBangKeJi/CRMChat/wikis/pages/preview?sort_id=4266898&doc_id=1539498'>点击查看</a>
 #### 程序安装文档  <a target="_blank" href='https://gitee.com/ZhongBangKeJi/CRMChat/wikis/pages/preview?sort_id=4266934&doc_id=1539498'>点击查看</a>
 #### 命令行一键安装文档 <a target="_blank" href='https://gitee.com/ZhongBangKeJi/CRMChat/wikis/pages/preview?sort_id=4267030&doc_id=1539498'>点击查看</a>
 
-# 命令文档
+### 命令文档
 #### swoole命令文档 <a target="_blank" href='https://gitee.com/ZhongBangKeJi/CRMChat/wikis/pages/preview?sort_id=4267027&doc_id=1539498'>点击查看</a>
 #### 应用KEY命令文档 <a target="_blank" href='https://gitee.com/ZhongBangKeJi/CRMChat/wikis/pages/preview?sort_id=4267028&doc_id=1539498'>点击查看</a>
 #### 命令行安装文档 <a target="_blank" href='https://gitee.com/ZhongBangKeJi/CRMChat/wikis/pages/preview?sort_id=4267030&doc_id=1539498'>点击查看</a>
 
-# 演示地址
+### 演示地址
 ### 用户端访问<a target="_blank" href='http://chat.crmeb.net/chat/pc?token=eyJpdiI6ImxmZEZBRzVteTBNK3FqWG5ySnBwV1E9PSIsInZhbHVlIjoiL2doelFwOWRuVHJwa0EvQUdFRWQ1ZURvdFg5aU8zZUp5MGkwMlp5K1RtQ2ZCb0FEK3lpZVVDOTVBOVVEUnRkVytmOHBOMjM0L1lpa2JMenVHVFpIcEZmOU4zdEhsNTZyTjhWZ3h3aENoT1VaRGJLc2NJcnR5dW9EcEJCc3gzVU44czBGU0d4d0l0WFZVZ0VOSEtqQzdQbEhNY215bDZKbWxLK2xvRkl3WmhBPSIsIm1hYyI6ImQxN2VkNTRjMGE2MWNmZjc5NTA5MDNhMzZlMjk5OGRlY2JlMzM1M2ZmZTAyNzFlZGU1MzI2ZmM3ZWU2NWMzZjIifQ%3D%3D'>点击体验</a>
 ### 客服端访问 <a target="_blank" href="http://chat.crmeb.net/kefu/pc_list">点击体验</a>
 
-# 访问地址
+### 访问地址
 
 ### 后台访问地址：
 
@@ -40,17 +31,17 @@ http://域名/admin
 
 http://域名/kefu
 
-## 页面展示
+### 页面展示
 
 ![输入图片说明](readme/image/2.jpg)
 ![输入图片说明](readme/image/3.jpg)
 
-## 下期APP功能展示(以下功能暂没有开发,仅提供展示)
+### 下期APP功能展示(以下功能暂没有开发,仅提供展示)
 
 ![输入图片说明](readme/image/1.jpg)
 
 
-## 开发规范
+### 开发规范
 #### 命名规范
 ThinkPHP6.0遵循PSR-2命名规范和PSR-4自动加载规范，并且注意如下规范:
 
@@ -211,25 +202,27 @@ ThinkPHP6.0遵循PSR-2命名规范和PSR-4自动加载规范，并且注意如�
 ## 主要特性
 
 有详细的代码注释，有完整系统手册
-### TP6框架
+#### TP6框架
 使用最新的 ThinkPHP 6.0 + Swoole4框架开发
-### 前端采用Vue CLI框架
+#### 前端采用Vue CLI框架
 前端使用Vue CLI框架nodejs打包，页面加载更流畅，用户体验更好
-### 标准接口
+#### 标准接口
 标准接口、前后端分离，二次开发更方便
-### 支持队列
+#### 支持队列
 降低流量高峰，解除耦合，高可用
-### 长连接
+#### 长连接
 减少CPU及内存使用及网络堵塞，减少请求响应时长
-### 无缝事件机制
+#### 无缝事件机制
 行为扩展更方便，方便二次开发
-### 后台快速生成表单
+#### 后台快速生成表单
 后台应用form-builder 无需写页面快速增删改查
-### 强大的后台权限管理
+#### 强大的后台权限管理
 后台多种角色、多重身份权限管理，权限可以控制到每一步操作
-### 一键安装
+#### 一键安装
 自动检查系统环境一键安装
 
+> 基于 TP6+Swoole4 开发 
+  运行环境要求PHP7.1 ~ 7.4。不支持windows环境运行
 
 本项目包含的第三方源码和二进制文件之版权信息另行标注。
 
