@@ -277,8 +277,7 @@ class Room
      * @param string $key
      * @return mixed
      */
-    public
-    function exist(string $key)
+    public function exist(string $key)
     {
         return $this->getTable()->exist($this->tableFdPrefix . $key);
     }
@@ -288,8 +287,7 @@ class Room
      * @param string $key
      * @return array|bool|mixed
      */
-    public
-    function get(string $key, string $field = null)
+    public function get(string $key, string $field = null)
     {
         return $this->getTable()->get($this->tableFdPrefix . $key, $field);
     }
@@ -299,8 +297,7 @@ class Room
      * @param int $userId
      * @return array
      */
-    public
-    function uidByFd(int $userId)
+    public function uidByFd(int $userId)
     {
         $fds        = $this->getRoomAll($this->type);
         $this->type = '';
@@ -319,8 +316,7 @@ class Room
      * @param int $uid
      * @return bool|mixed|null
      */
-    public
-    function kefuUidByFd(int $userId)
+    public function kefuUidByFd(int $userId)
     {
         $this->type = 'kefu';
         $fd         = $this->uidByFd($userId);
@@ -333,8 +329,7 @@ class Room
      * @param $key
      * @return mixed
      */
-    public
-    function fdByUid($key)
+    public function fdByUid($key)
     {
         return $this->getTable()->get($this->tableFdPrefix . $key, 'user_id');
     }
@@ -344,8 +339,7 @@ class Room
      * @param int $uid
      * @return array
      */
-    public
-    function exceptUidFd(int $userId)
+    public function exceptUidFd(int $userId)
     {
         $fds = $this->getRoomAll();
         $key = array_search($userId, $fds);
@@ -356,8 +350,7 @@ class Room
     /**
      * 删除群内所有用户信息
      */
-    public
-    function remove()
+    public function remove()
     {
         $all      = $this->cache->sMembers(self::USER_INFO_FD_PRE);
         $res      = $this->cache->sRem(self::USER_INFO_FD_PRE, ...$all);
@@ -378,8 +371,7 @@ class Room
      * 获取房间内的所有人
      * @return array
      */
-    public
-    function getRoomAll(string $type = '')
+    public function getRoomAll(string $type = '')
     {
         $fdAll = [];
         $all   = $this->cache->sMembers(self::USER_INFO_FD_PRE . ($type ? '_' . $type : ''));
@@ -394,8 +386,7 @@ class Room
      * 获取客服所有用户
      * @return array
      */
-    public
-    function getKefuRoomAll()
+    public function getKefuRoomAll()
     {
         return $this->cache->sMembers('_ws_kefu');
     }
@@ -408,8 +399,7 @@ class Room
      * @param string $type
      * @return bool|int
      */
-    public
-    function delRepeatUidFd(int $userId, string $key, array $fds = [], string $type = '')
+    public function delRepeatUidFd(int $userId, string $key, array $fds = [], string $type = '')
     {
         if (!$userId) {
             return true;

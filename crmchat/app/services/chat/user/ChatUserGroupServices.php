@@ -13,9 +13,11 @@ namespace app\services\chat\user;
 
 
 use app\dao\chat\user\ChatUserGroupDao;
+use app\services\chat\ChatUserServices;
 use crmeb\basic\BaseServices;
 use crmeb\exceptions\AdminException;
 use crmeb\services\FormBuilder as Form;
+use think\exception\ValidateException;
 use think\facade\Route as Url;
 use think\Model;
 
@@ -135,12 +137,14 @@ class ChatUserGroupServices extends BaseServices
      */
     public function delGroup(int $id)
     {
-        if ($this->getGroup($id)) {
-            if (!$this->dao->delete($id)) {
-                throw new AdminException('删除失败,请稍候再试!');
-            }
-        } else {
-            throw new AdminException('分组不存在!');
+        /** @var ChatUserServices $userServices */
+        $userServices = app()->make(ChatUserServices::class);
+        if ($userServices->count(['group_id' => $id])) {
+            throw new AdminException('请先清除掉,关联的用户分组');
         }
+        if (!$this->dao->delete($id)) {
+            throw new AdminException('删除失败,请稍候再试!');
+        }
+
     }
 }
