@@ -235,17 +235,17 @@
       justify-content: space-between;
       align-items: center;
       background: linear-gradient(270deg, #1890ff, #3875ea);
-      padding: 8px 14px;
+      padding: 14px 14px;
       box-sizing: border-box;
-      height: 50px;
+      height: 56px;
       font-size: 16px;
       color: #fff;
       &_title {
         display: flex;
         align-items: center;
         img {
-          width: 36px;
-          height: 36px;
+          width: 30px;
+          height: 30px;
           border-radius: 50%;
           margin-right: 10px;
         }
