@@ -22,7 +22,7 @@
         </div>
         <div class="user-info">
           <div class="item">
-            <span>手机号</span>
+            <span>电话</span>
             {{activeUserInfo.phone || '暂无'}}
           </div>
 
@@ -45,7 +45,7 @@
           </div>
 
           <div class="label-list" @click.stop="isUserLabel = true">
-            <span>用户标签</span>
+            <span>标签</span>
             <div class="con">
               <div class="label-item" v-for="item in activeUserInfo.label">{{item.label}}</div>
             </div>
@@ -121,8 +121,8 @@
     <Modal v-model="isEditRemark" title="请输入用户备注" width="320" class="none-radius">
       <Input v-model="remarkValue" placeholder="请输入备注"></Input>
       <div slot="footer">
-        <Button @click="isEditRemark=false">取消</Button>
         <Button type="primary" @click="handlyEditRemark">确定</Button>
+        <Button @click="isEditRemark=false">取消</Button>
       </div>
     </Modal>
   </div>

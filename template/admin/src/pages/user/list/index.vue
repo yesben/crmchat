@@ -3,11 +3,11 @@
     <div class="i-layout-page-header">
       <div class="i-layout-page-header">
         <span class="ivu-page-header-title">用户管理</span>
-        <div>
+        <!-- <div>
           <Tabs @on-click="onClickTab">
             <TabPane :label="item.name" :name="item.type" v-for="(item,index) in headeNum" :key="index" />
           </Tabs>
-        </div>
+        </div> -->
       </div>
     </div>
     <Card :bordered="false" dis-hover class="ivu-mt listbox">
@@ -156,9 +156,11 @@
     <Modal v-model="modal13" scrollable title="发送消息" width="1200" height="800" footer-hide class="modelBox">
       <news-category v-if="modal13" :isShowSend="isShowSend" :userIds="user_ids" :scrollerHeight="scrollerHeight" :contentTop="contentTop" :contentWidth="contentWidth" :maxCols="maxCols"></news-category>
     </Modal>
+
     <Modal v-model="labelShow" scrollable title="请选择用户标签" :closable="false" width="320" :footer-hide="true">
-      <userLabel :uid="labelActive.uid" @close="labelClose" @onceGetList="userGroup"></userLabel>
+      <userLabel v-if="labelShow" :uid="labelActive.uid" @close="labelClose" @onceGetList="userGroup"></userLabel>
     </Modal>
+
     <Modal v-model="setUserGroupModel" scrollable title="请选择用户分组" :closable="false" width="320" :footer-hide="true">
       <user-group v-if="setUserGroupModel" :activeUserInfo="activeUserInfo" :userGroup="getUserGroup" @handleSelectGroup="handleSelectGroup" @close="setUserGroupModel=false"></user-group>
     </Modal>
@@ -362,8 +364,8 @@ export default {
           minWidth: 100
         },
         {
-          title: '用户类型',
-          key: 'user_type',
+          title: '用户来源',
+          key: 'type',
           minWidth: 100
         },
         {

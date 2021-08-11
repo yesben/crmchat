@@ -83,8 +83,9 @@ export default {
       });
       this.unLaberids = unLaberids;
       putUserLabel(this.uid, {
-        label_ids: this.activeIds,
-        un_label_ids: this.unLaberids
+        label_id: this.activeIds,
+        un_label_id: this.unLaberids,
+        ids: [this.uid]
       }).then(res => {
         this.$emit("onceGetList");
         this.activeIds = []
