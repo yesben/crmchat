@@ -51,11 +51,14 @@ var option = {
     }
 };
 var canCustomerServer = new initCustomerServer(option);
-//样式设置说明
-
-
 
 canCustomerServer.init();
+
+//样式设置说明
+canCustomerServer.setStyleOfCustomerServer(this.canCustomerServer.connentServerDom,{
+            bottom:'300px',
+            left:'50%'
+        });
 // 调用打开客服弹窗的方法，如果isShowTip为false，就使用这个函数，当然也可以使用A链接
 canCustomerServer.getCustomeServer();
 
