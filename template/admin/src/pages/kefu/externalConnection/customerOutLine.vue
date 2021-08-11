@@ -77,6 +77,15 @@ export default {
 </script>
 <style lang="less" scoped>
 .customerOutLine_server {
+  width: 100%;
+  height: 100%;
+  max-width: 600px;
+  max-height: 668px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.7);
   &_header {
     height: 50px;
     background: linear-gradient(270deg, #1890ff 0%, #3875ea 100%);

@@ -2,7 +2,7 @@
 
   <div class="pc_customerServer">
     <div class="fixed" v-if="upperData.noCanClose == 1"></div>
-    <div class="pc_customerServer_container max-width_con" :class="{'max-width_advertisement': upperData.noCanClose == 1 || upperData.position == `center`}">
+    <div class="pc_customerServer_container max-width_con" :class="{'max-width_advertisement': upperData.noCanClose == 1 || upperData.windowStyle == `center`}">
       <!-- 客服头部开始 -->
       <div class="pc_customerServer_container_header">
         <div class="pc_customerServer_container_header_title">
@@ -88,15 +88,15 @@
           </div>
           <!-- 聊天内容结束 -->
 
-          <!-- 表情及图片容器 -->
-          <div class="pc_customerServer_container_footer_emoji" v-if="inputConType == 2">
-            <div class="emoji-item" v-for="(emoji, index) in emojiList" :key="index">
-              <i class="em" :class="emoji" @click.stop="select(emoji)"></i>
-            </div>
-          </div>
           <!-- 内容输入开始 -->
           <div class="pc_customerServer_container_footer">
             <div class="pc_customerServer_container_footer_header">
+              <!-- 表情及图片容器 -->
+              <div class="pc_customerServer_container_footer_emoji" v-if="inputConType == 2">
+                <div class="emoji-item" v-for="(emoji, index) in emojiList" :key="index">
+                  <i class="em" :class="emoji" @click.stop="select(emoji)"></i>
+                </div>
+              </div>
               <div class="pc_customerServer_container_footer_header_handle">
                 <div @click="inputConType = 2;goPageBottom()">
                   <img src="@/assets/images/customerServer/face.png" alt="">
@@ -118,9 +118,7 @@
             <!-- 表情及图片容器结束 -->
             <!-- 相关操作 -- 点击发送 -->
             <div class="pc_customerServer_container_footer_handle">
-              <div class="crmchat_link" @click="tolink">
-                <span>CRMChat开源客服系统</span>
-              </div>
+
               <div class="pc_customerServer_container_footer_handle_send" @click="sendText">
                 <span>发送</span>
               </div>
@@ -134,6 +132,9 @@
         <div class="pc_customerServer_container_advertisement" v-if="upperData.noCanClose == '1' || upperData.windowStyle == `center`">
           <div class="advertisement">
             <div v-html="advertisement"></div>
+            <div class="crmchat_link" @click="tolink">
+              <span>CRMChat开源客服系统</span>
+            </div>
           </div>
         </div>
       </div>
@@ -382,6 +383,7 @@ export default {
     min-height: 180px;
     border-top: 1px solid #ececec;
     &_header {
+      position: relative;
       &_handle {
         display: flex;
 
@@ -423,7 +425,7 @@ export default {
         opacity: 0;
       }
       .readyEmojiHeight {
-        height: 40px;
+        height: 90px;
       }
     }
     &_emoji {
@@ -434,6 +436,9 @@ export default {
       max-height: 150px;
       overflow-y: auto;
       background: #fff;
+      position: absolute;
+      bottom: 50px;
+      left: 0;
 
       .emoji-item {
         padding: 6px;
@@ -449,22 +454,7 @@ export default {
       justify-content: flex-end;
       position: relative;
       bottom: 10px;
-      .crmchat_link {
-        position: absolute;
-        left: 0;
-        text-align: center;
-        width: 100%;
-        transition: 0.3s;
-        z-index: 99;
-        cursor: pointer;
-        span {
-          color: #ccc;
-        }
 
-        span:hover {
-          color: #007aff;
-        }
-      }
       &_send {
         width: 56px;
         height: 26px;
@@ -498,12 +488,28 @@ export default {
     width: 260px;
     background: #fff;
     .advertisement {
-      padding: 10px;
+      padding: 5px;
       box-sizing: border-box;
-      max-height: 600px;
+      height: 550px;
       overflow-y: auto;
       img {
         max-width: 100%;
+      }
+    }
+    .crmchat_link {
+      position: fixed;
+      bottom: 20px;
+      text-align: center;
+      width: 230px;
+      transition: 0.3s;
+      z-index: 99;
+      cursor: pointer;
+      span {
+        color: #ccc;
+      }
+
+      span:hover {
+        color: #007aff;
       }
     }
   }
@@ -568,14 +574,13 @@ export default {
     }
   }
 }
-
 .fixed {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.7);
 }
 .pt140 {
   padding-bottom: 140px !important;
