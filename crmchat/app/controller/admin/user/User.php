@@ -17,6 +17,7 @@ use app\services\chat\ChatServiceRecordServices;
 use app\services\chat\ChatUserServices;
 use app\services\chat\user\ChatUserGroupServices;
 use app\services\chat\user\ChatUserLabelCateServices;
+use app\services\chat\user\ChatUserLabelServices;
 
 /**
  * Class User
@@ -41,14 +42,38 @@ class User extends AuthController
     public function index()
     {
         $where = $this->request->getMore([
-            ['nickname', '', '', 'nickname_like'],
+            ['nickname', ''],
             ['group_id', ''],
+            ['label_id', ''],
             ['time', ''],
             ['sex', ''],
-            ['user_type', '']
+            ['user_type', ''],
+            ['field_key', '']
         ]);
 
         return $this->success($this->services->getChatUserList($where));
+    }
+
+    /**
+     * @param ChatUserLabelCateServices $services
+     * @return mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getLavelAll(ChatUserLabelCateServices $services)
+    {
+        $list = $services->getLabelAll(0);
+        foreach ($list as &$item) {
+            $item['children'] = $item['label'];
+            foreach ($item['children'] as &$value) {
+                $value['value'] = $value['id'];
+            }
+            $item['label'] = $item['name'];
+            $item['value'] = $item['id'];
+            unset($item['name'], $item['id']);
+        }
+        return $this->success($list);
     }
 
     /**

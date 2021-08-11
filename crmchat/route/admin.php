@@ -124,6 +124,7 @@ Route::group('api', function () {
         Route::group('user', function () {
 
             Route::get('/index', 'User/index')->option(['real_name' => '用户列表']);
+            Route::get('/user_label', 'User/getLavelAll')->option(['real_name' => '用户标签搜索列表']);
             Route::get('/edit/:id', 'User/edit')->option(['real_name' => '获取修改用户表单']);
             Route::put('/update/:id', 'User/update')->option(['real_name' => '修改用户']);
             Route::put('/batch/label', 'User/batchLabel')->option(['real_name' => '批量修改用户标签']);

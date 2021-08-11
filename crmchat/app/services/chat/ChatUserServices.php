@@ -79,8 +79,8 @@ class ChatUserServices extends BaseServices
     public function getChatUserList(array $where)
     {
         [$page, $limit] = $this->getPageValue();
-        $list  = $this->dao->getDataList($where, ['*'], 'id', $page, $limit);
-        $count = $this->dao->count($where);
+        $list  = $this->dao->getUserModel($where)->with(['groupOne', 'label'])->page($page, $limit)->field(['*'])->select()->toArray();
+        $count = $this->dao->getUserModel($where)->count();
         return compact('list', 'count');
     }
 

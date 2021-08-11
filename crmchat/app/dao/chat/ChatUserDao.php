@@ -126,4 +126,38 @@ class ChatUserDao extends BaseDao
         })->field([$fieldTime, 'count(*) as number'])->group('time')->select()->toArray();
     }
 
+    /**
+     * @param $where
+     * @return \crmeb\basic\BaseModel
+     */
+    public function getUserModel($where)
+    {
+        return $this->getModel()->when(isset($where['time']) && $where['time'], function ($query) use ($where) {
+            if (strstr($where['time'], '-') !== false) {
+                [$startTime, $endTime] = explode('-', $where['time']);
+                if ($startTime == $endTime) {
+                    $endTime = $endTime . ' 23:59:59';
+                }
+                $time = $startTime . '-' . $endTime;
+            }
+            time_model($query, $time, 'create_time');
+        })->when(isset($where['nickname']) && $where['nickname'], function ($query) use ($where) {
+            if (isset($where['field_key']) && $where['field_key'] && in_array($where['field_key'], ['id', 'phone', 'nickname'])) {
+                $query->whereLike($where['field_key'], '%' . $where['nickname'] . '%');
+            } else {
+                $query->where('nickname|id|phone', 'like', '%' . $where['nickname'] . '%');
+            }
+        })->when(isset($where['group_id']) && $where['group_id'], function ($query) use ($where) {
+            $query->where('group_id', $where['group_id']);
+        })->when(isset($where['label_id']) && $where['label_id'], function ($query) use ($where) {
+            $labelId = explode(',', $where['label_id']);
+            $query->whereIn('id', function ($query) use ($labelId) {
+                $query->name('chat_user_label_assist')->whereIn('label_id', $labelId)->field(['user_id']);
+            });
+        })->when(isset($where['sex']) && $where['sex'] !== '', function ($query) use ($where) {
+            $query->where('sex', $where['sex']);
+        })->when(isset($where['user_type']) && $where['user_type'], function ($query) use ($where) {
+            $query->where('type', $where['user_type']);
+        });
+    }
 }

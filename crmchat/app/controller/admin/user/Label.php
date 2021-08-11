@@ -13,6 +13,7 @@ namespace app\controller\admin\user;
 
 
 use app\controller\admin\AuthController;
+use app\services\chat\user\ChatUserLabelAssistServices;
 use app\services\chat\user\ChatUserLabelServices;
 
 /**
@@ -125,10 +126,13 @@ class Label extends AuthController
      * @param $id
      * @return mixed
      */
-    public function delete($id)
+    public function delete(ChatUserLabelAssistServices $services, $id)
     {
         if (!$id) {
             return $this->fail('缺少参数');
+        }
+        if ($services->count(['label_id' => $id])) {
+            return $this->fail('请先取消关联此标签的用户');
         }
         $this->services->delete($id);
 

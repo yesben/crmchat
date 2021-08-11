@@ -45,16 +45,16 @@ class JwtAuth
      */
     public function getToken(int $id, string $type, array $params = []): array
     {
-        $host    = app()->request->host();
-        $time    = time();
-        $expTime = strtotime('+ 30day');
+        $host = app()->request->host();
+        $time = time();
+        $exp  = strtotime('+ 30day');
 
         $params        += [
             'iss' => $host,
             'aud' => $host,
             'iat' => $time,
             'nbf' => $time,
-            'exp' => $expTime,
+            'exp' => $exp,
         ];
         $params['jti'] = compact('id', 'type');
         $token         = JWT::encode($params, Env::get('app.app_key', $this->app_key));

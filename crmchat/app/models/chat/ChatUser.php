@@ -12,6 +12,7 @@
 namespace app\models\chat;
 
 
+use app\models\chat\user\ChatUserGroup;
 use app\models\chat\user\ChatUserLabel;
 use app\models\chat\user\ChatUserLabelAssist;
 use crmeb\basic\BaseModel;
@@ -46,6 +47,14 @@ class ChatUser extends BaseModel
     public function label()
     {
         return $this->hasManyThrough(ChatUserLabel::class, ChatUserLabelAssist::class, 'user_id', 'id', 'id', 'label_id');
+    }
+
+    /**
+     * @return \think\model\relation\HasOne
+     */
+    public function groupOne()
+    {
+        return $this->hasOne(ChatUserGroup::class, 'id', 'group_id');
     }
 
     /**
