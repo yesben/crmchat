@@ -27,8 +27,9 @@
             <span slot="close">关闭</span>
           </i-switch>
         </template>
-        <template slot-scope="{ row, index }" slot="stop_time">
-          <span> {{row.stop_time | formatDate}}</span>
+        <template slot-scope="{ row, index }" slot="online">
+          <Tag color="success" v-if="row.online">在线</Tag>
+          <Tag color="default" v-else>下线</Tag>
         </template>
 
         <template slot-scope="{ row, index }" slot="action">
@@ -218,14 +219,14 @@ export default {
           key: 'account',
           minWidth: 60
         },
-        // {
-        //   title: '客服名称',
-        //   key: 'wx_name',
-        //   minWidth: 120
-        // },
         {
           title: '客服状态',
           slot: 'status',
+          minWidth: 60
+        },
+        {
+          title: '是否上线',
+          slot: 'online',
           minWidth: 120
         },
         {
