@@ -1,5 +1,5 @@
 <template>
-  <div class="customerOutLine_server">
+  <div class="customerOutLine_server" :class="{ 'max_style': !isMobile }">
     <div class="customerOutLine_server_header">
       <span>商城客服已离线</span>
     </div>
@@ -39,6 +39,7 @@
 </template>
 <script>
 import { serviceFeedback, serviceFeedbackPost } from '@/api/kefu';
+import { mapState } from 'vuex';
 export default {
   data() {
     return {
@@ -50,8 +51,12 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState('media', ['isMobile']),
+  },
   created() {
     this.selectFeedBack();
+    console.log(this.$route.query);
   },
   methods: {
     // 查询广告
@@ -79,8 +84,7 @@ export default {
 .customerOutLine_server {
   width: 100%;
   height: 100%;
-  max-width: 600px;
-  max-height: 668px;
+
   position: fixed;
   top: 50%;
   left: 50%;
@@ -142,5 +146,9 @@ export default {
       }
     }
   }
+}
+.max_style {
+  max-width: 375px;
+  max-height: 668px;
 }
 </style>

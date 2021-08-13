@@ -7,7 +7,7 @@
       <div class="pc_customerServer_container_header">
         <div class="pc_customerServer_container_header_title">
           <img :src="chatServerData.avatar" alt="">
-          <span>{{chatServerData.to_user_nickname}}</span>
+          <span>{{chatServerData.nickname}}</span>
         </div>
         <div class="pc_customerServer_container_header_handle" @click="closeIframe" v-if="upperData.noCanClose != '1'">
           <span class="iconfont">&#xe6c5;</span>
@@ -32,7 +32,7 @@
                 </div>
               </div>
             </div>
-            <happy-scroll :key="happyScroll" size="1" resize hide-horizontal :scroll-top="scrollTop" @vertical-start="scrollHandler">
+            <happy-scroll size="1" resize hide-horizontal :scroll-top="scrollTop" @vertical-start="scrollHandler">
               <div class="scroll_content" id="chat_scroll" :class="{ 'pt140': isShowProductModel || inputConType == 2 }">
                 <!-- 滑动到容器顶部时，动画加载 -->
                 <Spin v-show="isLoad">
@@ -103,7 +103,7 @@
                 </div>
                 <div>
                   <img src="@/assets/images/customerServer/picture.png" alt="">
-                  <input type="file" class="type_file" @change="uploadFile">
+                  <input type="file" accept=".jp2,.jpe,.jpeg,.jpg,.png,.svf,.tif,.tiff" class="type_file" @change="uploadFile">
                 </div>
               </div>
             </div>
@@ -338,7 +338,7 @@ export default {
               margin-left: 10px;
             }
             .chart_list_item_text {
-              text-align: right;
+              text-align: left;
               background: #cde0ff;
               color: #000000;
             }

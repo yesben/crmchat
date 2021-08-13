@@ -4,7 +4,10 @@
       <div class="user-wrapper" v-if="activeUserInfo">
         <div class="user">
           <div class="avatar"><img v-lazy="activeUserInfo.avatar" alt=""></div>
-          <div class="name line1">{{activeUserInfo.nickname}}</div>
+          <div class="name line1">
+            <span v-if="editUserNameModel == false" @click="editUserNameModel= true">{{activeUserInfo.nickname}}</span>
+            <Input v-if="editUserNameModel" v-model="activeUserInfo.nickname" placeholder="请输入昵称" @on-blur="editUserData('editUserNameModel')"></Input>
+          </div>
           <div class="label">
             <template v-if="webType == 2">
               <span class="label routine">小程序</span>
@@ -23,7 +26,8 @@
         <div class="user-info">
           <div class="item">
             <span>电话</span>
-            {{activeUserInfo.phone || '暂无'}}
+            <span @click="editUserPhoneModel=true" v-if="!editUserPhoneModel">{{activeUserInfo.phone || '暂无'}}</span>
+            <Input v-else v-model="activeUserInfo.phone" @on-blur="editUserData('editUserPhoneModel')" placeholder="暂无手机号" size="small"></Input>
           </div>
 
           <!-- <div class="item">
@@ -121,8 +125,8 @@
     <Modal v-model="isEditRemark" title="请输入用户备注" width="320" class="none-radius">
       <Input v-model="remarkValue" placeholder="请输入备注"></Input>
       <div slot="footer">
-        <Button type="primary" @click="handlyEditRemark">确定</Button>
         <Button @click="isEditRemark=false">取消</Button>
+        <Button type="primary" @click="handlyEditRemark">确定</Button>
       </div>
     </Modal>
   </div>
@@ -201,6 +205,8 @@ export default {
   },
   data() {
     return {
+      editUserNameModel: false,
+      editUserPhoneModel: false,
       copyGroupId: '',
       isEditRemark: false, // 修改备注
       remarkValue: '',
@@ -311,6 +317,7 @@ export default {
 
   },
   methods: {
+
     // 修改备注
     handlyEditRemark() {
       console.log(this.activeUserInfo);
@@ -528,6 +535,21 @@ export default {
       } else {
         this.productHot()
       }
+    },
+    // 修改用户信息
+    editUserData(model) {
+      this.putUserData(() => {
+        this[model] = false;
+      });
+    },
+    putUserData(callback) {
+      updateUserData(this.activeUserInfo.id, this.activeUserInfo).then(res => {
+        this.$Message.success('修改成功');
+        this.getUserInfo();
+        this.remarkValue = '';
+        this.isEditRemark = false;
+        callback();
+      })
     }
   }
 }

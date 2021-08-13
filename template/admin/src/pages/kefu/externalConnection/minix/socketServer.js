@@ -128,7 +128,7 @@ export default {
       userRecord(postData).then(res => {
         if(res.status == 200) {
           this.chatServerData = res.data;
-
+          console.log(this.chatServerData);
           this.$nextTick(() => {
             this.happyScroll = !this.happyScroll;
           })
@@ -155,11 +155,14 @@ export default {
 
 
         if(res.status == 400) {
-          this.$router.push({ name: 'customerOutLine' });
+          this.$router.push({
+            name: 'customerOutLine',
+            query: this.$route.query
+          });
         }
       }).catch(rej => {
         if(rej.status == 400) {
-          this.$router.push({ name: 'customerOutLine' });
+          this.$router.push({ name: 'customerOutLine', query: this.$route.query });
         }
       })
     },
@@ -381,6 +384,9 @@ export default {
         if(res.status == 200) {
           this.sendMsg(res.data.url, 3);
         }
+      }).catch(rej => {
+        console.log(rej);
+        this.$Message.error(rej.msg);
       })
     },
 
