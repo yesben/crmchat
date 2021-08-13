@@ -77,6 +77,7 @@ class ChatUserDao extends BaseDao
     {
         $type = $where['type'] ?? 0;
         return $this->search()
+            ->when('is_tourist', $where['is_tourist'])
             ->when(isset($where['user_id']) && $where['user_id'], function ($query) use ($where) {
                 $query->where('id', $where['user_id']);
             })->when(isset($where['appid']) && $where['appid'], function ($query) use ($where) {
