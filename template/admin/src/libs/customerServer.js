@@ -174,8 +174,7 @@ function initCustomerServer(option) {
     var app = document.createElement('div');
     app.setAttribute('id', 'app');
 
-    var posX;
-    var posY;
+
 
 
 
