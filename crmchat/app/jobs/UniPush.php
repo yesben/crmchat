@@ -74,7 +74,7 @@ class UniPush extends BaseJobs
                 $messageOption->body = '[图文]' . ($message['other']['store_name'] ?? '');
                 break;
         }
-        $url                         = '/pages/chat/index?user_id=' . $userInfo['user_id'];
+        $url                         = '/pages/view/customerServer/index?to_user_id=' . $userInfo['user_id'];
         $messageOption->clickType    = 'payload';
         $messageOption->payload      = json_encode(['url' => $url, 'type' => 'url']);
         $messageOption->channelLevel = 4;

@@ -77,6 +77,7 @@ class ChatUserDao extends BaseDao
     {
         $type = $where['type'] ?? 0;
         return $this->search()
+            ->where('is_tourist', $where['is_tourist'])
             ->when(isset($where['user_id']) && $where['user_id'], function ($query) use ($where) {
                 $query->where('id', $where['user_id']);
             })->when(isset($where['appid']) && $where['appid'], function ($query) use ($where) {
@@ -99,7 +100,7 @@ class ChatUserDao extends BaseDao
     public function getKefuMobileStatisticsList(string $time, int $isTourist = 0)
     {
         if (in_array($time, ['today', 'yesterday'])) {
-            $fieldTime = "DATE_FORMAT(create_time,'%Y-%m-%d %H') as time";
+            $fieldTime = "DATE_FORMAT(create_time,'%H') as time";
         } else if (in_array($time, ['quarter', 'year'])) {
             $fieldTime = "DATE_FORMAT(create_time,'%Y-%m') as time";
         } else if (in_array($time, ['week', 'month', 'last week', 'last month'])) {
@@ -113,17 +114,19 @@ class ChatUserDao extends BaseDao
             } elseif ($day < 30) {
                 $fieldTime = "DATE_FORMAT(create_time,'%Y-%m-%d') as time";
             } elseif ($day <= 1) {
-                $fieldTime = "DATE_FORMAT(create_time,'%Y-%m-%d %H') as time";
+                $fieldTime = "DATE_FORMAT(create_time,'%H') as time";
             } else {
                 $fieldTime = "DATE_FORMAT(create_time,'%Y-%m-%d') as time";
             }
         } elseif (strstr($time, '-') !== false) {
             $fieldTime = "DATE_FORMAT(create_time,'%Y-%m-%d') as time";
+        } else {
+            $fieldTime = "DATE_FORMAT(create_time,'%Y-%m-%d') as time";
         }
         return $this->search()->where('is_tourist', $isTourist)->when(true, function ($query) use ($time) {
             $time = $time ?: 'today';
             time_model($query, $time, 'create_time');
-        })->field([$fieldTime, 'count(*) as number'])->group('time')->select()->toArray();
+        })->field([$fieldTime, 'count(*) as number'])->group('time')->order('time', 'asc')->select()->toArray();
     }
 
     /**
