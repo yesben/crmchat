@@ -122,12 +122,17 @@ export default {
         sex: this.upperData.sex,
         avatar: this.upperData.avatar,
         openid: this.upperData.openid,
-        kefu_id:this.upperData.kefu_id || 0
+        kefu_id: this.upperData.kefu_id || 0
       }
 
       userRecord(postData).then(res => {
         if(res.status == 200) {
           this.chatServerData = res.data;
+
+          this.$nextTick(() => {
+            this.happyScroll = !this.happyScroll;
+          })
+
           this.unReadMesage = 0;
           this.goPageBottom();
           let cookieData = {
@@ -145,6 +150,10 @@ export default {
           document.title = res.data.nickname ? `正在和${res.data.nickname}对话中 - ${this.chatServerData.site_name}` : '正在和游客对话中 - ' + this.chatServerData.site_name;
           this.connentServer(); // 建立socket 链接
         };
+
+
+
+
         if(res.status == 400) {
           this.$router.push({ name: 'customerOutLine' });
         }
