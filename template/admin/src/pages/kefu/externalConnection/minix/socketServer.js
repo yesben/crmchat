@@ -117,7 +117,7 @@ export default {
       let postData = {
         uid: this.upperData.uid || getLoc('uid') || 0,
         limit: 20,
-        nickName: this.upperData.nickName,
+        nickname: this.upperData.nickName,
         phone: this.upperData.phone,
         sex: this.upperData.sex,
         avatar: this.upperData.avatar,

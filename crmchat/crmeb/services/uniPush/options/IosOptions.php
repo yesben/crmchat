@@ -39,7 +39,8 @@ class IosOptions extends OptionsBase
         }
 
         return [
-            'aps' => [
+            'type' => 'notify',
+            'aps'  => [
                 'alert' => $data
             ]
         ];

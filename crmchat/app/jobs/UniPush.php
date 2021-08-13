@@ -74,11 +74,25 @@ class UniPush extends BaseJobs
                 $messageOption->body = '[图文]' . ($message['other']['store_name'] ?? '');
                 break;
         }
+        $url                         = '/pages/chat/index?user_id=' . $userInfo['user_id'];
         $messageOption->clickType    = 'payload';
-        $messageOption->payload      = 'click_type';
+        $messageOption->payload      = json_encode(['url' => $url, 'type' => 'url']);
         $messageOption->channelLevel = 4;
         $option->setAudience($clientId);
-        $option->setPushMessage($messageOption);
+
+        $res    = $uniPush->userStatus($clientId)->all();
+        $status = $res['data'][$clientId]['status'] ?? 'offline';
+        if ($status == 'offline') {
+            $option->setPushMessage($messageOption);
+        } else {
+            $option->pushChannel = [
+                'transmission' => json_encode([
+                    'title' => $messageOption->title,
+                    'body'  => $messageOption->body,
+                    'url'   => $url
+                ])
+            ];
+        }
         $ios              = new IosOptions();
         $ios->body        = $messageOption->body;
         $ios->title       = $messageOption->title;
