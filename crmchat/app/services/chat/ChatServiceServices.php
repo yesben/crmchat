@@ -179,6 +179,18 @@ class ChatServiceServices extends BaseServices
             $userId     = $userInfo['id'];
         } else {
             $userId = $userInfo->id;
+            $save   = false;
+            if (isset($user['nickname']) && $user['nickname'] && $user['nickname'] != $userInfo->nickname) {
+                $save               = true;
+                $userInfo->nickname = $user['nickname'];
+            }
+            if (isset($user['avatar']) && $user['avatar'] && $user['avatar'] != $userInfo->avatar) {
+                $save               = true;
+                $userInfo->nickname = $user['avatar'];
+            }
+            if ($save) {
+                $userInfo->save();
+            }
         }
 
         $toUserId = $this->dao->count(['appid' => $appId, 'status' => 1, 'user_id' => $toUserId]) ? $toUserId : 0;

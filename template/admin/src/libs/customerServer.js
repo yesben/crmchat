@@ -307,7 +307,12 @@ function initCustomerServer(option) {
     if(this.settingObj.deviceType == 'Mobile') {
       this.iframeLayout.style.top = '0';
     } else if(option.windowStyle == 'center') {
-      this.setStyleOfCustomerServer(this.iframeLayout, {
+        //防止第一次打开页面乱了
+        if(!this.isrelaod){
+            this.isrelaod = true;
+            this.iframe_contanier.contentWindow.location.reload();
+        }
+        this.setStyleOfCustomerServer(this.iframeLayout, {
         top: 0,
         left: 0,
         bottom: 0,
@@ -379,7 +384,6 @@ function initCustomerServer(option) {
       }
 
     });
-
     this.iframe_contanier.contentWindow.postMessage({ type: 'getImgOrText', productInfo: option.productInfo }, "*"); // 传送图文数据
     this.iframe_contanier.contentWindow.postMessage({ type: 'openCustomeServer' }, "*"); //通知iframe 打开了客服弹框
   }

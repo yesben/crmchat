@@ -25,7 +25,9 @@ class PushMessage
     //获取推送结果
     const REPORT_PUSH_TASK = 'report/push/task/';
     //获取24个小时在线用户数
-    const ONLINE_USER = '/report/online_user';
+    const ONLINE_USER = 'report/online_user';
+    //查询用户状态
+    const USER_STATUS = 'user/status/';
 
     /**
      * @var AbstractAPI
@@ -87,6 +89,17 @@ class PushMessage
     public function onlineUser()
     {
         return $this->abstractAPI->parseGet(self::ONLINE_USER);
+    }
+
+    /**
+     * 查询用户状态
+     * @param mixed ...$clientId
+     * @return \crmeb\utils\Collection
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function userStatus(...$clientId)
+    {
+        return $this->abstractAPI->parseGet(self::USER_STATUS . implode(',', $clientId));
     }
 
     /**
