@@ -5,12 +5,29 @@
     <title>CRMChat演示</title>
 </head>
 <body>
-<div>
+<div class="demo">
+    <div class="title">
+        <h2>CRMChat用户端演示</h2>
+    </div>
+    <div>
+        <ul>
+            <li>
+                请先登录客服管理端
+
+            </li>
+            <li>
+                <a href="https://chat.crmeb.net/kefu" target="_blank">https://chat.crmeb.net/kefu</a> （账号：kefu 密码：demo）
+
+            </li>
+        </ul>
+    </div>
     <ul>
-        <li>请先登录客服管理端<a href="https://chat.crmeb.net/kefu" target="_blank">登录</a>（账号：demo 密码：demo）</li>
+
+        <li>网页内嵌</li>
         <li><a href="kefu1.html" target="_blank">1、演示一内嵌最小化</a></li>
         <li><a href="kefu2.html" target="_blank">2、演示二内嵌中间弹窗</a></li>
         <li><a href="kefu3.html" target="_blank">3、演示三自定义模式</a></li>
+        <li>超链接</li>
         <li><a href="https://chat.crmeb.net/chat/index?noCanClose=1&token=e8bcc017f50e55c63b5352c4257c8904" target="_blank">4、Pc和手机超链接访问自动适应</a></li>
         <li><a href="https://chat.crmeb.net/chat/pc?noCanClose=1&token=e8bcc017f50e55c63b5352c4257c8904" target="_blank">6、Pc超链接访问</a></li>
         <li><a href="https://chat.crmeb.net/chat/pc?noCanClose=0&token=e8bcc017f50e55c63b5352c4257c8904" target="_blank">7、Pc超链接访问简介模式</a></li>
@@ -28,5 +45,29 @@
     };
     var canCustomerServer = new initCustomerServer(option);
     canCustomerServer.init();
+    canCustomerServer.getCustomeServer();
 </script>
+<style>
+    .demo{
+        width: 800px;
+        height: 500px;
+        background-color: #efefef;
+        border:1px solid #eee;
+        border-radius: 10px;
+        margin:100px auto ;
+        box-shadow: 1px 1px 15px 0px rgba(0, 0, 0, 0.3);
+
+    }
+    .demo .title{
+        text-align: center;height: 50px;padding: 30px;display: block;border-bottom: 1px solid #ccc;
+    }
+    .demo ul li{
+        list-style: none;
+        height: 30px;
+    }
+    .demo ul li a{
+        text-decoration:none;
+        color:blue;
+    }
+</style>
 </html>
