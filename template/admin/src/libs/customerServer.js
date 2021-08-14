@@ -95,7 +95,6 @@ function initCustomerServer(option) {
   this.settingObj.kefuid = option.kefuid || 0; // 指定客服，默认随机
   this.settingObj.sendUserData = option.sendUserData || {}; // 用户信息，默认游客
   this.settingObj.productInfo = option.productInfo || {}; // 携带产品信息，默认空
-  console.log(settingObj);
   // 判断当前环境下的设备是pc端 || 移动端, 将客户信息挂载到iframe的链接上
   this.setMatchMedia = () => {
     const matchMedia = window.matchMedia;
@@ -268,7 +267,6 @@ function initCustomerServer(option) {
   this.loadwindow = () => {
     // 接收来自iframe中的参数
     window.addEventListener("message", e => {
-      console.log(e.data);
 
       // 关闭弹框
       if(e.data.type == 'closeWindow') {

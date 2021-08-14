@@ -125,6 +125,10 @@ class ChatUserDao extends BaseDao
         }
         return $this->search()->where('is_tourist', $isTourist)->when(true, function ($query) use ($time) {
             $time = $time ?: 'today';
+            if (strstr($time, '/') !== false) {
+                [$year, $month] = explode('/', $time);
+                $time = $year . '/' . $month . '/01 00:00:00-' . $year . '/' . $month . '/' . days_in_month($year, $month) . ' 23:59:59';
+            }
             time_model($query, $time, 'create_time');
         })->field([$fieldTime, 'count(*) as number'])->group('time')->order('time', 'asc')->select()->toArray();
     }

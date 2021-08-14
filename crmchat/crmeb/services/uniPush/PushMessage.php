@@ -28,6 +28,8 @@ class PushMessage
     const ONLINE_USER = 'report/online_user';
     //查询用户状态
     const USER_STATUS = 'user/status/';
+    //绑定别名
+    const USER_ALIAS = 'user/alias';
 
     /**
      * @var AbstractAPI
@@ -100,6 +102,17 @@ class PushMessage
     public function userStatus(...$clientId)
     {
         return $this->abstractAPI->parseGet(self::USER_STATUS . implode(',', $clientId));
+    }
+
+    /**
+     * 绑定别名
+     * @param array $data
+     * @return \crmeb\utils\Collection
+     * @throws \Exception
+     */
+    public function userAlias(array $data)
+    {
+        return $this->abstractAPI->parseJSON(self::USER_ALIAS, ['data_list' => $data]);
     }
 
     /**

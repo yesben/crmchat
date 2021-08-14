@@ -52,7 +52,7 @@ class ChatServiceFeedback extends BaseModel
      */
     public function searchTitleAttr($query, $value)
     {
-        $value && $query->whereLike('rela_name|phone|content|uid', "%" . $value . "%");
+        $value && $query->whereLike('rela_name|phone|content|user_id', "%" . $value . "%");
     }
 
 }
