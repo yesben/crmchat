@@ -96,6 +96,7 @@ class UniPush extends BaseJobs
         $ios              = new IosOptions();
         $ios->body        = $messageOption->body;
         $ios->title       = $messageOption->title;
+        $ios->payload     = $messageOption->payload;
         $android          = new AndroidOptions();
         $android->body    = $messageOption->body;
         $android->title   = $messageOption->title;

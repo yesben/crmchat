@@ -199,7 +199,7 @@ abstract class BaseHandler
                 ])->getData());
             } else if ($clientId) {
                 UniPush::dispatch([
-                    ['nickname' => $data['nickname']],
+                    ['nickname' => $data['nickname'], 'user_id' => $userId],
                     $clientId,
                     [
                         'content'  => $msn,
