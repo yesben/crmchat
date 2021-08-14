@@ -64,6 +64,15 @@ class ChatServiceDialogueRecord extends BaseModel
     }
 
     /**
+     * 客服用户关联
+     * @return \think\model\relation\HasOne
+     */
+    public function user()
+    {
+        return $this->hasOne(ChatUser::class, 'id', 'to_user_id')->field(['id', 'nickname', 'remark_nickname']);
+    }
+
+    /**
      * uid搜索器
      * @param Model $query
      * @param $value

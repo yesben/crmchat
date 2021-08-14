@@ -20,7 +20,7 @@ class SpeechcraftValidate extends Validate
      * @var string[]
      */
     protected $rule = [
-        'title'   => 'chsAlphaNum|length:0,50',
+        'title'   => 'length:0,50',
         'cate_id' => 'require|number',
         'message' => 'require|length:0,500',
         'sort'    => 'number',

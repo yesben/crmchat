@@ -1030,6 +1030,20 @@ if (!function_exists('swoole_go')) {
     }
 }
 
+if (!function_exists('days_in_month')) {
+    /**
+     * 计算出某年某月的天数
+     * @param $month
+     * @param $year
+     * @return int
+     */
+    function days_in_month($month, $year)
+    {
+        // calculate number of days in a month
+        return $month == 2 ? ($year % 4 ? 28 : ($year % 100 ? 29 : ($year % 400 ? 28 : 29))) : (($month - 1) % 7 % 2 ? 30 : 31);
+    }
+}
+
 if (!function_exists('time_model')) {
 
     /**

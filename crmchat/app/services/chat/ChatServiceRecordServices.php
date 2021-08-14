@@ -67,12 +67,15 @@ class ChatServiceRecordServices extends BaseServices
     public function getServiceList(string $appid, int $userId, string $nickname, $isTourist = '')
     {
         [$page, $limit] = $this->getPageValue();
-        $list = $this->dao->getServiceList(['appid' => $appid, 'user_id' => $userId, 'title' => $nickname, 'is_tourist' => $isTourist], $page, $limit);
+        $list = $this->dao->getServiceList(['appid' => $appid, 'user_id' => $userId, 'title' => $nickname, 'is_tourist' => $isTourist], $page, $limit, ['user']);
         foreach ($list as &$item) {
             if ($item['message_type'] == 1) {
                 $item['message'] = Str::substrUTf8($item['message'], '10', 'UTF-8', '');
             }
             $item['_update_time'] = date('Y-m-d H:i', $item['update_time']);
+            if (isset($item['user']['remark_nickname']) && $item['user']['remark_nickname']) {
+                $item['nickname'] = $item['user']['remark_nickname'];
+            }
         }
         return $list;
     }
