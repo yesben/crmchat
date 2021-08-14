@@ -6,8 +6,9 @@
       <!-- 客服头部开始 -->
       <div class="pc_customerServer_container_header">
         <div class="pc_customerServer_container_header_title">
-          <img :src="chatServerData.avatar" alt="">
-          <span>{{chatServerData.nickname}}</span>
+
+          <img :src="chatServerData.to_user_avatar" alt="">
+          <span>{{chatServerData.to_user_nickname}}</span>
         </div>
         <div class="pc_customerServer_container_header_handle" @click="closeIframe" v-if="upperData.noCanClose != '1'">
           <span class="iconfont">&#xe6c5;</span>

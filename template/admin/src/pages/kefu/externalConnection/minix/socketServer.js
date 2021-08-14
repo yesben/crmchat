@@ -147,7 +147,7 @@ export default {
             })
           };
           this.goPageBottom(); // 滑动到页面底部
-          document.title = res.data.nickname ? `正在和${res.data.nickname}对话中 - ${this.chatServerData.site_name}` : '正在和游客对话中 - ' + this.chatServerData.site_name;
+          document.title = res.data.to_user_nickname ? `正在和${res.data.to_user_nickname}对话中 - ${this.chatServerData.site_name}` : '正在和游客对话中 - ' + this.chatServerData.site_name;
           this.connentServer(); // 建立socket 链接
         };
 
