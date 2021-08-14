@@ -188,6 +188,7 @@ CREATE TABLE IF NOT EXISTS `eb_chat_user` (
   `uid` int(10) NOT NULL DEFAULT '0' COMMENT '用户UID',
   `group_id` int(10) NOT NULL DEFAULT '0' COMMENT '分组',
   `nickname` varchar(50) NOT NULL DEFAULT '' COMMENT '用户昵称',
+  `remark_nickname` VARCHAR(100) NOT NULL DEFAULT '' COMMENT '备注昵称',
   `openid` varchar(50) NOT NULL DEFAULT '' COMMENT 'openid',
   `avatar` varchar(255) NOT NULL DEFAULT '' COMMENT '头像',
   `phone` varchar(11) NOT NULL DEFAULT '' COMMENT '手机号',
