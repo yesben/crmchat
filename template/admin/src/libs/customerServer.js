@@ -299,11 +299,14 @@ function initCustomerServer(option) {
       // 跳转到离线留言界面
       if(e.data.type == 'customerOutLine') {
         this.outLine = true;
-        this.iframeLayout.style.width = '377px';
+        this.setStyleOfCustomerServer(this.iframeLayout, {
+          width: this.outLine ? '378px' : '730px',
+        })
       }
-      // 监听，重新渲染通知（来自反馈成功界面）
+      // 监听，跳转回中间页，重置outline（来自反馈成功界面）
       if(e.data.type == 'reload') {
-        this.init();
+        this.outLine = false;
+
       }
 
     });
@@ -329,10 +332,6 @@ function initCustomerServer(option) {
         // this.iframe_contanier.contentWindow.location.reload();
       }
 
-
-
-
-
       this.setStyleOfCustomerServer(this.iframeLayout, {
         top: 0,
         left: 0,
@@ -346,7 +345,6 @@ function initCustomerServer(option) {
         overflow: 'hidden',
         'box-shadow': '1px 1px 15px 0px rgba(0, 0, 0, 0.3)'
       });
-
 
       // mobel = document.createElement('div');
       // this.setStyleOfCustomerServer(mobel, {

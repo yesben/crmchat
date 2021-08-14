@@ -614,7 +614,7 @@ export default {
   }
 }
 /deep/ .happy-scroll-content {
-  width: 100%;
+  width: 100% !important;
   box-sizing: border-box;
 }
 </style>
@@ -626,5 +626,37 @@ export default {
   span {
     max-width: 100%;
   }
+}
+.happy-scroll-container {
+  width: 100% !important;
+}
+.advertisement {
+  overflow: auto !important;
+}
+.advertisement::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 1px; /*高宽分别对应横竖滚动条的尺寸*/
+  height: 1px;
+}
+.advertisement::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 10px;
+  background-color: skyblue;
+  background-image: -webkit-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.2) 75%,
+    transparent 75%,
+    transparent
+  );
+}
+.advertisement::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background: #ededed;
+  border-radius: 10px;
 }
 </style>

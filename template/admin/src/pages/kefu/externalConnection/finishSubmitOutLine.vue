@@ -50,6 +50,10 @@ export default {
     // 关闭弹框
     closeIframe() {
       parent.postMessage({ type: 'closeWindow' }, "*");
+      this.$router.push({
+        name: 'customerServerRedirect',
+        query: this.$route.query
+      })
       parent.postMessage({ type: 'reload' }, "*");
     }
   }
