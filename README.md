@@ -21,6 +21,9 @@
 ### 用户端访问<a target="_blank" href='http://chat.crmeb.net/demo/index.html'>点击体验</a>
 ### 客服端访问 <a target="_blank" href="http://chat.crmeb.net/kefu/pc_list">点击体验</a>账号密码：kefu kefu123
 ### 后台演示 <a target="_blank" href="http://chat.crmeb.net/admin">点击体验</a>账号密码：demo demo
+### app下载
+![输入图片说明](readme/image/apperweima.png)
+
 
 ### 访问地址
 
