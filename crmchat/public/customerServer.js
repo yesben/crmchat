@@ -8,13 +8,7 @@ var base64ImageObject = {
     // 关闭客服服务，向下按钮
     putItAway: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAHk0lEQVR4Xu3dXW5cNxBEYd7txNsJsp1I2xGynWQ7Eww8hmR7fppN8rLIOn4NOWpW9QcBGcA+Cn9IgAQeJnCQDQmQwOMEAMJ2kMCTBADCepAAQNgBEsglwG+QXG7cMkkAICZF88xcAgDJ5cYtkwQAYlI0z8wlAJBcbtwySQAgJkXzzFwCAMnlxi2TBABiUjTPzCUAkFxu3DJJACAmRfPMXAIAyeXGLZMEAGJSNM/MJQCQXG7cMkkAICZF88xcAgDJ5cYtkwQAYlI0z8wlAJBcbtwySQAgJkXzzFwCAMnlxi2TBABiUjTPzCUAkFxu3DJJACAmRfPMXAIAyeXGLZMEAGJSNM/MJQCQXG7cMkkAICZF88xcAgDJ5cYtkwQAYlI0z8wlAJBcbtwySQAgJkXzzFwCAMnlxi2TBABiUjTPzCUAkFxu3DJJACAmRfPMXAIAyeXGLZMEAGJSNM/MJQCQXG7cMkkAICZF88xcAgDJ5cYtkwQAYlI0z8wlAJBcbtwySQAgJkXzzFwCAMnlxi2TBABiUjTPzCUAkFxu3DJJYCiQy+Xyx3Ec/5lkyTMnJDB6x4YBuVwub6WUP0spf4FkwuYY/MgrjlLKRynln+M4rvvW/c8QIDccf9+m/Rck3Xuz/8AvOL7dwngfgaQ7kF9w/CgSJPYr3S+AOzh+fHh3JF2BPMABkn67Yf9JT3AMQdINyAscILFf7fYAAji6I+kCJIgDJO07YvsJFTi6ImkGUokDJLYrnn94Akc3JE1AkjhAkt8Vu5sNOLogSQNpxAESu1Wvf3AHHM1IUkA64QBJ/c7Y3OiIowlJNZDOOEBis/Lxhw7AkUZSDeT6k0ASL5uTdQko4bhOngICkrrSOR1LQA1HExCQxErnVCwBRRzNQEASK59TzxNQxdEFCEhY/5YElHF0AwKSlhXxvauOoysQkPgueublK+DoDgQkmVXxu7MKjiFAQOK38DUvXgnHMCAgqVkZn7Or4RgKBCQ+ix956Yo4hgMBSWR19j+zKo5TgIBkfwDPXrgyjtOAgMQTyeo4TgUCEi8kO+A4HQhIPJDsgmMKEJDsjWQnHNOAgGRPJLvhmAoEJHsh2RHHdCAg2QPJrjgkgIBkbSQ745ABApI1keyOQwoISNZC4oBDDghI1kDigkMSCEi0kTjhkAUCEk0kbjikgYBEC4kjDnkgINFA4opjCSAgmYvEGccyQEAyB4k7jqWAgORcJOD4nnf6b3c/t67Pn8Y/vTA+eXB8ZrwcEH6TjAUCjp/zXRIISMYgAcfvuS4LBCR9kYDjfp5LAwFJHyTgeJzj8kBA0oYEHM/z2wIISHJIwPE6t22AgOR12V9PgCOW11ZAQBIrHRyxnJb8ojDyNL5MfJwSOCIbtPgXhZEnguT3lMAR2ZxNviiMPBUknymBI7Ixm31RGHkySEoBR2RTNv2iMPJ0ZyTgiGzI5l8URiJwRAKOyGaYfFEYicIJCTgiG/H6zHbfg7x6sgMScLzagvh/twOy+5eJ4Igvf+SkJZBdkYAjsvJ1Z2yB7IYEHHWLHz1tDWQXJOCIrnv9OXsgqyMBR/3S19wAyC2tFf/vFjhqVj13FiBfclsJCThyC197CyC/JLYCEnDUrnn+PEDuZKeMBBz5Zc/cBMiD1BSRgCOz4m13APIkPyUk4Ghb9OxtgLxITgEJOLLr3X4PIIEMZyIBR6CggUcAEgx3BhJwBMsZeAwgFeGeiQQcFcUMPAqQynDPQAKOylIGHgdIItyRSG7jfJRSviVGe3bl/TiOt86fuf3HASRZ8UAk14nAkeyl9zWANCQ6CEnDRHev8pujIVGANIR3vSqOBByN/QKkMUBhJODo0C1AOoQoiAQcnXoFSKcghZCAo2OnAOkYpgAScHTuEyCdA52IBBwDugTIgFAnIAHHoB4BMijYE5GAY2CHABkY7glIwDG4P4AMDnggEnCc0B1ATgh5ABJwnNQbQE4KuiMScJzYGUBODLsDEnCc3BdATg68AQk4JnQFkAmhJ5CAY1JPAJkUfAUScEzsCCATww8gAcfkfgAyuYAnSMAh0A1ABEq4gwQcIr0ARKSIL0gKf/uITikA0emCSQQTAIhgKYykkwBAdLpgEsEEACJYCiPpJAAQnS6YRDABgAiWwkg6CQBEpwsmEUwAIIKlMJJOAgDR6YJJBBMAiGApjKSTAEB0umASwQQAIlgKI+kkABCdLphEMAGACJbCSDoJAESnCyYRTAAggqUwkk4CANHpgkkEEwCIYCmMpJMAQHS6YBLBBAAiWAoj6SQAEJ0umEQwAYAIlsJIOgkARKcLJhFMACCCpTCSTgIA0emCSQQTAIhgKYykkwBAdLpgEsEEACJYCiPpJAAQnS6YRDABgAiWwkg6CQBEpwsmEUwAIIKlMJJOAgDR6YJJBBMAiGApjKSTAEB0umASwQQAIlgKI+kkABCdLphEMAGACJbCSDoJAESnCyYRTAAggqUwkk4CANHpgkkEEwCIYCmMpJMAQHS6YBLBBAAiWAoj6SQAEJ0umEQwAYAIlsJIOgkARKcLJhFMACCCpTCSTgIA0emCSQQTAIhgKYykkwBAdLpgEsEE/gf9UbX2kaDu0wAAAABJRU5ErkJggg=='
 }
-const settingObj = {
-    domId: 'customerServerTip',
-    openUrl: `${location.origin}/chat/index`,
-    deviceType: '', // 打开端
-    token: '',
-    insertDomNode: 'body', // 插入的目标dom， vue必穿，否则将插入至body中
-};
+const settingObj = {};
 
 function customerServerStyle() {
 
@@ -55,29 +49,8 @@ function customerServerStyle() {
         'justify-content': 'space-between',
     };
     this.connect_customerServer_img = {
-        width:'100%',
+        width: '100%',
     };
-
-    // this.connect_customerServer_con = {
-    //   'display': 'flex',
-    //   'align-items': 'center'
-    // }
-
-    // this.connect_customerServer_con_img = {
-    //   width: '20px',
-    //   height: '20px',
-    //   'margin-right': '4px'
-    // }
-    //
-    // this.connect_customerServer_open = {
-    //   display: 'flex',
-    //   'align-items': 'center'
-    // }
-    //
-    // this.connect_customerServer_open_img = {
-    //   width: '20px',
-    //   height: '20px'
-    // }
 
     this.connent_count = {
         position: 'absolute',
@@ -106,8 +79,9 @@ function customerServerStyle() {
 
 const customerServerStyleObject = new customerServerStyle();
 
-
+//初始化函数
 function initCustomerServer(option) {
+    this.outLine = false; // 是否在离线界面
     this.settingObj = settingObj;
     this.settingObj.openUrl = `${option.openUrl || location.origin}/chat/index`; //服务器地址加路由, 若不传入则自动获取引入应用所在服务器的域名
     this.settingObj.domId = option.customerServerTip || 'customerServerTip'; //浮动客服dom
@@ -115,6 +89,12 @@ function initCustomerServer(option) {
     this.settingObj.token = option.token; // token为必填项
     this.settingObj.pcIcon = option.pcIcon || base64ImageObject.pcIcon; // pcIcon 电脑端客服图片
     this.settingObj.mobileIcon = option.mobileIcon || base64ImageObject.mobileIcon; // mobile 手机端客服图片
+    this.settingObj.deviceType = option.deviceType || ''; // Mobile 手机端打开
+    this.settingObj.isShowTip = option.isShowTip || 'false'; //  客服悬浮按钮默认隐藏
+    this.settingObj.windowStyle = option.windowStyle || ''; // pc 端打开默认最精简模式，center居中模式
+    this.settingObj.kefuid = option.kefuid || 0; // 指定客服，默认随机
+    this.settingObj.sendUserData = option.sendUserData || {}; // 用户信息，默认游客
+    this.settingObj.productInfo = option.productInfo || {}; // 携带产品信息，默认空
     // 判断当前环境下的设备是pc端 || 移动端, 将客户信息挂载到iframe的链接上
     this.setMatchMedia = () => {
         const matchMedia = window.matchMedia;
@@ -127,68 +107,56 @@ function initCustomerServer(option) {
             this.settingObj.deviceType = 'pc';
         };
 
-        // 若用户通过 type 指定，则使用type指定的参数
-        if(option.type) {
-            this.settingObj.deviceType = option.type;
-        }
-
-
         // 获取客服客户相关参数
-        this.settingObj.openUrl += `?deviceType=${this.settingObj.deviceType}&`;
+        let params = {
+            domId: this.settingObj.domId,
+            token: this.settingObj.token,
+            deviceType: this.settingObj.deviceType,
+            isShowTip: this.settingObj.isShowTip,
+            windowStyle: this.settingObj.windowStyle,
+            // kefuid:this.settingObj.kefuid
+        };
+        this.settingObj.openUrl += `?=` + toParams(params) + `&`;
         let customerServerData = '';
-        if(option.sendUserData && Object.keys(option.sendUserData).length) {
-            customerServerData = toParams(option.sendUserData);
+        if(this.settingObj.sendUserData && Object.keys(this.settingObj.sendUserData).length) {
+            customerServerData = toParams(this.settingObj.sendUserData);
             this.settingObj.openUrl += `${customerServerData}&`;
         }
 
-        if(option.windowStyle) {
-            this.settingObj.openUrl += `windowStyle=${option.windowStyle}`
-        }
 
     }
 
 
     // 创建 联系客服小弹窗按钮（点击时打开聊天界面）,创建iframe容器 并将iframe添加至body中
     this.createCustomerServerContainer = () => {
-        // 联系客服按钮dom结构 移动端悬浮按钮样式
-        let htmlMobile = `
-    <div class="customerServer_container_mobile" id="${this.settingObj.domId}">
-      <img class="customerServer_container_mobile_image" src="${this.settingObj.mobileIcon}"></img>
-      <div class="connent_count"></div>
-    </div>
-    `;
-        //电脑端悬浮按钮样式
-        let html = `
-      <div class="customerServer_container" id="${this.settingObj.domId}">
-        <div class="connect_customerServer">
-            <img class="connect_customerServer_img" src="${this.settingObj.pcIcon}"></img>
-        </div>
-        <div class="connent_count"></div>
-      </div>
-    `;
-        let iframeHtml = `
-    <iframe src="${this.settingObj.openUrl}&token=${this.settingObj.token}" frameborder="0" class="iframe_contanier" style="width:100%; height:100%;"></iframe>
-  `;
+        let kefuhtml = ``;
+        if(this.settingObj.deviceType == 'Mobile') {
+            // 联系客服按钮dom结构 移动端悬浮按钮样式
+            kefuhtml = `
+            <div class="customerServer_container_mobile" id="${this.settingObj.domId}">
+              <img class="customerServer_container_mobile_image" src="${this.settingObj.mobileIcon}"></img>
+              <div class="connent_count"></div>
+            </div>
+            `;
+        } else {
+            //电脑端悬浮按钮样式
+            kefuhtml = `
+            <div class="customerServer_container" id="${this.settingObj.domId}">
+              <div class="connect_customerServer">
+                  <img class="connect_customerServer_img" src="${this.settingObj.pcIcon}"></img>
+              </div>
+              <div class="connent_count"></div>
+            </div>
+          `;
+        }
 
+        let iframeHtml = `
+    <iframe src="${this.settingObj.openUrl}" frameborder="0" class="iframe_contanier" style="width:100%; height:100%;"></iframe>
+  `;
 
         var app = document.createElement('div');
         app.setAttribute('id', 'app');
-
-        var posX;
-        var posY;
-
-
-
-        if(this.settingObj.deviceType == 'Mobile') {
-            app.innerHTML = htmlMobile;
-        } else {
-            app.innerHTML = html;
-        }
-
-
-
-
-
+        app.innerHTML = kefuhtml;
         this.body = document.querySelector(this.settingObj.insertDomNode);
         this.body.appendChild(app);
 
@@ -246,18 +214,13 @@ function initCustomerServer(option) {
         this.body.appendChild(this.iframeLayout);
 
         // 获取联系客服按钮dom对象
-        this.connentServerDom = document.querySelector(`#${settingObj.domId}`);
+        this.connentServerDom = document.querySelector(`#${this.settingObj.domId}`);
 
         // 判断联系客服按钮是否默认展示
 
-        if(!option.isShowTip) {
+        if(this.settingObj.isShowTip === false) {
             this.connentServerDom.style.display = 'none';
         }
-
-
-
-
-
         // 获取 iframe 弹框dom对象，便于后期数据交互
         this.iframe_contanier = document.querySelector('.iframe_contanier');
 
@@ -272,7 +235,7 @@ function initCustomerServer(option) {
     })
     }
 
-    // 设置初始化样式，包括iframe弹宽初始定位，未读消息等, 将iframe 插入到body里面
+    // 设置初始化样式，包括iframe弹宽初始定位，未读消息等
     this.initPositionStyle = () => {
         let mobileInitStyle = {
             width: '100%',
@@ -282,8 +245,8 @@ function initCustomerServer(option) {
         }
         // pc端初始化样式
         let pcInitStyle = {
-            width: '400px',
-            bottom: '-645px',
+            width: '377px',
+            // bottom: '-645px',
             height: '645px',
             'z-index': 999,
             'box-shadow': '1px 1px 15px 0px rgba(0, 0, 0, 0.3)'
@@ -300,21 +263,80 @@ function initCustomerServer(option) {
         this.connent_count = document.querySelector('.connent_count');
         this.connent_count.style.display = 'none';
     }
+    //加载聊天框
+    this.loadwindow = () => {
+        // 接收来自iframe中的参数
+        window.addEventListener("message", e => {
 
+            // 关闭弹框
+            if(e.data.type == 'closeWindow') {
+            if(this.settingObj.deviceType == 'Mobile') {
+                this.iframeLayout.style.top = '100%';
+            } else if(this.settingObj.windowStyle == 'center') {
+                this.setStyleOfCustomerServer(this.iframeLayout, {
+                    display: 'none'
+                });
+                this.connentServerDom.style.display = 'block';
+
+            } else {
+                this.iframeLayout.style.bottom = '-645px';
+                this.iframeLayout.style.opacity = '0';
+            }
+        }
+        // 收取未读消息
+        if(e.data.type == 'message_num') {
+
+            if(e.data.num > 0) {
+                this.connent_count.style.display = 'flex';
+                this.connent_count.innerHTML = e.data.num;
+            } else {
+                this.connent_count.style.display = 'none';
+            }
+        }
+
+        // 跳转到离线留言界面
+        if(e.data.type == 'customerOutLine') {
+            this.outLine = true;
+            this.setStyleOfCustomerServer(this.iframeLayout, {
+                width: this.outLine ? '378px' : '730px',
+            })
+        }
+        // 监听，跳转回中间页，重置outline（来自反馈成功界面）
+        if(e.data.type == 'reload') {
+            this.outLine = false;
+
+        }
+
+    });
+        // this.iframe_contanier.contentWindow.postMessage({ type: 'openCustomeServer' }, "*"); //通知iframe 打开了客服弹框
+
+        // this.iframe_contanier.contentWindow.postMessage({ type: 'closeCustomeServer' }, "*"); //通知iframe 打开了客服弹框
+
+
+
+
+
+    };
     // 打开客服聊天框
     this.getCustomeServer = () => {
 
         let mobel = '';
         if(this.settingObj.deviceType == 'Mobile') {
             this.iframeLayout.style.top = '0';
-        } else if(option.windowStyle == 'center') {
+        } else if(this.settingObj.windowStyle == 'center') {
+            //防止第一次打开页面乱了
+            if(!this.isrelaod) {
+                this.isrelaod = true;
+                // this.iframe_contanier.contentWindow.location.reload();
+            }
+
             this.setStyleOfCustomerServer(this.iframeLayout, {
                 top: 0,
                 left: 0,
                 bottom: 0,
                 right: 0,
                 margin: 'auto',
-                width: '730px',
+                width: this.outLine ? '378px' : '730px',
                 display: 'block',
                 transition: 'none',
                 'border-radius': '8px',
@@ -322,64 +344,32 @@ function initCustomerServer(option) {
                 'box-shadow': '1px 1px 15px 0px rgba(0, 0, 0, 0.3)'
             });
 
-            mobel = document.createElement('div');
-            this.setStyleOfCustomerServer(mobel, {
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                'z-index': '200',
-                background: 'rgba(0, 0, 0, 0.4)',
-                display: 'block'
-
-            })
+            // mobel = document.createElement('div');
+            // this.setStyleOfCustomerServer(mobel, {
+            //   position: 'fixed',
+            //   top: 0,
+            //   left: 0,
+            //   width: '100%',
+            //   height: '100%',
+            //   'z-index': '200',
+            //   background: 'rgba(0, 0, 0, 0.4)',
+            //   display: 'block'
+            //
+            // })
             // this.body.appendChild(mobel);
-            mobel.addEventListener('click', () => {
-                if(option.windowStyle == 'center') {
-                this.body.removeChild(mobel);
-                this.setStyleOfCustomerServer(this.iframeLayout, {
-                    display: 'none'
-                });
-            }
-        })
-
-
-
+            // mobel.addEventListener('click', () => {
+            //   if(this.settingObj.windowStyle == 'center') {
+            //     this.body.removeChild(mobel);
+            //     this.setStyleOfCustomerServer(this.iframeLayout, {
+            //       display: 'none'
+            //     });
+            //   }
+            // })
         } else {
             this.iframeLayout.style.bottom = 0;
             this.iframeLayout.style.opacity = '1';
         }
-        // 接收来自iframe中的参数
-        window.addEventListener("message", e => {
-            // 关闭弹框
-            if(e.data.type == 'closeWindow') {
-            if(this.settingObj.deviceType == 'Mobile') {
-                this.iframeLayout.style.top = '100%';
-            } else if(option.windowStyle == 'center') {
-                this.setStyleOfCustomerServer(this.iframeLayout, {
-                    display: 'none'
-                });
-                this.body.removeChild(mobel);
-            } else {
-                this.iframeLayout.style.bottom = '-645px';
-                this.iframeLayout.style.opacity = '0';
-            }
-        }
-        // 收取未读消息
-
-        if(e.data.type == 'message_num') {
-            if(e.data.num > 0) {
-                this.connent_count.style.display = 'flex';
-            } else {
-                this.connent_count.style.display = 'none';
-            }
-            this.connent_count.innerHTML = e.data.num;
-        }
-
-    });
-
-        this.iframe_contanier.contentWindow.postMessage({ type: 'getImgOrText', productInfo: option.productInfo }, "*"); // 传送图文数据
+        this.iframe_contanier.contentWindow.postMessage({ type: 'getImgOrText', productInfo: this.settingObj.productInfo }, "*"); // 传送图文数据
         this.iframe_contanier.contentWindow.postMessage({ type: 'openCustomeServer' }, "*"); //通知iframe 打开了客服弹框
     }
 
@@ -390,12 +380,13 @@ function initCustomerServer(option) {
 
 
 }
-
+//初始化
 initCustomerServer.prototype.init = function() {
     this.setMatchMedia();
     this.createCustomerServerContainer();
     this.batchSetStyle();
     this.initPositionStyle();
+    this.loadwindow();
 
     // 联系客服小按钮，点击事件
     this.connentServerDom.addEventListener('click', () => {
@@ -410,20 +401,13 @@ initCustomerServer.prototype.setStyleOfCustomerServer = function(dom, styleObj) 
 };
 
 initCustomerServer.prototype.getOpenUrl = function() {
-    return this.settingObj.openUr;
+    return this.settingObj.openUrl;
 }
-
-
-
 
 // export default initCustomerServer;
 
 // let useCustomerServer = new initCustomerServer(option);
 // useCustomerServer.init();
-
-
-
-
 
 // 生成指定范围内的随机数
 function getRandomInt(min, max) {
@@ -461,8 +445,6 @@ function ajax(options) {
         }
     }
 }
-
-
 
 
 // 将Object 改装成以 & 符号连接的字符串
