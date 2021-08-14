@@ -261,5 +261,14 @@ export default [
 		},
 		component: () => import('@/pages/kefu/externalConnection/customerOutLine')
 	},
+	{
+		// 完成提交反馈
+		path: '/chat/finishSubmitOutLine',
+		name: 'finishSubmitOutLine',
+		meta: {
+			title: '提交成功'
+		},
+		component: () => import('@/pages/kefu/externalConnection/finishSubmitOutLine')
+	}
 	// 外部连接，跳转联系客服模块结束
 ]

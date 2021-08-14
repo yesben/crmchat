@@ -72,8 +72,6 @@
 
             </div>
 
-
-
           </div>
           <!-- 聊天内容列表结束 -->
         </div>
@@ -567,5 +565,4 @@ export default {
   width: 100%;
   box-sizing: border-box;
 }
-
 </style>

@@ -197,6 +197,11 @@ export default {
                 openid: this.upperData.openid
               }
             })
+
+            if(this.upperData.isShowTip) {
+              ws.send({ type: 'to_chat', data: { id: 0 } });
+            };
+
           })
         })
 

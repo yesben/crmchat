@@ -5,7 +5,7 @@
         <div class="user">
           <div class="avatar"><img v-lazy="activeUserInfo.avatar" alt=""></div>
           <div class="name line1">
-            <span v-if="editUserNameModel == false" @click="editUserNameModel= true">{{activeUserInfo.nickname}}</span>
+            <span v-if="editUserNameModel == false" @click="editUserNameModel= true">{{activeUserInfo.remark_nickname?activeUserInfo.remark_nickname: activeUserInfo.nickname}}</span>
             <Input v-if="editUserNameModel" v-model="activeUserInfo.nickname" placeholder="请输入昵称" @on-blur="editUserData('editUserNameModel')"></Input>
           </div>
           <div class="label">
@@ -543,7 +543,7 @@ export default {
       });
     },
     putUserData(callback) {
-      updateUserData(this.activeUserInfo.id, this.activeUserInfo).then(res => {
+      updateUserData(this.activeUserInfo.id, { ...this.activeUserInfo, remark_nickname: this.activeUserInfo.nickname }).then(res => {
         this.$Message.success('修改成功');
         this.getUserInfo();
         this.remarkValue = '';
