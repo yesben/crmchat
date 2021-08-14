@@ -18,7 +18,7 @@
 #### 命令行安装文档 <a target="_blank" href='https://gitee.com/ZhongBangKeJi/CRMChat/wikis/pages/preview?sort_id=4267030&doc_id=1539498'>点击查看</a>
 
 ### 演示地址
-### 用户端访问<a target="_blank" href='http://chat.crmeb.net/chat/pc?token=eyJpdiI6ImxmZEZBRzVteTBNK3FqWG5ySnBwV1E9PSIsInZhbHVlIjoiL2doelFwOWRuVHJwa0EvQUdFRWQ1ZURvdFg5aU8zZUp5MGkwMlp5K1RtQ2ZCb0FEK3lpZVVDOTVBOVVEUnRkVytmOHBOMjM0L1lpa2JMenVHVFpIcEZmOU4zdEhsNTZyTjhWZ3h3aENoT1VaRGJLc2NJcnR5dW9EcEJCc3gzVU44czBGU0d4d0l0WFZVZ0VOSEtqQzdQbEhNY215bDZKbWxLK2xvRkl3WmhBPSIsIm1hYyI6ImQxN2VkNTRjMGE2MWNmZjc5NTA5MDNhMzZlMjk5OGRlY2JlMzM1M2ZmZTAyNzFlZGU1MzI2ZmM3ZWU2NWMzZjIifQ%3D%3D'>点击体验</a>
+### 用户端访问<a target="_blank" href='http://chat.crmeb.net/demo/index.html'>点击体验</a>
 ### 客服端访问 <a target="_blank" href="http://chat.crmeb.net/kefu/pc_list">点击体验</a>
 
 ### 访问地址
