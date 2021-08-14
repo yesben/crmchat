@@ -151,9 +151,6 @@ export default {
           this.connentServer(); // 建立socket 链接
         };
 
-
-
-
         if(res.status == 400) {
           this.$router.push({
             name: 'customerOutLine',
@@ -189,7 +186,7 @@ export default {
             ws.send({
               type: 'user',
               data: {
-                to_user_id: this.chatServerData.to_user_id,
+                to_user_id: this.upperData.isShowTip ? 0 : this.chatServerData.to_user_id,
                 uid: this.chatServerData.uid,
                 nickname: this.chatServerData.nickname,
                 avatar: this.chatServerData.avatar,
@@ -198,9 +195,9 @@ export default {
               }
             })
 
-            if(this.upperData.isShowTip) {
-              ws.send({ type: 'to_chat', data: { id: 0 } });
-            };
+            // if(this.upperData.isShowTip) {
+            //   ws.send({ type: 'to_chat', data: { id: 0 } });
+            // };
 
           })
         })
