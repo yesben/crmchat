@@ -92,7 +92,7 @@ function initCustomerServer(option) {
     this.settingObj.pcIcon = option.pcIcon || base64ImageObject.pcIcon; // pcIcon 电脑端客服图片
     this.settingObj.mobileIcon = option.mobileIcon || base64ImageObject.mobileIcon; // mobile 手机端客服图片
     this.settingObj.deviceType = option.deviceType || ''; // Mobile 手机端打开
-    this.settingObj.isShowTip = option.isShowTip || true; //  客服悬浮按钮默认隐藏
+    this.settingObj.isShowTip = option.isShowTip; //  false隐藏 true 展示 客服悬浮按钮默认展示
     this.settingObj.windowStyle = option.windowStyle || ''; // pc 端打开默认最精简模式，center居中模式
     this.settingObj.kefuid = option.kefuid || 0; // 指定客服，默认随机
     this.settingObj.sendUserData = option.sendUserData || {}; // 用户信息，默认游客
@@ -102,7 +102,6 @@ function initCustomerServer(option) {
     this.setMatchMedia = () => {
         if(!this.settingObj.deviceType){
             const matchMedia = window.matchMedia;
-            console.log(matchMedia('(max-width: 992px)').matches);
             // 自动判断启动端 pc 或是 移动
             if(matchMedia('(max-width: 600px)').matches) {
                 this.settingObj.deviceType = 'Mobile';
@@ -112,7 +111,7 @@ function initCustomerServer(option) {
                 this.settingObj.deviceType = 'pc';
             };
         }
-
+        // console.log(this.settingObj.deviceType);
         // 获取客服客户相关参数
         let params = {
             token: this.settingObj.token,
@@ -221,7 +220,7 @@ function initCustomerServer(option) {
         this.connentServerDom = document.querySelector(`#${this.settingObj.domId}`);
 
         // 判断联系客服按钮是否默认展示
-        if(this.settingObj.isShowTip !== true) {
+        if(this.settingObj.isShowTip === false) {
             this.connentServerDom.style.display = 'none';
         }
         // 获取 iframe 弹框dom对象，便于后期数据交互
