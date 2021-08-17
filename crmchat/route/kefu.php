@@ -52,6 +52,7 @@ Route::group('api', function () {
                 Route::put('userInfo', 'User/updateKefu')->name('updateKefu');//修改当前客服信息
                 Route::put('updateUser/:userId', 'User/updateUser')->name('updateUser');//修改用户信息
                 Route::put('client', 'User/updateService')->name('updateService');//修改当前客服client_id
+                Route::post('feedback', 'User/saveFeedback')->name('saveFeedback');//修改客服反馈
 
             })->middleware(KefuAuthTokenMiddleware::class);
 
@@ -84,7 +85,7 @@ Route::group('api', function () {
 
         Route::miss(function () {
             if (app()->request->isOptions()) {
-                $header                                = Config::get('cookie.header');
+                $header = Config::get('cookie.header');
                 $header['Access-Control-Allow-Origin'] = app()->request->header('origin');
                 return Response::create('ok')->code(200)->header($header);
             } else

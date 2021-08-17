@@ -14,6 +14,7 @@ namespace app\controller\kefu;
 
 use app\Request;
 use app\services\chat\ChatServiceDialogueRecordServices;
+use app\services\chat\ChatServiceFeedbackServices;
 use app\services\chat\ChatServiceRecordServices;
 use app\services\chat\ChatServiceServices;
 use app\services\chat\ChatUserServices;
@@ -22,6 +23,7 @@ use app\services\chat\user\ChatUserLabelAssistServices;
 use app\services\chat\user\ChatUserLabelCateServices;
 use app\services\chat\user\ChatUserLabelServices;
 use app\services\system\attachment\SystemAttachmentServices;
+use app\validate\chat\ChatServiceFeedbackValidate;
 use app\validate\chat\ChatServiceValidate;
 use crmeb\services\CacheService;
 use crmeb\services\UploadService;
@@ -54,7 +56,7 @@ class User extends AuthController
      */
     public function getKefuInfo()
     {
-        $kefuInfo             = $this->kefuInfo->toArray();
+        $kefuInfo = $this->kefuInfo->toArray();
         $kefuInfo['password'] = '******';
         return $this->success($kefuInfo);
     }
@@ -258,7 +260,7 @@ class User extends AuthController
         if (!$data['filename']) return $this->fail('参数有误');
         if (CacheService::has('start_uploads_' . $request->kefuId()) && CacheService::get('start_uploads_' . $request->kefuId()) >= 100) return $this->fail('非法操作');
         $upload = UploadService::init();
-        $info   = $upload->to('store/comment')->validate()->move($data['filename']);
+        $info = $upload->to('store/comment')->validate()->move($data['filename']);
         if ($info === false) {
             return $this->fail($upload->getError());
         }
@@ -305,7 +307,7 @@ class User extends AuthController
      */
     public function updateUser(ChatUserServices $services, $userId)
     {
-        $data   = $this->request->postMore([
+        $data = $this->request->postMore([
             ['nickname', ''],
             ['remark_nickname', ''],
             ['sex', ''],
@@ -327,5 +329,28 @@ class User extends AuthController
             $services->update($userId, $update);
         }
         return $this->success('修改成功');
+    }
+
+    /**
+     * 保存反馈信息
+     * @param Request $request
+     * @param ChatServiceFeedbackServices $services
+     * @return mixed
+     */
+    public function saveFeedback(Request $request, ChatServiceFeedbackServices $services)
+    {
+        $data = $request->postMore([
+            ['rela_name', ''],
+            ['phone', ''],
+            ['content', ''],
+        ]);
+
+        validate(ChatServiceFeedbackValidate::class)->check($data);
+
+        $data['content'] = htmlspecialchars($data['content']);
+        $data['add_time'] = time();
+        $data['uid'] = $this->kefuInfo['user_id'];
+        $services->save($data);
+        return $this->success('保存成功');
     }
 }
