@@ -50,9 +50,9 @@ class UniPush extends BaseJobs
             return true;
         }
         /** @var PushMessage $uniPush */
-        $uniPush              = app()->make(PushMessage::class);
-        $option               = new PushOptions();
-        $messageOption        = new PushMessageOptions();
+        $uniPush = app()->make(PushMessage::class);
+        $option = new PushOptions();
+        $messageOption = new PushMessageOptions();
         $messageOption->title = $userInfo['nickname'];
         switch ((int)($message['msn_type'] ?? 0)) {
             case ChatServiceDialogueRecordServices::MSN_TYPE_TXT:
@@ -74,32 +74,26 @@ class UniPush extends BaseJobs
                 $messageOption->body = '[图文]' . ($message['other']['store_name'] ?? '');
                 break;
         }
-        $url                         = '/pages/view/customerServer/index?to_user_id=' . $userInfo['user_id'];
-        $messageOption->clickType    = 'payload';
-        $messageOption->payload      = json_encode(['url' => $url, 'type' => 'url']);
+        $url = '/pages/view/customerServer/index?to_user_id=' . $userInfo['user_id'];
+        $messageOption->clickType = 'payload';
+        $messageOption->payload = json_encode(['url' => $url, 'type' => 'url']);
         $messageOption->channelLevel = 4;
         $option->setAudience($clientId);
-
-        $res    = $uniPush->userStatus($clientId)->all();
-        $status = $res['data'][$clientId]['status'] ?? 'offline';
-        if ($status == 'offline') {
-            $option->setPushMessage($messageOption);
-        } else {
-            $option->pushChannel = [
-                'transmission' => json_encode([
-                    'title' => $messageOption->title,
-                    'body'  => $messageOption->body,
-                    'url'   => $url
-                ])
-            ];
-        }
-        $ios              = new IosOptions();
-        $ios->body        = $messageOption->body;
-        $ios->title       = $messageOption->title;
-        $ios->payload     = $messageOption->payload;
-        $android          = new AndroidOptions();
-        $android->body    = $messageOption->body;
-        $android->title   = $messageOption->title;
+        $option->setPushMessage($messageOption);
+        $option->pushChannel = [
+            'transmission' => json_encode([
+                'title' => $messageOption->title,
+                'body' => $messageOption->body,
+                'url' => $url
+            ])
+        ];
+        $ios = new IosOptions();
+        $ios->body = $messageOption->body;
+        $ios->title = $messageOption->title;
+        $ios->payload = $messageOption->payload;
+        $android = new AndroidOptions();
+        $android->body = $messageOption->body;
+        $android->title = $messageOption->title;
         $android->payload = $android->title;
         $option->setPushChannel($android, $ios);
         $uniPush->push($option);

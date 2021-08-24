@@ -9,26 +9,26 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 
-namespace app\http\middleware;
+namespace app\services\chat;
 
 
-use app\Request;
-use crmeb\interfaces\MiddlewareInterface;
+use app\dao\chat\ChatComplainDao;
+use crmeb\basic\BaseServices;
 
 /**
- * Class InstallMiddleware
- * @package app\http\middleware
+ * Class ChatComplainServices
+ * @package app\services\chat
  */
-class InstallMiddleware implements MiddlewareInterface
+class ChatComplainServices extends BaseServices
 {
 
-    public function handle(Request $request, \Closure $next)
+    /**
+     * ChatComplainServices constructor.
+     * @param ChatComplainDao $dao
+     */
+    public function __construct(ChatComplainDao $dao)
     {
-        //检测是否已安装CRMEB系统
-        if (file_exists(root_path() . "public/install/") && !file_exists(root_path() . "public/install/install.lock")) {
-//            return redirect('/install/index');
-        }
-
-        return $next($request);
+        $this->dao = $dao;
     }
+
 }

@@ -13,6 +13,7 @@ namespace app\controller\kefu;
 
 
 use app\Request;
+use app\services\chat\ChatComplainServices;
 use app\services\chat\ChatServiceDialogueRecordServices;
 use app\services\chat\ChatServiceFeedbackServices;
 use app\services\chat\ChatServiceRecordServices;
@@ -22,6 +23,7 @@ use app\services\chat\user\ChatUserGroupServices;
 use app\services\chat\user\ChatUserLabelAssistServices;
 use app\services\chat\user\ChatUserLabelCateServices;
 use app\services\chat\user\ChatUserLabelServices;
+use app\services\other\CategoryServices;
 use app\services\system\attachment\SystemAttachmentServices;
 use app\validate\chat\ChatServiceFeedbackValidate;
 use app\validate\chat\ChatServiceValidate;
@@ -352,5 +354,58 @@ class User extends AuthController
         $data['uid'] = $this->kefuInfo['user_id'];
         $services->save($data);
         return $this->success('保存成功');
+    }
+
+    /**
+     *
+     * @param ChatUserServices $services
+     * @param ChatServiceDialogueRecordServices $dialogueRecordServices
+     * @param $userId
+     * @return mixed
+     */
+    public function status(ChatUserServices $services, ChatServiceDialogueRecordServices $dialogueRecordServices, $userId)
+    {
+        if (!$userId) {
+            return $this->fail('缺少用户id');
+        }
+
+        $this->services->transaction(function () use ($userId, $dialogueRecordServices, $services) {
+            $this->services->delete(['to_user_id' => $userId]);
+            $dialogueRecordServices->delete(['to_user_id' => $userId]);
+            $services->delete($userId);
+        });
+
+        return $this->success('拉黑成功');
+    }
+
+    /**
+     *
+     * @param CategoryServices $services
+     * @return mixed
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function getComplainList(CategoryServices $services)
+    {
+        return $this->success($services->getComplainList());
+    }
+
+    /**
+     * @param ChatComplainServices $services
+     * @return mixed
+     */
+    public function complain(ChatComplainServices $services)
+    {
+        $data = $this->request->postMore([
+            ['content', ''],
+            ['user_id', ''],
+            ['cate_id', []],
+        ]);
+
+        $data['cate_id'] = implode('/', $data['cate_id']);
+        $services->save($data);
+
+        return $this->success('投诉成功');
     }
 }

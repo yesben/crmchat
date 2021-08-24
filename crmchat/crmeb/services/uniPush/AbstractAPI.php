@@ -57,7 +57,7 @@ class AbstractAPI
      */
     public function __construct(HttpService $service)
     {
-        $this->http  = $service;
+        $this->http = $service;
         $this->cache = Cache::store();
     }
 
@@ -102,7 +102,7 @@ class AbstractAPI
     protected function url(string $path = '')
     {
         $baseUrl = $this->resolvBaseUrl();
-        $base    = strstr($path, 'http') === false;
+        $base = strstr($path, 'http') === false;
         return ($base ? $baseUrl : '') . ($path ? $base ? '/' . $path : $path : '');
     }
 
@@ -159,8 +159,8 @@ class AbstractAPI
      */
     protected function curl(string $url, array $data, array $header = [], string $method = null, bool $json = false)
     {
-        $header   = $json ? array_merge(['content-type:application/json'], $header) : $header;
-        $method   = $method ?: 'post';
+        $header = $json ? array_merge(['content-type:application/json'], $header) : $header;
+        $method = $method ?: 'post';
         $response = $this->http->request($this->url($url), $method, $json ? json_encode($data) : $data, $header, 15, true);
         $response = json_decode($response, true);
         if (JSON_ERROR_NONE !== json_last_error()) {
@@ -176,16 +176,16 @@ class AbstractAPI
      */
     protected function getToken()
     {
-        $name  = 'UNI_PUSH_TOKEN_' . $this->appId;
+        $name = 'UNI_PUSH_TOKEN_' . $this->appId;
         $token = $this->cache->get($name);
         if (!$token) {
             $msectime = $this->getMsectime();
             $response = $this->parseJSON('auth', [
-                'sign'      => $this->getSign($msectime),
+                'sign' => $this->getSign($msectime),
                 'timestamp' => $msectime,
-                'appkey'    => $this->appKey
+                'appkey' => $this->appKey
             ]);
-            $data     = $response->data;
+            $data = $response->data;
             if (!isset($data['token'])) {
                 throw new ApiException('获取token失败');
             }
@@ -203,11 +203,13 @@ class AbstractAPI
      */
     public function getAuthToken()
     {
-        $name  = 'UNI_PUSH_TOKEN';
+        $name = 'UNI_PUSH_TOKEN';
+        $nameAppId = 'UNI_PUSH_APPID';
         $token = $this->cache->get($name);
-        if (!$token) {
+        $appId = $this->cache->get($nameAppId);
+        if (!$token || !$appId) {
             $data = $this->curl('https://store.crmeb.net/api/open/token', [
-                'host'    => request()->host(),
+                'host' => request()->host(),
                 'version' => get_crmeb_version()
             ]);
             $data = $data->data;
@@ -216,9 +218,11 @@ class AbstractAPI
             }
             if ($data['token']) {
                 $this->cache->set($name, $data['token'], 3600);
+                $this->cache->set($nameAppId, $data['appId'], 3600);
                 $token = $data['token'];
             }
         }
+        $this->appId = $appId;
         return $token;
     }
 
@@ -255,7 +259,7 @@ class AbstractAPI
     public function http(string $url, array $data, string $method = 'post')
     {
 //        $token  = $this->getToken();//本地
-        $token  = $this->getAuthToken();//远程
+        $token = $this->getAuthToken();//远程
         $header = [
             'token:' . $token
         ];

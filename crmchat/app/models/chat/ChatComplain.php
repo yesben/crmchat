@@ -9,26 +9,26 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 
-namespace app\http\middleware;
+namespace app\models\chat;
 
 
-use app\Request;
-use crmeb\interfaces\MiddlewareInterface;
+use crmeb\basic\BaseModel;
 
 /**
- * Class InstallMiddleware
- * @package app\http\middleware
+ * Class ChatComplain
+ * @package app\models\chat
  */
-class InstallMiddleware implements MiddlewareInterface
+class ChatComplain extends BaseModel
 {
 
-    public function handle(Request $request, \Closure $next)
-    {
-        //检测是否已安装CRMEB系统
-        if (file_exists(root_path() . "public/install/") && !file_exists(root_path() . "public/install/install.lock")) {
-//            return redirect('/install/index');
-        }
+    /**
+     * @var string
+     */
+    protected $name = 'chat_complain';
 
-        return $next($request);
-    }
+    /**
+     * @var string
+     */
+    protected $key = 'id';
+
 }

@@ -53,6 +53,9 @@ Route::group('api', function () {
                 Route::put('updateUser/:userId', 'User/updateUser')->name('updateUser');//修改用户信息
                 Route::put('client', 'User/updateService')->name('updateService');//修改当前客服client_id
                 Route::post('feedback', 'User/saveFeedback')->name('saveFeedback');//修改客服反馈
+                Route::get('complain', 'User/getComplainList')->name('getComplainList');//获取客服投诉
+                Route::post('complain', 'User/complain')->name('complain');//保存客户投诉
+                Route::put('status/:userId', 'User/status')->name('status');//拉黑用户
 
             })->middleware(KefuAuthTokenMiddleware::class);
 
