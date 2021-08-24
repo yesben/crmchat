@@ -122,7 +122,8 @@ export default {
         sex: this.upperData.sex,
         avatar: this.upperData.avatar,
         openid: this.upperData.openid,
-        kefu_id: this.upperData.kefu_id || 0
+        kefu_id: this.upperData.kefu_id || 0,
+        type: this.upperData.deviceType == 'Mobile' ? '3' : '0'
       }
 
       userRecord(postData).then(res => {
@@ -191,7 +192,8 @@ export default {
                 nickname: this.chatServerData.nickname,
                 avatar: this.chatServerData.avatar,
                 phone: this.userMessage.phone ? this.userMessage.phone : this.chatServerData.phone,
-                openid: this.upperData.openid
+                openid: this.upperData.openid,
+                type: this.upperData.deviceType == 'Mobile' ? '3' : '0' // 0 = pc , 1 = 微信 ，2 = 小程序 ，3 = H5, 4 = APP 
               }
             })
 
