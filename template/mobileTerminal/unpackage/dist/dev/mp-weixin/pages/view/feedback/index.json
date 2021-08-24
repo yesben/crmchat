@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "客户反馈",
-  "usingComponents": {
-    "uni-popup": "/uni_modules/uni-popup/components/uni-popup/uni-popup",
-    "submit-response": "/pages/view/feedback/component/submitResponse"
-  }
-}

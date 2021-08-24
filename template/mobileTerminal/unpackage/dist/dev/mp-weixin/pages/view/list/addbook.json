@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "通讯录",
-  "usingComponents": {
-    "address-book": "/pages/view/list/addressBookNavigation/addressBookNavigation"
-  }
-}
