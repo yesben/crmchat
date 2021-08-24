@@ -32,7 +32,7 @@ class wsSocket {
         let wsUrl = ''
         let hostUrl = wss(Setting.wsSocketUrl);
 
-         hostUrl = hostUrl + '/ws' ;
+        hostUrl = hostUrl + '/ws';
 
         if(opt.key == 1) {
             wsUrl = hostUrl + '?type=admin' + '&token=' + util.cookies.get("token")
@@ -41,6 +41,7 @@ class wsSocket {
             wsUrl = hostUrl + `?type=kefu` + '&token=' + `${Cookies.get("kefu_token")}`;
         }
         if(opt.key == 3) {
+            console.log(opt.form);
             wsUrl = `${hostUrl}?type=user&form=${opt.form}&token=${opt.token}`;
         }
 
