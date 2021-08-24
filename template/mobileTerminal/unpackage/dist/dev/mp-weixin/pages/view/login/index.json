@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "登录页",
-  "usingComponents": {
-    "login-input": "/pages/view/login/component/loginInput"
-  }
-}

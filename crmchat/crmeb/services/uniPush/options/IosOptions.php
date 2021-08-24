@@ -27,6 +27,8 @@ class IosOptions extends OptionsBase
 
     public $body;
 
+    public $payload;
+
     /**
      * @return array
      */
@@ -39,10 +41,13 @@ class IosOptions extends OptionsBase
         }
 
         return [
-            'type' => 'notify',
-            'aps'  => [
-                'alert' => $data
-            ]
+            'type'       => 'notify',
+            'aps'        => [
+                'alert' => $data,
+                'sound' => 'sound'
+            ],
+            'payload'    => json_encode($this->payload),
+            'auto_badge' => '+1'
         ];
     }
 }

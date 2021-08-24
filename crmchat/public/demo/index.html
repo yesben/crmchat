@@ -23,10 +23,14 @@
     </div>
     <ul>
 
-        <li>网页内嵌</li>
-        <li><a href="kefu1.html" target="_blank">1、演示一内嵌最小化</a></li>
-        <li><a href="kefu2.html" target="_blank">2、演示二内嵌中间弹窗</a></li>
-        <li><a href="kefu3.html" target="_blank">3、演示三自定义模式</a></li>
+        <li>网页内嵌(每个演示需要重新刷新页面)
+            <a href="javascript:void(0)" onclick="window.location.reload();" style="padding: 7px 10px;">刷新</a>
+        </li>
+        <li><a href="javascript:void(0)" onclick="demo0()"  >0、Pc端对话框右下角展示</a></li>
+        <li><a href="javascript:void(0)" onclick="demo1()" >1、PC端内嵌中间弹窗</a></li>
+        <li><a href="javascript:void(0)" onclick="demo2()" >2、自适应展示(电脑端看不出来效果)</a></li>
+        <li><a href="javascript:void(0)" onclick="demo3()" >3、移动端展示</a></li>
+        <li><a href="kaifa.html" target="_blank">4、演示三自定义模式</a></li>
         <li>超链接</li>
         <li><a href="https://chat.crmeb.net/chat/index?noCanClose=1&token=e8bcc017f50e55c63b5352c4257c8904" target="_blank">4、Pc和手机超链接访问自动适应</a></li>
         <li><a href="https://chat.crmeb.net/chat/pc?noCanClose=1&token=e8bcc017f50e55c63b5352c4257c8904" target="_blank">6、Pc超链接访问</a></li>
@@ -38,19 +42,58 @@
 </body>
 <script src="https://chat.crmeb.net/customerServer.js"></script>
 <script>
-    var option = {
-        openUrl: 'https://chat.crmeb.net',
-        token: 'e8bcc017f50e55c63b5352c4257c8904',
-        isShowTip: true,
-    };
-    var canCustomerServer = new initCustomerServer(option);
-    canCustomerServer.init();
-    canCustomerServer.getCustomeServer();
+    function demo0() {
+        var option = {
+            openUrl: 'https://chat.crmeb.net',
+            token: 'e8bcc017f50e55c63b5352c4257c8904',
+            isShowTip: true,
+        };
+        var canCustomerServer = new initCustomerServer(option);
+        canCustomerServer.init();
+        canCustomerServer.getCustomeServer();
+    }
+    function demo1() {
+        var option = {
+            openUrl: 'https://chat.crmeb.net',
+            token: 'e8bcc017f50e55c63b5352c4257c8904',
+            isShowTip: true,
+            windowStyle: 'center',//默认空 右下角小弹窗， center 普通中间弹窗样式
+            deviceType:'pc',//打开端 pc
+
+        };
+        var canCustomerServer = new initCustomerServer(option);
+        canCustomerServer.init();
+        //自动弹开对话框
+//    canCustomerServer.getCustomeServer();
+    }
+    function demo2() {
+        var option = {
+            openUrl: 'https://chat.crmeb.net',
+            token: 'e8bcc017f50e55c63b5352c4257c8904',
+            isShowTip: true,
+        };
+        var canCustomerServer = new initCustomerServer(option);
+        canCustomerServer.init();
+//    canCustomerServer.getCustomeServer();
+    }
+    function demo3() {
+        var option = {
+            openUrl: 'https://chat.crmeb.net',
+            token: 'e8bcc017f50e55c63b5352c4257c8904',
+            isShowTip: true,
+            deviceType:'Mobile',//打开端 Mobile
+        };
+        var canCustomerServer = new initCustomerServer(option);
+        canCustomerServer.init();
+//    canCustomerServer.getCustomeServer();
+    }
+
+
 </script>
 <style>
     .demo{
         width: 800px;
-        height: 500px;
+        height: 600px;
         background-color: #efefef;
         border:1px solid #eee;
         border-radius: 10px;

@@ -41,7 +41,6 @@ class ChatService extends BaseModel
      */
     protected $updateTime = false;
 
-
     protected function getAddTimeAttr($value)
     {
         if ($value) return date('Y-m-d H:i:s', $value);

@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "统计",
-  "usingComponents": {
-    "biaofun-datetime-picker": "/components/biaofun-datetime-picker/biaofun-datetime-picker",
-    "qiun-data-charts": "/uni_modules/qiun-data-charts/components/qiun-data-charts/qiun-data-charts"
-  }
-}
