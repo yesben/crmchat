@@ -90,7 +90,7 @@ export default {
       let option = {
 
         openUrl: this.siteUrl,
-        // type: 'pc', // Mobile
+        deviceType: '', //pc, Mobile
         // domId: 'customerServerTip',
         insertDomNode: '.getCode_container',
         token: this.tokeninfo.token_md5,

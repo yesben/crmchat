@@ -98,14 +98,18 @@ function initCustomerServer(option) {
   // 判断当前环境下的设备是pc端 || 移动端, 将客户信息挂载到iframe的链接上
   this.setMatchMedia = () => {
     const matchMedia = window.matchMedia;
-    // 自动判断启动端 pc 或是 移动
-    if(matchMedia('(max-width: 600px)').matches) {
-      this.settingObj.deviceType = 'Mobile';
-    } else if(matchMedia('(max-width: 992px)').matches) {
-      this.settingObj.deviceType = 'pc';
-    } else {
-      this.settingObj.deviceType = 'pc';
+    // 若未从外部传入自动判断启动端 pc 或是 移动
+    if(!option.deviceType) {
+      if(matchMedia('(max-width: 600px)').matches) {
+        this.settingObj.deviceType = 'Mobile';
+      } else if(matchMedia('(max-width: 992px)').matches) {
+        this.settingObj.deviceType = 'pc';
+      } else {
+        this.settingObj.deviceType = 'pc';
+      }
     };
+
+
 
     // 获取客服客户相关参数
     let params = {
