@@ -13,6 +13,7 @@ namespace app\controller\admin\user;
 
 
 use app\controller\admin\AuthController;
+use app\services\chat\ChatServiceDialogueRecordServices;
 use app\services\chat\ChatServiceRecordServices;
 use app\services\chat\ChatUserServices;
 use app\services\chat\user\ChatUserGroupServices;
@@ -92,7 +93,7 @@ class User extends AuthController
      * @param $id
      * @return mixed
      */
-    public function update(ChatServiceRecordServices $services, $id)
+    public function update(ChatServiceRecordServices $services, ChatServiceDialogueRecordServices $dialogueRecordServices, $id)
     {
         $data = $this->request->postMore([
             ['avatar', ''],
@@ -122,6 +123,7 @@ class User extends AuthController
         }
         if ($update) {
             $services->update(['to_user_id' => $id], $update);
+            $dialogueRecordServices->update(['user_id' => $id], $update);
         }
 
         return $this->success('修改成功');
