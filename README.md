@@ -25,7 +25,7 @@
 ![输入图片说明](readme/image/apperweima.png)
 
 ### 开源交流群
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0817/120702_bf4e3330_1491977.png "屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0826/094202_089987a2_1491977.png "屏幕截图.png")
 ### 访问地址
 
 ### 后台访问地址：
