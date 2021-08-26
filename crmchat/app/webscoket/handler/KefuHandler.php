@@ -57,7 +57,7 @@ class KefuHandler extends BaseHandler
 
         /** @var ChatUserServices $userService */
         $userService = app()->make(ChatUserServices::class);
-        $user        = $userService->get($kefuInfo['user_id'], ['id', 'nickname', 'appid']);
+        $user = $userService->get($kefuInfo['user_id'], ['id', 'nickname', 'appid']);
         if (!isset($user['id'])) {
             return $response->fail('您登录的客服用户不存在');
         }
@@ -90,7 +90,7 @@ class KefuHandler extends BaseHandler
     public function online(array $data = [], Response $response)
     {
         $online = $data['online'] ?? 0;
-        $user   = $this->room->get($this->fd);
+        $user = $this->room->get($this->fd);
         if ($user) {
             /** @var ChatServiceServices $service */
             $service = app()->make(ChatServiceServices::class);
@@ -99,7 +99,7 @@ class KefuHandler extends BaseHandler
                 $fd = $this->room->uidByFd($user['to_user_id']);
                 //给当前正在聊天的用户发送上下线消息
                 $this->manager->pushing($fd, $response->message('online', [
-                    'online'  => $online,
+                    'online' => $online,
                     'user_id' => $user['user_id']
                 ])->getData());
             }
@@ -114,7 +114,7 @@ class KefuHandler extends BaseHandler
      */
     public function transfer(array $data, Response $response)
     {
-        $data   = $data['data'] ?? [];
+        $data = $data['data'] ?? [];
         $userId = $data['recored']['user_id'] ?? 0;
         if ($userId && $this->room->uidByFd($userId)) {
             $data['recored']['online'] = 1;
@@ -131,17 +131,17 @@ class KefuHandler extends BaseHandler
      */
     public function logout(array $data = [], Response $response)
     {
-        $user   = $this->room->get($this->fd);
+        $user = $this->room->get($this->fd);
         $userId = $user['user_id'] ?? 0;
         if ($userId) {
             /** @var ChatServiceServices $service */
             $service = app()->make(ChatServiceServices::class);
-            $service->update(['user_id' => $user['user_id']], ['online' => 0, 'is_login' => 0]);
+            $service->update(['user_id' => $user['user_id']], ['online' => 0]);
             /** @var ChatServiceRecordServices $service */
             $service = app()->make(ChatServiceRecordServices::class);
             $service->updateRecord(['to_user_id' => $userId], ['online' => 0]);
             $this->manager->pushing($this->room->getKefuRoomAll(), $response->message('online', [
-                'online'  => 0,
+                'online' => 0,
                 'user_id' => $userId
             ]), $this->fd);
         }

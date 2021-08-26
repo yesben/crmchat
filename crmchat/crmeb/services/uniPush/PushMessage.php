@@ -30,6 +30,8 @@ class PushMessage
     const USER_STATUS = 'user/status/';
     //绑定别名
     const USER_ALIAS = 'user/alias';
+    //设置角标
+    const USER_BADGE = 'user/badge/cid/';
 
     /**
      * @var AbstractAPI
@@ -116,12 +118,24 @@ class PushMessage
     }
 
     /**
+     * 设置角标
+     * @param $clientId
+     * @param array $data
+     * @return \crmeb\utils\Collection
+     * @throws \Exception
+     */
+    public function userBadge($clientId, $badge)
+    {
+        return $this->abstractAPI->parseJSON(self::USER_BADGE . implode(',', $clientId), ['badge' => $badge]);
+    }
+
+    /**
      * @return string
      */
     public function getNewRequestId()
     {
         list($msec, $sec) = explode(' ', microtime());
-        $msectime  = number_format((floatval($msec) + floatval($sec)) * 1000, 0, '', '');
+        $msectime = number_format((floatval($msec) + floatval($sec)) * 1000, 0, '', '');
         $requestId = 'uni' . $msectime . mt_rand(10000, max(intval($msec * 10000) + 10000, 98369));
         return $requestId;
     }

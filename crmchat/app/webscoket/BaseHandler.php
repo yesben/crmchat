@@ -64,9 +64,9 @@ abstract class BaseHandler
     public function handle($event)
     {
         [$method, $result, $manager, $room] = $event;
-        $this->manager  = $manager;
-        $this->room     = $room;
-        $this->fd       = array_shift($result);
+        $this->manager = $manager;
+        $this->room = $room;
+        $this->fd = array_shift($result);
         $this->formType = array_shift($result);
         if (method_exists($this, $method)) {
             return $this->{$method}(...$result);
@@ -91,13 +91,13 @@ abstract class BaseHandler
         if (!$user) {
             return $response->fail('聊天用户不存在');
         }
-        $appId      = $user['appid'];
+        $appId = $user['appid'];
         $to_user_id = $data['to_user_id'] ?? 0;
-        $msn_type   = $data['type'] ?? 0;
-        $msn        = $data['msn'] ?? '';
-        $formType   = $this->formType ?? null;
-        $userId     = $user['user_id'];
-        $other      = $data['other'] ?? [];
+        $msn_type = $data['type'] ?? 0;
+        $msn = $data['msn'] ?? '';
+        $formType = $this->formType ?? null;
+        $userId = $user['user_id'];
+        $other = $data['other'] ?? [];
         if (!$to_user_id) {
             return $response->message('err_tip', ['msg' => '用户不存在']);
         }
@@ -110,15 +110,15 @@ abstract class BaseHandler
         if (!in_array($msn_type, ChatServiceDialogueRecordServices::MSN_TYPE)) {
             return $response->message('err_tip', ['msg' => '格式错误']);
         }
-        $msn              = trim(strip_tags(str_replace(["\n", "\t", "\r", "&nbsp;"], '', htmlspecialchars_decode($msn))));
-        $data             = compact('to_user_id', 'msn_type', 'msn');
+        $msn = trim(strip_tags(str_replace(["\n", "\t", "\r", "&nbsp;"], '', htmlspecialchars_decode($msn))));
+        $data = compact('to_user_id', 'msn_type', 'msn');
         $data['add_time'] = time();
-        $data['appid']    = $appId;
-        $data['user_id']  = $userId;
+        $data['appid'] = $appId;
+        $data['user_id'] = $userId;
 
         $toUserFd = $this->manager->getUserIdByFds($to_user_id);
 
-        $toUser    = ['to_user_id' => -1];
+        $toUser = ['to_user_id' => -1];
         $fremaData = [];
         foreach ($toUserFd as $value) {
             if ($frem = $this->room->get($value)) {
@@ -131,28 +131,28 @@ abstract class BaseHandler
         //是否在线
         $userOnline = count($fremaData) ? 1 : 0;
         //是否和当前用户对话
-        $online       = $toUserFd && $toUser && $toUser['to_user_id'] == $userId;
+        $online = $toUserFd && $toUser && $toUser['to_user_id'] == $userId;
         $data['type'] = $online ? 1 : 0;
         if (in_array($msn_type, [5, 6])) {
             $data['other'] = json_encode($other);
         } else {
             $data['other'] = '';
         }
-        $data              = $logServices->save($data);
-        $data              = $data->toArray();
+        $data = $logServices->save($data);
+        $data = $data->toArray();
         $data['_add_time'] = $data['add_time'];
-        $data['add_time']  = strtotime($data['add_time']);
+        $data['add_time'] = strtotime($data['add_time']);
 
         /** @var ChatUserServices $userService */
-        $userService      = app()->make(ChatUserServices::class);
-        $_userInfo        = $userService->getUserInfo($data['user_id'], ['nickname', 'avatar', 'is_tourist']);
-        $isTourist        = $_userInfo['is_tourist'];
+        $userService = app()->make(ChatUserServices::class);
+        $_userInfo = $userService->getUserInfo($data['user_id'], ['nickname', 'avatar', 'is_tourist']);
+        $isTourist = $_userInfo['is_tourist'];
         $data['nickname'] = $_userInfo['nickname'] ?? '';
-        $data['avatar']   = $_userInfo['avatar'] ?? '';
+        $data['avatar'] = $_userInfo['avatar'] ?? '';
 
         //用户向客服发送消息，判断当前客服是否在登录中
         /** @var ChatServiceRecordServices $serviceRecored */
-        $serviceRecored  = app()->make(ChatServiceRecordServices::class);
+        $serviceRecored = app()->make(ChatServiceRecordServices::class);
         $unMessagesCount = $logServices->getMessageNum(['user_id' => $userId, 'to_user_id' => $to_user_id, 'type' => 0]);
         //记录当前用户和他人聊天记录
         $data['recored'] = $serviceRecored->saveRecord(
@@ -182,19 +182,19 @@ abstract class BaseHandler
             //用户在线，可是没有和当前用户进行聊天，给当前用户发送未读条数
             if ($toUserFd && $toUser['to_user_id'] != $userId && $fremaData['is_open']) {
                 $data['recored']['nickname'] = $_userInfo['nickname'];
-                $data['recored']['avatar']   = $_userInfo['avatar'];
+                $data['recored']['avatar'] = $_userInfo['avatar'];
 
                 $data['recored']['online'] = $userOnline;
-                $allUnMessagesCount        = $logServices->getMessageNum([
-                    'appid'      => $user['appid'],
+                $allUnMessagesCount = $logServices->getMessageNum([
+                    'appid' => $user['appid'],
                     'to_user_id' => $to_user_id,
-                    'type'       => 0
+                    'type' => 0
                 ]);
 
                 $this->manager->pushing($toUserFd, $response->message('mssage_num', [
                     'user_id' => $userId,
-                    'num'     => $unMessagesCount,//某个用户的未读条数
-                    'allNum'  => $allUnMessagesCount,//总未读条数
+                    'num' => $unMessagesCount,//某个用户的未读条数
+                    'allNum' => $allUnMessagesCount,//总未读条数
                     'recored' => $data['recored']
                 ])->getData());
             } else if ($clientId) {
@@ -202,9 +202,9 @@ abstract class BaseHandler
                     ['nickname' => $data['nickname'], 'user_id' => $userId],
                     $clientId,
                     [
-                        'content'  => $msn,
+                        'content' => $msn,
                         'msn_type' => $data['msn_type'],
-                        'other'    => is_string($data['other']) ?
+                        'other' => is_string($data['other']) ?
                             json_decode($data['other'], true) :
                             $data['other'],
                     ]
@@ -224,7 +224,7 @@ abstract class BaseHandler
     public function to_chat(array $data = [], Response $response)
     {
         $toUserId = $data['id'] ?? 0;
-        $res      = $this->room->get($this->fd);
+        $res = $this->room->get($this->fd);
         if ($res) {
             $userId = $res['user_id'];
             $this->manager->updateTabelField($userId, $toUserId);
@@ -251,7 +251,7 @@ abstract class BaseHandler
     public function open(array $data = [], Response $response)
     {
         $open = $data['open'] ?? 0;
-        $res  = $this->room->get($this->fd);
+        $res = $this->room->get($this->fd);
         if ($res) {
             $userId = $res['user_id'];
             $this->manager->updateTabelField($userId, $open, 'is_open');
@@ -277,8 +277,9 @@ abstract class BaseHandler
      */
     public function close(array $data = [], Response $response)
     {
-        $usreId   = $data['data']['user_id'] ?? 0;
+        $usreId = $data['data']['user_id'] ?? 0;
         $toUsreId = $data['data']['to_user_id'] ?? 0;
+        $appId = $data['data']['appid'] ?? '';
         if ($usreId) {
             /** @var ChatServiceRecordServices $service */
             $service = app()->make(ChatServiceRecordServices::class);
@@ -286,11 +287,12 @@ abstract class BaseHandler
 
             /** @var ChatServiceServices $service */
             $service = app()->make(ChatServiceServices::class);
-            $service->update(['user_id' => $usreId], ['online' => 0]);
-
+            if (!$service->value(['appid' => $appId, 'user_id' => $usreId], 'is_app')) {
+                $service->update(['user_id' => $usreId], ['online' => 0]);
+            }
 
             $this->manager->pushing($this->room->getKefuRoomAll(), $response->message('online', [
-                'online'  => 0,
+                'online' => 0,
                 'user_id' => $usreId
             ]), $this->fd);
 

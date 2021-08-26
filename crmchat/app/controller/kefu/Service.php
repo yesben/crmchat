@@ -99,7 +99,7 @@ class Service extends AuthController
         }
         $data['add_time'] = time();
         $data['owner_id'] = $this->kefuId;
-        $data['type']     = 1;
+        $data['type'] = 1;
 
         $services->save($data);
         return $this->success('添加成功');
@@ -196,7 +196,7 @@ class Service extends AuthController
             return $this->fail('添加的内容重复');
         }
         $data['add_time'] = time();
-        $data['kefu_id']  = $this->kefuId;
+        $data['kefu_id'] = $this->kefuId;
 
         $res = $services->save($data);
         if ($res) {
@@ -282,7 +282,7 @@ class Service extends AuthController
         if (!$userId) {
             return $this->fail('缺少参数');
         }
-        return $this->success($this->services->getChatList($this->kefuInfo['user_id'], $userId, (int)$upperId, $is_tourist));
+        return $this->success($this->services->getChatList($this->kefuInfo['user_id'], $userId, (int)$upperId, $this->kefuInfo['appid']));
     }
 
     /**
@@ -291,7 +291,7 @@ class Service extends AuthController
      */
     public function getServiceInfo()
     {
-        $this->kefuInfo['site_name']          = sys_config('site_name');
+        $this->kefuInfo['site_name'] = sys_config('site_name');
         $this->kefuInfo['config_export_open'] = sys_config('config_export_open');
         return $this->success($this->kefuInfo->toArray());
     }
