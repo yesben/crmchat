@@ -205,7 +205,7 @@ class Service extends AuthController
         }
         if ($update) {
             $services->update(['to_user_id' => $id], $update);
-            $dialogueRecordServices->update(['user_id' => $id, $update]);
+            $dialogueRecordServices->update(['user_id' => $id], $update);
         }
 
         return $this->success('修改成功!');
