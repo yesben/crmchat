@@ -93,7 +93,7 @@ class User extends AuthController
      * @param $id
      * @return mixed
      */
-    public function update(ChatServiceRecordServices $services, ChatServiceDialogueRecordServices $dialogueRecordServices, $id)
+    public function update(ChatServiceRecordServices $services, $id)
     {
         $data = $this->request->postMore([
             ['avatar', ''],
@@ -123,7 +123,6 @@ class User extends AuthController
         }
         if ($update) {
             $services->update(['to_user_id' => $id], $update);
-            $dialogueRecordServices->update(['user_id' => $id], $update);
         }
 
         return $this->success('修改成功');

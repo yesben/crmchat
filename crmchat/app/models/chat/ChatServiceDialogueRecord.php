@@ -59,7 +59,7 @@ class ChatServiceDialogueRecord extends BaseModel
     {
         return $this->hasOne(ChatService::class, 'uid', 'uid')->field(['uid', 'nickname', 'avatar'])->bind([
             'nickname' => 'nickname',
-            'avatar'   => 'avatar'
+            'avatar' => 'avatar'
         ]);
     }
 
@@ -70,6 +70,24 @@ class ChatServiceDialogueRecord extends BaseModel
     public function user()
     {
         return $this->hasOne(ChatUser::class, 'id', 'to_user_id')->field(['id', 'nickname', 'remark_nickname']);
+    }
+
+    /**
+     * @return \think\model\relation\HasOne
+     */
+    public function userThis()
+    {
+        return $this->hasOne(ChatUser::class, 'id', 'user_id')
+            ->field(['id', 'nickname', 'avatar']);
+    }
+
+    /**
+     * @return \think\model\relation\HasOne
+     */
+    public function userTo()
+    {
+        return $this->hasOne(ChatUser::class, 'id', 'to_user_id')
+            ->field(['id', 'nickname', 'avatar']);
     }
 
     /**

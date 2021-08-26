@@ -153,7 +153,7 @@ class Service extends AuthController
      * @param \think\Request $request
      * @return Response
      */
-    public function update(ChatServiceRecordServices $services, ChatServiceDialogueRecordServices $dialogueRecordServices, $id)
+    public function update(ChatServiceRecordServices $services, $id)
     {
         $data = $this->request->postMore([
             ['appid', ''],
@@ -205,7 +205,6 @@ class Service extends AuthController
         }
         if ($update) {
             $services->update(['to_user_id' => $id], $update);
-            $dialogueRecordServices->update(['user_id' => $id], $update);
         }
 
         return $this->success('修改成功!');
