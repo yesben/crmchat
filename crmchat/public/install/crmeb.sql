@@ -3,6 +3,16 @@
 
 -- --------------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS `eb_chat_complain` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(100) NOT NULL DEFAULT '' COMMENT '投诉内容',
+  `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '用户表ID',
+  `cate_id` int(10) NOT NULL DEFAULT '0' COMMENT '分类',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `cate_id` (`cate_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户投诉';
+
 --
 -- 表的结构 `eb_application`
 --

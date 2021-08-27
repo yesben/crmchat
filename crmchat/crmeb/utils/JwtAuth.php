@@ -57,7 +57,7 @@ class JwtAuth
             'exp' => $exp,
         ];
         $params['jti'] = compact('id', 'type');
-        $token         = JWT::encode($params, Env::get('app.app_key', $this->app_key));
+        $token         = JWT::encode($params, Env::get('app_key', $this->app_key));
 
         return compact('token', 'params');
     }
