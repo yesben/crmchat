@@ -26,7 +26,7 @@ class InstallMiddleware implements MiddlewareInterface
     {
         //检测是否已安装CRMEB系统
         if (file_exists(root_path() . "public/install/") && !file_exists(root_path() . "public/install/install.lock")) {
-//            return redirect('/install/index');
+            return redirect('/install/index');
         }
 
         return $next($request);
