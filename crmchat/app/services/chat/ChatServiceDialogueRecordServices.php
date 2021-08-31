@@ -144,8 +144,8 @@ class ChatServiceDialogueRecordServices extends BaseServices
                     $item['avatar'] = $item['userThis']['avatar'] ?? '';
                 }
                 if ($item['userTO']['id'] == $item['to_user_id']) {
-                    $item['nickname'] = $item['userThis']['nickname'] ?? '';
-                    $item['avatar'] = $item['userThis']['avatar'] ?? '';
+                    $item['nickname'] = $item['userTO']['nickname'] ?? '';
+                    $item['avatar'] = $item['userTO']['avatar'] ?? '';
                 }
             }
         }
