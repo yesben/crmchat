@@ -23,6 +23,7 @@ use app\services\chat\user\ChatUserGroupServices;
 use app\services\chat\user\ChatUserLabelAssistServices;
 use app\services\chat\user\ChatUserLabelCateServices;
 use app\services\chat\user\ChatUserLabelServices;
+use app\services\other\CacheServices;
 use app\services\other\CategoryServices;
 use app\services\system\attachment\SystemAttachmentServices;
 use app\validate\chat\ChatServiceFeedbackValidate;
@@ -408,5 +409,17 @@ class User extends AuthController
         $services->save($data);
 
         return $this->success('投诉成功');
+    }
+
+    /**
+     * 获取用户协议内容
+     * @return mixed
+     */
+    public function getUserAgreement()
+    {
+        /** @var CacheServices $cache */
+        $cache = app()->make(CacheServices::class);
+        $content = $cache->getDbCache('user_agreement', '');
+        return $this->success(compact('content'));
     }
 }

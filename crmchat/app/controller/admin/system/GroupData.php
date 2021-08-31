@@ -83,8 +83,8 @@ class GroupData extends AuthController
     public function save(SystemGroupServices $services)
     {
         $params = request()->post();
-        $gid    = (int)$params['gid'];
-        $group  = $services->getOne(['id' => $gid], 'id,config_name,fields');
+        $gid = (int)$params['gid'];
+        $group = $services->getOne(['id' => $gid], 'id,config_name,fields');
         if ($group && $group['config_name'] == 'order_details_images') {
             $groupDatas = $this->services->getColumn(['gid' => $gid], 'value', 'id');
             foreach ($groupDatas as $groupData) {
@@ -96,25 +96,25 @@ class GroupData extends AuthController
         }
 
         $fields = json_decode($group['fields'], true) ?? [];
-        $value  = [];
+        $value = [];
         foreach ($params as $key => $param) {
             foreach ($fields as $index => $field) {
                 if ($key == $field["title"]) {
                     if ($param == "")
                         return $this->fail($field["name"] . "不能为空！");
                     else {
-                        $value[$key]["type"]  = $field["type"];
+                        $value[$key]["type"] = $field["type"];
                         $value[$key]["value"] = $param;
                     }
                 }
             }
         }
         $data = [
-            "gid"      => $params['gid'],
+            "gid" => $params['gid'],
             "add_time" => time(),
-            "value"    => json_encode($value),
-            "sort"     => $params["sort"] ?: 0,
-            "status"   => $params["status"]
+            "value" => json_encode($value),
+            "sort" => $params["sort"] ?: 0,
+            "status" => $params["status"]
         ];
         $this->services->save($data);
         \crmeb\services\CacheService::clear();
@@ -157,23 +157,23 @@ class GroupData extends AuthController
     public function update(SystemGroupServices $services, $id)
     {
         $groupData = $this->services->get($id);
-        $fields    = $services->getValueFields((int)$groupData["gid"]);
-        $params    = request()->post();
+        $fields = $services->getValueFields((int)$groupData["gid"]);
+        $params = request()->post();
         foreach ($params as $key => $param) {
             foreach ($fields as $index => $field) {
                 if ($key == $field["title"]) {
                     if ($param == '')
                         return $this->fail($field["name"] . "不能为空！");
                     else {
-                        $value[$key]["type"]  = $field["type"];
+                        $value[$key]["type"] = $field["type"];
                         $value[$key]["value"] = $param;
                     }
                 }
             }
         }
         $data = [
-            "value"  => json_encode($value),
-            "sort"   => $params["sort"],
+            "value" => json_encode($value),
+            "sort" => $params["sort"],
             "status" => $params["status"]
         ];
         $this->services->update($id, $data);
@@ -218,7 +218,7 @@ class GroupData extends AuthController
     public function getKfAdv()
     {
         /** @var CacheServices $cache */
-        $cache   = app()->make(CacheServices::class);
+        $cache = app()->make(CacheServices::class);
         $content = $cache->getDbCache('kf_adv', '');
         return $this->success(compact('content'));
     }
@@ -243,7 +243,7 @@ class GroupData extends AuthController
     public function getUserAgreement()
     {
         /** @var CacheServices $cache */
-        $cache   = app()->make(CacheServices::class);
+        $cache = app()->make(CacheServices::class);
         $content = $cache->getDbCache('user_agreement', '');
         return $this->success(compact('content'));
     }

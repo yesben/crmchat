@@ -114,19 +114,19 @@ class PushMessage
      */
     public function userAlias(array $data)
     {
-        return $this->abstractAPI->parseJSON(self::USER_ALIAS, ['data_list' => $data]);
+        return $this->abstractAPI->parsePost(self::USER_ALIAS, ['data_list' => $data]);
     }
 
     /**
      * 设置角标
-     * @param $clientId
-     * @param array $data
+     * @param array $clientId
+     * @param string $badge
      * @return \crmeb\utils\Collection
      * @throws \Exception
      */
-    public function userBadge($clientId, $badge)
+    public function userBadge(array $clientId, string $badge)
     {
-        return $this->abstractAPI->parseJSON(self::USER_BADGE . implode(',', $clientId), ['badge' => $badge]);
+        return $this->abstractAPI->parsePost(self::USER_BADGE . implode(',', $clientId), ['badge' => $badge]);
     }
 
     /**

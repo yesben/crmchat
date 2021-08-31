@@ -405,9 +405,18 @@ export function setKfAdv(data) {
  * @description 数据配置
  * @param data
  */
-// export function groupAllApi() {
-//     return request({
-//         url: 'setting/group_all',
-//         method: 'get'
-//     })
-// }
+export function getUserAgreementApi() {
+    return request({
+        url: 'setting/get_user_agreement',
+        method: 'get'
+    })
+}
+
+
+export function saveUserAgreementApi(data) {
+    return request({
+        url: 'setting/set_user_agreement',
+        method: 'post',
+        data
+    })
+}

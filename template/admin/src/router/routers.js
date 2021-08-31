@@ -86,14 +86,6 @@ const frameIn = [
         component: () => import('@/components/iconFrom/index')
     },
     {
-        path: '/admin/store.StoreProduct/index.html',
-        name: `storeProduct`,
-        meta: {
-            title: '选择商品'
-        },
-        component: () => import('@/components/goodsList/index')
-    },
-    {
         path: '/admin/system.User/list.html',
         name: `changeUser`,
         meta: {

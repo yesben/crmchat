@@ -28,6 +28,7 @@ Route::group('api', function () {
             Route::get('key', 'Login/getLoginKey')->name('getLoginKey');//获取扫码登录key
             Route::get('scan/:key', 'Login/scanLogin')->name('scanLogin');//检测扫码情况
             Route::get('config', 'Login/getAppid')->name('getAppid');//获取配置
+            Route::get('agreement', 'User/getUserAgreement')->name('getUserAgreement');//用户协议
 
             Route::group(function () {
 
