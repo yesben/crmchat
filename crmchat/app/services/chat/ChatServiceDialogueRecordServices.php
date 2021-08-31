@@ -142,10 +142,15 @@ class ChatServiceDialogueRecordServices extends BaseServices
                 if ($item['userThis']['id'] == $item['user_id']) {
                     $item['nickname'] = $item['userThis']['nickname'] ?? '';
                     $item['avatar'] = $item['userThis']['avatar'] ?? '';
-                }
-                if ($item['userTO']['id'] == $item['to_user_id']) {
+                } else if ($item['userTO']['id'] == $item['user_id']) {
                     $item['nickname'] = $item['userTO']['nickname'] ?? '';
                     $item['avatar'] = $item['userTO']['avatar'] ?? '';
+                } else if ($item['userTO']['id'] == $item['to_user_id']) {
+                    $item['nickname'] = $item['userTO']['nickname'] ?? '';
+                    $item['avatar'] = $item['userTO']['avatar'] ?? '';
+                } else if ($item['userThis']['id'] == $item['to_user_id']) {
+                    $item['nickname'] = $item['userThis']['nickname'] ?? '';
+                    $item['avatar'] = $item['userThis']['avatar'] ?? '';
                 }
             }
         }

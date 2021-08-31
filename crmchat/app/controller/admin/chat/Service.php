@@ -204,7 +204,7 @@ class Service extends AuthController
             $update['nickname'] = $data['nickname'];
         }
         if ($update) {
-            $services->update($id, $update);
+            $services->update($customer['user_id'], $update);
         }
 
         return $this->success('修改成功!');

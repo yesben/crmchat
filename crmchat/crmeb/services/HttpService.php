@@ -83,7 +83,7 @@ class HttpService
         self::$status = null;
         self::$curlError = null;
         self::$headerStr = null;
-        dump(compact('url', 'method', 'data', 'header'));
+  
         $curl = curl_init($url);
         $method = strtoupper($method);
         //请求方式
