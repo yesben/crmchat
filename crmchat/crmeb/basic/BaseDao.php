@@ -11,6 +11,7 @@
 
 namespace crmeb\basic;
 
+use think\App;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
@@ -35,6 +36,11 @@ abstract class BaseDao
      */
     protected $joinAlis;
 
+    /**
+     * @var App
+     */
+    protected $app;
+
 
     /**
      * 获取当前模型
@@ -48,6 +54,24 @@ abstract class BaseDao
      */
     protected function setJoinModel(): string
     {
+    }
+
+    /**
+     * @param App $app
+     * @return $this
+     */
+    public function setApp(App $app)
+    {
+        $this->app = $app;
+        return $this;
+    }
+
+    /**
+     * @return App
+     */
+    protected function getApp()
+    {
+        return $this->app ?: app();
     }
 
     /**
@@ -126,7 +150,7 @@ abstract class BaseDao
      */
     protected function getModel()
     {
-        return app()->make($this->setModel());
+        return $this->getApp()->make($this->setModel());
     }
 
     /**
@@ -296,7 +320,7 @@ abstract class BaseDao
      */
     protected function withSearchSelect(array $withSearch, ?array $data = [])
     {
-        $with     = [];
+        $with = [];
         $respones = new \ReflectionClass($this->setModel());
         foreach ($withSearch as $fieldName) {
             $method = 'search' . Str::studly($fieldName) . 'Attr';

@@ -61,20 +61,24 @@ class SwooleWorkerStart implements ListenerInterface
     {
         if (0 == $this->server->worker_id) {
             $this->timer($event);
+            $this->configMysql($event);
         }
         if ($this->server->worker_id == ($this->config->get('swoole.server.options.worker_num')) && $this->config->get('swoole.websocket.enable', false)) {
             $this->ping();
         }
     }
 
+    /**
+     *
+     */
     protected function ping()
     {
         /**
          * @var $pingService Ping
          */
         $pingService = app()->make(Ping::class);
-        $server      = $this->server;
-        $timeout     = intval($this->config->get('swoole.websocket.ping_timeout', 60000) / 1000);
+        $server = $this->server;
+        $timeout = intval($this->config->get('swoole.websocket.ping_timeout', 60000) / 1000);
         Timer::tick(1500, function (int $timer_id) use (&$server, &$pingService, $timeout) {
             $nowTime = time();
             foreach ($server->connections as $fd) {
@@ -95,8 +99,8 @@ class SwooleWorkerStart implements ListenerInterface
     protected function timer(App $app)
     {
         //开启定时器
-        $last        = time();
-        $task        = [6 => $last, 10 => $last, 30 => $last, 60 => $last, 180 => $last, 300 => $last];
+        $last = time();
+        $task = [6 => $last, 10 => $last, 30 => $last, 60 => $last, 180 => $last, 300 => $last];
         $this->timer = Timer::tick($this->interval, function () use (&$task, $app) {
             try {
                 $now = time();
@@ -112,4 +116,13 @@ class SwooleWorkerStart implements ListenerInterface
             }
         });
     }
+
+    /**
+     * @param App $app
+     */
+    public function configMysql(App $app)
+    {
+        $app->db->query('SET sql_mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"');
+    }
+
 }

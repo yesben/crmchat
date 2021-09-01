@@ -17,6 +17,7 @@ use app\services\chat\user\ChatUserGroupServices;
 use app\services\chat\user\ChatUserLabelAssistServices;
 use Carbon\Carbon;
 use crmeb\basic\BaseServices;
+use think\App;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
 use think\exception\ValidateException;
@@ -47,9 +48,9 @@ class ChatUserServices extends BaseServices
      */
     public function getKefuSum(string $appid = '')
     {
-        $all          = $this->dao->count(['appid' => $appid]);
-        $toDayKefu    = $this->dao->count(['time' => 'today', 'appid' => $appid, 'is_tourist' => 0]);
-        $month        = $this->dao->count(['time' => 'month', 'appid' => $appid]);
+        $all = $this->dao->count(['appid' => $appid]);
+        $toDayKefu = $this->dao->count(['time' => 'today', 'appid' => $appid, 'is_tourist' => 0]);
+        $month = $this->dao->count(['time' => 'month', 'appid' => $appid]);
         $toDayTourist = $this->dao->count(['time' => 'today', 'appid' => $appid, 'is_tourist' => 1]);
         return compact('all', 'toDayKefu', 'month', 'toDayTourist');
     }
@@ -68,6 +69,12 @@ class ChatUserServices extends BaseServices
         return $this->dao->get($uid, $field, $with);
     }
 
+    public function setApp(App $app)
+    {
+        $this->dao->setApp($app);
+        return $this;
+    }
+
     /**
      * 获取客服用户
      * @param array $where
@@ -79,7 +86,7 @@ class ChatUserServices extends BaseServices
     public function getChatUserList(array $where)
     {
         [$page, $limit] = $this->getPageValue();
-        $list  = $this->dao->getUserModel($where)->with(['groupOne', 'label'])->page($page, $limit)->field(['*'])->select()->toArray();
+        $list = $this->dao->getUserModel($where)->with(['groupOne', 'label'])->page($page, $limit)->field(['*'])->select()->toArray();
         $count = $this->dao->getUserModel($where)->count();
         return compact('list', 'count');
     }
@@ -101,8 +108,8 @@ class ChatUserServices extends BaseServices
         }
         /** @var ChatUserGroupServices $groupService */
         $groupService = app()->make(ChatUserGroupServices::class);
-        $option       = $groupService->getColumn([], 'group_name as label,id as value');
-        $rule         = [
+        $option = $groupService->getColumn([], 'group_name as label,id as value');
+        $rule = [
             Form::frameImage('avatar', '用户头像', $this->url('admin/widget.images/index.html', ['fodder' => 'avatar', 'big' => 1]), $userInfo->getAttr('avatar'))->icon('ios-image')->width('950px')->height('420px'),
             Form::input('nickname', '用户昵称', $userInfo->getAttr('nickname')),
             Form::input('remark_nickname', '备注昵称', $userInfo->getAttr('remark_nickname')),
@@ -148,7 +155,7 @@ class ChatUserServices extends BaseServices
     {
         return [
             'tourist' => $this->dao->getKefuMobileStatisticsList($time, 1),
-            'list'    => $this->dao->getKefuMobileStatisticsList($time, 0),
+            'list' => $this->dao->getKefuMobileStatisticsList($time, 0),
         ];
     }
 
@@ -165,30 +172,30 @@ class ChatUserServices extends BaseServices
     public function getKefuStatistics(int $id, int $type, int $year, int $month)
     {
         if ($type) {
-            $date      = Carbon::create($year, $month);
+            $date = Carbon::create($year, $month);
             $startTime = $date->startOfMonth()->toDateTimeString();
-            $endTime   = $date->endOfMonth()->toDateTimeString();
+            $endTime = $date->endOfMonth()->toDateTimeString();
         } else {
-            $date      = Carbon::create($year);
+            $date = Carbon::create($year);
             $startTime = $date->startOfYear()->toDateTimeString();
-            $endTime   = $date->endOfYear()->toDateTimeString();
+            $endTime = $date->endOfYear()->toDateTimeString();
         }
 
 
         return [
-            'list'    => $this->dao->kefuStatistics([
-                'user_id'    => $id,
-                'type'       => $type,
+            'list' => $this->dao->kefuStatistics([
+                'user_id' => $id,
+                'type' => $type,
                 'is_tourist' => 0,
-                'startTime'  => $startTime,
-                'endTime'    => $endTime,
+                'startTime' => $startTime,
+                'endTime' => $endTime,
             ]),
             'tourist' => $this->dao->kefuStatistics([
-                'user_id'    => $id,
-                'type'       => $type,
+                'user_id' => $id,
+                'type' => $type,
                 'is_tourist' => 1,
-                'startTime'  => $startTime,
-                'endTime'    => $endTime,
+                'startTime' => $startTime,
+                'endTime' => $endTime,
             ])
         ];
     }

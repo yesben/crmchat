@@ -17,6 +17,7 @@ use app\services\chat\ChatServiceRecordServices;
 use app\services\chat\ChatServiceServices;
 use app\services\chat\ChatUserServices;
 use crmeb\utils\Arr;
+use Swoole\Timer;
 use think\facade\Log;
 
 /**
@@ -174,43 +175,56 @@ abstract class BaseHandler
         } else {
             /** @var ChatServiceServices $services */
             $services = app()->make(ChatServiceServices::class);
-            $clientId = $services->value(['user_id' => $to_user_id, 'appid' => $user['appid']], 'client_id');
-            if (!$clientId) {
+            $kefuInfo = $services->get(['user_id' => $to_user_id, 'appid' => $user['appid']], ['client_id', 'auto_reply']);
+            if (!$kefuInfo) {
                 $clientId = $this->room->getClient($to_user_id);
+                $auto_reply = false;
+            } else {
+                $clientId = $kefuInfo->client_id;
+                $auto_reply = !!$kefuInfo->auto_reply;
             }
-            $fremaData = $fremaData[0] ?? ['is_open' => 1];
-            //用户在线，可是没有和当前用户进行聊天，给当前用户发送未读条数
-            if ($toUserFd && $toUser['to_user_id'] != $userId && $fremaData['is_open']) {
-                $data['recored']['nickname'] = $_userInfo['nickname'];
-                $data['recored']['avatar'] = $_userInfo['avatar'];
+            //开启自动回复
+            if ($auto_reply) {
+                $app = app();
+                Timer::after(1000, function () use ($app, $services, $appId, $to_user_id, $other, $msn_type, $userId, $msn, $response) {
+                    $data = $services->autoReply($app, $appId, $to_user_id, $userId, $msn, $msn_type, $other);
+                    $toUserFd = $this->manager->getUserIdByFds($userId);
+                    return $this->manager->pushing($toUserFd, $response->message('reply', $data)->getData());
+                });
+            } else {
+                $fremaData = $fremaData[0] ?? ['is_open' => 1];
+                //用户在线，可是没有和当前用户进行聊天，给当前用户发送未读条数
+                if ($toUserFd && $toUser['to_user_id'] != $userId && $fremaData['is_open']) {
+                    $data['recored']['nickname'] = $_userInfo['nickname'];
+                    $data['recored']['avatar'] = $_userInfo['avatar'];
 
-                $data['recored']['online'] = $userOnline;
-                $allUnMessagesCount = $logServices->getMessageNum([
-                    'appid' => $user['appid'],
-                    'to_user_id' => $to_user_id,
-                    'type' => 0
-                ]);
+                    $data['recored']['online'] = $userOnline;
+                    $allUnMessagesCount = $logServices->getMessageNum([
+                        'appid' => $user['appid'],
+                        'to_user_id' => $to_user_id,
+                        'type' => 0
+                    ]);
 
-                $this->manager->pushing($toUserFd, $response->message('mssage_num', [
-                    'user_id' => $userId,
-                    'num' => $unMessagesCount,//某个用户的未读条数
-                    'allNum' => $allUnMessagesCount,//总未读条数
-                    'recored' => $data['recored']
-                ])->getData());
-            } else if ($clientId) {
-                UniPush::dispatch([
-                    ['nickname' => $data['nickname'], 'user_id' => $userId],
-                    $clientId,
-                    [
-                        'content' => $msn,
-                        'msn_type' => $data['msn_type'],
-                        'other' => is_string($data['other']) ?
-                            json_decode($data['other'], true) :
-                            $data['other'],
-                    ]
-                ]);
+                    $this->manager->pushing($toUserFd, $response->message('mssage_num', [
+                        'user_id' => $userId,
+                        'num' => $unMessagesCount,//某个用户的未读条数
+                        'allNum' => $allUnMessagesCount,//总未读条数
+                        'recored' => $data['recored']
+                    ])->getData());
+                } else if ($clientId) {
+                    UniPush::dispatch([
+                        ['nickname' => $data['nickname'], 'user_id' => $userId],
+                        $clientId,
+                        [
+                            'content' => $msn,
+                            'msn_type' => $data['msn_type'],
+                            'other' => is_string($data['other']) ?
+                                json_decode($data['other'], true) :
+                                $data['other'],
+                        ]
+                    ]);
+                }
             }
-
         }
         return $response->message('chat', $data);
     }

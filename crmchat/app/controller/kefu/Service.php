@@ -13,6 +13,7 @@ namespace app\controller\kefu;
 
 
 use app\Request;
+use app\services\chat\ChatAutoReplyServices;
 use app\services\chat\ChatServiceSpeechcraftServices;
 use app\services\kefu\KefuServices;
 use app\services\message\service\StoreServiceServices;
@@ -338,4 +339,58 @@ class Service extends AuthController
         CacheService::set($code, '0', 600);
         return app('json')->success('登录成功');
     }
+
+    /**
+     * @param ChatAutoReplyServices $services
+     * @return mixed
+     */
+    public function getAuthReply(ChatAutoReplyServices $services)
+    {
+        return $this->success($services->getAuthReply($this->kefuInfo['appid'], (int)$this->kefuInfo['user_id']));
+    }
+
+    /**
+     * 修改和添加
+     * @param Request $request
+     * @param ChatAutoReplyServices $services
+     * @param $id
+     * @return mixed
+     */
+    public function saveAuthReply(Request $request, ChatAutoReplyServices $services, $id)
+    {
+        $data = $request->postMore([
+            ['keyword', ''],
+            ['content', ''],
+            ['sort', 0]
+        ]);
+        if (!$data['keyword']) {
+            return $this->fail('缺少关键字');
+        }
+        if (!$data['content']) {
+            return $this->fail('缺少回复内容');
+        }
+
+        if ($id) {
+            $services->update(['id' => $id], $data);
+        } else {
+            $data['user_id'] = $this->kefuInfo['user_id'];
+            $data['appid'] = $this->kefuInfo['appid'];
+            $services->save($data);
+        }
+
+        return $this->success('保存自动回复成功');
+    }
+
+    /**
+     * 设置自动回复
+     * @param $value
+     * @return mixed
+     */
+    public function setAutoReply($value)
+    {
+        $this->services->update(['id' => $this->kefuId], ['auto_reply' => $value]);
+        return $this->success('设置成功');
+    }
+
+
 }

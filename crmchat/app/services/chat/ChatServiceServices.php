@@ -14,14 +14,17 @@ namespace app\services\chat;
 
 use app\dao\chat\ChatServiceDao;
 use app\services\ApplicationServices;
+use app\services\system\config\SystemConfigServices;
 use crmeb\basic\BaseServices;
 use crmeb\exceptions\AdminException;
+use crmeb\services\DisyllabicWords;
 use crmeb\services\FormBuilder;
 use FormBuilder\Exception\FormBuilderException;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
 use think\exception\ValidateException;
+use think\App;
 
 /**
  * Class ChatServiceServices
@@ -240,5 +243,84 @@ class ChatServiceServices extends BaseServices
         $serviceLogList = $logServices->getServiceChatList(['appid' => $appId, 'chat' => [$userId, $toUserId]], $limit, $idTo);
         $result['serviceList'] = array_reverse($logServices->tidyChat($serviceLogList));
         return $result;
+    }
+
+    /**
+     * 自动回复
+     * @param string $appId
+     * @param int $userId
+     * @param int $toUserId
+     * @param string $msg
+     * @param int $msntype
+     * @param array $other
+     * @return array|bool
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function autoReply(App $app, string $appId, int $userId, int $toUserId, string $msg, int $msntype, array $other)
+    {
+        $this->dao->setApp($app);
+
+        $data = [
+            'add_time' => time(),
+            'appid' => $appId,
+            'user_id' => $userId,
+            'to_user_id' => $toUserId,
+            'msn_type' => $msntype,
+            'type' => 1,
+        ];
+        if (in_array($msntype, [5, 6])) {
+            $data['other'] = json_encode($other);
+        } else {
+            $data['other'] = '';
+        }
+        $data['msn'] = '[自动回复]当前客服已开启自动回复,暂无您提出的内容做出的自动回复!';
+        /** @var SystemConfigServices $configService */
+        $configService = $app->make(SystemConfigServices::class);
+        $words = new DisyllabicWords(['appCode' => json_decode($configService->setApp($app)->getConfigValue('disyllabic_app_code'), true)]);
+        $keyword = $words->getWord($msg);
+        array_push($keyword, $msg);
+        if ($keyword) {
+            /** @var ChatAutoReplyServices $authReplyService */
+            $authReplyService = $app->make(ChatAutoReplyServices::class);
+            $reply = $authReplyService->setApp($app)->getReplyList(['keyword' => $keyword, 'appid' => $appId, 'user_id' => $userId]);
+            if ($reply) {
+                $data['msn'] = '[自动回复]' . $reply[0]['content'];
+            }
+        }
+        /** @var ChatServiceDialogueRecordServices $logServices */
+        $logServices = $app->make(ChatServiceDialogueRecordServices::class);
+        $data = $logServices->setApp($app)->save($data);
+        $data = $data->toArray();
+        $data['_add_time'] = $data['add_time'];
+        $data['add_time'] = strtotime($data['add_time']);
+
+        /** @var ChatUserServices $userService */
+        $userService = $app->make(ChatUserServices::class);
+        $_userInfo = $userService->setApp($app)->getUserInfo($data['user_id'], ['nickname', 'avatar', 'is_tourist']);
+        $isTourist = $_userInfo['is_tourist'];
+        $data['nickname'] = $_userInfo['nickname'] ?? '';
+        $data['avatar'] = $_userInfo['avatar'] ?? '';
+
+        //用户向客服发送消息，判断当前客服是否在登录中
+        /** @var ChatServiceRecordServices $serviceRecored */
+        $serviceRecored = $app->make(ChatServiceRecordServices::class);
+        $unMessagesCount = $logServices->setApp($app)->getMessageNum(['user_id' => $userId, 'to_user_id' => $toUserId, 'type' => 0]);
+        //记录当前用户和他人聊天记录
+        $data['recored'] = $serviceRecored->setApp($app)->saveRecord(
+            $appId,
+            $userId,
+            $toUserId,
+            $msg,
+            $formType ?? 0,
+            $msntype,
+            $unMessagesCount,
+            (int)$isTourist,
+            $data['nickname'],
+            $data['avatar'],
+            0
+        );
+        return $data;
     }
 }

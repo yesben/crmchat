@@ -60,8 +60,8 @@ export default {
       autoLogin: true,
       imgcode: '',
       formInline: {
-        username: '',
-        password: '',
+        username: 'demo',
+        password: 'demo',
         code: '',
         key: ''
       },

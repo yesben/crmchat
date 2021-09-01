@@ -3,6 +3,18 @@
 
 -- --------------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS `eb_chat_auto_reply` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `keyword` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT '关键词',
+  `content` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT '内容',
+  `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '所属用户',
+  `appid` varchar(64) COLLATE utf8_unicode_ci NOT NULL COMMENT '所属appid',
+  `sort` INT(10) NOT NULL DEFAULT '0' COMMENT '排序,越靠前,越是能被自会回复到',
+  `add_time` int(10) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='自动回复';
+
+
 CREATE TABLE IF NOT EXISTS `eb_chat_complain` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `content` varchar(100) NOT NULL DEFAULT '' COMMENT '投诉内容',
@@ -100,6 +112,7 @@ CREATE TABLE IF NOT EXISTS `eb_chat_service` (
   `customer` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否展示统计管理',
   `uniqid` varchar(35) NOT NULL DEFAULT '' COMMENT '扫码登录唯一值',
   `is_app` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为APP登陆',
+  `auto_reply` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '自动回复',
   `client_id` varchar(50) NOT NULL DEFAULT '' COMMENT 'client_id'
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='客服表';
 

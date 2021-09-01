@@ -14,6 +14,7 @@ namespace app\services\chat;
 
 use app\dao\chat\ChatServiceDialogueRecordDao;
 use crmeb\basic\BaseServices;
+use think\App;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
@@ -66,6 +67,15 @@ class ChatServiceDialogueRecordServices extends BaseServices
         $this->dao = $dao;
     }
 
+    /**
+     * @param App $app
+     * @return $this
+     */
+    public function setApp(App $app)
+    {
+        $this->dao->setApp($app);
+        return $this;
+    }
 
     /**
      * 获取聊天记录中的uid和to_uid
