@@ -78,6 +78,7 @@ class Service extends AuthController
             ['password', ''],
             ['true_password', ''],
             ['nickname', ''],
+            ['welcome_words', ''],
             ['status', 1],
         ]);
         if ($data['avatar'] == '') {
@@ -165,6 +166,7 @@ class Service extends AuthController
             ['notify', 1],
             ['customer', 1],
             ['password', ''],
+            ['welcome_words', ''],
             ['true_password', ''],
         ]);
         $customer = $this->services->get((int)$id);
