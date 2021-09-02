@@ -244,7 +244,7 @@ class ChatServiceServices extends BaseServices
         ];
         $serviceLogList = $logServices->getServiceChatList(['appid' => $appId, 'chat' => [$userId, $toUserId]], $limit, $idTo);
         $result['serviceList'] = array_reverse($logServices->tidyChat($serviceLogList));
-        WelcomeWords::dispatchSece(1, [$kefuId, $appId, $toUserId, $userId]);
+        WelcomeWords::dispatchSece(1, [$appId, $toUserId, $userId]);
         return $result;
     }
 
@@ -329,7 +329,6 @@ class ChatServiceServices extends BaseServices
 
     /**
      * 欢迎语
-     * @param int $kefuId
      * @param string $appId
      * @param int $userId
      * @param int $toUserId
@@ -338,7 +337,7 @@ class ChatServiceServices extends BaseServices
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function welcomeWords(int $kefuId, string $appId, int $userId, int $toUserId)
+    public function welcomeWords(string $appId, int $userId, int $toUserId)
     {
         $data = [
             'add_time' => time(),
@@ -348,7 +347,7 @@ class ChatServiceServices extends BaseServices
             'msn_type' => 1,
             'type' => 1,
         ];
-        $msg = $this->dao->value(['id' => $kefuId], 'welcome_words');
+        $msg = $this->dao->value(['user_id' => $userId, 'appid' => $appId], 'welcome_words');
         if (!$msg) {
             return false;
         }

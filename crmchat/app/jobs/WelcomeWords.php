@@ -35,7 +35,7 @@ class WelcomeWords extends BaseJobs
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function doJob($kefuId, $appid, $userId, $toUserId)
+    public function doJob($appid, $userId, $toUserId)
     {
         /** @var ChatServiceDialogueRecordServices $logServices */
         $logServices = app()->make(ChatServiceDialogueRecordServices::class);
@@ -45,7 +45,7 @@ class WelcomeWords extends BaseJobs
         }
         /** @var ChatServiceServices $service */
         $service = app()->make(ChatServiceServices::class);
-        $data = $service->welcomeWords((int)$kefuId, $appid, (int)$userId, (int)$toUserId);
+        $data = $service->welcomeWords($appid, (int)$userId, (int)$toUserId);
         if ($data) {
             SwooleTaskService::user()->to($toUserId)->data([
                 'type' => 'reply',
