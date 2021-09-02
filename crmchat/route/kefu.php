@@ -84,6 +84,7 @@ Route::group('api', function () {
                 Route::delete('speechcraft/:id', 'Service/deleteSpeechcraft')->name('deleteSpeechcraft');//删除话术
                 Route::get('auth_reply', 'Service/getAuthReply')->name('getAuthReply');//获取当前自动回复内容
                 Route::post('auth_reply/:id', 'Service/saveAuthReply')->name('saveAuthReply');//保存当前自动回复内容
+                Route::delete('auth_reply/:id', 'Service/deleteAuthReply')->name('deleteAuthReply');//删除当前自动回复内容
                 Route::put('auth_reply/:value', 'Service/setAutoReply')->name('setAutoReply');//设置是否自动回复
 
             })->middleware(KefuAuthTokenMiddleware::class);

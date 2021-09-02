@@ -19,6 +19,7 @@ use crmeb\basic\BaseServices;
  * Class ChatAutoReplyServices
  * @package app\services\chat
  * @method array getReplyList(array $where) 获取回复列表
+ * @method ChatAutoReplyDao setApp($app) 设置app
  */
 class ChatAutoReplyServices extends BaseServices
 {

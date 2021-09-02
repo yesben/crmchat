@@ -123,6 +123,9 @@ class Service extends AuthController
         if (!$data['name']) {
             return $this->fail('分类不能为空');
         }
+        if (mb_strlen($data['name']) > 10) {
+            return $this->fail('分类字数长度不能超过10个字');
+        }
 
         $cateInfo = $services->get($id);
         if (!$cateInfo) {
@@ -379,6 +382,26 @@ class Service extends AuthController
         }
 
         return $this->success('保存自动回复成功');
+    }
+
+    /**
+     * 删除自动回复
+     * @param ChatAutoReplyServices $services
+     * @param $id
+     * @return mixed
+     */
+    public function deleteAuthReply(ChatAutoReplyServices $services, $id)
+    {
+        if (!$id) {
+            return $this->fail('缺少参数');
+        }
+
+        if ($services->delete($id)) {
+            return $this->success('删除成功');
+        } else {
+            return $this->fail('删除失败');
+        }
+
     }
 
     /**

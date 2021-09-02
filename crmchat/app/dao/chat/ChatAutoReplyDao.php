@@ -69,6 +69,6 @@ class ChatAutoReplyDao extends BaseDao
             $query->where('appid', $where['appid']);
         })->when(isset($where['user_id']), function ($query) use ($where) {
             $query->where('user_id', $where['user_id']);
-        })->limit(5)->order('sort', 'desc')->select()->toArray();
+        })->limit(5)->order('sort desc,id desc')->select()->toArray();
     }
 }
