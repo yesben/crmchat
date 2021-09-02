@@ -47,10 +47,7 @@ class WelcomeWords extends BaseJobs
         $service = app()->make(ChatServiceServices::class);
         $data = $service->welcomeWords($appid, (int)$userId, (int)$toUserId);
         if ($data) {
-            SwooleTaskService::user()->to($toUserId)->data([
-                'type' => 'reply',
-                'data' => $data
-            ])->push();
+            SwooleTaskService::user()->type('reply')->to($toUserId)->data($data)->push();
         }
 
         return true;
