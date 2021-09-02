@@ -14,6 +14,7 @@ namespace app\services\chat;
 
 use app\dao\chat\ChatAutoReplyDao;
 use crmeb\basic\BaseServices;
+use crmeb\services\FormBuilder;
 
 /**
  * Class ChatAutoReplyServices
@@ -48,5 +49,30 @@ class ChatAutoReplyServices extends BaseServices
         return $this->dao->getReply(['appid' => $appId, 'user_id' => $userId], $page, $limit);
     }
 
+    /**
+     * 获取表单
+     * @param int $id
+     * @return array
+     * @throws \FormBuilder\Exception\FormBuilderException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getForm(int $id)
+    {
+        $data = [];
+        if ($id) {
+            $data = $this->dao->get($id);
+            if ($data) {
+                $data = $data->toArray();
+            }
+        }
+        $field = [
+            FormBuilder::input('keyword', '关键字', $data['keyword'] ?? '')->required()->placeholder('请输入关键字,多个关键字用逗号隔开'),
+            FormBuilder::textarea('content', '回复内容', $data['content'] ?? '')->required()->placeholder('请输入回复内容'),
+            FormBuilder::number('sort', '排序', $data['sort'] ?? 0)
+        ];
 
+        return create_form($id ? '修改自动回复' : '添加自动回复', $field, '/chat/reply/' . $id, 'post');
+    }
 }

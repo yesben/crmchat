@@ -78,6 +78,7 @@ class Service extends AuthController
             ['password', ''],
             ['true_password', ''],
             ['nickname', ''],
+            ['auto_reply', 0],
             ['welcome_words', ''],
             ['status', 1],
         ]);
@@ -166,6 +167,7 @@ class Service extends AuthController
             ['notify', 1],
             ['customer', 1],
             ['password', ''],
+            ['auto_reply', 0],
             ['welcome_words', ''],
             ['true_password', ''],
         ]);

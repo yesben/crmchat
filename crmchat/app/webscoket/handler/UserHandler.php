@@ -137,7 +137,7 @@ class UserHandler extends BaseHandler
             'online'  => 1
         ])->getData(), $this->fd);
 
-        return $response->success('ok');
+        return $response->success('user');
     }
 
 }
