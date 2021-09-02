@@ -20,12 +20,14 @@ use crmeb\basic\BaseServices;
 use crmeb\exceptions\AdminException;
 use crmeb\services\DisyllabicWords;
 use crmeb\services\FormBuilder;
+use crmeb\services\SwooleTaskService;
 use FormBuilder\Exception\FormBuilderException;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
 use think\exception\ValidateException;
 use think\App;
+use think\facade\Log;
 
 /**
  * Class ChatServiceServices
@@ -244,7 +246,11 @@ class ChatServiceServices extends BaseServices
         ];
         $serviceLogList = $logServices->getServiceChatList(['appid' => $appId, 'chat' => [$userId, $toUserId]], $limit, $idTo);
         $result['serviceList'] = array_reverse($logServices->tidyChat($serviceLogList));
-        WelcomeWords::dispatchSece(1, [$appId, $toUserId, $userId]);
+        try {
+            $this->welcomeWords($appId, $toUserId, $userId);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
         return $result;
     }
 
@@ -339,6 +345,13 @@ class ChatServiceServices extends BaseServices
      */
     public function welcomeWords(string $appId, int $userId, int $toUserId)
     {
+        /** @var ChatServiceDialogueRecordServices $logServices */
+        $logServices = app()->make(ChatServiceDialogueRecordServices::class);
+        $unMessagesCount = $logServices->count(['chat' => [$userId, $toUserId]]);
+        if ($unMessagesCount) {
+            return true;
+        }
+
         $data = [
             'add_time' => time(),
             'appid' => $appId,
@@ -385,6 +398,9 @@ class ChatServiceServices extends BaseServices
             $data['avatar'],
             0
         );
+        if ($data) {
+            SwooleTaskService::user()->type('reply')->to($toUserId)->data($data)->push();
+        }
         return $data;
     }
 }
