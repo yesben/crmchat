@@ -38,6 +38,8 @@
           <a @click="del(row,'删除客服',index)">删除</a>
           <Divider type="vertical" v-if="row.status" />
           <a @click="goChat(row)" v-if="row.status">进入工作台</a>
+          <Divider type="vertical" />
+          <a @click="auth(row)">自动回复</a>
         </template>
       </Table>
 
@@ -80,7 +82,7 @@
         </div>
       </div>
     </Modal>
-
+    <auto-reply ref="AutoReply" :userId="userId" :appId="appId"></auto-reply>
   </div>
 </template>
 
@@ -91,6 +93,7 @@ import {
   kefuListApi, kefucreateApi, kefuaddApi, kefuAddApi,
   kefusetStatusApi, kefuEditApi, kefuRecordApi, kefuChatlistApi, kefuLogin
 } from '@/api/setting'
+import AutoReply from "./compoents/AutoReply";
 export default {
   name: 'index',
   filters: {
@@ -101,6 +104,9 @@ export default {
       }
       return statusMap[status]
     }
+  },
+  components:{
+    AutoReply
   },
   computed: {
     ...mapState('media', [
@@ -118,6 +124,8 @@ export default {
   },
   data() {
     return {
+      userId:0,
+      appId:'',
       isChat: true,
       formValidate3: {
         page: 1,
@@ -297,6 +305,11 @@ export default {
     this.getList()
   },
   methods: {
+    auth(item){
+      this.userId = item.user_id
+      this.appId = item.appid
+      this.$refs.AutoReply.open()
+    },
     // 进入工作台
     goChat(item) {
       kefuLogin(item.id).then(res => {

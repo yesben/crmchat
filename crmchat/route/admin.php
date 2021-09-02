@@ -76,7 +76,7 @@ Route::group('api', function () {
             //保存自动回复
             Route::post('reply/:id', 'AutoReply/save')->option(['real_name' => '保存自动回复']);
             //删除自动回复
-            Route::delete('reply', 'AutoReply/delete')->option(['real_name' => '删除自动回复']);
+            Route::delete('reply/:id', 'AutoReply/delete')->option(['real_name' => '删除自动回复']);
             //客服登录
             Route::get('kefu/login/:id', 'Service/keufLogin')->option(['real_name' => '客服登录']);
             //添加客服表单

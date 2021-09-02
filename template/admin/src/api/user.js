@@ -10,6 +10,36 @@
 
 import request from '@/libs/request'
 
+
+export function getAuthReply(params) {
+    return request({
+        url:'chat/reply',
+        method:'get',
+        params
+    })
+}
+
+export function saveAuthReply(id,data) {
+    return request({
+        url:'chat/reply',
+        method:'post',
+        data
+    })
+}
+export function getAuthReplyForm(id,params) {
+    return request({
+        url:'chat/reply/'+id,
+        method:'get',
+        params
+    })
+}
+export function deleteAuthReply(id) {
+    return request({
+        url:'chat/reply/'+id,
+        method:'delete',
+    })
+}
+
 /**
  * @description 用户管理--列表
  * @param {Object} param data {Object} 传值参数
