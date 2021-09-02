@@ -371,8 +371,9 @@ class User extends AuthController
             return $this->fail('缺少用户id');
         }
 
-        $this->services->transaction(function () use ($userId, $dialogueRecordServices, $services) {
+        $this->services->transaction(function () use ($userId, , $dialogueRecordServices, $services) {
             $this->services->delete(['to_user_id' => $userId]);
+            $this->services->delete(['user_id' => $userId]);
             $dialogueRecordServices->delete(['to_user_id' => $userId]);
             $services->delete($userId);
         });
