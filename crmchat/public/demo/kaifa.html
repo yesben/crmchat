@@ -25,6 +25,7 @@
         deviceType:'Mobile',//打开端 Mobile
 //      windowStyle: 'center',//默认空 右下角小弹窗， center 普通中间弹窗样式
         domId: 'customerServerTip',//展示在页面右下角联系客服的dom的id，可根据id获取到dom后自行修改样式, 默认为customerServerTip
+
         //        insertDomNode: '.getCode_container', // SPA应用必填，html文件单独引入选填，表示插入客服弹窗的 dom节点，一般为当前界面的根节点，默认为body
         //设置客户信息
         //        sendUserData: {
@@ -56,6 +57,7 @@
     canCustomerServer.setStyleOfCustomerServer(canCustomerServer.connentServerDom, {
         display: 'block'
     });
+
 
     document.querySelector('.demo').addEventListener('click', () => {
 
