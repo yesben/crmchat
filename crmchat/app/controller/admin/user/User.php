@@ -13,10 +13,12 @@ namespace app\controller\admin\user;
 
 
 use app\controller\admin\AuthController;
+use app\services\chat\ChatServiceDialogueRecordServices;
 use app\services\chat\ChatServiceRecordServices;
 use app\services\chat\ChatUserServices;
 use app\services\chat\user\ChatUserGroupServices;
 use app\services\chat\user\ChatUserLabelCateServices;
+use app\services\chat\user\ChatUserLabelServices;
 
 /**
  * Class User
@@ -41,14 +43,38 @@ class User extends AuthController
     public function index()
     {
         $where = $this->request->getMore([
-            ['nickname', '', '', 'nickname_like'],
+            ['nickname', ''],
             ['group_id', ''],
+            ['label_id', ''],
             ['time', ''],
             ['sex', ''],
-            ['user_type', '']
+            ['user_type', ''],
+            ['field_key', '']
         ]);
 
         return $this->success($this->services->getChatUserList($where));
+    }
+
+    /**
+     * @param ChatUserLabelCateServices $services
+     * @return mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getLavelAll(ChatUserLabelCateServices $services)
+    {
+        $list = $services->getLabelAll(0);
+        foreach ($list as &$item) {
+            $item['options'] = $item['label'];
+            foreach ($item['options'] as &$value) {
+                $value['value'] = $value['id'];
+            }
+            $item['label'] = $item['name'];
+            $item['value'] = $item['id'];
+            unset($item['name'], $item['id']);
+        }
+        return $this->success($list);
     }
 
     /**
@@ -74,6 +100,8 @@ class User extends AuthController
             ['nickname', ''],
             ['group_id', 0],
             ['remarks', ''],
+            ['remark_nickname', ''],
+            ['phone', ''],
         ]);
         if (!$data['avatar']) {
             return $this->fail('用户头像必须填写');
@@ -82,12 +110,19 @@ class User extends AuthController
             return $this->fail('用户昵称必须填写');
         }
 
-        $avatar = $this->services->value(['id' => $id], 'avatar');
+        $userInfo = $this->services->get(['id' => $id], ['avatar', 'nickname']);
 
         $this->services->update($id, $data);
 
-        if ($data['avatar'] != $avatar) {
-            $services->update(['to_user_id' => $id], ['avatar' => $data['avatar']]);
+        $update = [];
+        if ($data['avatar'] != $userInfo->avatar) {
+            $update['avatar'] = $data['avatar'];
+        }
+        if ($data['nickname'] != $userInfo->nickname) {
+            $update['nickname'] = $data['nickname'];
+        }
+        if ($update) {
+            $services->update(['to_user_id' => $id], $update);
         }
 
         return $this->success('修改成功');

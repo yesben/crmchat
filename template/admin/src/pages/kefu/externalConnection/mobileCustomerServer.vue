@@ -6,7 +6,7 @@
         <img :src="chatServerData.to_user_avatar" alt="">
         <span>{{chatServerData.to_user_nickname}}</span>
       </div>
-      <div class="pc_customerServer_container_header_handle" @click="closeIframe">
+      <div class="pc_customerServer_container_header_handle" @click="closeIframe" v-if="upperData.noCanClose != '1'">
         <span class="iconfont">&#xe6c5;</span>
       </div>
     </div>
@@ -72,10 +72,6 @@
 
             </div>
 
-            <div class="crmchat_link" @click="tolink">
-              <span>CRMChat开源客服系统</span>
-            </div>
-
           </div>
           <!-- 聊天内容列表结束 -->
         </div>
@@ -87,14 +83,16 @@
 
     <div class="footer_customerServer_container">
       <div class="mobel_customerServer_container_footer">
-
+        <div class="crmchat_link" @click="tolink">
+          <span>CRMChat开源客服系统</span>
+        </div>
         <div class="mobel_customerServer_container_footer_uploag_image">
           <span class="iconfont">&#xe6ca;</span>
           <input type="file" class="file_input" @change="uploadFile">
         </div>
         <div class="mobel_customerServer_container_footer_input">
           <div class="mobel_customerServer_container_footer_input_con">
-            <textarea @focus="textareaInput" class="font" @input="textareaChange($event)" v-model='userMessage' placeholder="请输入内容"></textarea>
+            <textarea @keyup.enter="sendText" @focus="textareaInput" class="font" @input="textareaChange($event)" v-model='userMessage' placeholder="请输入内容"></textarea>
             <p class="font" v-html='pCont'></p>
           </div>
           <!-- <div class="mobel_customerServer_container_footer_input_send" @click="sendText">
@@ -214,7 +212,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     background: linear-gradient(270deg, #1890ff 0%, #3875ea 100%);
-    padding: 18px 14px;
+    padding: 7px 14px;
     font-size: 16px;
     color: #fff;
     &_title {
@@ -237,12 +235,14 @@ export default {
     flex: 1;
     overflow: hidden;
     .scroll_content {
-      width: 100%;
+      width: 98%;
       height: 100%;
       overflow-y: auto;
       padding-bottom: 20px;
       box-sizing: border-box;
       .chart_list {
+        position: relative;
+        z-index: 2;
         &_item {
           &_content {
             display: flex;
@@ -266,9 +266,9 @@ export default {
             max-width: 60%;
             word-wrap: break-word;
             background: #fff;
-            padding: 14px;
-            font-size: 14px;
-            border-radius: 4px;
+            padding: 9px 14px;
+            font-size: 15px;
+            border-radius: 6px;
           }
           &_img {
             max-width: 60%;
@@ -279,7 +279,7 @@ export default {
           }
           .chart_list_item_imgOrText {
             background: #fff;
-            padding: 10px;
+            padding: 4px 10px;
             border-radius: 8px;
             width: 226px;
             box-sizing: border-box;
@@ -314,8 +314,8 @@ export default {
             }
             .chart_list_item_text {
               text-align: right;
-              background: #3875ea;
-              color: #fff;
+              background: #cde0ff;
+              color: #000;
             }
             .chart_list_item_img {
               text-align: right;
@@ -362,10 +362,26 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-top: 1px solid #dddddd;
+    border-top: 1px solid #ececec;
     padding: 8px 15px;
     box-sizing: border-box;
     position: relative;
+    .crmchat_link {
+      text-align: center;
+      width: 98%;
+      transition: 0.3s;
+      z-index: 1;
+      cursor: pointer;
+      position: absolute;
+      bottom: 60px;
+      span {
+        color: #ccc;
+      }
+
+      span:hover {
+        color: #007aff;
+      }
+    }
     .iconfont {
       font-size: 24px;
     }
@@ -417,6 +433,7 @@ export default {
           border: none;
           width: 100%;
           height: 100%;
+          font-size: 15px;
         }
         p {
           width: 100%;
@@ -443,6 +460,7 @@ export default {
       border-radius: 4px;
       margin-left: 8px;
       color: #fff;
+      font-size: 14px;
     }
     .sendMessage-primary {
       background: #3875ea;
@@ -546,19 +564,5 @@ export default {
 /deep/ .happy-scroll-content {
   width: 100%;
   box-sizing: border-box;
-}
-.crmchat_link {
-  text-align: center;
-  width: 100%;
-  transition: 0.3s;
-  z-index: 99;
-  cursor: pointer;
-  span {
-    color: #ccc;
-  }
-
-  span:hover {
-    color: #007aff;
-  }
 }
 </style>

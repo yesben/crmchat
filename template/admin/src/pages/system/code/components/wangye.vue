@@ -79,7 +79,7 @@ export default {
   props: {
     tokeninfo: {},
     siteUrl: '',
-    cgetCopy: {}
+    //    cgetCopy: {}
   },
   mounted() {
 
@@ -90,12 +90,12 @@ export default {
       let option = {
 
         openUrl: this.siteUrl,
-        // type: 'pc', // Mobile
+        deviceType: '', //pc, Mobile
         // domId: 'customerServerTip',
         insertDomNode: '.getCode_container',
         token: this.tokeninfo.token_md5,
         isShowTip: true, // true 展示 false 不展示
-        windowStyle: '', // center 仅仅pc端有效，在页面中间弹出
+        windowStyle: 'center', // center 仅仅pc端有效，在页面中间弹出
         // sendUserData: {
         // uid: '',
         //   nickName: '',
@@ -123,7 +123,8 @@ export default {
       this.canCustomerServer.getCustomeServer(); // 点击调取客服弹框
     },
     getCopy(id) {
-      this.cgetCopy(id);
+      //      this.cgetCopy(id);
+      this.$emit('cgetCopy', id);
     },
   }
 }

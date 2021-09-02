@@ -13,6 +13,7 @@ namespace app\controller\kefu;
 
 
 use app\Request;
+use app\services\chat\ChatAutoReplyServices;
 use app\services\chat\ChatServiceSpeechcraftServices;
 use app\services\kefu\KefuServices;
 use app\services\message\service\StoreServiceServices;
@@ -99,7 +100,7 @@ class Service extends AuthController
         }
         $data['add_time'] = time();
         $data['owner_id'] = $this->kefuId;
-        $data['type']     = 1;
+        $data['type'] = 1;
 
         $services->save($data);
         return $this->success('添加成功');
@@ -121,6 +122,9 @@ class Service extends AuthController
 
         if (!$data['name']) {
             return $this->fail('分类不能为空');
+        }
+        if (mb_strlen($data['name']) > 10) {
+            return $this->fail('分类字数长度不能超过10个字');
         }
 
         $cateInfo = $services->get($id);
@@ -196,7 +200,7 @@ class Service extends AuthController
             return $this->fail('添加的内容重复');
         }
         $data['add_time'] = time();
-        $data['kefu_id']  = $this->kefuId;
+        $data['kefu_id'] = $this->kefuId;
 
         $res = $services->save($data);
         if ($res) {
@@ -282,7 +286,7 @@ class Service extends AuthController
         if (!$userId) {
             return $this->fail('缺少参数');
         }
-        return $this->success($this->services->getChatList($this->kefuInfo['user_id'], $userId, (int)$upperId, $is_tourist));
+        return $this->success($this->services->getChatList($this->kefuInfo['user_id'], $userId, (int)$upperId, $this->kefuInfo['appid']));
     }
 
     /**
@@ -291,7 +295,7 @@ class Service extends AuthController
      */
     public function getServiceInfo()
     {
-        $this->kefuInfo['site_name']          = sys_config('site_name');
+        $this->kefuInfo['site_name'] = sys_config('site_name');
         $this->kefuInfo['config_export_open'] = sys_config('config_export_open');
         return $this->success($this->kefuInfo->toArray());
     }
@@ -338,4 +342,78 @@ class Service extends AuthController
         CacheService::set($code, '0', 600);
         return app('json')->success('登录成功');
     }
+
+    /**
+     * @param ChatAutoReplyServices $services
+     * @return mixed
+     */
+    public function getAuthReply(ChatAutoReplyServices $services)
+    {
+        return $this->success($services->getAuthReply($this->kefuInfo['appid'], (int)$this->kefuInfo['user_id']));
+    }
+
+    /**
+     * 修改和添加
+     * @param Request $request
+     * @param ChatAutoReplyServices $services
+     * @param $id
+     * @return mixed
+     */
+    public function saveAuthReply(Request $request, ChatAutoReplyServices $services, $id)
+    {
+        $data = $request->postMore([
+            ['keyword', ''],
+            ['content', ''],
+            ['sort', 0]
+        ]);
+        if (!$data['keyword']) {
+            return $this->fail('缺少关键字');
+        }
+        if (!$data['content']) {
+            return $this->fail('缺少回复内容');
+        }
+
+        if ($id) {
+            $services->update(['id' => $id], $data);
+        } else {
+            $data['user_id'] = $this->kefuInfo['user_id'];
+            $data['appid'] = $this->kefuInfo['appid'];
+            $services->save($data);
+        }
+
+        return $this->success('保存自动回复成功');
+    }
+
+    /**
+     * 删除自动回复
+     * @param ChatAutoReplyServices $services
+     * @param $id
+     * @return mixed
+     */
+    public function deleteAuthReply(ChatAutoReplyServices $services, $id)
+    {
+        if (!$id) {
+            return $this->fail('缺少参数');
+        }
+
+        if ($services->delete($id)) {
+            return $this->success('删除成功');
+        } else {
+            return $this->fail('删除失败');
+        }
+
+    }
+
+    /**
+     * 设置自动回复
+     * @param $value
+     * @return mixed
+     */
+    public function setAutoReply($value)
+    {
+        $this->services->update(['id' => $this->kefuId], ['auto_reply' => $value]);
+        return $this->success('设置成功');
+    }
+
+
 }

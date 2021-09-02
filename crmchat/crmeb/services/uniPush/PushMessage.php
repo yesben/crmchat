@@ -25,7 +25,13 @@ class PushMessage
     //获取推送结果
     const REPORT_PUSH_TASK = 'report/push/task/';
     //获取24个小时在线用户数
-    const ONLINE_USER = '/report/online_user';
+    const ONLINE_USER = 'report/online_user';
+    //查询用户状态
+    const USER_STATUS = 'user/status/';
+    //绑定别名
+    const USER_ALIAS = 'user/alias';
+    //设置角标
+    const USER_BADGE = 'user/badge/cid/';
 
     /**
      * @var AbstractAPI
@@ -90,12 +96,46 @@ class PushMessage
     }
 
     /**
+     * 查询用户状态
+     * @param mixed ...$clientId
+     * @return \crmeb\utils\Collection
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function userStatus(...$clientId)
+    {
+        return $this->abstractAPI->parseGet(self::USER_STATUS . implode(',', $clientId));
+    }
+
+    /**
+     * 绑定别名
+     * @param array $data
+     * @return \crmeb\utils\Collection
+     * @throws \Exception
+     */
+    public function userAlias(array $data)
+    {
+        return $this->abstractAPI->parsePost(self::USER_ALIAS, ['data_list' => $data]);
+    }
+
+    /**
+     * 设置角标
+     * @param array $clientId
+     * @param string $badge
+     * @return \crmeb\utils\Collection
+     * @throws \Exception
+     */
+    public function userBadge(array $clientId, string $badge)
+    {
+        return $this->abstractAPI->parsePost(self::USER_BADGE . implode(',', $clientId), ['badge' => $badge]);
+    }
+
+    /**
      * @return string
      */
     public function getNewRequestId()
     {
         list($msec, $sec) = explode(' ', microtime());
-        $msectime  = number_format((floatval($msec) + floatval($sec)) * 1000, 0, '', '');
+        $msectime = number_format((floatval($msec) + floatval($sec)) * 1000, 0, '', '');
         $requestId = 'uni' . $msectime . mt_rand(10000, max(intval($msec * 10000) + 10000, 98369));
         return $requestId;
     }

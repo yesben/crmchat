@@ -14,14 +14,17 @@ namespace app\services\chat;
 
 use app\dao\chat\ChatServiceDao;
 use app\services\ApplicationServices;
+use app\services\system\config\SystemConfigServices;
 use crmeb\basic\BaseServices;
 use crmeb\exceptions\AdminException;
+use crmeb\services\DisyllabicWords;
 use crmeb\services\FormBuilder;
 use FormBuilder\Exception\FormBuilderException;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
 use think\exception\ValidateException;
+use think\App;
 
 /**
  * Class ChatServiceServices
@@ -43,7 +46,7 @@ class ChatServiceServices extends BaseServices
      */
     public function __construct(ChatServiceDao $dao, FormBuilder $builder)
     {
-        $this->dao     = $dao;
+        $this->dao = $dao;
         $this->builder = $builder;
     }
 
@@ -58,7 +61,7 @@ class ChatServiceServices extends BaseServices
     public function getServiceList(array $where)
     {
         [$page, $limit] = $this->getPageValue();
-        $list  = $this->dao->getServiceList($where, $page, $limit);
+        $list = $this->dao->getServiceList($where, $page, $limit);
         $count = $this->dao->count($where);
         return compact('list', 'count');
     }
@@ -76,7 +79,7 @@ class ChatServiceServices extends BaseServices
         } else {
             /** @var ApplicationServices $seervice */
             $seervice = app()->make(ApplicationServices::class);
-            $field[]  = $this->builder->select('appid', '请选择应用')->options($seervice->getOptions())->required();
+            $field[] = $this->builder->select('appid', '请选择应用')->options($seervice->getOptions())->required();
         }
         $field[] = $this->builder->frameImage('avatar', '客服头像', $this->url('admin/widget.images/index', ['fodder' => 'avatar'], true), $formData['avatar'] ?? '')->icon('ios-add')->width('950px')->height('420px');
         $field[] = $this->builder->input('nickname', '客服名称', $formData['nickname'] ?? '')->col(24)->required();
@@ -133,7 +136,7 @@ class ChatServiceServices extends BaseServices
         $serviceLog = app()->make(ChatServiceDialogueRecordServices::class);
         /** @var ChatUserServices $serviceUser */
         $serviceUser = app()->make(ChatUserServices::class);
-        $userIds     = $serviceLog->getChatUserIds($userId);
+        $userIds = $serviceLog->getChatUserIds($userId);
         if (!$userIds) {
             return [];
         }
@@ -170,15 +173,27 @@ class ChatServiceServices extends BaseServices
         $uid = $user['uid'] ?? 0;
         /** @var ChatUserServices $userServices */
         $userServices = app()->make(ChatUserServices::class);
-        $userInfo     = $userServices->get(['uid' => $uid, 'appid' => $appId]);
+        $userInfo = $userServices->get(['uid' => $uid, 'appid' => $appId]);
         if (!$uid || !$userInfo) {
             /** @var ApplicationServices $appService */
             $appService = app()->make(ApplicationServices::class);
-            $userInfo   = $appService->createUser($appId, $user);
-            $uid        = $userInfo['uid'];
-            $userId     = $userInfo['id'];
+            $userInfo = $appService->createUser($appId, $user);
+            $uid = $userInfo['uid'];
+            $userId = $userInfo['id'];
         } else {
             $userId = $userInfo->id;
+            $save = false;
+            if (isset($user['nickname']) && $user['nickname'] && $user['nickname'] != $userInfo->nickname) {
+                $save = true;
+                $userInfo->nickname = $user['nickname'];
+            }
+            if (isset($user['avatar']) && $user['avatar'] && $user['avatar'] != $userInfo->avatar) {
+                $save = true;
+                $userInfo->nickname = $user['avatar'];
+            }
+            if ($save) {
+                $userInfo->save();
+            }
         }
 
         $toUserId = $this->dao->count(['appid' => $appId, 'status' => 1, 'user_id' => $toUserId]) ? $toUserId : 0;
@@ -212,21 +227,100 @@ class ChatServiceServices extends BaseServices
         }
         $toUserInfo = $this->dao->get(['user_id' => $toUserId], ['nickname', 'avatar']);
         /** @var ChatServiceDialogueRecordServices $logServices */
-        $logServices           = app()->make(ChatServiceDialogueRecordServices::class);
-        $result                = [
-            'serviceList'      => [],
-            'to_user_id'       => $toUserId,
-            'is_tourist'       => $userInfo['is_tourist'],
-            'uid'              => $uid,
-            'user_id'          => $userId,
-            'site_name'        => sys_config('site_name'),
-            'nickname'         => $userInfo['nickname'],
-            'avatar'           => $userInfo['avatar'],
+        $logServices = app()->make(ChatServiceDialogueRecordServices::class);
+        $result = [
+            'serviceList' => [],
+            'to_user_id' => $toUserId,
+            'is_tourist' => $userInfo['is_tourist'],
+            'uid' => $uid,
+            'user_id' => $userId,
+            'site_name' => sys_config('site_name'),
+            'nickname' => $userInfo['nickname'],
+            'avatar' => $userInfo['avatar'],
             'to_user_nickname' => $toUserInfo['nickname'],
-            'to_user_avatar'   => $toUserInfo['avatar']
+            'to_user_avatar' => $toUserInfo['avatar']
         ];
-        $serviceLogList        = $logServices->getServiceChatList(['appid' => $appId, 'chat' => [$userId, $toUserId]], $limit, $idTo);
+        $serviceLogList = $logServices->getServiceChatList(['appid' => $appId, 'chat' => [$userId, $toUserId]], $limit, $idTo);
         $result['serviceList'] = array_reverse($logServices->tidyChat($serviceLogList));
         return $result;
+    }
+
+    /**
+     * 自动回复
+     * @param string $appId
+     * @param int $userId
+     * @param int $toUserId
+     * @param string $msg
+     * @param int $msntype
+     * @param array $other
+     * @return array|bool
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function autoReply(App $app, string $appId, int $userId, int $toUserId, string $msg, int $msntype, array $other)
+    {
+        $this->dao->setApp($app);
+
+        $data = [
+            'add_time' => time(),
+            'appid' => $appId,
+            'user_id' => $userId,
+            'to_user_id' => $toUserId,
+            'msn_type' => $msntype,
+            'type' => 1,
+        ];
+        if (in_array($msntype, [5, 6])) {
+            $data['other'] = json_encode($other);
+        } else {
+            $data['other'] = '';
+        }
+        $data['msn'] = '[自动回复]当前客服已开启自动回复,暂无您提出的内容做出的自动回复!';
+        /** @var SystemConfigServices $configService */
+        $configService = $app->make(SystemConfigServices::class);
+        $words = new DisyllabicWords(['appCode' => json_decode($configService->setApp($app)->getConfigValue('disyllabic_app_code'), true)]);
+        $keyword = $words->getWord($msg);
+        array_push($keyword, $msg);
+        if ($keyword) {
+            /** @var ChatAutoReplyServices $authReplyService */
+            $authReplyService = $app->make(ChatAutoReplyServices::class);
+            $reply = $authReplyService->setApp($app)->getReplyList(['keyword' => $keyword, 'appid' => $appId, 'user_id' => $userId]);
+            if ($reply) {
+                $data['msn'] = '[自动回复]' . $reply[0]['content'];
+            }
+        }
+        /** @var ChatServiceDialogueRecordServices $logServices */
+        $logServices = $app->make(ChatServiceDialogueRecordServices::class);
+        $data = $logServices->setApp($app)->save($data);
+        $data = $data->toArray();
+        $data['_add_time'] = $data['add_time'];
+        $data['add_time'] = strtotime($data['add_time']);
+
+        /** @var ChatUserServices $userService */
+        $userService = $app->make(ChatUserServices::class);
+        $_userInfo = $userService->setApp($app)->getUserInfo($data['user_id'], ['nickname', 'avatar', 'is_tourist']);
+        $isTourist = $_userInfo['is_tourist'];
+        $data['nickname'] = $_userInfo['nickname'] ?? '';
+        $data['avatar'] = $_userInfo['avatar'] ?? '';
+
+        //用户向客服发送消息，判断当前客服是否在登录中
+        /** @var ChatServiceRecordServices $serviceRecored */
+        $serviceRecored = $app->make(ChatServiceRecordServices::class);
+        $unMessagesCount = $logServices->setApp($app)->getMessageNum(['user_id' => $userId, 'to_user_id' => $toUserId, 'type' => 0]);
+        //记录当前用户和他人聊天记录
+        $data['recored'] = $serviceRecored->setApp($app)->saveRecord(
+            $appId,
+            $userId,
+            $toUserId,
+            $msg,
+            $formType ?? 0,
+            $msntype,
+            $unMessagesCount,
+            (int)$isTourist,
+            $data['nickname'],
+            $data['avatar'],
+            0
+        );
+        return $data;
     }
 }

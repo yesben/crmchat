@@ -13,6 +13,7 @@ namespace app\services\kefu;
 
 
 use app\dao\chat\ChatServiceDao;
+use app\jobs\AutoBadge;
 use app\jobs\ServiceTransfer;
 use app\services\chat\ChatServiceAuxiliaryServices;
 use app\services\chat\ChatServiceDialogueRecordServices;
@@ -52,10 +53,10 @@ class KefuServices extends BaseServices
     public function getServiceList(array $where, array $noId)
     {
         $where['status'] = 1;
-        $where['noId']   = $noId;
+        $where['noId'] = $noId;
         $where['online'] = 1;
         [$page, $limit] = $this->getPageValue();
-        $list  = $this->dao->getServiceList($where, $page, $limit);
+        $list = $this->dao->getServiceList($where, $page, $limit);
         $count = $this->dao->count($where);
         return compact('list', 'count');
     }
@@ -70,12 +71,12 @@ class KefuServices extends BaseServices
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function getChatList(int $userId, int $toUserId, int $upperId)
+    public function getChatList(int $userId, int $toUserId, int $upperId, string $appId = '')
     {
         /** @var ChatServiceDialogueRecordServices $service */
         $service = app()->make(ChatServiceDialogueRecordServices::class);
-        $service->update(['to_user_id' => $userId, 'user_id' => $toUserId], ['type' => 1]);
         [$page, $limit] = $this->getPageValue();
+        AutoBadge::dispatch([$userId, $toUserId, $appId]);
         return array_reverse($service->tidyChat($service->getServiceChatList(['chat' => [$userId, $toUserId]], $limit, $upperId)));
     }
 
@@ -94,19 +95,19 @@ class KefuServices extends BaseServices
         /** @var ChatServiceAuxiliaryServices $auxiliaryServices */
         $auxiliaryServices = app()->make(ChatServiceAuxiliaryServices::class);
         /** @var ChatServiceDialogueRecordServices $service */
-        $service     = app()->make(ChatServiceDialogueRecordServices::class);
-        $addTime     = $auxiliaryServices->value(['binding_id' => $kfuUserId, 'relation_id' => $userId], 'update_time');
-        $where       = ['chat' => [$kfuUserId, $userId], 'add_time' => $addTime];
+        $service = app()->make(ChatServiceDialogueRecordServices::class);
+        $addTime = $auxiliaryServices->value(['binding_id' => $kfuUserId, 'relation_id' => $userId], 'update_time');
+        $where = ['chat' => [$kfuUserId, $userId], 'add_time' => $addTime];
         $messageData = $service->getMessageOne($where);
         $messageData = $messageData ? $messageData->toArray() : [];
-        $count       = $service->getMessageCount($where);
-        $limit       = 100;
-        $pageNum     = $count ? ceil($count / $limit) : 0;
-        $record      = $this->transaction(function () use ($where, $limit, $pageNum, $messageData, $appid, $service, $kfuUserId, $userId, $kefuToUserId, $auxiliaryServices) {
+        $count = $service->getMessageCount($where);
+        $limit = 100;
+        $pageNum = $count ? ceil($count / $limit) : 0;
+        $record = $this->transaction(function () use ($where, $limit, $pageNum, $messageData, $appid, $service, $kfuUserId, $userId, $kefuToUserId, $auxiliaryServices) {
             /** @var ChatServiceRecordServices $serviceRecord */
             $serviceRecord = app()->make(ChatServiceRecordServices::class);
-            $info          = $serviceRecord->get(['user_id' => $kfuUserId, 'to_user_id' => $userId], ['type', 'message_type', 'is_tourist', 'avatar', 'nickname']);
-            $record        = $serviceRecord->saveRecord(
+            $info = $serviceRecord->get(['user_id' => $kfuUserId, 'to_user_id' => $userId], ['type', 'message_type', 'is_tourist', 'avatar', 'nickname']);
+            $record = $serviceRecord->saveRecord(
                 $appid,
                 $userId,
                 $kefuToUserId,
@@ -118,7 +119,7 @@ class KefuServices extends BaseServices
                 $info['nickname'] ?? "",
                 $info['avatar'] ?? ''
             );
-            $res           = $auxiliaryServices->saveAuxliary(['binding_id' => $kfuUserId, 'relation_id' => $userId]);
+            $res = $auxiliaryServices->saveAuxliary(['binding_id' => $kfuUserId, 'relation_id' => $userId]);
             if (!$res && !$record) {
                 throw new ValidateException('转接客服失败');
             }

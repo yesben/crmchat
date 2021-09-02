@@ -43,6 +43,11 @@ class PushOptions extends OptionsBase
     public $pushMessage = [];
 
     /**
+     * @var array
+     */
+    public $pushChannel = [];
+
+    /**
      * PushOptions constructor.
      * @param string $requestId
      * @param array $settings
@@ -79,6 +84,19 @@ class PushOptions extends OptionsBase
     public function setPushMessage(PushMessageOptions $options)
     {
         $this->pushMessage = $options->toArray();
+        return $this;
+    }
+
+    /**
+     * @param array $data
+     * @return $this
+     */
+    public function setPushChannel(AndroidOptions $androidOptions, IosOptions $iosOptions)
+    {
+        $this->pushChannel = [
+            'ios'     => $iosOptions->toArray(),
+            'android' => $androidOptions->toArray()
+        ];
         return $this;
     }
 

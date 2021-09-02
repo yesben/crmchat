@@ -46,8 +46,21 @@ class CategoryServices extends BaseServices
     public function getCateList(array $where = [], array $field = ['*'])
     {
         [$page, $limit] = $this->getPageValue();
-        $data  = $this->dao->getCateList($where, $page, $limit, $field);
+        $data = $this->dao->getCateList($where, $page, $limit, $field);
         $count = $this->dao->count($where);
         return compact('data', 'count');
+    }
+
+    /**
+     * 投诉
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function getComplainList()
+    {
+        $list = $this->dao->getCateList(['type' => 2], 0, 0);
+        return get_tree_children($list, 'children');
     }
 }

@@ -117,17 +117,23 @@ export default {
       let postData = {
         uid: this.upperData.uid || getLoc('uid') || 0,
         limit: 20,
-        nickName: this.upperData.nickName,
+        nickname: this.upperData.nickName,
         phone: this.upperData.phone,
         sex: this.upperData.sex,
         avatar: this.upperData.avatar,
         openid: this.upperData.openid,
-        kefu_id:this.upperData.kefu_id || 0
+        kefu_id: this.upperData.kefu_id || 0,
+        type: this.upperData.deviceType == 'Mobile' ? '3' : '0'
       }
 
       userRecord(postData).then(res => {
         if(res.status == 200) {
           this.chatServerData = res.data;
+          console.log(this.chatServerData);
+          this.$nextTick(() => {
+            this.happyScroll = !this.happyScroll;
+          })
+
           this.unReadMesage = 0;
           this.goPageBottom();
           let cookieData = {
@@ -142,15 +148,19 @@ export default {
             })
           };
           this.goPageBottom(); // 滑动到页面底部
-          document.title = res.data.nickname ? `正在和${res.data.nickname}对话中 - ${this.chatServerData.site_name}` : '正在和游客对话中 - ' + this.chatServerData.site_name;
+          document.title = res.data.to_user_nickname ? `正在和${res.data.to_user_nickname}对话中 - ${this.chatServerData.site_name}` : '正在和游客对话中 - ' + this.chatServerData.site_name;
           this.connentServer(); // 建立socket 链接
         };
+
         if(res.status == 400) {
-          this.$router.push({ name: 'customerOutLine' });
+          this.$router.push({
+            name: 'customerOutLine',
+            query: this.$route.query
+          });
         }
       }).catch(rej => {
         if(rej.status == 400) {
-          this.$router.push({ name: 'customerOutLine' });
+          this.$router.push({ name: 'customerOutLine', query: this.$route.query });
         }
       })
     },
@@ -177,14 +187,20 @@ export default {
             ws.send({
               type: 'user',
               data: {
-                to_user_id: this.chatServerData.to_user_id,
+                to_user_id: this.upperData.isShowTip ? 0 : this.chatServerData.to_user_id,
                 uid: this.chatServerData.uid,
                 nickname: this.chatServerData.nickname,
                 avatar: this.chatServerData.avatar,
                 phone: this.userMessage.phone ? this.userMessage.phone : this.chatServerData.phone,
-                openid: this.upperData.openid
+                openid: this.upperData.openid,
+                type: this.upperData.deviceType == 'Mobile' ? '3' : '0' // 0 = pc , 1 = 微信 ，2 = 小程序 ，3 = H5, 4 = APP 
               }
             })
+
+            // if(this.upperData.isShowTip) {
+            //   ws.send({ type: 'to_chat', data: { id: 0 } });
+            // };
+
           })
         })
 
@@ -372,6 +388,9 @@ export default {
         if(res.status == 200) {
           this.sendMsg(res.data.url, 3);
         }
+      }).catch(rej => {
+        console.log(rej);
+        this.$Message.error(rej.msg);
       })
     },
 

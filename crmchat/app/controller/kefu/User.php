@@ -13,7 +13,9 @@ namespace app\controller\kefu;
 
 
 use app\Request;
+use app\services\chat\ChatComplainServices;
 use app\services\chat\ChatServiceDialogueRecordServices;
+use app\services\chat\ChatServiceFeedbackServices;
 use app\services\chat\ChatServiceRecordServices;
 use app\services\chat\ChatServiceServices;
 use app\services\chat\ChatUserServices;
@@ -21,7 +23,10 @@ use app\services\chat\user\ChatUserGroupServices;
 use app\services\chat\user\ChatUserLabelAssistServices;
 use app\services\chat\user\ChatUserLabelCateServices;
 use app\services\chat\user\ChatUserLabelServices;
+use app\services\other\CacheServices;
+use app\services\other\CategoryServices;
 use app\services\system\attachment\SystemAttachmentServices;
+use app\validate\chat\ChatServiceFeedbackValidate;
 use app\validate\chat\ChatServiceValidate;
 use crmeb\services\CacheService;
 use crmeb\services\UploadService;
@@ -54,7 +59,7 @@ class User extends AuthController
      */
     public function getKefuInfo()
     {
-        $kefuInfo             = $this->kefuInfo->toArray();
+        $kefuInfo = $this->kefuInfo->toArray();
         $kefuInfo['password'] = '******';
         return $this->success($kefuInfo);
     }
@@ -237,10 +242,11 @@ class User extends AuthController
      * 退出登陆
      * @return mixed
      */
-    public function logout()
+    public function logout(ChatServiceServices $services)
     {
         $key = trim(ltrim($this->request->header(Config::get('cookie.token_name')), 'Bearer'));
         CacheService::redisHandler()->delete($key);
+        $services->update(['user_id' => $this->kefuInfo['user_id'], 'appid' => $this->kefuInfo['appid']], ['online' => 0]);
         return $this->success();
     }
 
@@ -258,7 +264,7 @@ class User extends AuthController
         if (!$data['filename']) return $this->fail('参数有误');
         if (CacheService::has('start_uploads_' . $request->kefuId()) && CacheService::get('start_uploads_' . $request->kefuId()) >= 100) return $this->fail('非法操作');
         $upload = UploadService::init();
-        $info   = $upload->to('store/comment')->validate()->move($data['filename']);
+        $info = $upload->to('store/comment')->validate()->move($data['filename']);
         if ($info === false) {
             return $this->fail($upload->getError());
         }
@@ -305,8 +311,9 @@ class User extends AuthController
      */
     public function updateUser(ChatUserServices $services, $userId)
     {
-        $data   = $this->request->postMore([
+        $data = $this->request->postMore([
             ['nickname', ''],
+            ['remark_nickname', ''],
             ['sex', ''],
             ['phone', ''],
             ['remarks', ''],
@@ -326,5 +333,93 @@ class User extends AuthController
             $services->update($userId, $update);
         }
         return $this->success('修改成功');
+    }
+
+    /**
+     * 保存反馈信息
+     * @param Request $request
+     * @param ChatServiceFeedbackServices $services
+     * @return mixed
+     */
+    public function saveFeedback(Request $request, ChatServiceFeedbackServices $services)
+    {
+        $data = $request->postMore([
+            ['rela_name', ''],
+            ['phone', ''],
+            ['content', ''],
+        ]);
+
+        validate(ChatServiceFeedbackValidate::class)->check($data);
+
+        $data['content'] = htmlspecialchars($data['content']);
+        $data['add_time'] = time();
+        $data['uid'] = $this->kefuInfo['user_id'];
+        $services->save($data);
+        return $this->success('保存成功');
+    }
+
+    /**
+     *
+     * @param ChatUserServices $services
+     * @param ChatServiceDialogueRecordServices $dialogueRecordServices
+     * @param $userId
+     * @return mixed
+     */
+    public function status(ChatUserServices $services, ChatServiceDialogueRecordServices $dialogueRecordServices, $userId)
+    {
+        if (!$userId) {
+            return $this->fail('缺少用户id');
+        }
+
+        $this->services->transaction(function () use ($userId, $dialogueRecordServices, $services) {
+            $this->services->delete(['to_user_id' => $userId]);
+            $dialogueRecordServices->delete(['to_user_id' => $userId]);
+            $services->delete($userId);
+        });
+
+        return $this->success('拉黑成功');
+    }
+
+    /**
+     *
+     * @param CategoryServices $services
+     * @return mixed
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function getComplainList(CategoryServices $services)
+    {
+        return $this->success($services->getComplainList());
+    }
+
+    /**
+     * @param ChatComplainServices $services
+     * @return mixed
+     */
+    public function complain(ChatComplainServices $services)
+    {
+        $data = $this->request->postMore([
+            ['content', ''],
+            ['user_id', ''],
+            ['cate_id', []],
+        ]);
+
+        $data['cate_id'] = implode('/', $data['cate_id']);
+        $services->save($data);
+
+        return $this->success('投诉成功');
+    }
+
+    /**
+     * 获取用户协议内容
+     * @return mixed
+     */
+    public function getUserAgreement()
+    {
+        /** @var CacheServices $cache */
+        $cache = app()->make(CacheServices::class);
+        $content = $cache->getDbCache('user_agreement', '');
+        return $this->success(compact('content'));
     }
 }

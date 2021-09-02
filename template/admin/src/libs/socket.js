@@ -32,8 +32,7 @@ class wsSocket {
         let wsUrl = ''
         let hostUrl = wss(Setting.wsSocketUrl);
 
-        sessionStorage.getItem("SERVER_TYPE") ? hostUrl = hostUrl + '/ws' : hostUrl;
-
+        hostUrl = hostUrl + '/ws';
 
         if(opt.key == 1) {
             wsUrl = hostUrl + '?type=admin' + '&token=' + util.cookies.get("token")
@@ -42,13 +41,14 @@ class wsSocket {
             wsUrl = hostUrl + `?type=kefu` + '&token=' + `${Cookies.get("kefu_token")}`;
         }
         if(opt.key == 3) {
+            console.log(opt.form);
             wsUrl = `${hostUrl}?type=user&form=${opt.form}&token=${opt.token}`;
         }
 
 
         // if (opt.token) {
         //     wsUrl += '&token=' + opt.token
-        // } else 
+        // } else
         if(opt.tourist_uid) {
             wsUrl += '&tourist_uid=' + opt.tourist_uid
         }

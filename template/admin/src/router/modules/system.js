@@ -24,17 +24,6 @@ export default {
   },
   component: BasicLayout,
   children: [
-
-
-    {
-      path: 'system_upgradeclient/index',
-      name: `${pre}systemUpgradeclient`,
-      meta: {
-        auth: ['system-system-upgradeclient'],
-        title: '在线升级'
-      },
-      component: () => import('@/pages/system/systemUpgradeclient/index')
-    },
     {
       path: 'code',
       name: `${pre}code`,

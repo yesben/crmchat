@@ -80,6 +80,7 @@
                   </Upload>
                 </div>
                 <div class="icon-item" @click.stop.stop="isMsg = true"><span class="iconfont iconliaotian"></span></div>
+                <div class="icon-item" @click.stop.stop="authMsg = true"><Icon size="22" color="#515a6e" type="ios-chatboxes-outline" /></div>
               </div>
               <div class="right-wrapper">
                 <div class="icon-item" @click.stop="isTransfer = !isTransfer">
@@ -117,6 +118,10 @@
       <Modal v-model="isMsg" :mask="true" class="none-radius isMsgbox" width="600" :footer-hide="true">
         <msg-window v-if="isMsg" @close="msgClose" @activeTxt="activeTxt"></msg-window>
       </Modal>
+      <!-- 自动回复 -->
+      <Modal v-model="authMsg" :mask="true" class="none-radius isMsgbox" width="600" :footer-hide="true">
+        <auth-reply v-if="authMsg" @close="msgClose" @activeTxt="activeTxt"></auth-reply>
+      </Modal>
       <!-- 商品弹窗 -->
       <!-- <div v-if="isProductBox">
         <div class="bg" @click.stop="isProductBox = false"></div>
@@ -145,6 +150,7 @@ import rightMenu from "./components/rightMenu";
 import emojiList from "@/utils/emoji";
 import { Socket } from '@/libs/socket';
 import msgWindow from "./components/msgWindow";
+import authReply from "./components/authReply";
 import transfer from './components/transfer'
 import { serviceList } from '@/api/kefu'
 // import goodsDetail from "./components/goods_detail";
@@ -177,11 +183,13 @@ export default {
     msgWindow,
     transfer,
     HappyScroll,
+    authReply
     // goodsDetail,
     // orderDetail
   },
   data() {
     return {
+      authMsg:false,
       chatListModel: false,
       isEmoji: false, // 是否显示表情弹框
       chatCon: '', // 输入框输入的聊天内容

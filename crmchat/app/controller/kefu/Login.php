@@ -48,14 +48,15 @@ class Login extends AuthController
      */
     public function login(Request $request)
     {
-        [$account, $password] = $request->postMore([
+        [$account, $password, $isApp] = $request->postMore([
             ['account', ''],
             ['password', ''],
+            ['is_app', 0],
         ], true);
 
         validate(LoginValidate::class)->check(['account' => $account, 'password' => $password]);
 
-        $token = $this->services->authLogin($account, $password);
+        $token = $this->services->authLogin($account, $password, (int)$isApp);
 
         return $this->success('登录成功', $token);
     }

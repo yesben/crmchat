@@ -50,7 +50,7 @@ class LoginServices extends BaseServices
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function authLogin(string $account, string $password = null)
+    public function authLogin(string $account, string $password = null, int $isApp = 0)
     {
         $kefuInfo = $this->dao->get(['account' => $account]);
         if (!$kefuInfo) {
@@ -62,14 +62,17 @@ class LoginServices extends BaseServices
         if (!$kefuInfo->status) {
             throw new ValidateException('您已被禁止登录');
         }
-        $token                 = $this->createToken($kefuInfo->id, 'kefu');
-        $kefuInfo->online      = 1;
+        $token = $this->createToken($kefuInfo->id, 'kefu');
+        $kefuInfo->online = 1;
         $kefuInfo->update_time = time();
-        $kefuInfo->ip          = request()->ip();
-        $kefuInfo->status      = 1;
+        $kefuInfo->ip = request()->ip();
+        $kefuInfo->status = 1;
+        if (!$kefuInfo->is_app) {
+            $kefuInfo->is_app = $isApp;
+        }
         $kefuInfo->save();
         return [
-            'token'    => $token['token'],
+            'token' => $token['token'],
             'exp_time' => $token['params']['exp'],
             'kefuInfo' => $kefuInfo->hidden(['password', 'ip', 'update_time', 'add_time', 'status', 'mer_id', 'customer', 'notify'])->toArray()
         ];
@@ -150,12 +153,12 @@ class LoginServices extends BaseServices
         } else {
             $keyValue = CacheService::get($key);
             if ($keyValue === '0') {
-                $status   = 1;//正在扫描中
+                $status = 1;//正在扫描中
                 $kefuInfo = $this->dao->get(['uniqid' => $key], ['account', 'uniqid']);
                 if ($kefuInfo) {
-                    $tokenInfo           = $this->authLogin($kefuInfo->account);
+                    $tokenInfo = $this->authLogin($kefuInfo->account);
                     $tokenInfo['status'] = 3;
-                    $kefuInfo->uniqid    = '';
+                    $kefuInfo->uniqid = '';
                     $kefuInfo->save();
                     CacheService::delete($key);
                     return $tokenInfo;

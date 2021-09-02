@@ -13,6 +13,8 @@ namespace app\jobs;
 
 
 use crmeb\basic\BaseJobs;
+use crmeb\services\uniPush\options\AndroidOptions;
+use crmeb\services\uniPush\options\IosOptions;
 use crmeb\services\uniPush\options\PushMessageOptions;
 use crmeb\services\uniPush\options\PushOptions;
 use crmeb\services\uniPush\PushMessage;
@@ -48,9 +50,9 @@ class UniPush extends BaseJobs
             return true;
         }
         /** @var PushMessage $uniPush */
-        $uniPush              = app()->make(PushMessage::class);
-        $option               = new PushOptions();
-        $messageOption        = new PushMessageOptions();
+        $uniPush = app()->make(PushMessage::class);
+        $option = new PushOptions();
+        $messageOption = new PushMessageOptions();
         $messageOption->title = $userInfo['nickname'];
         switch ((int)($message['msn_type'] ?? 0)) {
             case ChatServiceDialogueRecordServices::MSN_TYPE_TXT:
@@ -72,11 +74,28 @@ class UniPush extends BaseJobs
                 $messageOption->body = '[图文]' . ($message['other']['store_name'] ?? '');
                 break;
         }
-        $messageOption->clickType    = 'payload';
-        $messageOption->payload      = 'click_type';
+        $url = '/pages/view/customerServer/index?to_user_id=' . $userInfo['user_id'];
+        $messageOption->clickType = 'payload';
+        $messageOption->payload = json_encode(['url' => $url, 'type' => 'url']);
         $messageOption->channelLevel = 4;
         $option->setAudience($clientId);
         $option->setPushMessage($messageOption);
+        $option->pushChannel = [
+            'transmission' => json_encode([
+                'title' => $messageOption->title,
+                'body' => $messageOption->body,
+                'url' => $url
+            ])
+        ];
+        $ios = new IosOptions();
+        $ios->body = $messageOption->body;
+        $ios->title = $messageOption->title;
+        $ios->payload = $messageOption->payload;
+        $android = new AndroidOptions();
+        $android->body = $messageOption->body;
+        $android->title = $messageOption->title;
+        $android->payload = $android->title;
+        $option->setPushChannel($android, $ios);
         $uniPush->push($option);
         Log::error('unipush数据:' . json_encode($option->toArray()));
         return true;

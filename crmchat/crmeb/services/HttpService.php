@@ -78,12 +78,12 @@ class HttpService
      * @param int $timeout
      * @return bool|string
      */
-    public static function request($url, $method = 'get', $data = array(), $header = false, $timeout = 15)
+    public static function request($url, $method = 'get', $data = array(), $header = false, $timeout = 15, bool $code = false)
     {
         self::$status = null;
         self::$curlError = null;
         self::$headerStr = null;
-
+  
         $curl = curl_init($url);
         $method = strtoupper($method);
         //请求方式
@@ -113,6 +113,9 @@ class HttpService
         self::$status = $status;
         self::$headerStr = trim(substr($content, 0, $status['header_size']));
         $content = trim(substr($content, $status['header_size']));
+        if ($code) {
+            return $content;
+        }
         return (intval($status["http_code"]) === 200) ? $content : false;
     }
 

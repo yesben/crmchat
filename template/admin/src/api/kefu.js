@@ -10,6 +10,40 @@
 
 import request from '@/libs/request'
 
+export function getKefuInfo() {
+  return request({
+    url: '/service/info',
+    method: 'get',
+    kefu: true
+  });
+}
+
+export function getAuthReply(params) {
+  return request({
+    url: '/service/auth_reply',
+    method: 'get',
+    params,
+    kefu: true
+  });
+}
+
+export function saveAuthReply(id,data) {
+  return request({
+    url: '/service/auth_reply/'+id,
+    method: 'post',
+    data,
+    kefu: true
+  });
+}
+
+export function updateAuthReply(value) {
+  return request({
+    url: '/service/auth_reply/'+value,
+    method: 'put',
+    kefu: true
+  });
+}
+
 /*
  * 登录
  * */

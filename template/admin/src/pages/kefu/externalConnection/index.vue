@@ -18,9 +18,10 @@ export default {
   methods: {
     // 重定向方法，判断是否是移动端环境，跳转对应界面
     redirect() {
+      //      console.log('index');
       const token = this.$route.query.token;
 
-      console.log(this.$route.query);
+      //      console.log(this.$route.query);
 
       setLoc('mobile_token', token);
       if(this.$route.query.deviceType == "pc" || this.$route.query.deviceType == "Desktop") {
@@ -32,6 +33,8 @@ export default {
         this.$router.push({ name: 'customerServerMobile', query: this.$route.query })
         return;
       }
+
+
       if(this.isMobile) {
         this.$router.push({ name: 'customerServerMobile', query: this.$route.query })
       } else {

@@ -62,6 +62,7 @@ class Service extends AuthController
             ['sex', ''],
             ['avatar', ''],
             ['openid', ''],
+            ['type', ''],
         ]);
 
         return app('json')->successful($this->services->getRecord($this->appId, $user, $idTo, $limit, $toUserId, (int)$cookieUid, (int)$kefuUd));

@@ -60,8 +60,8 @@ export default {
       autoLogin: true,
       imgcode: '',
       formInline: {
-        username: '',
-        password: '',
+        username: 'demo',
+        password: 'demo',
         code: '',
         key: ''
       },
@@ -308,6 +308,7 @@ export default {
 .index_from {
   padding: 0 40px 32px 40px;
   height: 400px;
+  width: 380px;
   box-sizing: border-box;
 }
 

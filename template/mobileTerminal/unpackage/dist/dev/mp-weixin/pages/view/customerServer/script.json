@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "常用语",
-  "usingComponents": {
-    "scripts-libary": "/pages/view/customerServer/component/scriptLibary"
-  }
-}

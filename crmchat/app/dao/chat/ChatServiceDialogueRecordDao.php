@@ -79,13 +79,13 @@ class ChatServiceDialogueRecordDao extends BaseDao
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function getChatList(array $where, int $limit = 20, int $upperId = 0)
+    public function getChatList(array $where, int $limit = 20, int $upperId = 0, array $with = [])
     {
         return $this->search($where)->when($upperId, function ($query) use ($upperId, $limit) {
             $query->where('id', '<', $upperId)->limit($limit)->order('id DESC');
         })->when(!$upperId, function ($query) use ($limit) {
             $query->limit($limit)->order('id DESC');
-        })->select()->toArray();
+        })->with($with)->select()->toArray();
     }
 
     /**

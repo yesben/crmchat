@@ -24,16 +24,6 @@ export default {
   },
   component: BasicLayout,
   children: [
-
-    {
-      path: 'wechat/wechat_user/user/index',
-      name: `${pre}wechatUser`,
-      meta: {
-        auth: ['wechat-wechat-user-user'],
-        title: '微信用户'
-      },
-      component: () => import('@/pages/app/wechat/user/user')
-    },
     {
       path: 'wechat/wechat_user/user/tag',
       name: `${pre}tag`,
@@ -52,14 +42,5 @@ export default {
       },
       component: () => import('@/pages/app/wechat/user/tag')
     },
-    {
-      path: 'wechat/wechat_user/user/message',
-      name: `${pre}message`,
-      meta: {
-        auth: ['wechat-wechat-user-message'],
-        title: '用户行为记录'
-      },
-      component: () => import('@/pages/app/wechat/user/message')
-    }
   ]
 }

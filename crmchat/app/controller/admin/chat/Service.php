@@ -14,6 +14,7 @@ namespace app\controller\admin\chat;
 
 use app\controller\admin\AuthController;
 use app\services\chat\ChatServiceDialogueRecordServices;
+use app\services\chat\ChatServiceRecordServices;
 use app\services\chat\ChatServiceServices;
 use app\services\chat\ChatUserServices;
 use app\services\kefu\LoginServices;
@@ -113,15 +114,15 @@ class Service extends AuthController
                 $userInfo->save();
                 $res->user_id = $userInfo->id;
             } else {
-                $uid          = $services->max(['appid' => $data['appid']]) + 1;
-                $userInfo     = $services->save([
-                    'phone'     => $data['phone'],
-                    'nickname'  => $data['nickname'],
-                    'avatar'    => $data['avatar'],
+                $uid = $services->max(['appid' => $data['appid']]) + 1;
+                $userInfo = $services->save([
+                    'phone' => $data['phone'],
+                    'nickname' => $data['nickname'],
+                    'avatar' => $data['avatar'],
                     'is_delete' => 0,
-                    'type'      => 0,
-                    'uid'       => $uid,
-                    'appid'     => $data['appid'],
+                    'type' => 0,
+                    'uid' => $uid,
+                    'appid' => $data['appid'],
                 ]);
                 $res->user_id = $userInfo->id;
             }
@@ -152,9 +153,9 @@ class Service extends AuthController
      * @param \think\Request $request
      * @return Response
      */
-    public function update($id)
+    public function update(ChatUserServices $services, $id)
     {
-        $data     = $this->request->postMore([
+        $data = $this->request->postMore([
             ['appid', ''],
             ['avatar', ''],
             ['nickname', ''],
@@ -194,6 +195,18 @@ class Service extends AuthController
             unset($data['password']);
         }
         $this->services->update($id, $data);
+
+        $update = [];
+        if ($data['avatar'] != $customer->avatar) {
+            $update['avatar'] = $data['avatar'];
+        }
+        if ($data['nickname'] != $customer->nickname) {
+            $update['nickname'] = $data['nickname'];
+        }
+        if ($update) {
+            $services->update($customer['user_id'], $update);
+        }
+
         return $this->success('修改成功!');
     }
 
@@ -220,7 +233,7 @@ class Service extends AuthController
     public function set_status($id, $status)
     {
         if ($status == '' || $id == 0) return $this->fail('参数错误');
-        $info         = $this->services->get($id, ['status', 'user_id']);
+        $info = $this->services->get($id, ['status', 'user_id']);
         $info->status = $status;
         $info->save();
         return $this->success($status == 0 ? '隐藏成功' : '显示成功');

@@ -28,6 +28,7 @@ Route::group('api', function () {
             Route::get('key', 'Login/getLoginKey')->name('getLoginKey');//获取扫码登录key
             Route::get('scan/:key', 'Login/scanLogin')->name('scanLogin');//检测扫码情况
             Route::get('config', 'Login/getAppid')->name('getAppid');//获取配置
+            Route::get('agreement', 'User/getUserAgreement')->name('getUserAgreement');//用户协议
 
             Route::group(function () {
 
@@ -52,6 +53,10 @@ Route::group('api', function () {
                 Route::put('userInfo', 'User/updateKefu')->name('updateKefu');//修改当前客服信息
                 Route::put('updateUser/:userId', 'User/updateUser')->name('updateUser');//修改用户信息
                 Route::put('client', 'User/updateService')->name('updateService');//修改当前客服client_id
+                Route::post('feedback', 'User/saveFeedback')->name('saveFeedback');//修改客服反馈
+                Route::get('complain', 'User/getComplainList')->name('getComplainList');//获取客服投诉
+                Route::post('complain', 'User/complain')->name('complain');//保存客户投诉
+                Route::put('status/:userId', 'User/status')->name('status');//拉黑用户
 
             })->middleware(KefuAuthTokenMiddleware::class);
 
@@ -77,6 +82,10 @@ Route::group('api', function () {
                 Route::post('speechcraft', 'Service/saveSpeechcraft')->name('saveSpeechcraft');//添加话术
                 Route::put('speechcraft/:id', 'Service/editSpeechcraft')->name('editSpeechcraft');//修改话术
                 Route::delete('speechcraft/:id', 'Service/deleteSpeechcraft')->name('deleteSpeechcraft');//删除话术
+                Route::get('auth_reply', 'Service/getAuthReply')->name('getAuthReply');//获取当前自动回复内容
+                Route::post('auth_reply/:id', 'Service/saveAuthReply')->name('saveAuthReply');//保存当前自动回复内容
+                Route::delete('auth_reply/:id', 'Service/deleteAuthReply')->name('deleteAuthReply');//删除当前自动回复内容
+                Route::put('auth_reply/:value', 'Service/setAutoReply')->name('setAutoReply');//设置是否自动回复
 
             })->middleware(KefuAuthTokenMiddleware::class);
 
@@ -84,7 +93,7 @@ Route::group('api', function () {
 
         Route::miss(function () {
             if (app()->request->isOptions()) {
-                $header                                = Config::get('cookie.header');
+                $header = Config::get('cookie.header');
                 $header['Access-Control-Allow-Origin'] = app()->request->header('origin');
                 return Response::create('ok')->code(200)->header($header);
             } else

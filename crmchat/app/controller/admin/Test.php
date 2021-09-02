@@ -12,10 +12,20 @@
 namespace app\controller\admin;
 
 
+use app\jobs\UniPush;
+use app\services\ApplicationServices;
+use app\services\chat\ChatUserServices;
+use crmeb\services\uniPush\options\AndroidOptions;
+use crmeb\services\uniPush\options\IosOptions;
+use crmeb\services\uniPush\options\PushMessageOptions;
+use crmeb\services\uniPush\options\PushOptions;
+use crmeb\services\uniPush\PushMessage;
 use crmeb\utils\Captcha;
 use crmeb\utils\Character;
 use crmeb\utils\Encrypter;
-use think\facade\Env;
+use crmeb\utils\Collection;
+use think\facade\Db;
+use think\facade\Log;
 use think\facade\Route;
 use think\helper\Str;
 use Carbon\Carbon;
@@ -24,13 +34,109 @@ class Test
 {
     protected $app;
 
-    public function index(Captcha $captcha)
+//    public function index(Captcha $captcha)
+//    {
+//        $res = $captcha->create([], true);
+//
+//        echo '<img src="' . $res['img'] . '">';
+//
+//        dump($res['key']);
+//    }
+
+    public function resolvBaseUrl()
     {
-        $res = $captcha->create([], true);
+        return 'https://restapi.getui.com/v2/';
+    }
 
-        echo '<img src="' . $res['img'] . '">';
+    public function url(string $path = '')
+    {
+        $baseUrl = $this->resolvBaseUrl();
+        $base    = strstr($baseUrl, 'http') === false;
+        return ($base ? $baseUrl : '') . ($path ? $base ? '/' . $path : $path : '');
+    }
 
-        dump($res['key']);
+    public function index2()
+    {
+        $clientId = '6b37b5c8e81c145986c60c5af3d12894';
+        /** @var PushMessage $uniPush */
+        $uniPush = app()->make(PushMessage::class);
+        $uniPush->config([
+            'appId'        => 'j03CifWGQw75KVTUt3tyh1',
+            'appKey'       => 'QEADCgxYbI6qmwRhxccyJ3',
+            'masterSecret' => 'CehaJ5xnrr5zKqiT1Nbdr9'
+        ]);
+        $option                      = new PushOptions();
+        $messageOption               = new PushMessageOptions();
+        $messageOption->title        = '新消息来了';
+        $messageOption->body         = '来了老弟！！';
+        $messageOption->clickType    = 'payload';
+        $messageOption->payload      = 'click_type';
+        $messageOption->channelLevel = 4;
+
+        $option->setAudience($clientId);
+
+        $ios              = new IosOptions();
+        $ios->body        = $messageOption->body;
+        $ios->title       = $messageOption->title;
+        $android          = new AndroidOptions();
+        $android->body    = $messageOption->body;
+        $android->title   = $messageOption->title;
+        $android->payload = $android->title;
+        $option->setPushChannel($android, $ios);
+//        $option->pushMessage = [
+//            'transmission' => json_encode(['title' => '新消息来了', 'body' => 's收到没,来了老弟！！', 'url' => '/pages/view/user/index'])
+//        ];
+//        $option->setPushMessage($messageOption);
+        $res = $uniPush->push($option);
+        dump($res->all(), $option->toArray());
+    }
+
+    public function index()
+    {
+        $clientId = '6b37b5c8e81c145986c60c5af3d12894';
+        /** @var PushMessage $uniPush */
+        $uniPush = app()->make(PushMessage::class);
+//        $uniPush->config([
+//            'appId'        => 'j03CifWGQw75KVTUt3tyh1',
+//            'appKey'       => 'QEADCgxYbI6qmwRhxccyJ3',
+//            'masterSecret' => 'CehaJ5xnrr5zKqiT1Nbdr9'
+//        ]);
+        $option                      = new PushOptions();
+        $messageOption               = new PushMessageOptions();
+        $messageOption->title        = '新消息来了';
+        $messageOption->body         = '倩倩，收到没！！收到了给我回一句';
+        $messageOption->clickType    = 'payload';
+        $messageOption->payload      = 'click_type';
+        $messageOption->channelLevel = 4;
+
+        $option->setAudience($clientId);
+
+        $ios              = new IosOptions();
+        $ios->body        = $messageOption->body;
+        $ios->title       = $messageOption->title;
+        $android          = new AndroidOptions();
+        $android->body    = $messageOption->body;
+        $android->title   = $messageOption->title;
+        $android->payload = $android->title;
+        $option->setPushChannel($android, $ios);
+        $option->pushMessage = [
+            'transmission' => json_encode(['title' => '新消息来了', 'body' => 's收到没,来了老弟！！', 'url' => '/pages/view/user/index'])
+        ];
+        $option->setPushMessage($messageOption);
+        $res = $uniPush->push($option);
+        dump($res->all(), $option->toArray());
+//
+//        $res = UniPush::dispatchSece(10, [
+//            ['nickname' => '新消息来了'],
+//            $clientId,
+//            [
+//                'content'  => '来了老弟!' . date('Y-m-d H:i:s'),
+//                'msn_type' => 1,
+//                'other'    => [],
+//            ],
+//        ]);
+//
+//        dump($res);
     }
 
     public function rule()

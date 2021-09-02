@@ -23,6 +23,16 @@ export function userList(data) {
 }
 
 /**
+ *
+ */
+export function getUserLabelAllApi() {
+    return request({
+        url: 'user/user_label',
+        method: 'get',
+    })
+}
+
+/**
  * @description 编辑表单数据
  * @param {Number} param id {Number} 会员id
  */
