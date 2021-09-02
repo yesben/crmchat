@@ -353,7 +353,7 @@ class ChatServiceServices extends BaseServices
             return false;
         }
         $data['other'] = '';
-        $data['msn'] = $msg;
+        $data['msn'] = '[欢迎语]' . $msg;
         /** @var ChatServiceDialogueRecordServices $logServices */
         $logServices = app()->make(ChatServiceDialogueRecordServices::class);
         $data = $logServices->save($data);
