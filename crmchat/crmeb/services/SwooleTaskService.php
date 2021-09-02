@@ -156,10 +156,10 @@ class SwooleTaskService
      * 实例化
      * @return static
      */
-    public static function instance()
+    public static function instance(string $taskType = null, App $app = null)
     {
         if (is_null(self::$instance)) {
-            self::$instance = new static();
+            self::$instance = new static($taskType, $app);
         }
         return self::$instance;
     }
@@ -188,9 +188,9 @@ class SwooleTaskService
      * 用户任务
      * @return SwooleTaskService
      */
-    public static function user()
+    public static function user(App $app = null)
     {
-        self::instance()->type = __FUNCTION__;
+        self::instance(null, $app)->type = __FUNCTION__;
         return self::instance();
     }
 

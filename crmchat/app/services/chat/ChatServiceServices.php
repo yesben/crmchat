@@ -404,8 +404,7 @@ class ChatServiceServices extends BaseServices
             0
         );
         if ($data) {
-            $task = new SwooleTaskService(null, $app);
-            $task->user()->type('reply')->to($toUserId)->data($data)->push();
+            SwooleTaskService::user($app)->type('reply')->to($toUserId)->data($data)->push();
         }
         return $data;
     }
