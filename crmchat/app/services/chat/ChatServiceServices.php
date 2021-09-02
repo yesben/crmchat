@@ -22,6 +22,7 @@ use crmeb\services\DisyllabicWords;
 use crmeb\services\FormBuilder;
 use crmeb\services\SwooleTaskService;
 use FormBuilder\Exception\FormBuilderException;
+use Swoole\Timer;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
@@ -247,7 +248,10 @@ class ChatServiceServices extends BaseServices
         $serviceLogList = $logServices->getServiceChatList(['appid' => $appId, 'chat' => [$userId, $toUserId]], $limit, $idTo);
         $result['serviceList'] = array_reverse($logServices->tidyChat($serviceLogList));
         try {
-            $this->welcomeWords($appId, $toUserId, $userId);
+            $app = app();
+            Timer::after(1000, function () use ($app, $appId, $toUserId, $userId) {
+                $this->welcomeWords($app, $appId, $toUserId, $userId);
+            });
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
@@ -343,11 +347,12 @@ class ChatServiceServices extends BaseServices
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function welcomeWords(string $appId, int $userId, int $toUserId)
+    public function welcomeWords(App $app, string $appId, int $userId, int $toUserId)
     {
+        $this->dao->setApp($app);
         /** @var ChatServiceDialogueRecordServices $logServices */
-        $logServices = app()->make(ChatServiceDialogueRecordServices::class);
-        $unMessagesCount = $logServices->count(['chat' => [$userId, $toUserId]]);
+        $logServices = $app->make(ChatServiceDialogueRecordServices::class);
+        $unMessagesCount = $logServices->setApp($app)->count(['chat' => [$userId, $toUserId]]);
         if ($unMessagesCount) {
             return true;
         }
@@ -367,25 +372,25 @@ class ChatServiceServices extends BaseServices
         $data['other'] = '';
         $data['msn'] = '[欢迎语]' . $msg;
         /** @var ChatServiceDialogueRecordServices $logServices */
-        $logServices = app()->make(ChatServiceDialogueRecordServices::class);
+        $logServices = $app->make(ChatServiceDialogueRecordServices::class)->setApp($app);
         $data = $logServices->save($data);
         $data = $data->toArray();
         $data['_add_time'] = $data['add_time'];
         $data['add_time'] = strtotime($data['add_time']);
 
         /** @var ChatUserServices $userService */
-        $userService = app()->make(ChatUserServices::class);
-        $_userInfo = $userService->getUserInfo($data['user_id'], ['nickname', 'avatar', 'is_tourist']);
+        $userService = $app->make(ChatUserServices::class);
+        $_userInfo = $userService->setApp($app)->getUserInfo($data['user_id'], ['nickname', 'avatar', 'is_tourist']);
         $isTourist = $_userInfo['is_tourist'];
         $data['nickname'] = $_userInfo['nickname'] ?? '';
         $data['avatar'] = $_userInfo['avatar'] ?? '';
 
         //用户向客服发送消息，判断当前客服是否在登录中
         /** @var ChatServiceRecordServices $serviceRecored */
-        $serviceRecored = app()->make(ChatServiceRecordServices::class);
-        $unMessagesCount = $logServices->getMessageNum(['user_id' => $userId, 'to_user_id' => $toUserId, 'type' => 0]);
+        $serviceRecored = $app->make(ChatServiceRecordServices::class);
+        $unMessagesCount = $logServices->setApp($app)->getMessageNum(['user_id' => $userId, 'to_user_id' => $toUserId, 'type' => 0]);
         //记录当前用户和他人聊天记录
-        $data['recored'] = $serviceRecored->saveRecord(
+        $data['recored'] = $serviceRecored->setApp($app)->saveRecord(
             $appId,
             $userId,
             $toUserId,
@@ -399,7 +404,8 @@ class ChatServiceServices extends BaseServices
             0
         );
         if ($data) {
-            SwooleTaskService::user()->type('reply')->to($toUserId)->data($data)->push();
+            $task = new SwooleTaskService(null, $app);
+            $task->user()->type('reply')->to($toUserId)->data($data)->push();
         }
         return $data;
     }

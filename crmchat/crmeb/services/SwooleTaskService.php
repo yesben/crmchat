@@ -12,6 +12,7 @@
 namespace crmeb\services;
 
 use Swoole\Server;
+use think\App;
 use think\facade\Log;
 
 /**
@@ -64,14 +65,15 @@ class SwooleTaskService
 
     /**
      * SwooleTaskService constructor.
-     * @param string $taskType
+     * @param string|null $taskType
+     * @param App|null $app
      */
-    public function __construct(string $taskType = null)
+    public function __construct(string $taskType = null, App $app = null)
     {
         if ($taskType) {
             $this->taskType = $taskType;
         }
-        $this->server = app('swoole.server');
+        $this->server = $app ? $app->make('swoole.server') : app('swoole.server');
     }
 
     /**
@@ -138,10 +140,10 @@ class SwooleTaskService
             $this->server->task([
                 'type' => $this->taskType,
                 'data' => [
-                    'except'  => $this->except,
-                    'data'    => $this->data,
+                    'except' => $this->except,
+                    'data' => $this->data,
                     'user_id' => $this->to,
-                    'type'    => $this->type,
+                    'type' => $this->type,
                 ]
             ]);
             $this->reset();
@@ -200,10 +202,10 @@ class SwooleTaskService
     protected function reset()
     {
         $this->taskType = 'message';
-        $this->except   = null;
-        $this->data     = ['type' => null, 'data' => []];
-        $this->to       = null;
-        $this->type     = null;
+        $this->except = null;
+        $this->data = ['type' => null, 'data' => []];
+        $this->to = null;
+        $this->type = null;
         return $this;
     }
 }
