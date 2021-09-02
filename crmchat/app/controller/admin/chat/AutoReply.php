@@ -51,7 +51,9 @@ class AutoReply extends AuthController
      */
     public function create($id)
     {
-        return $this->success($this->services->getForm((int)$id));
+        $userId = $this->request->get('user_id', 0);
+        $appId = $this->request->get('appid', '');
+        return $this->success($this->services->getForm((int)$id, (int)$userId, $appId));
     }
 
     /**
@@ -63,6 +65,8 @@ class AutoReply extends AuthController
         $data = $this->request->postMore([
             ['keyword', ''],
             ['content', ''],
+            ['user_id', ''],
+            ['appid', ''],
             ['sort', 0],
         ]);
 

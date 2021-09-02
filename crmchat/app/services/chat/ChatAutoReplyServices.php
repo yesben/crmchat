@@ -75,7 +75,7 @@ class ChatAutoReplyServices extends BaseServices
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getForm(int $id)
+    public function getForm(int $id, int $userId, string $appId)
     {
         $data = [];
         if ($id) {
@@ -87,7 +87,9 @@ class ChatAutoReplyServices extends BaseServices
         $field = [
             FormBuilder::input('keyword', '关键字', $data['keyword'] ?? '')->required()->placeholder('请输入关键字,多个关键字用逗号隔开'),
             FormBuilder::textarea('content', '回复内容', $data['content'] ?? '')->required()->placeholder('请输入回复内容'),
-            FormBuilder::number('sort', '排序', $data['sort'] ?? 0)
+            FormBuilder::number('sort', '排序', $data['sort'] ?? 0),
+            FormBuilder::hidden('user_id', $userId),
+            FormBuilder::hidden('appid', $appId),
         ];
 
         return create_form($id ? '修改自动回复' : '添加自动回复', $field, '/chat/reply/' . $id, 'post');
