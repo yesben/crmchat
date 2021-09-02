@@ -38,7 +38,7 @@ class AutoReply extends AuthController
             ['user_id', 0],
             ['appid', ''],
         ], true);
-        return $this->success($this->services->getAuthReply($appId, (int)$userId));
+        return $this->success($this->services->getList($appId, (int)$userId));
     }
 
     /**

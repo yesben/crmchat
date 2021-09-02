@@ -50,6 +50,23 @@ class ChatAutoReplyServices extends BaseServices
     }
 
     /**
+     * 获取列表
+     * @param string $appId
+     * @param int $userId
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getList(string $appId, int $userId)
+    {
+        [$page, $limit] = $this->getPageValue();
+        $list = $this->dao->getReply(['appid' => $appId, 'user_id' => $userId], $page, $limit);
+        $count = $this->dao->count(['appid' => $appId, 'user_id' => $userId]);
+        return compact('list', 'count');
+    }
+
+    /**
      * 获取表单
      * @param int $id
      * @return array

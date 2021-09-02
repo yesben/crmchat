@@ -21,7 +21,6 @@ use crmeb\basic\BaseDao;
  */
 class ChatAutoReplyDao extends BaseDao
 {
-
     /**
      * @return string
      */
