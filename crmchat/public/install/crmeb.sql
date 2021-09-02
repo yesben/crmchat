@@ -113,6 +113,7 @@ CREATE TABLE IF NOT EXISTS `eb_chat_service` (
   `uniqid` varchar(35) NOT NULL DEFAULT '' COMMENT '扫码登录唯一值',
   `is_app` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为APP登陆',
   `auto_reply` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '自动回复',
+  `welcome_words` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '欢迎语',
   `client_id` varchar(50) NOT NULL DEFAULT '' COMMENT 'client_id'
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='客服表';
 

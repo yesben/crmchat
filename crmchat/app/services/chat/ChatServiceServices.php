@@ -13,6 +13,7 @@ namespace app\services\chat;
 
 
 use app\dao\chat\ChatServiceDao;
+use app\jobs\WelcomeWords;
 use app\services\ApplicationServices;
 use app\services\system\config\SystemConfigServices;
 use crmeb\basic\BaseServices;
@@ -242,6 +243,7 @@ class ChatServiceServices extends BaseServices
         ];
         $serviceLogList = $logServices->getServiceChatList(['appid' => $appId, 'chat' => [$userId, $toUserId]], $limit, $idTo);
         $result['serviceList'] = array_reverse($logServices->tidyChat($serviceLogList));
+        WelcomeWords::dispatchSece(1, [$kefuId, $appId, $toUserId, $userId]);
         return $result;
     }
 
@@ -315,6 +317,68 @@ class ChatServiceServices extends BaseServices
             $msg,
             $formType ?? 0,
             $msntype,
+            $unMessagesCount,
+            (int)$isTourist,
+            $data['nickname'],
+            $data['avatar'],
+            0
+        );
+        return $data;
+    }
+
+    /**
+     * 欢迎语
+     * @param int $kefuId
+     * @param string $appId
+     * @param int $userId
+     * @param int $toUserId
+     * @return array|bool
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function welcomeWords(int $kefuId, string $appId, int $userId, int $toUserId)
+    {
+        $data = [
+            'add_time' => time(),
+            'appid' => $appId,
+            'user_id' => $userId,
+            'to_user_id' => $toUserId,
+            'msn_type' => 1,
+            'type' => 1,
+        ];
+        $msg = $this->dao->value(['id' => $kefuId], 'welcome_words');
+        if (!$msg) {
+            return false;
+        }
+        $data['other'] = '';
+        $data['msn'] = $msg;
+        /** @var ChatServiceDialogueRecordServices $logServices */
+        $logServices = app()->make(ChatServiceDialogueRecordServices::class);
+        $data = $logServices->save($data);
+        $data = $data->toArray();
+        $data['_add_time'] = $data['add_time'];
+        $data['add_time'] = strtotime($data['add_time']);
+
+        /** @var ChatUserServices $userService */
+        $userService = app()->make(ChatUserServices::class);
+        $_userInfo = $userService->getUserInfo($data['user_id'], ['nickname', 'avatar', 'is_tourist']);
+        $isTourist = $_userInfo['is_tourist'];
+        $data['nickname'] = $_userInfo['nickname'] ?? '';
+        $data['avatar'] = $_userInfo['avatar'] ?? '';
+
+        //用户向客服发送消息，判断当前客服是否在登录中
+        /** @var ChatServiceRecordServices $serviceRecored */
+        $serviceRecored = app()->make(ChatServiceRecordServices::class);
+        $unMessagesCount = $logServices->getMessageNum(['user_id' => $userId, 'to_user_id' => $toUserId, 'type' => 0]);
+        //记录当前用户和他人聊天记录
+        $data['recored'] = $serviceRecored->saveRecord(
+            $appId,
+            $userId,
+            $toUserId,
+            $msg,
+            $formType ?? 0,
+            1,
             $unMessagesCount,
             (int)$isTourist,
             $data['nickname'],
