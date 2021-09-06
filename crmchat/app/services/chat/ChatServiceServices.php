@@ -289,7 +289,7 @@ class ChatServiceServices extends BaseServices
         } else {
             $data['other'] = '';
         }
-        $data['msn'] = '[自动回复]当前客服已开启自动回复,暂无您提出的内容做出的自动回复!';
+        $data['msn'] = '';
         /** @var SystemConfigServices $configService */
         $configService = $app->make(SystemConfigServices::class);
         $words = new DisyllabicWords(['appCode' => json_decode($configService->setApp($app)->getConfigValue('disyllabic_app_code'), true)]);
@@ -300,8 +300,11 @@ class ChatServiceServices extends BaseServices
             $authReplyService = $app->make(ChatAutoReplyServices::class);
             $reply = $authReplyService->setApp($app)->getReplyList(['keyword' => $keyword, 'appid' => $appId, 'user_id' => $userId]);
             if ($reply) {
-                $data['msn'] = '[自动回复]' . $reply[0]['content'];
+                $data['msn'] = $reply[0]['content'];
             }
+        }
+        if (!$data['msn']) {
+            return false;
         }
         /** @var ChatServiceDialogueRecordServices $logServices */
         $logServices = $app->make(ChatServiceDialogueRecordServices::class);
@@ -371,7 +374,7 @@ class ChatServiceServices extends BaseServices
             return false;
         }
         $data['other'] = '';
-        $data['msn'] = '[欢迎语]' . $msg;
+        $data['msn'] = $msg;
         /** @var ChatServiceDialogueRecordServices $logServices */
         $logServices = $app->make(ChatServiceDialogueRecordServices::class)->setApp($app);
         $data = $logServices->save($data);

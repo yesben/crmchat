@@ -67,7 +67,7 @@ class KefuHandler extends BaseHandler
         $service->updateRecord(['to_user_id' => $user['id']], ['online' => 1]);
         /** @var ChatServiceServices $service */
         $service = app()->make(ChatServiceServices::class);
-        $service->update(['user_id' => $user['id']], ['online' => 1, 'is_login' => 1]);
+        $service->update(['user_id' => $user['id']], ['online' => 1]);
 
         return $response->success(['uid' => $user['id'], 'appid' => $kefuInfo['appid']]);
     }

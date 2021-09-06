@@ -188,8 +188,10 @@ abstract class BaseHandler
                 $app = app();
                 Timer::after(1000, function () use ($app, $services, $appId, $to_user_id, $other, $msn_type, $userId, $msn, $response) {
                     $data = $services->autoReply($app, $appId, $to_user_id, $userId, $msn, $msn_type, $other);
-                    $toUserFd = $this->manager->getUserIdByFds($userId);
-                    return $this->manager->pushing($toUserFd, $response->message('reply', $data)->getData());
+                    if ($data) {
+                        $toUserFd = $this->manager->getUserIdByFds($userId);
+                        return $this->manager->pushing($toUserFd, $response->message('reply', $data)->getData());
+                    }
                 });
             } else {
                 $fremaData = $fremaData[0] ?? ['is_open' => 1];
