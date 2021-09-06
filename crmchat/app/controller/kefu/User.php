@@ -12,6 +12,7 @@
 namespace app\controller\kefu;
 
 
+use app\jobs\AutoBadge;
 use app\Request;
 use app\services\chat\ChatComplainServices;
 use app\services\chat\ChatServiceDialogueRecordServices;
@@ -300,6 +301,7 @@ class User extends AuthController
     {
         $clientId = $this->request->post('client_id', '');
         $services->update($this->kefuId, ['client_id' => $clientId]);
+        AutoBadge::dispatch([$this->kefuInfo['user_id'], 0, $this->kefuInfo['appid']]);
         return $this->success();
     }
 

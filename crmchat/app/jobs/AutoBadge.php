@@ -50,8 +50,10 @@ class AutoBadge extends BaseJobs
         ]);
         /** @var PushMessage $pushMessage */
         $pushMessage = app()->make(PushMessage::class);
-        $pushMessage->userBadge([$clientId], '-' . $allUnMessagesCount);
-        $logServices->update(['to_user_id' => $userId, 'user_id' => $toUserId], ['type' => 1]);
+        $pushMessage->userBadge([$clientId], $allUnMessagesCount == 0 ? '0' : '-' . $allUnMessagesCount);
+        if ($toUserId) {
+            $logServices->update(['to_user_id' => $userId, 'user_id' => $toUserId], ['type' => 1]);
+        }
         return true;
     }
 }
