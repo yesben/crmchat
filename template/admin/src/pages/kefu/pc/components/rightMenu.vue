@@ -1,6 +1,6 @@
 <template>
   <div class="right-wrapper">
-    <template v-if="curStatus == 0">
+    <template>
       <div class="user-wrapper" v-if="activeUserInfo">
         <div class="user">
           <div class="avatar"><img v-lazy="activeUserInfo.avatar" alt=""></div>
@@ -233,7 +233,7 @@ export default {
         },
       ],
       activeUserInfo: '', //用户详情
-      curStatus: this.status,
+      // curStatus: this.status,
       limit: 10,
       orderConfig: {
         page: 1,
@@ -281,32 +281,15 @@ export default {
         this.page = 1
         this.isGoodsScroll = true
         this.goodsConfig.buyList = []
-        Promise.all[this.getUserInfo()]
-        if(this.goodsConfig.type == 0) {
-          // this.productCart()
-        } else if(this.goodsConfig.type == 1) {
-          this.productVisit()
-        } else {
-          this.productHot()
-        }
+        this.getUserInfo();
       }
     },
-    isTourist(nVal, oVal) {
-      // if(nVal == 1) {
-      this.activeUserInfo = ''
-      this.orderList = []
-      this.goodsConfig.buyList = []
-      // }
-    }
   },
   mounted() {
 
     let self = this
-    this.bus.$on('selectRightMenu', (arg) => {
-      this.curStatus = arg
-    })
 
-    if(this.uid && this.isTourist == 0) {
+    if(this.uid) {
       this.getUserInfo();
       // 查询客服分组列表
 

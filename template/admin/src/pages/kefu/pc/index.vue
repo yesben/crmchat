@@ -3,7 +3,7 @@
     <div class="content-wrapper">
       <baseHeader :kefuInfo="kefuInfo" :online="online" @setOnline="setOnline"></baseHeader>
       <div class="container">
-        <chatList v-if="chatListModel" @setDataId="setDataId" @search="bindSearch" @changeType="changeType" :userOnline="userOnline" :newRecored="newRecored" :searchData="searchData"></chatList>
+        <chatList @setDataId="setDataId" @search="bindSearch" @changeType="changeType" :userOnline="userOnline" :newRecored="newRecored" :searchData="searchData"></chatList>
         <div class="chat-content">
           <div class="chat-body">
 
@@ -189,8 +189,8 @@ export default {
   },
   data() {
     return {
+      wsOpen:false,
       authMsg:false,
-      chatListModel: false,
       isEmoji: false, // 是否显示表情弹框
       chatCon: '', // 输入框输入的聊天内容
       emojiGroup: chunk(emojiList, 20), // 表情列表 已20个一组进行分组
@@ -374,7 +374,6 @@ export default {
         // ws登录成功
         ws.$on("success", (data) => {
           this.isShow = true;
-          this.chatListModel = true;
         });
       })
         .catch((error) => {
@@ -385,6 +384,7 @@ export default {
     },
     wsRestart() {
       this.bus.pageWs = Socket(true);
+      this.wsOpen = true
       this.wsAgain();
     },
 
@@ -439,7 +439,7 @@ export default {
     // 获取是否游客 获取会话列表
     changeType(data) {
       this.tourist = data;
-      console.log(this.tourist);
+      // console.log(this.tourist);
     },
     // 获取列表用户信息
     setDataId(data) {
@@ -554,7 +554,7 @@ export default {
           }, 0)
         } else {
           var container = document.querySelector("#chat_scroll");
-          this.scrollTop = container.offsetHeight
+          this.scrollTop = container.offsetHeight + 0.01
           setTimeout(res => {
             if(this.scrollTop != this.$refs.scrollBox.offsetHeight) {
               this.scrollTop = document.querySelector("#chat_scroll").offsetHeight

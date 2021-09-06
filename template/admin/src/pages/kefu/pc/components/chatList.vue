@@ -190,7 +190,7 @@ export default {
       this.nickname = data
     })
     this.getList();
-    this.wsStart();
+    // this.wsStart();
   },
   methods: {
     // 搜索
