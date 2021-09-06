@@ -125,7 +125,7 @@ class KefuServices extends BaseServices
             }
             //同步聊天消息
             if ($pageNum) {
-                for ($i = 1; $i <= $pageNum; $i++) {
+                for ($i = 0; $i < $pageNum; $i++) {
                     ServiceTransfer::dispatch([$where, $kfuUserId, $kefuToUserId, $i, $limit]);
                 }
             }
