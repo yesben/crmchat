@@ -3,7 +3,7 @@
     <div class="content-wrapper">
       <baseHeader :kefuInfo="kefuInfo" :online="online" @setOnline="setOnline"></baseHeader>
       <div class="container">
-        <chatList @setDataId="setDataId" @search="bindSearch" @changeType="changeType" :userOnline="userOnline" :newRecored="newRecored" :searchData="searchData"></chatList>
+        <chatList @setDataId="setDataId" @search="bindSearch" @changeType="changeType" :isShow="isShow" :userOnline="userOnline" :newRecored="newRecored" :searchData="searchData"></chatList>
         <div class="chat-content">
           <div class="chat-body">
 
@@ -225,7 +225,8 @@ export default {
       scrollNum: 0, //滚动次数
       transferId: '', //转接id
       bodyClose: false,
-      tourist: 0
+      tourist: 0,
+      isShow:false
     }
   },
   computed: {
@@ -373,6 +374,7 @@ export default {
         });
         // ws登录成功
         ws.$on("success", (data) => {
+          console.log('ws success')
           this.isShow = true;
         });
       })

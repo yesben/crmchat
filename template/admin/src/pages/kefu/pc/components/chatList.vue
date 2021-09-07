@@ -79,6 +79,10 @@ export default {
     searchData: {
       type: String,
       default: ''
+    },
+    isShow:{
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -120,6 +124,7 @@ export default {
     },
     isShow: {
       handler(nVal, oVal) {
+        console.log('isShow',nVal)
         if(nVal) {
           this.wsStart()
         }

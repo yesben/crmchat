@@ -193,7 +193,7 @@ export default {
                 avatar: this.chatServerData.avatar,
                 phone: this.userMessage.phone ? this.userMessage.phone : this.chatServerData.phone,
                 openid: this.upperData.openid,
-                type: this.upperData.deviceType == 'Mobile' ? '3' : '0' // 0 = pc , 1 = 微信 ，2 = 小程序 ，3 = H5, 4 = APP 
+                type: this.upperData.deviceType == 'Mobile' ? '3' : '0' // 0 = pc , 1 = 微信 ，2 = 小程序 ，3 = H5, 4 = APP
               }
             })
 
@@ -213,6 +213,19 @@ export default {
           parent.postMessage({ type: 'message_num', num: data.num }, "*");
         })
 
+
+        ws.$on('to_transfer',data=>{
+          let to_user_id = this.chatServerData.to_user_id;
+          this.chatServerData.to_user_id = data.toUid
+          this.chatServerData.to_user_nickname = data.nickname
+          this.chatServerData.to_user_avatar = data.avatar
+          this.chatServerData.serviceList.map(item=>{
+            if(to_user_id == item.user_id){
+              item.avatar = data.avatar
+            }
+          })
+          ws.send({ type: 'to_chat', data: { id: data.toUid } });
+        })
 
 
         // let num = 1;
