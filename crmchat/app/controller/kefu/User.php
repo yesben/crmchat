@@ -312,7 +312,7 @@ class User extends AuthController
      * @param $userId
      * @return mixed
      */
-    public function updateUser(ChatUserServices $services, $userId)
+    public function updateUser(ChatUserServices $services, ChatServiceRecordServices $recordServices, $userId)
     {
         $data = $this->request->postMore([
             ['nickname', ''],
@@ -330,7 +330,8 @@ class User extends AuthController
         if ($update) {
 
             if (isset($data['phone']) && preg_match('/^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/', $data['phone'])) {
-                $data['is_tourist'] = 0;
+                $update['is_tourist'] = 0;
+                $recordServices->update(['to_user_id' => $userId], ['is_tourist' => 0]);
             }
 
             $services->update($userId, $update);
