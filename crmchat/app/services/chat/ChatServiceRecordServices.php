@@ -71,7 +71,7 @@ class ChatServiceRecordServices extends BaseServices
         $list = $this->dao->getServiceList(['appid' => $appid, 'user_id' => $userId, 'title' => $nickname, 'is_tourist' => $isTourist], $page, $limit, ['user']);
         foreach ($list as &$item) {
             if ($item['message_type'] == 1) {
-                $item['message'] = preg_replace('/^\[em-[a-z_]+\]/', '[表情]', $item['message']);
+                $item['message'] = preg_replace('/^\[em-[a-z_]+\]/', '[表情]', $item['message'], -1);
                 $item['message'] = Str::truncateUtf8String($item['message'], 15, '');
             }
             $item['_update_time'] = date('Y-m-d H:i', $item['update_time']);
