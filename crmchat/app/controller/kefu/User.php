@@ -289,6 +289,7 @@ class User extends AuthController
      */
     public function getMessageCount(ChatServiceDialogueRecordServices $services)
     {
+        AutoBadge::dispatch([$this->kefuInfo['user_id'], 0, $this->kefuInfo['appid']]);
         return $this->success(['count' => $services->getMessageNum(['appid' => $this->kefuInfo['appid'], 'to_user_id' => $this->kefuInfo['user_id'], 'type' => 0])]);
     }
 

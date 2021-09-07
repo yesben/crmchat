@@ -147,13 +147,15 @@ class Service extends AuthController
      * @param $id
      * @return mixed
      */
-    public function deleteCate(CategoryServices $services, $id)
+    public function deleteCate(CategoryServices $services, ChatServiceSpeechcraftServices $speechcraftServices, $id)
     {
         $cateInfo = $services->get($id);
         if (!$cateInfo) {
             return $this->fail('分类不存在');
         }
-
+        if ($speechcraftServices->count(['cate_id' => $id])) {
+            return $this->fail('请先删除分类下的话术');
+        }
         if ($cateInfo->delete()) {
             return $this->success('删除成功');
         } else {

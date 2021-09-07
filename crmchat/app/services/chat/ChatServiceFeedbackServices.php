@@ -71,7 +71,7 @@ class ChatServiceFeedbackServices extends BaseServices
         }
         $feedInfo = $feedInfo->toArray();
         $field    = [
-            FormBuilder::textarea('make', '备注', $feedInfo['make'])->col(22),
+            FormBuilder::textarea('make', '备注', $feedInfo['make'] ?? '')->col(22),
         ];
         if (!$feedInfo['status']) {
             $field[] = FormBuilder::radio('status', '状态', 0)->setOptions([

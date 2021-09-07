@@ -86,7 +86,7 @@ return is_win() ? [] : [
     ],
     'tables'     => [//高性能内存数据库
         'user'   => [
-            'size'    => 2048,
+            'size'    => 2048 * 2,
             'columns' => [
                 ['name' => 'fd', 'type' => Table::TYPE_INT],
                 ['name' => 'type', 'size' => 1024, 'type' => Table::TYPE_STRING],
