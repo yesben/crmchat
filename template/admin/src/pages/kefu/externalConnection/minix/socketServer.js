@@ -182,12 +182,12 @@ export default {
         });
 
         ws.$on('success', data => {
-
+        console.log(this.upperData)
           this.bus.pageWs.then((ws) => {
             ws.send({
               type: 'user',
               data: {
-                to_user_id: this.upperData.isShowTip ? 0 : this.chatServerData.to_user_id,
+                to_user_id: this.upperData.isShowTip && this.upperData.isShowTip !='undefined' ? 0 : this.chatServerData.to_user_id,
                 uid: this.chatServerData.uid,
                 nickname: this.chatServerData.nickname,
                 avatar: this.chatServerData.avatar,
