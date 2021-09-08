@@ -33,7 +33,7 @@ class ChatServiceFeeback extends Migrator
         $table->addColumn('rela_name', 'string', ['limit' => 50, 'default' => 0, 'comment' => '姓名']);
         $table->addColumn('phone', 'string', ['limit' => 11, 'default' => 0, 'comment' => '电话']);
         $table->addColumn('content', 'string', ['limit' => 500, 'default' => 0, 'comment' => '反馈内容']);
-        $table->addColumn('make', 'string', ['limit' => 500, 'default' => 0, 'comment' => '备注']);
+        $table->addColumn('make', 'string', ['limit' => 500, 'default' => '', 'comment' => '备注']);
         $table->addColumn('status', 'boolean', ['limit' => 1, 'default' => 0, 'comment' => '状态0=未查看，1=已查看']);
         $table->addColumn('add_time', 'integer', ['limit' => 10, 'default' => 0, 'comment' => '添加时间']);
         $table->addColumn('appid', 'string', ['limit' => 32, 'default' => '', 'comment' => 'APPID']);

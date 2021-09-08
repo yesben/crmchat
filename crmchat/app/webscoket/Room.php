@@ -81,7 +81,7 @@ class Room
      */
     public function getTable(string $tableName = 'user')
     {
-        return app()->make(Table::class)->get('user');
+        return app()->make(Table::class)->get($tableName);
     }
 
     /**
@@ -125,7 +125,7 @@ class Room
      */
     public function getClient(int $userId)
     {
-        $list   = $this->cache->sMembers('client');
+        $list = $this->cache->sMembers('client');
         $client = [];
         foreach ($list as $item) {
             $client[] = $this->clientGet($item);
@@ -178,8 +178,8 @@ class Room
     public function add(string $key, string $appid, int $userId = 0, int $isApp = 0, string $clientId = '', int $toUserId = 0, int $tourist = 0)
     {
         $nowkey = $this->tableFdPrefix . $key;
-        $data   = ['fd' => $key, 'is_open' => 1, 'client_id' => $clientId, 'appid' => $appid, 'is_app' => $isApp, 'type' => $this->type ?: 'user', 'user_id' => $userId, 'to_user_id' => $toUserId, 'tourist' => $tourist];
-        $res    = $this->getTable()->set($nowkey, $data);
+        $data = ['fd' => $key, 'is_open' => 1, 'client_id' => $clientId, 'appid' => $appid, 'is_app' => $isApp, 'type' => $this->type ?: 'user', 'user_id' => $userId, 'to_user_id' => $toUserId, 'tourist' => $tourist];
+        $res = $this->getTable()->set($nowkey, $data);
         $this->cache->sAdd(self::USER_INFO_FD_PRE, $key . '=' . $userId);
         $this->delRepeatUidFd($userId, $key);
         if ($this->type) {
@@ -214,7 +214,7 @@ class Room
     public function update(string $key, $field = null, $value = null)
     {
         $nowkey = $this->tableFdPrefix . $key;
-        $res    = true;
+        $res = true;
         if (is_array($field)) {
             $res = $this->getTable()->set($nowkey, $field);
         } else if (!is_array($field) && $value !== null) {
@@ -223,7 +223,7 @@ class Room
                 return false;
             }
             $data[$field] = $value;
-            $res          = $this->getTable()->set($nowkey, $data);
+            $res = $this->getTable()->set($nowkey, $data);
         }
         return $res;
     }
@@ -262,7 +262,7 @@ class Room
      */
     public function delsMembers(int $userId = 0, string $type = '')
     {
-        $fds        = $this->getRoomAll($type);
+        $fds = $this->getRoomAll($type);
         $removeData = [];
         foreach ($fds as $fd => $id) {
             if ($id == $userId) {
@@ -299,9 +299,9 @@ class Room
      */
     public function uidByFd(int $userId)
     {
-        $fds        = $this->getRoomAll($this->type);
+        $fds = $this->getRoomAll($this->type);
         $this->type = '';
-        $fd         = [];
+        $fd = [];
         foreach ($fds as $k => $v) {
             if ($v == $userId) {
                 $fd[] = $k;
@@ -319,7 +319,7 @@ class Room
     public function kefuUidByFd(int $userId)
     {
         $this->type = 'kefu';
-        $fd         = $this->uidByFd($userId);
+        $fd = $this->uidByFd($userId);
         $this->type = '';
         return $fd;
     }
@@ -352,8 +352,8 @@ class Room
      */
     public function remove()
     {
-        $all      = $this->cache->sMembers(self::USER_INFO_FD_PRE);
-        $res      = $this->cache->sRem(self::USER_INFO_FD_PRE, ...$all);
+        $all = $this->cache->sMembers(self::USER_INFO_FD_PRE);
+        $res = $this->cache->sRem(self::USER_INFO_FD_PRE, ...$all);
         $typeList = $this->cache->sMembers(self::TYPE_NAME);
         if ($typeList) {
             foreach ($typeList as $item) {
@@ -374,7 +374,7 @@ class Room
     public function getRoomAll(string $type = '')
     {
         $fdAll = [];
-        $all   = $this->cache->sMembers(self::USER_INFO_FD_PRE . ($type ? '_' . $type : ''));
+        $all = $this->cache->sMembers(self::USER_INFO_FD_PRE . ($type ? '_' . $type : ''));
         foreach ($all as $item) {
             [$fd, $uid] = explode('=', $item);
             $fdAll[(string)$fd] = (int)$uid;
@@ -404,7 +404,7 @@ class Room
         if (!$userId) {
             return true;
         }
-        $fds    = $fds ?: $this->getRoomAll($type);
+        $fds = $fds ?: $this->getRoomAll($type);
         $remove = [];
         foreach ($fds as $fd => $item) {
             if ($userId == $item && $key && $key != $fd) {
