@@ -46,8 +46,6 @@ class AdminAuthServices extends BaseServices
      */
     public function parseToken(string $token): array
     {
-        /** @var CacheService $cacheService */
-        $cacheService = app()->make(CacheService::class);
 
         if (!$token || $token === 'undefined') {
             throw new AuthException(ApiErrorCode::ERR_LOGIN);
@@ -57,33 +55,13 @@ class AdminAuthServices extends BaseServices
         //设置解析token
         [$id, $type] = $jwtAuth->parseToken($token);
 
-        //检测token是否过期
-        $md5Token = md5($token);
-        if (!$cacheService->hasToken($md5Token) || !($cacheToken = $cacheService->getTokenBucket($md5Token))) {
-            $this->authFailAfter($id, $type);
-            throw new AuthException(ApiErrorCode::ERR_LOGIN);
-        }
-        //是否超出有效次数
-        if (isset($cacheToken['invalidNum']) && $cacheToken['invalidNum'] >= 3) {
-            if (!request()->isCli()) {
-                $cacheService->clearToken($md5Token);
-            }
-            $this->authFailAfter($id, $type);
-            throw new AuthException(ApiErrorCode::ERR_LOGIN_INVALID);
-        }
-
-
         //验证token
         try {
             $jwtAuth->verifyToken();
-            $cacheService->setTokenBucket($md5Token, $cacheToken, $cacheToken['exp']);
+
         } catch (ExpiredException $e) {
-            $cacheToken['invalidNum'] = isset($cacheToken['invalidNum']) ? $cacheToken['invalidNum']++ : 1;
-            $cacheService->setTokenBucket($md5Token, $cacheToken, $cacheToken['exp']);
+            throw new AuthException(ApiErrorCode::ERR_LOGIN_INVALID);
         } catch (\Throwable $e) {
-            if (!request()->isCli()) {
-                $cacheService->clearToken($md5Token);
-            }
             $this->authFailAfter($id, $type);
             throw new AuthException(ApiErrorCode::ERR_LOGIN_INVALID);
         }
@@ -91,9 +69,6 @@ class AdminAuthServices extends BaseServices
         //获取管理员信息
         $adminInfo = $this->dao->get($id);
         if (!$adminInfo || !$adminInfo->id) {
-            if (!request()->isCli()) {
-                $cacheService->clearToken($md5Token);
-            }
             $this->authFailAfter($id, $type);
             throw new AuthException(ApiErrorCode::ERR_LOGIN_STATUS);
         }

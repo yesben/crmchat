@@ -289,6 +289,9 @@ class ChatServiceServices extends BaseServices
         } else {
             $data['other'] = '';
         }
+        if (!$msg) {
+            return false;
+        }
         $data['msn'] = '';
         /** @var SystemConfigServices $configService */
         $configService = $app->make(SystemConfigServices::class);

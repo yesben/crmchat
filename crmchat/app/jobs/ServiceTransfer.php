@@ -38,8 +38,9 @@ class ServiceTransfer extends BaseJobs
     {
         /** @var ChatServiceDialogueRecordServices $service */
         $service = app()->make(ChatServiceDialogueRecordServices::class);
-        $list    = $service->getMessageList($where, $page, $limit);
-        $data    = [];
+        $list = $service->getMessageList($where, $page, $limit);
+        $data = [];
+        $list = array_reverse($list);
         foreach ($list as $item) {
             if ($item['to_user_id'] == $kfuUserId) {
                 $item['to_user_id'] = $kefuToUserId;
