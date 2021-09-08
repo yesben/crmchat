@@ -142,6 +142,7 @@ CREATE TABLE IF NOT EXISTS `eb_chat_service_dialogue_record` (
   `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否已读（0：否；1：是；）',
   `remind` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否提醒过',
   `msn_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '消息类型 1=文字 2=表情 3=图片 4=语音',
+  `is_send` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是否发送',
   `other` varchar(2000) NOT NULL DEFAULT '' COMMENT '其他参数'
 ) ENGINE=InnoDB AUTO_INCREMENT=466 DEFAULT CHARSET=utf8mb4 COMMENT='用户和客服对话记录';
 

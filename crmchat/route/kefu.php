@@ -57,6 +57,7 @@ Route::group('api', function () {
                 Route::get('complain', 'User/getComplainList')->name('getComplainList');//获取客服投诉
                 Route::post('complain', 'User/complain')->name('complain');//保存客户投诉
                 Route::put('status/:userId', 'User/status')->name('status');//拉黑用户
+                Route::post('savelog', 'User/savelog')->name('savelog');//保存聊天记录
 
             })->middleware(KefuAuthTokenMiddleware::class);
 

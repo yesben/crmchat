@@ -85,7 +85,7 @@ class SwooleWorkerStart implements ListenerInterface
                 if ($server->isEstablished($fd)) {
                     $last = $pingService->getLastTime($fd);
                     if ($last && ($nowTime - $last) > $timeout) {
-                        $server->push($fd, 'timeout');
+                        $server->push($fd, json_encode(['type' => 'timeout']));
                         $server->close($fd);
                     }
                 }

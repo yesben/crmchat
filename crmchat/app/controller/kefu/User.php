@@ -427,4 +427,37 @@ class User extends AuthController
         $content = $cache->getDbCache('user_agreement', '');
         return $this->success(compact('content'));
     }
+
+    /**
+     * 记录聊天记录
+     * @param ChatServiceDialogueRecordServices $recordServices
+     * @return mixed
+     */
+    public function savelog(ChatServiceDialogueRecordServices $recordServices)
+    {
+        $data = $this->request->postMore([
+            ['other', []],
+            ['type', 0],
+            ['is_send', 0],
+            ['to_user_id', 0],
+            ['msn_type', 0],
+            ['msn', ''],
+        ]);
+        if (!$data['to_user_id'] || !$data['msn']) {
+            return $this->fail('缺少参数');
+        }
+        $data['appid'] = $this->kefuInfo['appid'];
+        $data['user_id'] = $this->kefuInfo['user_id'];
+        $data['add_time'] = time();
+        $res = $recordServices->save($data);
+
+        if (!$res) {
+            return $this->fail('插入失败');
+        }
+        $res = $res->toArray();
+        $res['nickname'] = $this->kefuInfo['nickname'];
+        $res['avatar'] = $this->kefuInfo['avatar'];
+        $res['_add_time'] = date('Y-m-d H:i:s', $data['add_time']);
+        return $this->success($res);
+    }
 }
