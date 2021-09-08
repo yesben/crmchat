@@ -187,8 +187,12 @@ abstract class BaseHandler
             Timer::after(100, function () use ($app, $services, $appId, $to_user_id, $other, $msn_type, $userId, $msn, $response) {
                 $data = $services->autoReply($app, $appId, $to_user_id, $userId, $msn, $msn_type, $other);
                 if ($data) {
+                    //给当前用户自动回复
                     $toUserFd = $this->manager->getUserIdByFds($userId);
-                    return $this->manager->pushing($toUserFd, $response->message('reply', $data)->getData());
+                    $this->manager->pushing($toUserFd, $response->message('reply', $data)->getData());
+                    //给对方回复消息
+                    $toUserFd = $this->manager->getUserIdByFds($to_user_id);
+                    $this->manager->pushing($toUserFd, $response->message('chat', $data)->getData());
                 }
             });
         }
