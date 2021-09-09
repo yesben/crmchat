@@ -256,6 +256,11 @@ class ChatServiceServices extends BaseServices
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
+        try{
+
+        }catch (\Exception $e){
+
+        }
         return $result;
     }
 
