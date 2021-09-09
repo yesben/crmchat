@@ -225,6 +225,8 @@ export default {
             }
           })
           ws.send({ type: 'to_chat', data: { id: data.toUid } });
+
+          document.title =  `正在和${data.nickname}对话中 - ${this.chatServerData.site_name}`
         })
 
 

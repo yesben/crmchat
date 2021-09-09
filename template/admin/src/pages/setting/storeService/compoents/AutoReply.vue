@@ -42,7 +42,7 @@
                         width: 200
                     },
                     {
-                        title: '客服头像',
+                        title: '回复内容',
                         key: 'content'
                     },
                     {

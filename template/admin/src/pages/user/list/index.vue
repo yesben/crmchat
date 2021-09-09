@@ -3,11 +3,11 @@
     <div class="i-layout-page-header">
       <div class="i-layout-page-header">
         <span class="ivu-page-header-title">用户管理</span>
-        <!-- <div>
+        <div>
           <Tabs @on-click="onClickTab">
             <TabPane :label="item.name" :name="item.type" v-for="(item,index) in headeNum" :key="index" />
           </Tabs>
-        </div> -->
+        </div>
       </div>
     </div>
     <Card :bordered="false" dis-hover class="ivu-mt listbox">
@@ -68,21 +68,22 @@
             </Col>
             </Col>
             <Col span="18">
-            <Col v-bind="grid">
-            <FormItem label="选择时间：" label-for="user_time">
-              <DatePicker :editable="false" @on-change="onchangeTime" :value="timeVal" format="yyyy/MM/dd" type="datetimerange" placement="bottom-start" placeholder="自定义时间" style="width: 300px;" class="mr20" :options="options"></DatePicker>
-            </FormItem>
-
-            </Col>
-              <Col v-bind="grid">
-                <FormItem label="用户来源：" label-for="group_id">
-                  <Select v-model="user_type" placeholder="请选择" element-id="user_type" clearable>
-                    <Option value="all">全部</Option>
-                    <Option :value="item.value" v-for="(item, index) in selectType" :key="index">{{item.label}}</Option>
-                  </Select>
+                <Col v-bind="grid">
+                <FormItem label="选择时间：" label-for="user_time">
+                  <DatePicker :editable="false" @on-change="onchangeTime" :value="timeVal" format="yyyy/MM/dd" type="datetimerange" placement="bottom-start" placeholder="自定义时间" style="width: 300px;" class="mr20" :options="options"></DatePicker>
                 </FormItem>
+
+                </Col>
+                <Col v-bind="grid">
+                  <FormItem label="用户来源：" label-for="group_id">
+                    <Select v-model="user_type" placeholder="请选择" element-id="user_type" clearable>
+                      <Option value="all">全部</Option>
+                      <Option :value="item.value" v-for="(item, index) in selectType" :key="index">{{item.label}}</Option>
+                    </Select>
+                  </FormItem>
+                </Col>
               </Col>
-            </Col>
+
           </template>
           <Col span="6" class="ivu-text-right userFrom">
           <FormItem>
@@ -133,6 +134,13 @@
             {{groupListObj[row.group_id]}}
           </div>
         </template>
+
+        <template slot-scope="{ row, index }" slot="is_tourist">
+          <div>
+            {{row.is_tourist ? '游客': '客户'}}
+          </div>
+        </template>
+
         <template slot-scope="{ row, index }" slot="label">
           <div v-for="item in row.label">
              <span>{{item.label}}</span>
@@ -290,11 +298,9 @@ export default {
       },
       collapse: false,
       headeNum: [
-        { 'type': '', 'name': '全部' },
-        { 'type': 'wechat', 'name': '微信公众号' },
-        { 'type': 'routine', 'name': '微信小程序' },
-        { 'type': 'h5', 'name': 'H5' },
-        { 'type': 'pc', 'name': 'PC' }
+        { 'type': 'all', 'name': '全部' },
+        { 'type': 1, 'name': '游客' },
+        { 'type': 0, 'name': '用户' },
       ],
       address: [],
       addresData: city,
@@ -363,6 +369,11 @@ export default {
           title: '备注昵称',
           key: 'remark_nickname',
           minWidth: 150
+        },
+        {
+          title: '用户类型',
+          slot: 'is_tourist',
+          minWidth: 100
         },
         {
           title: '分组',
@@ -449,6 +460,10 @@ export default {
     labelClose() {
       this.labelShow = false
     },
+    changeLabel(){
+      this.userFrom.page = 1;
+      this.getList();
+    },
     // 提交
     putSend(name) {
       this.$refs[name].validate((valid) => {
@@ -487,7 +502,7 @@ export default {
     },
     onClickTab(type) {
       this.userFrom.page = 1;
-      this.userFrom.user_type = type;
+      this.userFrom.is_tourist = type;
       this.getList();
     },
     userGroup() {
@@ -662,18 +677,22 @@ export default {
     },
     // 会员列表
     getList() {
+      let userFrom = JSON.parse(JSON.stringify(this.userFrom));
       if(this.user_type === 'all'){
-        this.userFrom.user_type = '';
+        userFrom.user_type = '';
       }else{
         this.userFrom.user_type = this.user_type
       }
-      this.userFrom.status = this.userFrom.status || '';
-      this.userFrom.sex = this.userFrom.sex || '';
-      this.userFrom.label_id = this.label_id === 'all' ? '' : this.label_id.join(',');
-      this.userFrom.field_key = this.field_key === 'all' ? '' : this.field_key;
-      this.userFrom.group_id = this.group_id === 'all' ? '' : this.group_id;
+      if(userFrom.is_tourist === 'all'){
+        userFrom.is_tourist = '';
+      }
+      userFrom.status = userFrom.status || '';
+      userFrom.sex = userFrom.sex || '';
+      userFrom.label_id = this.label_id === 'all' ? '' : this.label_id.join(',');
+      userFrom.field_key = this.field_key === 'all' ? '' : this.field_key;
+      userFrom.group_id = this.group_id === 'all' ? '' : this.group_id;
       this.loading = true;
-      userList(this.userFrom).then(async res => {
+      userList(userFrom).then(async res => {
         let data = res.data;
         this.userLists = data.list;
         console.log(this.userLists);

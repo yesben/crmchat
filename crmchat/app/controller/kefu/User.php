@@ -103,12 +103,13 @@ class User extends AuthController
      */
     public function getUserList(Character $character, string $nickname = '')
     {
+        $labelId = $this->request->get('label_id', '');
         return $this->success(
             $character->groupByInitials(
                 $this->services->getUserList(
                     $this->kefuInfo['appid'],
                     $this->kefuInfo['user_id'],
-                    $nickname),
+                    $nickname, $labelId),
                 'nickname'
             )
         );

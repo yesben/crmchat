@@ -3,7 +3,7 @@
     <div class="content-wrapper">
       <baseHeader :kefuInfo="kefuInfo" :online="online" @setOnline="setOnline"></baseHeader>
       <div class="container">
-        <chatList @setDataId="setDataId" @search="bindSearch" @changeType="changeType" :isShow="isShow" :userOnline="userOnline" :newRecored="newRecored" :searchData="searchData"></chatList>
+        <chatList ref="chatList" @setDataId="setDataId" @search="bindSearch" @changeType="changeType" :isShow="isShow" :userOnline="userOnline" :newRecored="newRecored" :searchData="searchData"></chatList>
         <div class="chat-content">
           <div class="chat-body">
 
@@ -80,7 +80,7 @@
                   </Upload>
                 </div>
                 <div class="icon-item" @click.stop.stop="isMsg = true"><span class="iconfont iconliaotian"></span></div>
-                <div class="icon-item" @click.stop.stop="authMsg = true"><Icon size="22" color="#515a6e" type="ios-chatboxes-outline" /></div>
+                <div class="icon-item" @click.stop.stop="authMsg = true"><Icon style="font-weight: bold" size="22" color="#515a6e" type="ios-chatboxes-outline" /></div>
               </div>
               <div class="right-wrapper">
                 <div class="icon-item" @click.stop="isTransfer = !isTransfer">
@@ -88,7 +88,7 @@
                   <span>转接</span>
                 </div>
                 <div class="transfer-box" v-if="isTransfer">
-                  <transfer @close="msgClose" @transferPeople="transferPeople" :userUid="userActive.to_user_id"></transfer>
+                  <transfer ref="transfer" @close="msgClose" @transferPeople="transferPeople" @delchatList="delchatList" :userUid="userActive.to_user_id"></transfer>
                 </div>
                 <div class="transfer-bg" v-if="isTransfer" @click.stop="isTransfer = false"></div>
               </div>
@@ -116,11 +116,11 @@
       </div>
       <!-- 用户标签 -->
       <Modal v-model="isMsg" :mask="true" class="none-radius isMsgbox" width="600" :footer-hide="true">
-        <msg-window v-if="isMsg" @close="msgClose" @activeTxt="activeTxt"></msg-window>
+        <msg-window v-if="isMsg" @close="msgWinClose" @activeTxt="activeTxt"></msg-window>
       </Modal>
       <!-- 自动回复 -->
       <Modal v-model="authMsg" :mask="true" class="none-radius isMsgbox" width="600" :footer-hide="true">
-        <auth-reply v-if="authMsg" @close="msgClose" @activeTxt="activeTxt"></auth-reply>
+        <auth-reply v-if="authMsg" @close="msgAuthClose" @activeTxt="activeTxt"></auth-reply>
       </Modal>
       <!-- 商品弹窗 -->
       <!-- <div v-if="isProductBox">
@@ -476,8 +476,15 @@ export default {
 
 
     },
-    msgClose() {
+    msgClose(e) {
+      this.$refs.chatList.deleteUserList(e.id)
       this.isTransfer = false
+    },
+    msgWinClose() {
+      this.isMsg = false
+    },
+    msgAuthClose() {
+      this.authMsg = false
     },
     // 话术选中
     activeTxt(data) {

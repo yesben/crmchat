@@ -77,10 +77,15 @@ class ChatServiceRecordDao extends BaseDao
      */
     public function getServiceList(array $where, int $page, int $limit, array $with = [])
     {
+        $labelId = isset($where['label_id']) ? $where['label_id'] : [];
         return $this->search($where)->when($page && $limit, function ($query) use ($page, $limit) {
             $query->page($page, $limit);
         })->when(count($with), function ($query) use ($with) {
             $query->with($with);
+        })->when($labelId, function ($query) use ($labelId) {
+            $query->whereIn('user_id', function ($query) use ($labelId) {
+                $query->name('chat_user_label_assist')->whereIn('label_id', $labelId)->field(['user_id']);
+            });
         })->order('update_time desc')->select()->toArray();
     }
 

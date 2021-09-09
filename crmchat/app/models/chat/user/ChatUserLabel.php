@@ -51,6 +51,21 @@ class ChatUserLabel extends BaseModel
     }
 
     /**
+     * @return HasManyThrough
+     */
+    public function userone()
+    {
+        return $this->hasOneThrough(
+            ChatUser::class,
+            ChatUserLabelAssist::class,
+            'label_id',
+            'id',
+            'id',
+            'user_id'
+        );
+    }
+
+    /**
      * @param Model $query
      * @param $value
      */

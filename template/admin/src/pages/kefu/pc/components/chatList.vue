@@ -207,6 +207,13 @@ export default {
       console.log(e.target.value)
       this.bus.$emit('change', e.target.value)
     },
+    deleteUserList(id){
+      this.userList.forEach((el, index, arr) => {
+        if(el.id == id){
+          this.userList.splice(index,1)
+        }
+      })
+    },
     wsStart() {
       let that = this
       this.bus.pageWs.then(ws => {

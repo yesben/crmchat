@@ -71,10 +71,14 @@ class ChatUserLabelCateServices extends CategoryServices
      */
     public function getLabelAll(int $id)
     {
-        $labelAll = $this->dao->getDataList(['type' => 0], ['name', 'id'], 'id', 0, 0, ['label']);
+        $labelAll = $this->dao->getDataList(['type' => 0], ['name', 'id'], 'id', 0, 0, ['label' => function ($query) {
+            $query->with(['userone' => function ($query) {
+                $query->field(['count(*) count_user', 'label_id']);
+            }]);
+        }]);
         if ($id) {
             /** @var ChatUserLabelAssistServices $service */
-            $service  = app()->make(ChatUserLabelAssistServices::class);
+            $service = app()->make(ChatUserLabelAssistServices::class);
             $labelIds = $service->getColumn(['user_id' => $id], 'label_id');
             foreach ($labelAll as &$item) {
                 if ($item['label']) {

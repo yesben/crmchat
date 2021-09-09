@@ -204,16 +204,16 @@ export default {
     let self = this
     this.serviceCate()
     this.$nextTick(() => {
-      this.scroll = new BScroll(this.$refs.wrapper, {
-        mouseWheel: {
-          speed: 20,
-          invert: false,
-          easeTime: 300
-        },
-        scrollbar: true,
-        disableMouse: true,
-        // and so on
-      })
+      // this.scroll = new BScroll(this.$refs.wrapper, {
+      //   mouseWheel: {
+      //     speed: 20,
+      //     invert: false,
+      //     easeTime: 300
+      //   },
+      //   scrollbar: true,
+      //   disableMouse: true,
+      //   // and so on
+      // })
     })
   },
   methods: {
@@ -300,7 +300,7 @@ export default {
         })
         // res.data.data.unshift(obj)
         this.sortList = res.data.data
-        if(this.cateId === '') {
+        if(this.cateId === '' && res.data.data.length) {
           this.cateId = res.data.data[0].id
         }
         this.getList()

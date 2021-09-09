@@ -82,28 +82,26 @@ class KefuServices extends BaseServices
 
     /**
      * 转移客服
-     * @param int $kfuUid
-     * @param int $uid
-     * @param int $toUid
-     * @return mixed
+     * @param string $appid
+     * @param int $kfuUserId
+     * @param int $userId
+     * @param int $kefuToUserId
+     * @return bool
      */
     public function setTransfer(string $appid, int $kfuUserId, int $userId, int $kefuToUserId)
     {
         if ($userId === $kefuToUserId) {
             throw new ValidateException('自己不能转接给自己');
         }
-        /** @var ChatServiceAuxiliaryServices $auxiliaryServices */
-        $auxiliaryServices = app()->make(ChatServiceAuxiliaryServices::class);
         /** @var ChatServiceDialogueRecordServices $service */
         $service = app()->make(ChatServiceDialogueRecordServices::class);
-        $addTime = $auxiliaryServices->value(['binding_id' => $kfuUserId, 'relation_id' => $userId], 'update_time');
-        $where = ['chat' => [$kfuUserId, $userId], 'add_time' => $addTime];
+        $where = ['chat' => [$kfuUserId, $userId]];
         $messageData = $service->getMessageOne($where);
         $messageData = $messageData ? $messageData->toArray() : [];
         $count = $service->getMessageCount($where);
         $limit = 100;
         $pageNum = $count ? ceil($count / $limit) : 0;
-        $record = $this->transaction(function () use ($where, $limit, $pageNum, $messageData, $appid, $service, $kfuUserId, $userId, $kefuToUserId, $auxiliaryServices) {
+        $record = $this->transaction(function () use ($where, $limit, $pageNum, $messageData, $appid, $service, $kfuUserId, $userId, $kefuToUserId) {
             /** @var ChatServiceRecordServices $serviceRecord */
             $serviceRecord = app()->make(ChatServiceRecordServices::class);
             $info = $serviceRecord->get(['user_id' => $kfuUserId, 'to_user_id' => $userId], ['type', 'message_type', 'is_tourist', 'avatar', 'nickname']);
@@ -119,8 +117,7 @@ class KefuServices extends BaseServices
                 $info['nickname'] ?? "",
                 $info['avatar'] ?? ''
             );
-            $res = $auxiliaryServices->saveAuxliary(['binding_id' => $kfuUserId, 'relation_id' => $userId]);
-            if (!$res && !$record) {
+            if (!$record && !$info->delete()) {
                 throw new ValidateException('转接客服失败');
             }
             //同步聊天消息
