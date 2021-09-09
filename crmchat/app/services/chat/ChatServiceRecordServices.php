@@ -51,7 +51,11 @@ class ChatServiceRecordServices extends BaseServices
      */
     public function getUserList(string $appid, int $userId, string $nickname)
     {
-        return $this->dao->getServiceList(['appid' => $appid, 'user_id' => $userId, 'title' => $nickname, 'is_tourist' => 0], 0, 0);
+        $list = $this->dao->getServiceList(['appid' => $appid, 'user_id' => $userId, 'title' => $nickname, 'is_tourist' => 0], 0, 0, ['user']);
+        foreach ($list as &$item) {
+            $item['nickname'] = $item['user']['remark_nickname'] ?? $item['nickname'];
+        }
+        return $list;
     }
 
     /**

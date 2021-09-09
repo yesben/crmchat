@@ -33,7 +33,7 @@ class ChatServiceRecordDao extends BaseDao
      */
     public function __construct()
     {
-        $this->deleteWeekRecord();
+
     }
 
     /**

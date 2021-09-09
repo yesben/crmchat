@@ -49,7 +49,8 @@ class User extends AuthController
             ['time', ''],
             ['sex', ''],
             ['user_type', ''],
-            ['field_key', '']
+            ['field_key', ''],
+            ['is_tourist', '']
         ]);
 
         return $this->success($this->services->getChatUserList($where));

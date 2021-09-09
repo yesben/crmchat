@@ -77,6 +77,11 @@ class ChatServiceDialogueRecordServices extends BaseServices
         return $this;
     }
 
+    public function getDialogueRecord(array $where)
+    {
+
+    }
+
     /**
      * 获取聊天记录中的uid和to_uid
      * @param int $userId
