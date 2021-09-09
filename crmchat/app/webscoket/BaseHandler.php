@@ -99,7 +99,6 @@ abstract class BaseHandler
         $formType = $this->formType ?? null;
         $userId = $user['user_id'];
         $other = $data['other'] ?? [];
-        $id = $data['id'] ?? 0;
         $guid = $data['guid'] ?? 0;
         if (!$to_user_id) {
             return $response->message('err_tip', ['msg' => '用户不存在']);
@@ -143,13 +142,7 @@ abstract class BaseHandler
         } else {
             $data['other'] = '';
         }
-        //传入参数就
-        if ($id) {
-            $data = $logServices->get($id);
-            $logServices->update($id, ['is_send' => 1]);
-        } else {
-            $data = $logServices->save($data);
-        }
+        $data = $logServices->save($data);
         $data = $data->toArray();
         $data['_add_time'] = $data['add_time'];
         $data['add_time'] = strtotime($data['add_time']);
@@ -185,7 +178,7 @@ abstract class BaseHandler
         $services = app()->make(ChatServiceServices::class);
         $kefuInfo = $services->get(['user_id' => $to_user_id, 'appid' => $user['appid']], ['client_id', 'auto_reply']);
         if (!$kefuInfo) {
-            $clientId = $this->room->getClient($to_user_id);
+            $clientId = '';
             $auto_reply = false;
         } else {
             $clientId = $kefuInfo->client_id;

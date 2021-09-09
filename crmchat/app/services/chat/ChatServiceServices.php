@@ -256,9 +256,9 @@ class ChatServiceServices extends BaseServices
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
-        try{
+        try {
 
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
 
         }
         return $result;
@@ -376,6 +376,7 @@ class ChatServiceServices extends BaseServices
             'to_user_id' => $toUserId,
             'msn_type' => 1,
             'type' => 1,
+            'is_send' => 1
         ];
         $msg = $this->dao->value(['user_id' => $userId, 'appid' => $appId], 'welcome_words');
         if (!$msg) {
@@ -417,6 +418,7 @@ class ChatServiceServices extends BaseServices
         );
         if ($data) {
             SwooleTaskService::user($app)->type('reply')->to($toUserId)->data($data)->push();
+            SwooleTaskService::user($app)->type('chat')->to($userId)->data($data)->push();
         }
         return $data;
     }

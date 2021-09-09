@@ -70,10 +70,10 @@ class Manager extends Websocket
     public function __construct(\think\App $app, Server $server, Room $room, Event $event, Response $response, Ping $ping, NowRoom $nowRoom)
     {
         parent::__construct($app, $server, $room, $event);
-        $this->response    = $response;
+        $this->response = $response;
         $this->pingService = $ping;
-        $this->nowRoom     = $nowRoom;
-        $this->cache       = CacheService::redisHandler();
+        $this->nowRoom = $nowRoom;
+        $this->cache = CacheService::redisHandler();
         $this->nowRoom->setCache($this->cache);
         $this->cache_timeout = intval(app()->config->get('swoole.websocket.ping_timeout', 60000) / 1000) + 2;
     }
@@ -85,10 +85,10 @@ class Manager extends Websocket
      */
     public function onOpen($fd, \think\Request $request)
     {
-        $type     = $request->get('type');
-        $form     = $request->get('form');
+        $type = $request->get('type');
+        $form = $request->get('form');
         $clientId = $request->get('client_id', '');
-        $token    = $request->get('token');
+        $token = $request->get('token');
         if (!$token || !in_array($type, self::USER_TYPE)) {
             return $this->server->close($fd);
         }
@@ -110,17 +110,8 @@ class Manager extends Websocket
         if ($uid) {
             $this->login($type, $uid, $fd);
         }
-        $isApp = $form == 'app' ? 1 : 0;
 
-        if ($isApp) {
-            $this->nowRoom->clientAdd((string)$fd, [
-                'fd'        => $fd,
-                'client_id' => $clientId,
-                'type'      => $type,
-                'user_id'   => $uid
-            ]);
-        }
-        $this->nowRoom->add($fd, $data['data']['appid'] ?? '', $uid, $isApp, $clientId);
+        $this->nowRoom->add($fd, $data['data']['appid'] ?? '', $uid);
         $this->pingService->createPing($fd, time(), $this->cache_timeout);
         $this->send($fd, $this->response->message('ping', ['now' => time()]));
         return $this->send($fd, $this->response->success());
@@ -241,7 +232,7 @@ class Manager extends Websocket
      */
     public function onMessage(Frame $frame)
     {
-        $info   = $this->nowRoom->get($frame->fd);
+        $info = $this->nowRoom->get($frame->fd);
         $result = json_decode($frame->data, true) ?: [];
 
         if (!isset($result['type']) || !$result['type']) return true;
@@ -281,7 +272,7 @@ class Manager extends Websocket
             $data = $data->getData();
         }
         $data = is_array($data) ? json_encode($data) : $data;
-        $fds  = is_array($fds) ? $fds : [$fds];
+        $fds = is_array($fds) ? $fds : [$fds];
         foreach ($fds as $fd) {
             if (!$fd) {
                 continue;
@@ -308,13 +299,7 @@ class Manager extends Websocket
             $data = $this->nowRoom->get($tabfd);
             $this->nowRoom->deleteFd($data['type'], $data['user_id'], $fd);
             $this->logout($data['type'], $data['user_id'], $fd);
-            if (!$data['is_app'] && !$data['client_id']) {
-                $this->nowRoom->type($data['type'])->del($tabfd);
-            } else {
-                $this->nowRoom->update($fd, 'to_user_id', 0);
-                $this->nowRoom->update($fd, 'is_close', 1);
-                $this->nowRoom->update($fd, 'is_open', 0);
-            }
+            $this->nowRoom->type($data['type'])->del($tabfd);
             $this->exec($data['type'], 'close', [$fd, null, ['data' => $data], $this->response]);
         }
         $this->pingService->removePing($fd);

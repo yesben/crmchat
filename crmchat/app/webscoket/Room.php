@@ -175,10 +175,10 @@ class Room
      * @param int $tourist 是否为游客
      * @return mixed
      */
-    public function add(string $key, string $appid, int $userId = 0, int $isApp = 0, string $clientId = '', int $toUserId = 0, int $tourist = 0)
+    public function add(string $key, string $appid, int $userId = 0, int $toUserId = 0, int $tourist = 0)
     {
         $nowkey = $this->tableFdPrefix . $key;
-        $data = ['fd' => $key, 'is_open' => 1, 'client_id' => $clientId, 'appid' => $appid, 'is_app' => $isApp, 'type' => $this->type ?: 'user', 'user_id' => $userId, 'to_user_id' => $toUserId, 'tourist' => $tourist];
+        $data = ['fd' => $key, 'is_open' => 1, 'appid' => $appid, 'type' => $this->type ?: 'user', 'user_id' => $userId, 'to_user_id' => $toUserId, 'tourist' => $tourist];
         $res = $this->getTable()->set($nowkey, $data);
         $this->cache->sAdd(self::USER_INFO_FD_PRE, $key . '=' . $userId);
         $this->delRepeatUidFd($userId, $key);
