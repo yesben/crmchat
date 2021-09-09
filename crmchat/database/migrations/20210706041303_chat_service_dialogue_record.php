@@ -40,6 +40,7 @@ class ChatServiceDialogueRecord extends Migrator
         $table->addColumn('remind', 'boolean', ['limit' => 1, 'default' => 0, 'comment' => '是否提醒过']);
         $table->addColumn('msn_type', 'boolean', ['limit' => 1, 'default' => 0, 'comment' => '消息类型 1=文字 2=表情 3=图片 4=语音']);
         $table->addColumn('other', 'string', ['limit' => 2000, 'default' => '', 'comment' => '其他参数']);
+        $table->addColumn('guid', 'string', ['limit' => 100, 'default' => '', 'comment' => 'Guid,相当于唯一值']);
         $table->addIndex(['to_uid', 'uid']);
         $table->create();
     }

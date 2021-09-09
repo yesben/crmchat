@@ -100,6 +100,7 @@ abstract class BaseHandler
         $userId = $user['user_id'];
         $other = $data['other'] ?? [];
         $id = $data['id'] ?? 0;
+        $guid = $data['guid'] ?? 0;
         if (!$to_user_id) {
             return $response->message('err_tip', ['msg' => '用户不存在']);
         }
@@ -117,6 +118,7 @@ abstract class BaseHandler
         $data['add_time'] = time();
         $data['appid'] = $appId;
         $data['user_id'] = $userId;
+        $data['guid'] = $guid;
         $data['is_send'] = 1;
 
         $toUserFd = $this->manager->getUserIdByFds($to_user_id);

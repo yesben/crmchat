@@ -108,7 +108,6 @@ class Manager extends Websocket
         $uid = $data['data']['uid'] ?? 0;
 
         if ($uid) {
-            $this->deleteCloneFd($uid);
             $this->login($type, $uid, $fd);
         }
         $isApp = $form == 'app' ? 1 : 0;
