@@ -85,60 +85,6 @@ class Room
     }
 
     /**
-     * 添加
-     * @param string $fd
-     * @param array $data
-     * @return mixed
-     */
-    public function clientAdd(string $fd, array $data)
-    {
-        $this->cache->sadd('client', $fd);
-        return $this->getTable('client')->set($fd, $data);
-    }
-
-    /**
-     * 获取
-     * @param string $fd
-     * @return mixed
-     */
-    public function clientGet(string $fd)
-    {
-        return $this->getTable('client')->get($fd);
-    }
-
-    /**
-     * 删除
-     * @param string $fd
-     * @return mixed
-     */
-    public function clientDel(string $fd)
-    {
-        $this->cache->sRem('client', $fd);
-        return $this->getTable('client')->del($fd);
-    }
-
-
-    /**
-     * 根据uid获取client_id信息
-     * @param int $userId
-     * @return mixed|null
-     */
-    public function getClient(int $userId)
-    {
-        $list = $this->cache->sMembers('client');
-        $client = [];
-        foreach ($list as $item) {
-            $client[] = $this->clientGet($item);
-        }
-        foreach ($client as $value) {
-            if ($value['user_id'] == $userId) {
-                return $value;
-            }
-        }
-        return null;
-    }
-
-    /**
      * 修改
      * @param string $fd
      * @param $field

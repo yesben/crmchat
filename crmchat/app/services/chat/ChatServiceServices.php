@@ -288,6 +288,7 @@ class ChatServiceServices extends BaseServices
             'to_user_id' => $toUserId,
             'msn_type' => $msntype,
             'type' => 1,
+            'is_send' => 1
         ];
         if (in_array($msntype, [5, 6])) {
             $data['other'] = json_encode($other);
