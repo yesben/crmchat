@@ -180,6 +180,7 @@ abstract class BaseHandler
             $userOnline
         );
 
+        $data['recored']['_update_time'] = date('Y-m-d H:i', $data['recored']['update_time']);
         /** @var ChatServiceServices $services */
         $services = app()->make(ChatServiceServices::class);
         $kefuInfo = $services->get(['user_id' => $to_user_id, 'appid' => $user['appid']], ['client_id', 'auto_reply']);
