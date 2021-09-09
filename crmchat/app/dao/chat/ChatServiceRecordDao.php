@@ -78,6 +78,7 @@ class ChatServiceRecordDao extends BaseDao
     public function getServiceList(array $where, int $page, int $limit, array $with = [])
     {
         $labelId = isset($where['label_id']) ? $where['label_id'] : [];
+        unset($where['label_id']);
         return $this->search($where)->when($page && $limit, function ($query) use ($page, $limit) {
             $query->page($page, $limit);
         })->when(count($with), function ($query) use ($with) {
