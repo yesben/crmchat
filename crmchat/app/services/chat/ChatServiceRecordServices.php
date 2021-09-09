@@ -55,7 +55,9 @@ class ChatServiceRecordServices extends BaseServices
         $labelId = array_filter($labelId);
         $list = $this->dao->getServiceList(['appid' => $appid, 'label_id' => $labelId, 'user_id' => $userId, 'title' => $nickname, 'is_tourist' => 0], 0, 0, ['user']);
         foreach ($list as &$item) {
-            $item['nickname'] = $item['user']['remark_nickname'] ?? $item['nickname'];
+            if (isset($item['user']['remark_nickname']) && $item['user']['remark_nickname']) {
+                $item['nickname'] = $item['user']['remark_nickname'];
+            }
         }
         return $list;
     }
