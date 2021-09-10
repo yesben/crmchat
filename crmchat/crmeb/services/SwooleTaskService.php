@@ -168,9 +168,9 @@ class SwooleTaskService
      * 客服任务
      * @return SwooleTaskService
      */
-    public static function kefu()
+    public static function kefu(App $app = null)
     {
-        self::instance()->type = __FUNCTION__;
+        self::instance(null, $app)->type = __FUNCTION__;
         return self::instance();
     }
 
@@ -178,9 +178,9 @@ class SwooleTaskService
      * 后台任务
      * @return SwooleTaskService
      */
-    public static function admin()
+    public static function admin(App $app = null)
     {
-        self::instance()->type = __FUNCTION__;
+        self::instance(null, $app)->type = __FUNCTION__;
         return self::instance();
     }
 

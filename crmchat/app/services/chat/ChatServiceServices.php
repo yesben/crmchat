@@ -420,7 +420,7 @@ class ChatServiceServices extends BaseServices
             if ($authReply) {
                 SwooleTaskService::user($app)->type('reply')->to($toUserId)->data($data)->push();
             }
-            SwooleTaskService::user($app)->type('chat')->to($userId)->data($data)->push();
+            SwooleTaskService::kefu($app)->type('chat')->to($userId)->data($data)->push();
         }
         return $data;
     }
