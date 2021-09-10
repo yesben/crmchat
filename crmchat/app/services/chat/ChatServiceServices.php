@@ -369,6 +369,7 @@ class ChatServiceServices extends BaseServices
         /** @var ChatServiceDialogueRecordServices $logServices */
         $logServices = $app->make(ChatServiceDialogueRecordServices::class)->setApp($app);
         $msg = $this->dao->value(['user_id' => $userId, 'appid' => $appId], 'welcome_words');
+        $authReply = false;
         if (!$unMessagesCount && $msg) {
             $data = [
                 'add_time' => time(),
@@ -385,8 +386,9 @@ class ChatServiceServices extends BaseServices
             $data = $data->toArray();
             $data['_add_time'] = $data['add_time'];
             $data['add_time'] = strtotime($data['add_time']);
+            $authReply = true;
         } else {
-            $data = $logServices->get(['appid' => $appId, 'user_id' => $userId, 'to_user_id' => $toUserId]);
+            $data = $logServices->getMessageOne(['appid' => $appId, 'user_id' => $userId, 'to_user_id' => $toUserId]);
             $data = $data ? $data->toArray() : [];
         }
         /** @var ChatUserServices $userService */
@@ -415,7 +417,9 @@ class ChatServiceServices extends BaseServices
             0
         );
         if ($data) {
-            SwooleTaskService::user($app)->type('reply')->to($toUserId)->data($data)->push();
+            if ($authReply) {
+                SwooleTaskService::user($app)->type('reply')->to($toUserId)->data($data)->push();
+            }
             SwooleTaskService::user($app)->type('chat')->to($userId)->data($data)->push();
         }
         return $data;
