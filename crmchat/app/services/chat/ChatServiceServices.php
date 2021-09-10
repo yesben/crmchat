@@ -370,9 +370,9 @@ class ChatServiceServices extends BaseServices
         $logServices = $app->make(ChatServiceDialogueRecordServices::class)->setApp($app);
         $msg = $this->dao->value(['user_id' => $userId, 'appid' => $appId], 'welcome_words');
         /** @var ChatUserServices $userService */
-        $userService = $app->make(ChatUserServices::class);
+        $userService = $app->make(ChatUserServices::class)->setApp($app);
         /** @var ChatServiceRecordServices $serviceRecored */
-        $serviceRecored = $app->make(ChatServiceRecordServices::class);
+        $serviceRecored = $app->make(ChatServiceRecordServices::class)->setApp($app);
         $authReply = false;
         if (!$unMessagesCount && $msg) {
             $data = [
