@@ -89,6 +89,9 @@ class LoginServices extends BaseServices
      */
     public function parseToken(string $token, int $code = 410003)
     {
+        if ($token === 'undefined' || !$token) {
+            throw new AuthException(ApiErrorCode::ERR_LOGIN, $code);
+        }
         /** @var JwtAuth $jwtAuth */
         $jwtAuth = app()->make(JwtAuth::class);
         //设置解析token
