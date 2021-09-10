@@ -117,7 +117,7 @@ class KefuServices extends BaseServices
                 $info['nickname'] ?? "",
                 $info['avatar'] ?? ''
             );
-            if (!$record && !$info->delete() && $serviceRecord->delete(['user_id' => $userId, 'to_user_id' => $kfuUserId, 'appid' => $appid])) {
+            if (!$record && !$info->delete() && !$serviceRecord->delete(['user_id' => $userId, 'to_user_id' => $kfuUserId, 'appid' => $appid])) {
                 throw new ValidateException('转接客服失败');
             }
             //同步聊天消息
