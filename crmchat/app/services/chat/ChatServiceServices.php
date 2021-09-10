@@ -426,6 +426,7 @@ class ChatServiceServices extends BaseServices
         $isTourist = $_userInfo['is_tourist'];
         $nickname = $_userInfo['nickname'] ?? '';
         $avatar = $_userInfo['avatar'] ?? '';
+        $online = $this->dao->value(['appid' => $appId, 'user_id' => $toUserId], 'online');
         $recored = $serviceRecored->setApp($app)->saveRecord(
             $appId,
             $toUserId,
@@ -437,7 +438,7 @@ class ChatServiceServices extends BaseServices
             (int)$isTourist,
             $nickname,
             $avatar,
-            $this->dao->value(['appid' => $appId, 'user_id' => $toUserId], 'online')
+            $online ?: 0
         );
 
         SwooleTaskService::kefu($app)->type('recored')->to($userId)->data($recored)->push();
