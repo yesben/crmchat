@@ -417,10 +417,11 @@ class ChatServiceServices extends BaseServices
             }
         } else {
             //回复给客服
-            $_userInfo = $userService->getUserInfo($toUserId, ['nickname', 'avatar', 'type']);
+            $_userInfo = $userService->getUserInfo($toUserId, ['nickname', 'avatar', 'type', 'is_tourist']);
             $nickname = $_userInfo['nickname'] ?? '';
             $avatar = $_userInfo['avatar'] ?? '';
             $formType = $_userInfo['type'] ?? 0;
+            $isTourist = $_userInfo['is_tourist'] ?? 0;
             $recored = $serviceRecored->setApp($app)->saveRecord(
                 $appId,
                 $toUserId,
@@ -429,7 +430,7 @@ class ChatServiceServices extends BaseServices
                 (int)$formType,
                 1,
                 $unMessagesCount,
-                0,
+                (int)$isTourist,
                 $nickname,
                 $avatar,
                 1
