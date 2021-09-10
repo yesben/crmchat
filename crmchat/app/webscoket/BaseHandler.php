@@ -328,14 +328,16 @@ abstract class BaseHandler
             }
 
             //给转接的客服发送消息通知
-            $this->manager->pushing($kefuToUserId, $response->message('transfer', [
+            $kefuToUserIdFd = $this->manager->getUserIdByFds($kefuToUserId);
+            $this->manager->pushing($kefuToUserIdFd, $response->message('transfer', [
                 'recored' => $record,
                 'kefuInfo' => $keufInfo
             ]));
 
             //告知用户对接此用户聊天
             $keufToInfo = $services->get(['user_id' => $kefuToUserId], ['avatar', 'nickname']);
-            $this->manager->pushing($userId, $response->message('to_transfer', [
+            $userIdFd = $this->manager->getUserIdByFds($userId);
+            $this->manager->pushing($userIdFd, $response->message('to_transfer', [
                 'toUid' => $kefuToUserId,
                 'avatar' => $keufToInfo['avatar'] ?? '',
                 'nickname' => $keufToInfo['nickname'] ?? ''
