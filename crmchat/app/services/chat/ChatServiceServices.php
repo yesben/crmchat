@@ -397,8 +397,6 @@ class ChatServiceServices extends BaseServices
         $isTourist = $_userInfo['is_tourist'];
         $data['nickname'] = $_userInfo['nickname'] ?? '';
         $data['avatar'] = $_userInfo['avatar'] ?? '';
-
-        //用户向客服发送消息，判断当前客服是否在登录中
         /** @var ChatServiceRecordServices $serviceRecored */
         $serviceRecored = $app->make(ChatServiceRecordServices::class);
         $unMessagesCount = $logServices->setApp($app)->getMessageNum(['user_id' => $userId, 'to_user_id' => $toUserId, 'type' => 0]);
@@ -414,14 +412,35 @@ class ChatServiceServices extends BaseServices
             (int)$isTourist,
             $data['nickname'],
             $data['avatar'],
-            0
+            1
         );
+        //回复给用户
         if ($data) {
             if ($authReply) {
                 SwooleTaskService::user($app)->type('reply')->to($toUserId)->data($data)->push();
             }
-            SwooleTaskService::kefu($app)->type('recored')->to($userId)->data($data['recored'])->push();
         }
+
+        //回复给客服
+        $_userInfo = $userService->getUserInfo($toUserId, ['nickname', 'avatar', 'is_tourist']);
+        $isTourist = $_userInfo['is_tourist'];
+        $nickname = $_userInfo['nickname'] ?? '';
+        $avatar = $_userInfo['avatar'] ?? '';
+        $recored = $serviceRecored->setApp($app)->saveRecord(
+            $appId,
+            $toUserId,
+            $userId,
+            $msg,
+            $formType ?? 0,
+            1,
+            $unMessagesCount,
+            (int)$isTourist,
+            $nickname,
+            $avatar,
+            $this->dao->value(['appid' => $appId, 'user_id' => $toUserId], 'online')
+        );
+
+        SwooleTaskService::kefu($app)->type('recored')->to($userId)->data($recored)->push();
         return $data;
     }
 }
