@@ -369,6 +369,10 @@ class ChatServiceServices extends BaseServices
         /** @var ChatServiceDialogueRecordServices $logServices */
         $logServices = $app->make(ChatServiceDialogueRecordServices::class)->setApp($app);
         $msg = $this->dao->value(['user_id' => $userId, 'appid' => $appId], 'welcome_words');
+        /** @var ChatUserServices $userService */
+        $userService = $app->make(ChatUserServices::class);
+        /** @var ChatServiceRecordServices $serviceRecored */
+        $serviceRecored = $app->make(ChatServiceRecordServices::class);
         $authReply = false;
         if (!$unMessagesCount && $msg) {
             $data = [
@@ -386,62 +390,52 @@ class ChatServiceServices extends BaseServices
             $data = $data->toArray();
             $data['_add_time'] = $data['add_time'];
             $data['add_time'] = strtotime($data['add_time']);
-            $authReply = true;
-        } else {
-            $data = [];
-            $msg = '';
-        }
-        /** @var ChatUserServices $userService */
-        $userService = $app->make(ChatUserServices::class);
-        $_userInfo = $userService->setApp($app)->getUserInfo($data['user_id'], ['nickname', 'avatar', 'is_tourist']);
-        $isTourist = $_userInfo['is_tourist'];
-        $data['nickname'] = $_userInfo['nickname'] ?? '';
-        $data['avatar'] = $_userInfo['avatar'] ?? '';
-        /** @var ChatServiceRecordServices $serviceRecored */
-        $serviceRecored = $app->make(ChatServiceRecordServices::class);
-        $unMessagesCount = $logServices->setApp($app)->getMessageNum(['user_id' => $userId, 'to_user_id' => $toUserId, 'type' => 0]);
-        //记录当前用户和他人聊天记录
-        $data['recored'] = $serviceRecored->setApp($app)->saveRecord(
-            $appId,
-            $userId,
-            $toUserId,
-            $msg,
-            $formType ?? 0,
-            1,
-            $unMessagesCount,
-            (int)$isTourist,
-            $data['nickname'],
-            $data['avatar'],
-            1
-        );
-        //回复给用户
-        if ($data) {
+            $_userInfo = $userService->setApp($app)->getUserInfo($data['user_id'], ['nickname', 'avatar', 'is_tourist', 'type']);
+            $isTourist = $_userInfo['is_tourist'];
+            $data['nickname'] = $_userInfo['nickname'] ?? '';
+            $data['avatar'] = $_userInfo['avatar'] ?? '';
+            $formType = $_userInfo['type'] ?? 0;
+            $unMessagesCount = $logServices->setApp($app)->getMessageNum(['user_id' => $userId, 'to_user_id' => $toUserId, 'type' => 0]);
+            //记录当前用户和他人聊天记录
+            $online = $this->dao->value(['appid' => $appId, 'user_id' => $toUserId], 'online');
+            $data['recored'] = $serviceRecored->setApp($app)->saveRecord(
+                $appId,
+                $userId,
+                $toUserId,
+                $msg,
+                $formType ?? 0,
+                1,
+                $unMessagesCount,
+                (int)$isTourist,
+                $data['nickname'],
+                $data['avatar'],
+                $online ?: 0
+            );
+            //回复给用户
             if ($authReply) {
                 SwooleTaskService::user($app)->type('reply')->to($toUserId)->data($data)->push();
             }
+        } else {
+            //回复给客服
+            $_userInfo = $userService->getUserInfo($toUserId, ['nickname', 'avatar', 'type']);
+            $nickname = $_userInfo['nickname'] ?? '';
+            $avatar = $_userInfo['avatar'] ?? '';
+            $formType = $_userInfo['type'] ?? 0;
+            $recored = $serviceRecored->setApp($app)->saveRecord(
+                $appId,
+                $toUserId,
+                $userId,
+                $msg,
+                $formType,
+                1,
+                $unMessagesCount,
+                0,
+                $nickname,
+                $avatar,
+                1
+            );
+
+            SwooleTaskService::kefu($app)->type('recored')->to($userId)->data($recored)->push();
         }
-
-        //回复给客服
-        $_userInfo = $userService->getUserInfo($toUserId, ['nickname', 'avatar', 'is_tourist']);
-        $isTourist = $_userInfo['is_tourist'];
-        $nickname = $_userInfo['nickname'] ?? '';
-        $avatar = $_userInfo['avatar'] ?? '';
-        $online = $this->dao->value(['appid' => $appId, 'user_id' => $toUserId], 'online');
-        $recored = $serviceRecored->setApp($app)->saveRecord(
-            $appId,
-            $toUserId,
-            $userId,
-            $msg,
-            $formType ?? 0,
-            1,
-            $unMessagesCount,
-            (int)$isTourist,
-            $nickname,
-            $avatar,
-            $online ?: 0
-        );
-
-        SwooleTaskService::kefu($app)->type('recored')->to($userId)->data($recored)->push();
-        return $data;
     }
 }
