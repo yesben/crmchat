@@ -168,6 +168,8 @@ class ChatServiceDialogueRecordDao extends BaseDao
     {
         return $this->search(['chat' => $where['chat']])->when(isset($where['add_time']) && $where['add_time'], function ($query) use ($where) {
             $query->where('add_time', '>', $where['add_time']);
+        })->when(isset($where['appid']) && $where['appid'], function ($query) use ($where) {
+            $query->where('appid', $where['appid']);
         })->order('id', 'desc')->find();
     }
 }

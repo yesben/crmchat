@@ -388,7 +388,7 @@ class ChatServiceServices extends BaseServices
             $data['add_time'] = strtotime($data['add_time']);
             $authReply = true;
         } else {
-            $data = $logServices->getMessageOne(['appid' => $appId, 'user_id' => $userId, 'to_user_id' => $toUserId]);
+            $data = $logServices->getMessageOne(['appid' => $appId, 'chat' => [$userId, $toUserId]]);
             $data = $data ? $data->toArray() : [];
         }
         /** @var ChatUserServices $userService */
