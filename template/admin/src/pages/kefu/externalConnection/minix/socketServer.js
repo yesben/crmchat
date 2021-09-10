@@ -21,6 +21,8 @@ export default {
         uid: '',
         serviceList: [] // 聊天记录
       },
+      chatStatus:false,
+      toChat:false,
       upperStrataData: {},
       upperData: {}, // 外部链接携带进来的参数
       unreadMessages: '',
@@ -71,7 +73,7 @@ export default {
       if(e.data.type == 'openCustomeServer') {
         this.bus.pageWs.then((ws) => {
           ws.send({ type: 'to_chat', data: { id: this.chatServerData.to_user_id } });
-
+          this.toChat = true;
           if(this.unReadMesage) {
             this.getUserRecord()
           }
@@ -82,6 +84,7 @@ export default {
       if(e.data.type == 'closeCustomeServer') {
         this.bus.pageWs.then((ws) => {
           ws.send({ type: 'to_chat', data: { id: 0 } });
+          this.toChat = true;
         })
       }
 
@@ -166,10 +169,26 @@ export default {
     },
     // 建立连接
     connentServer() {
+      let number = 0;
       let token = getLoc('mobile_token');
       let formTerminal = this.upperData.deviceType == 'Mobile' ? 'h5' : 'pc'
       this.bus.pageWs = mobileScoket(true, token, formTerminal);
       this.bus.pageWs.then((ws) => {
+
+        ws.$on('close',()=>{
+          this.toChat = false;
+          this.chatStatus = false;
+        })
+
+        ws.$on('kefu_logout',data=>{
+          if(data.online == 0){
+            this.$router.push({
+              name: 'customerOutLine',
+              query: this.$route.query
+            });
+          }
+        })
+
         // 发送消息监听函数
         ws.$on(["reply", "chat"], data => {
           this.chatServerData.serviceList.push(data);
@@ -182,12 +201,12 @@ export default {
         });
 
         ws.$on('success', data => {
-        console.log(this.upperData)
-          this.bus.pageWs.then((ws) => {
+          this.chatStatus = true;
+          let to_user_id = this.upperData.isShowTip && this.upperData.isShowTip !='undefined' ? 0 : this.chatServerData.to_user_id
             ws.send({
               type: 'user',
               data: {
-                to_user_id: this.upperData.isShowTip && this.upperData.isShowTip !='undefined' ? 0 : this.chatServerData.to_user_id,
+                to_user_id: to_user_id,
                 uid: this.chatServerData.uid,
                 nickname: this.chatServerData.nickname,
                 avatar: this.chatServerData.avatar,
@@ -196,12 +215,18 @@ export default {
                 type: this.upperData.deviceType == 'Mobile' ? '3' : '0' // 0 = pc , 1 = 微信 ，2 = 小程序 ，3 = H5, 4 = APP
               }
             })
-
-            // if(this.upperData.isShowTip) {
-            //   ws.send({ type: 'to_chat', data: { id: 0 } });
-            // };
-
-          })
+          if(!to_user_id){
+            if(!this.toChat && this.chatServerData.to_user_id){
+              ws.send({
+                data: {
+                  id: this.chatServerData.to_user_id,
+                  test:1
+                },
+                type: "to_chat",
+              });
+              this.toChat = true;
+            }
+          }
         })
 
         ws.$on('mssage_num', data => {
@@ -225,7 +250,7 @@ export default {
             }
           })
           ws.send({ type: 'to_chat', data: { id: data.toUid } });
-
+          this.toChat = true;
           document.title =  `正在和${data.nickname}对话中 - ${this.chatServerData.site_name}`
         })
 
@@ -313,19 +338,22 @@ export default {
 
     // 文本发送
     sendText() {
+      if(!this.chatStatus){
+        return this.$Message.error('正在连接中');
+      }
       let sendMessage;
       if(!this.$refs['inputDiv']) {
-        sendMessage = this.userMessage;
+        sendMessage = this.userMessage.replace(/[\r\n]/g, '');
       } else {
-        sendMessage = this.$refs['inputDiv'].innerText.replace(/(↵)/g, '\n');
+        sendMessage = this.$refs['inputDiv'].innerText.replace(/[\r\n]/g, '');
       }
-
+      console.log(sendMessage)
       if(sendMessage) {
         this.sendMsg(sendMessage, 1);
         this.$refs['inputDiv'] ? this.$refs['inputDiv'].innerText = '' : this.userMessage = '';
       } else {
         this.$Message.error('请先输入信息，在进行发送');
-
+        this.$refs['inputDiv'] ? this.$refs['inputDiv'].innerText = '' : this.userMessage = '';
       }
 
 
@@ -376,6 +404,7 @@ export default {
       // 通知服务器，客户收起了聊天框
       this.bus.pageWs.then((ws) => {
         ws.send({ type: 'to_chat', data: { id: 0 } });
+        this.toChat = true;
       })
     },
     // 聊天输入框获取焦点

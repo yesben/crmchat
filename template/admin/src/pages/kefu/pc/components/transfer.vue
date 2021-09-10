@@ -62,7 +62,8 @@ export default {
         kefuToUserId: item.user_id
       }).then(res => {
         this.$Message.success(res.msg)
-        this.$emit('close',{id:item.id})
+        this.$emit('close')
+        this.$emit('transferSuccess',item);
       }).catch(error => {
         this.$Message.error(error.msg)
       })

@@ -21,7 +21,7 @@ class wsSocket {
         this.ws = null;
         this.opt = opt || {};
         this.networkStatus = true;
-        this.reconnetime = null;
+        reconneTimer[this.opt.key] = null;
         this.init(opt);
         this.networkWath();
         this.defaultEvenv();
@@ -123,12 +123,15 @@ class wsSocket {
 
     onClose() {
         this.timer && clearInterval(this.timer);
+        this.timer = null;
         this.opt.close && this.opt.close();
         this.socketStatus = false;
         this.reconne();
     }
 
     onError(e) {
+        this.timer && clearInterval(this.timer);
+        this.timer = null;
         this.opt.error && this.opt.error(e);
         this.socketStatus = false;
         this.reconne();
@@ -162,6 +165,7 @@ function createSocket(key, flag, token, tourist_uid, type, form) {
                 },
                 message(res) {
                     const { type, data = {} } = JSON.parse(res.data);
+                    console.log(type)
                     ws.vm.$emit(type, data);
                 },
                 close(e) {

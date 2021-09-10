@@ -207,22 +207,28 @@ export default {
       console.log(e.target.value)
       this.bus.$emit('change', e.target.value)
     },
-    deleteUserList(id){
+    deleteUserList(item){
       this.userList.forEach((el, index, arr) => {
-        if(el.id == id){
+        if(el.id == item.id){
           this.userList.splice(index,1)
         }
       })
+      if(this.userList.length){
+        this.selectUser(this.userList[0],0)
+      }
     },
-    updateUserList(data){
+    updateUserList(data,op){
+      let ids = [];
       this.userList.map(item=>{
-        if(item.id === data.recored.id){
-          item.message = data.recored.message
-          item._update_time = data.recored._update_time
-        }else{
-          this.userList.unshift(data.recored)
+        ids.push(item.id)
+        if (item.id === data.id) {
+          item.message = data.message
+          item._update_time = data._update_time
         }
       })
+      if(ids.indexOf(data.id) === -1 && op) {
+        this.userList.unshift(data);
+      }
     },
     wsStart() {
       let that = this
@@ -257,7 +263,7 @@ export default {
         })
 
         ws.$on('mssage_num', data => {
-
+          console.log('mssage_num',data)
           if(data.recored.id) {
             let status = false
             that.userList.forEach((el, index, arr) => {

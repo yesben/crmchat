@@ -88,7 +88,7 @@
                   <span>转接</span>
                 </div>
                 <div class="transfer-box" v-if="isTransfer">
-                  <transfer ref="transfer" @close="msgClose" @transferPeople="transferPeople" @delchatList="delchatList" :userUid="userActive.to_user_id"></transfer>
+                  <transfer ref="transfer" @transferSuccess="transferSuccess" @close="msgClose" @transferPeople="transferPeople" :userUid="userActive.to_user_id"></transfer>
                 </div>
                 <div class="transfer-bg" v-if="isTransfer" @click.stop="isTransfer = false"></div>
               </div>
@@ -226,7 +226,8 @@ export default {
       transferId: '', //转接id
       bodyClose: false,
       tourist: 0,
-      isShow:false
+      isShow:false,
+      toChat:false,
     }
   },
   computed: {
@@ -317,6 +318,23 @@ export default {
     // 建立scoket 连接
     wsAgain() {
       this.bus.pageWs.then((ws) => {
+        ws.$on('close',()=>{
+          this.toChat = false;
+        })
+        ws.$on('success',()=>{
+          this.isShow = true;
+          let toChat = this.userActive ? this.userActive.to_user_id : this.userActive;
+          if(!this.toChat && toChat){
+            ws.send({
+              data: {
+                id: toChat,
+                test:1
+              },
+              type: "to_chat",
+            });
+            this.toChat = true;
+          }
+        });
         ws.$on(["reply", "chat"], (data) => {
           if(data.msn_type == 1) {
             data.msn = this.replace_em(data.msn);
@@ -327,13 +345,16 @@ export default {
             }
           }
           this.chatList.push(data);
-
-          this.$refs.chatList.updateUserList(data.recored.message,data.recored._update_time);
-          this.$nextTick(function() {
+          this.$refs.chatList.updateUserList(data.recored,false);
+          this.$nextTick(()=>{
             this.scrollTop = document.querySelector(
               "#chat_scroll"
             ).offsetHeight;
           });
+        });
+        ws.$on('recored',(data)=>{
+          console.log(data)
+          this.$refs.chatList.updateUserList(data,true);
         });
         ws.$on("reply", (data) => {
           mp3.play();
@@ -366,15 +387,7 @@ export default {
 
         });
 
-        // ws登录成功
-        ws.$on("success", (data) => {
-          console.log('ws success')
-          this.isShow = true;
-        });
       })
-        .catch((error) => {
-
-        });
     },
     wsRestart() {
       this.bus.pageWs = Socket(true);
@@ -395,11 +408,6 @@ export default {
         this.$Message.error(res.msg);
       }
     },
-    //订单详情
-    //    lookOrder(item) {
-    //      this.orderId = item.orderInfo.id
-    //      this.isOrder = true
-    //    },
     setOnline(data) {
 
       this.bus.pageWs.then(ws => {
@@ -412,13 +420,6 @@ export default {
       })
       this.online = data;
     },
-    // 阻止浏览器默认换行操作
-    //    listen(e) {
-    //      if(e.keyCode == 13) {
-    //        e.preventDefault()
-    //        return false
-    //      }
-    //    },
     // 输入框选择表情
     select(data) {
       let val = `[${data}]`
@@ -449,9 +450,11 @@ export default {
           ws.send({
             data: {
               id: this.userActive ? this.userActive.to_user_id : this.userActive,
+              test:2
             },
             type: "to_chat",
           });
+          this.toChat = true
         });
         this.getChatList()
       } else {
@@ -469,8 +472,10 @@ export default {
 
     },
     msgClose(e) {
-      this.$refs.chatList.deleteUserList(e.id)
       this.isTransfer = false
+    },
+    transferSuccess(e){
+      this.$refs.chatList.deleteUserList(this.userActive)
     },
     msgWinClose() {
       this.isMsg = false
@@ -485,7 +490,12 @@ export default {
     },
     // 文本发送
     sendText() {
-      this.sendMsg(this.chatCon, 1)
+      let chatCon = this.chatCon.replace(/[\r\n]/g, '');
+      if(!chatCon){
+        this.chatCon = '';
+        return this.$Message.error('请输入内容');
+      }
+      this.sendMsg(chatCon, 1)
       this.chatCon = '';
     },
 
