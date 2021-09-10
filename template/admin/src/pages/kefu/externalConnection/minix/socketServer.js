@@ -326,7 +326,7 @@ export default {
     },
     // 选择表情
     select(item) {
-      if(this.$route.query.deviceType == 'Mobile') {
+      if(this.$route.query.deviceType == 'Mobile' || !this.$refs['inputDiv']) {
         this.userMessage += `[${item}]`
       } else {
         this.inputConType = 1;
