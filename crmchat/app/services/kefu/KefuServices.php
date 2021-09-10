@@ -104,7 +104,7 @@ class KefuServices extends BaseServices
         $record = $this->transaction(function () use ($where, $limit, $pageNum, $messageData, $appid, $service, $kfuUserId, $userId, $kefuToUserId) {
             /** @var ChatServiceRecordServices $serviceRecord */
             $serviceRecord = app()->make(ChatServiceRecordServices::class);
-            $info = $serviceRecord->get(['user_id' => $kfuUserId, 'to_user_id' => $userId], ['type', 'message_type', 'is_tourist', 'avatar', 'nickname']);
+            $info = $serviceRecord->get(['user_id' => $kfuUserId, 'to_user_id' => $userId, 'appid' => $appid], ['type', 'message_type', 'is_tourist', 'avatar', 'nickname']);
             $record = $serviceRecord->saveRecord(
                 $appid,
                 $userId,
@@ -117,7 +117,7 @@ class KefuServices extends BaseServices
                 $info['nickname'] ?? "",
                 $info['avatar'] ?? ''
             );
-            if (!$record && !$info->delete()) {
+            if (!$record && !$info->delete() && $serviceRecord->delete(['user_id' => $userId, 'to_user_id' => $kfuUserId, 'appid' => $appid])) {
                 throw new ValidateException('转接客服失败');
             }
             //同步聊天消息
