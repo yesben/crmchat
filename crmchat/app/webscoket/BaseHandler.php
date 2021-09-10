@@ -213,7 +213,7 @@ abstract class BaseHandler
             $this->manager->pushing($toUserFd, $response->message('reply', $data)->getData());
         } else {
             //用户在线，可是没有和当前用户进行聊天，给当前用户发送未读条数
-            if ($toUserFd && $toUser['to_user_id'] != $userId && $isBackstage) {
+            if ($toUserFd && $toUser['to_user_id'] != $userId && $isBackstage && $kefuOnline) {
                 $data['recored']['nickname'] = $_userInfo['nickname'];
                 $data['recored']['avatar'] = $_userInfo['avatar'];
 
