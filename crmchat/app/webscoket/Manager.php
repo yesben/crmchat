@@ -145,21 +145,6 @@ class Manager extends Websocket
         $this->cache->expire($key . $uid, 1800);
     }
 
-    /**
-     *
-     * @param int $userId
-     * @throws \Psr\SimpleCache\InvalidArgumentException
-     */
-    public function deleteCloneFd(int $userId)
-    {
-        $fds = $this->getUserIdByFds($userId);
-        foreach ($fds as $fd) {
-            $data = $this->nowRoom->get($fd);
-            if ($data) {
-                $this->nowRoom->type($data['type'])->del($fd);
-            }
-        }
-    }
 
     /**
      * @param int $userId

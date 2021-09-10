@@ -239,6 +239,12 @@ abstract class BaseHandler
                 ]);
             }
         }
+
+        $data['recored'] = $serviceRecored->get(['user_id' => $userId, 'to_user_id' => $to_user_id]);
+        if ($data['recored']) {
+            $data['recored'] = $data['recored']->toArray();
+            $data['recored']['_update_time'] = date('Y-m-d H:i', $data['recored']['update_time']);
+        }
         return $response->message('chat', $data);
     }
 
