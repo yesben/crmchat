@@ -42,7 +42,16 @@
 </body>
 <script src="https://chat.crmeb.net/customerServer.js"></script>
 <script>
+    var demostatus = {
+        demo0:false,
+        demo1:false,
+        demo2:false,
+        demo3:false,
+    };
     function demo0() {
+        if(demostatus.demo0){
+            return;
+        }
         var option = {
             openUrl: 'https://chat.crmeb.net',
             token: 'e8bcc017f50e55c63b5352c4257c8904',
@@ -50,8 +59,12 @@
         var canCustomerServer = new initCustomerServer(option);
         canCustomerServer.init();
         canCustomerServer.getCustomeServer();
+        demostatus.demo0 = true;
     }
     function demo1() {
+        if(demostatus.demo1){
+            return;
+        }
         var option = {
             openUrl: 'https://chat.crmeb.net',
             token: 'e8bcc017f50e55c63b5352c4257c8904',
@@ -62,10 +75,14 @@
         };
         var canCustomerServer = new initCustomerServer(option);
         canCustomerServer.init();
+        demostatus.demo1 = true;
         //自动弹开对话框
 //    canCustomerServer.getCustomeServer();
     }
     function demo2() {
+        if(demostatus.demo2){
+            return;
+        }
         var option = {
             openUrl: 'https://chat.crmeb.net',
             token: 'e8bcc017f50e55c63b5352c4257c8904',
@@ -73,9 +90,13 @@
         };
         var canCustomerServer = new initCustomerServer(option);
         canCustomerServer.init();
+        demostatus.demo2 = true;
 //    canCustomerServer.getCustomeServer();
     }
     function demo3() {
+        if(demostatus.demo3){
+            return;
+        }
         var option = {
             openUrl: 'https://chat.crmeb.net',
             token: 'e8bcc017f50e55c63b5352c4257c8904',
@@ -84,6 +105,7 @@
         };
         var canCustomerServer = new initCustomerServer(option);
         canCustomerServer.init();
+        demostatus.demo3 = true;
 //    canCustomerServer.getCustomeServer();
     }
 

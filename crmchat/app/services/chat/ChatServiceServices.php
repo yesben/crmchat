@@ -299,10 +299,10 @@ class ChatServiceServices extends BaseServices
             return false;
         }
         $data['msn'] = '';
-        /** @var SystemConfigServices $configService */
-        $configService = $app->make(SystemConfigServices::class);
-        $words = new DisyllabicWords(['appCode' => json_decode($configService->setApp($app)->getConfigValue('disyllabic_app_code'), true)]);
-        $keyword = $words->getWord($msg);
+//        /** @var SystemConfigServices $configService */
+//        $configService = $app->make(SystemConfigServices::class);
+//        $words = new DisyllabicWords(['appCode' => json_decode($configService->setApp($app)->getConfigValue('disyllabic_app_code'), true)]);
+        $keyword = [];
         array_push($keyword, $msg);
         if ($keyword) {
             /** @var ChatAutoReplyServices $authReplyService */
