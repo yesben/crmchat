@@ -11,13 +11,16 @@
 
 namespace app\webscoket;
 
+use app\jobs\ServiceTransfer;
 use app\jobs\UniPush;
 use app\services\chat\ChatServiceDialogueRecordServices;
 use app\services\chat\ChatServiceRecordServices;
 use app\services\chat\ChatServiceServices;
 use app\services\chat\ChatUserServices;
+use crmeb\services\SwooleTaskService;
 use crmeb\utils\Arr;
 use Swoole\Timer;
+use think\exception\ValidateException;
 use think\facade\Log;
 
 /**
@@ -176,13 +179,17 @@ abstract class BaseHandler
         $data['recored']['_update_time'] = date('Y-m-d H:i', $data['recored']['update_time']);
         /** @var ChatServiceServices $services */
         $services = app()->make(ChatServiceServices::class);
-        $kefuInfo = $services->get(['user_id' => $to_user_id, 'appid' => $user['appid']], ['client_id', 'auto_reply']);
+        $kefuInfo = $services->get(['user_id' => $to_user_id, 'appid' => $user['appid']], ['is_backstage', 'online', 'client_id', 'auto_reply']);
         if (!$kefuInfo) {
             $clientId = '';
             $auto_reply = false;
+            $kefuOnline = false;
+            $isBackstage = false;
         } else {
             $clientId = $kefuInfo->client_id;
             $auto_reply = !!$kefuInfo->auto_reply;
+            $kefuOnline = !!$kefuInfo['online'];
+            $isBackstage = !!$kefuInfo['is_backstage'];
         }
 
         //开启自动回复
@@ -205,9 +212,8 @@ abstract class BaseHandler
         if ($online) {
             $this->manager->pushing($toUserFd, $response->message('reply', $data)->getData());
         } else {
-            $fremaData = $fremaData[0] ?? ['is_open' => 1];
             //用户在线，可是没有和当前用户进行聊天，给当前用户发送未读条数
-            if ($toUserFd && $toUser['to_user_id'] != $userId && $fremaData['is_open']) {
+            if ($toUserFd && $toUser['to_user_id'] != $userId && $isBackstage) {
                 $data['recored']['nickname'] = $_userInfo['nickname'];
                 $data['recored']['avatar'] = $_userInfo['avatar'];
 
@@ -224,8 +230,8 @@ abstract class BaseHandler
                     'allNum' => $allUnMessagesCount,//总未读条数
                     'recored' => $data['recored']
                 ])->getData());
-            } else if ($clientId) {
-                //开启自动回复
+            } else if ($kefuOnline && $clientId) {
+                //客服不在线,但是客服在app登录了,状态保持在线,发送app推送消息
                 UniPush::dispatch([
                     ['nickname' => $data['nickname'], 'user_id' => $userId],
                     $clientId,
@@ -237,6 +243,9 @@ abstract class BaseHandler
                             $data['other'],
                     ]
                 ]);
+            } else if (!$kefuOnline) {
+                //客服不在线,app端也不在线,自动转接给在线的客服
+                $this->authTransfer($response, $data['appid'], $userId, $to_user_id);
             }
         }
 
@@ -246,6 +255,96 @@ abstract class BaseHandler
             $data['recored']['_update_time'] = date('Y-m-d H:i', $data['recored']['update_time']);
         }
         return $response->message('chat', $data);
+    }
+
+    /**
+     * 聊天自动转接
+     * @param Response $response
+     * @param string $appid
+     * @param $userId
+     * @param $kfuUserId
+     * @return bool
+     */
+    protected function authTransfer(Response $response, string $appid, $userId, $kfuUserId)
+    {
+        /** @var ChatServiceServices $services */
+        $services = app()->make(ChatServiceServices::class);
+        //客服不在线,app端也不在线,自动转接给在线的客服
+        $kefuUserInfo = $services->getColumn(['online' => 1, 'appid' => $appid], 'user_id,id');
+        if (!$kefuUserInfo) {
+            return $this->manager->pushing($userId, $response->message('kefu_logout', [
+                'user_id' => $kfuUserId,
+                'online' => 0
+            ])->getData());
+        }
+        $userIds = array_column($kefuUserInfo, 'user_id');
+        mt_srand();
+        $kefuToUserId = $userIds[array_rand($userIds)] ?? 0;
+
+        /** @var ChatServiceDialogueRecordServices $service */
+        $service = app()->make(ChatServiceDialogueRecordServices::class);
+        $where = ['chat' => [$kfuUserId, $userId]];
+        $messageData = $service->getMessageOne($where);
+        $messageData = $messageData ? $messageData->toArray() : [];
+        $count = $service->getMessageCount($where);
+        $limit = 100;
+        $pageNum = $count ? ceil($count / $limit) : 0;
+        try {
+            $record = $service->transaction(function () use ($where, $limit, $pageNum, $messageData, $appid, $service, $kfuUserId, $userId, $kefuToUserId) {
+                /** @var ChatServiceRecordServices $serviceRecord */
+                $serviceRecord = app()->make(ChatServiceRecordServices::class);
+                $info = $serviceRecord->get(['user_id' => $kfuUserId, 'to_user_id' => $userId, 'appid' => $appid], ['id', 'type', 'message_type', 'is_tourist', 'avatar', 'nickname']);
+                $record = $serviceRecord->saveRecord(
+                    $appid,
+                    $userId,
+                    $kefuToUserId,
+                    $messageData['msn'] ?? '',
+                    $info['type'] ?? 1,
+                    $messageData['message_type'] ?? 1,
+                    0,
+                    (int)($info['is_tourist'] ?? 0),
+                    $info['nickname'] ?? "",
+                    $info['avatar'] ?? ''
+                );
+                $res = $serviceRecord->delete(['user_id' => $kfuUserId, 'to_user_id' => $userId, 'appid' => $appid]);
+                $res = $res && $serviceRecord->delete(['user_id' => $userId, 'to_user_id' => $kfuUserId, 'appid' => $appid]);
+                if (!$record && !$res) {
+                    throw new ValidateException('转接客服失败');
+                }
+                //同步聊天消息
+                if ($pageNum) {
+                    for ($i = 0; $i < $pageNum; $i++) {
+                        ServiceTransfer::dispatch([$where, $kfuUserId, $kefuToUserId, $i, $limit]);
+                    }
+                }
+                return $record;
+            });
+
+            $keufInfo = $services->get(['user_id' => $kfuUserId], ['avatar', 'nickname']);
+            if ($keufInfo) {
+                $keufInfo = $keufInfo->toArray();
+            } else {
+                $keufInfo = (object)[];
+            }
+
+            //给转接的客服发送消息通知
+            $this->manager->pushing($kefuToUserId, $response->message('transfer', [
+                'recored' => $record,
+                'kefuInfo' => $keufInfo
+            ]));
+
+            //告知用户对接此用户聊天
+            $keufToInfo = $services->get(['user_id' => $kefuToUserId], ['avatar', 'nickname']);
+            $this->manager->pushing($userId, $response->message('to_transfer', [
+                'toUid' => $kefuToUserId,
+                'avatar' => $keufToInfo['avatar'] ?? '',
+                'nickname' => $keufToInfo['nickname'] ?? ''
+            ])->getData());
+
+        } catch (\Exception $e) {
+            Log::error('自动转接客服失败:' . $e->getMessage());
+        }
+
     }
 
     /**

@@ -112,6 +112,7 @@ CREATE TABLE IF NOT EXISTS `eb_chat_service` (
   `customer` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否展示统计管理',
   `uniqid` varchar(35) NOT NULL DEFAULT '' COMMENT '扫码登录唯一值',
   `is_app` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为APP登陆',
+  `is_backstage` TINYINT(1) NOT NULL DEFAULT '1' COMMENT '1=前台运行;0=后台运行',
   `auto_reply` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '自动回复',
   `welcome_words` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '欢迎语',
   `client_id` varchar(50) NOT NULL DEFAULT '' COMMENT 'client_id'

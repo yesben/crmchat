@@ -417,5 +417,16 @@ class Service extends AuthController
         return $this->success('设置成功');
     }
 
+    /**
+     * 设置是否后台
+     * @param $backstage
+     * @return mixed
+     */
+    public function backstage($backstage)
+    {
+        $this->services->update(['id' => $this->kefuId], ['is_backstage' => $backstage]);
+        return $this->success('设置成功');
+    }
+
 
 }

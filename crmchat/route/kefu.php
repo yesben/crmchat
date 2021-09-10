@@ -87,6 +87,7 @@ Route::group('api', function () {
                 Route::post('auth_reply/:id', 'Service/saveAuthReply')->name('saveAuthReply');//保存当前自动回复内容
                 Route::delete('auth_reply/:id', 'Service/deleteAuthReply')->name('deleteAuthReply');//删除当前自动回复内容
                 Route::put('auth_reply/:value', 'Service/setAutoReply')->name('setAutoReply');//设置是否自动回复
+                Route::put('backstage/:backstage', 'Service/backstage')->name('backstage');//设置是否后台运行
 
             })->middleware(KefuAuthTokenMiddleware::class);
 
