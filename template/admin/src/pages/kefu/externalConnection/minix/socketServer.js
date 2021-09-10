@@ -123,6 +123,7 @@ export default {
         avatar: this.upperData.avatar,
         openid: this.upperData.openid,
         kefu_id: this.upperData.kefu_id || 0,
+        toUserId:getLoc('to_user_id') || 0,
         type: this.upperData.deviceType == 'Mobile' ? '3' : '0'
       }
 
@@ -139,14 +140,13 @@ export default {
           let cookieData = {
             nickname: '',
             uid: '',
-            avatar: ''
+            avatar: '',
+            to_user_id:0,
+            to_user_nickname:''
           };
-          if(res.data.is_tourist == 1) {
-
             Object.keys(cookieData).forEach(item => {
               setLoc(item, getLoc(item) ? getLoc(item) : res.data[item]);
             })
-          };
           this.goPageBottom(); // 滑动到页面底部
           document.title = res.data.to_user_nickname ? `正在和${res.data.to_user_nickname}对话中 - ${this.chatServerData.site_name}` : '正在和游客对话中 - ' + this.chatServerData.site_name;
           this.connentServer(); // 建立socket 链接

@@ -60,8 +60,8 @@ export default {
       autoLogin: true,
       imgcode: '',
       formInline: {
-        username: '',
-        password: '',
+        username: 'demo',
+        password: 'demo',
         code: '',
         key: ''
       },
@@ -166,8 +166,8 @@ export default {
         let data = res.data
         let expires = this.getExpiresTime(data.expires_time)
         // 记录用户登陆信息
-        setCookies('uuid', data.user_info.id, expires)
-        setCookies('token', data.token, expires)
+        setCookies('uuid', data.user_info.id)
+        setCookies('token', data.token,expires)
         setCookies('expires_time', data.expires_time, expires)
 
         this.$store.commit('userInfo/uniqueAuth', data.unique_auth)
@@ -199,7 +199,7 @@ export default {
     getExpiresTime(expiresTime) {
       let nowTimeNum = Math.round(new Date() / 1000)
       let expiresTimeNum = expiresTime - nowTimeNum
-      return parseFloat(parseFloat(parseFloat(expiresTimeNum / 60) / 60) / 24)
+      return parseInt(parseFloat(parseFloat(expiresTimeNum / 60) / 60) / 24)
     },
     closefail() {
       if(this.jigsaw) this.jigsaw.reset()

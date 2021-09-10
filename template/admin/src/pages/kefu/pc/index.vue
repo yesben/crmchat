@@ -327,6 +327,8 @@ export default {
             }
           }
           this.chatList.push(data);
+
+          this.$refs.chatList.updateUserList(data.recored.message,data.recored._update_time);
           this.$nextTick(function() {
             this.scrollTop = document.querySelector(
               "#chat_scroll"
@@ -364,14 +366,6 @@ export default {
 
         });
 
-
-
-        ws.$on("timeout", (data) => {
-          setTimeout(() => {
-            this.isShow = false;
-            this.wsRestart();
-          }, 2000);
-        });
         // ws登录成功
         ws.$on("success", (data) => {
           console.log('ws success')
@@ -379,9 +373,7 @@ export default {
         });
       })
         .catch((error) => {
-          setTimeout(() => {
-            this.wsRestart();
-          }, 2000);
+
         });
     },
     wsRestart() {

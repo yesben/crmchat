@@ -10,7 +10,7 @@
     <div class="scroll-box">
 
       <vue-scroll :ops="ops" @handle-scroll="handleScroll" v-if="userList.length>0">
-        <div class="chat-item" v-for="(item,index) in userList" :key="index" :class="{active:curId == item.id}" @click="selectUser(item)">
+        <div class="chat-item" v-for="(item,index) in userList" :key="index" :class="{active:curId == item.id}" @click="selectUser(item,index)">
           <div class="avatar">
             <img v-lazy="item.avatar" alt="">
             <div class="status" :class="{off:item.online == 0}"></div>
@@ -214,6 +214,16 @@ export default {
         }
       })
     },
+    updateUserList(data){
+      this.userList.map(item=>{
+        if(item.id === data.recored.id){
+          item.message = data.recored.message
+          item._update_time = data.recored._update_time
+        }else{
+          this.userList.unshift(data.recored)
+        }
+      })
+    },
     wsStart() {
       let that = this
       this.bus.pageWs.then(ws => {
@@ -229,6 +239,7 @@ export default {
                 let oldVal = data.recored
                 arr.splice(index, 1)
                 if(index == 0) {
+                  oldVal.index = index
                   this.$emit('setDataId', oldVal)
                   oldVal.mssage_num = 0
                 }
@@ -300,6 +311,7 @@ export default {
 
           if(this.page == 1 && res.data.length > 0 && !this.isSearch) {
             this.curId = res.data[0].id
+            res.data[0].index = 0
             this.$emit('setDataId', res.data[0])
           }
           this.page++
@@ -313,10 +325,11 @@ export default {
       this.getList()
     },
     // 选择用户
-    selectUser(item) {
+    selectUser(item,index) {
       if(this.curId == item.id) return
       item.mssage_num = 0
       this.curId = item.id
+      item.index = index;
       this.$emit('setDataId', item)
     },
     handleScroll(vertical, horizontal, nativeEvent) {

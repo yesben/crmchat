@@ -366,32 +366,29 @@ class ChatServiceServices extends BaseServices
         /** @var ChatServiceDialogueRecordServices $logServices */
         $logServices = $app->make(ChatServiceDialogueRecordServices::class);
         $unMessagesCount = $logServices->setApp($app)->count(['chat' => [$userId, $toUserId]]);
-        if ($unMessagesCount) {
-            return true;
-        }
-
-        $data = [
-            'add_time' => time(),
-            'appid' => $appId,
-            'user_id' => $userId,
-            'to_user_id' => $toUserId,
-            'msn_type' => 1,
-            'type' => 1,
-            'is_send' => 1
-        ];
-        $msg = $this->dao->value(['user_id' => $userId, 'appid' => $appId], 'welcome_words');
-        if (!$msg) {
-            return false;
-        }
-        $data['other'] = '';
-        $data['msn'] = $msg;
         /** @var ChatServiceDialogueRecordServices $logServices */
         $logServices = $app->make(ChatServiceDialogueRecordServices::class)->setApp($app);
-        $data = $logServices->save($data);
-        $data = $data->toArray();
-        $data['_add_time'] = $data['add_time'];
-        $data['add_time'] = strtotime($data['add_time']);
-
+        $msg = $this->dao->value(['user_id' => $userId, 'appid' => $appId], 'welcome_words');
+        if (!$unMessagesCount && $msg) {
+            $data = [
+                'add_time' => time(),
+                'appid' => $appId,
+                'user_id' => $userId,
+                'to_user_id' => $toUserId,
+                'msn_type' => 1,
+                'type' => 1,
+                'is_send' => 1
+            ];
+            $data['other'] = '';
+            $data['msn'] = $msg;
+            $data = $logServices->save($data);
+            $data = $data->toArray();
+            $data['_add_time'] = $data['add_time'];
+            $data['add_time'] = strtotime($data['add_time']);
+        } else {
+            $data = $logServices->get(['appid' => $appId, 'user_id' => $userId, 'to_user_id' => $toUserId]);
+            $data = $data ? $data->toArray() : [];
+        }
         /** @var ChatUserServices $userService */
         $userService = $app->make(ChatUserServices::class);
         $_userInfo = $userService->setApp($app)->getUserInfo($data['user_id'], ['nickname', 'avatar', 'is_tourist']);

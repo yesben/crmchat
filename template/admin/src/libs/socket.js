@@ -13,17 +13,51 @@ import Cookies from "js-cookie";
 import Vue from 'vue';
 
 
+let reconneTimer = []
+
 class wsSocket {
     constructor(opt) {
         this.vm = new Vue;
         this.ws = null;
         this.opt = opt || {};
+        this.networkStatus = true;
+        this.reconnetime = null;
         this.init(opt);
+        this.networkWath();
+        this.defaultEvenv();
+    }
+
+    defaultEvenv(){
+        this.vm.$on('timeout',()=>{
+            this.init(this.opt);
+        });
+    }
+
+    networkWath(){
+        window.addEventListener("online", ()=>{
+            this.networkStatus = true;
+            this.reconne();
+        });
+        window.addEventListener("offline", ()=>{
+            this.networkStatus = false;
+            this.socketStatus = false;
+        });
+    }
+
+    reconne(){
+        if(reconneTimer[this.opt.key] || this.socketStatus){
+            return;
+        }
+        reconneTimer[this.opt.key] = setInterval(()=>{
+            this.init(this.opt);
+        },2000)
     }
 
     onOpen(key = false) {
         this.opt.open && this.opt.open();
         let that = this;
+        clearInterval(reconneTimer[this.opt.key]);
+        reconneTimer[this.opt.key] = null;
         that.ping();
         this.socketStatus = true;
     }
@@ -70,6 +104,9 @@ class wsSocket {
     }
 
     send(data) {
+        if(!this.socketStatus || this.ws.readyState === 0 || !this.networkStatus){
+            this.init(this.opt);
+        }
         return new Promise((resolve, reject) => {
             try {
                 this.ws.send(JSON.stringify(data));
@@ -87,10 +124,14 @@ class wsSocket {
     onClose() {
         this.timer && clearInterval(this.timer);
         this.opt.close && this.opt.close();
+        this.socketStatus = false;
+        this.reconne();
     }
 
     onError(e) {
         this.opt.error && this.opt.error(e);
+        this.socketStatus = false;
+        this.reconne();
     }
 
     $on(...args) {
