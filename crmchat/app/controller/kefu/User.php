@@ -62,6 +62,7 @@ class User extends AuthController
     {
         $kefuInfo = $this->kefuInfo->toArray();
         $kefuInfo['password'] = '******';
+        $kefuInfo['site_title'] = sys_config('site_name');
         return $this->success($kefuInfo);
     }
 
