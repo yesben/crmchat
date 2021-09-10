@@ -388,8 +388,8 @@ class ChatServiceServices extends BaseServices
             $data['add_time'] = strtotime($data['add_time']);
             $authReply = true;
         } else {
-            $data = $logServices->getMessageOne(['appid' => $appId, 'chat' => [$userId, $toUserId]]);
-            $data = $data ? $data->toArray() : [];
+            $data = [];
+            $msg = '';
         }
         /** @var ChatUserServices $userService */
         $userService = $app->make(ChatUserServices::class);
@@ -420,7 +420,7 @@ class ChatServiceServices extends BaseServices
             if ($authReply) {
                 SwooleTaskService::user($app)->type('reply')->to($toUserId)->data($data)->push();
             }
-            SwooleTaskService::kefu($app)->type('chat_list')->to($userId)->data($data)->push();
+            SwooleTaskService::kefu($app)->type('recored')->to($userId)->data($data['recored'])->push();
         }
         return $data;
     }
