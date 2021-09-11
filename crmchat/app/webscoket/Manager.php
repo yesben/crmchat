@@ -219,7 +219,7 @@ class Manager extends Websocket
         $result = json_decode($frame->data, true) ?: [];
 
         if (!isset($result['type']) || !$result['type']) return true;
-        $this->refresh($info['type'], $info['uid']);
+        $this->refresh($info['type'], $info['user_id']);
         if ($result['type'] == 'ping') {
             return $this->send($frame->fd, $this->response->message('ping', ['now' => time()]));
         }
