@@ -86,8 +86,6 @@ class Manager extends Websocket
     public function onOpen($fd, \think\Request $request)
     {
         $type = $request->get('type');
-        $form = $request->get('form');
-        $clientId = $request->get('client_id', '');
         $token = $request->get('token');
         if (!$token || !in_array($type, self::USER_TYPE)) {
             return $this->server->close($fd);
@@ -221,7 +219,7 @@ class Manager extends Websocket
         $result = json_decode($frame->data, true) ?: [];
 
         if (!isset($result['type']) || !$result['type']) return true;
-
+        $this->refresh($info['type'], $info['uid']);
         if ($result['type'] == 'ping') {
             return $this->send($frame->fd, $this->response->message('ping', ['now' => time()]));
         }
