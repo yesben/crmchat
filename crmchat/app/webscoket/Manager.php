@@ -136,6 +136,11 @@ class Manager extends Websocket
         return $this->cache->sMembers($key . $userId);
     }
 
+    /**
+     * 刷新key
+     * @param $type
+     * @param $uid
+     */
     public function refresh($type, $uid)
     {
         $key = '_ws_' . $type;
