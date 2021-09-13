@@ -98,14 +98,14 @@ class UniPush extends BaseJobs
         $ios->body = $messageOption->body;
         $ios->title = $messageOption->title;
         $ios->payload = $messageOption->payload;
-        $ios->autoBadge = $allUnMessagesCount;
+        $ios->autoBadge = (string)$allUnMessagesCount;
         $android = new AndroidOptions();
         $android->body = $messageOption->body;
         $android->title = $messageOption->title;
         $android->payload = $android->title;
         $option->setPushChannel($android, $ios);
-        $uniPush->push($option);
-        Log::error('unipush数据:' . json_encode($option->toArray()));
+        $res = $uniPush->push($option);
+        Log::error(['option' => $option->toArray(), 'res' => $res->toArray()]);
         return true;
     }
 }
