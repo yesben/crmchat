@@ -251,6 +251,8 @@ class ChatServiceServices extends BaseServices
         try {
             $app = app();
             Timer::after(1000, function () use ($app, $appId, $toUserId, $userId) {
+                $newApp = clone $app;
+                App::setInstance($newApp);
                 $this->welcomeWords($app, $appId, $toUserId, $userId);
             });
         } catch (\Exception $e) {
@@ -362,10 +364,9 @@ class ChatServiceServices extends BaseServices
      */
     public function welcomeWords(App $app, string $appId, int $userId, int $toUserId)
     {
-        $this->dao->setApp($app);
         /** @var ChatServiceDialogueRecordServices $logServices */
         $logServices = $app->make(ChatServiceDialogueRecordServices::class);
-        $unMessagesCount = $logServices->setApp($app)->count(['chat' => [$userId, $toUserId]]);
+        $unMessagesCount = $logServices->count(['chat' => [$userId, $toUserId]]);
         /** @var ChatServiceDialogueRecordServices $logServices */
         $logServices = $app->make(ChatServiceDialogueRecordServices::class)->setApp($app);
         $msg = $this->dao->value(['user_id' => $userId, 'appid' => $appId], 'welcome_words');
