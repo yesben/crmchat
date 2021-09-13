@@ -13,7 +13,8 @@ import Cookies from "js-cookie";
 import Vue from 'vue';
 
 
-let reconneTimer = []
+let reconneTimer = {};
+let reconneCount = {};
 
 class wsSocket {
     constructor(opt) {
@@ -21,7 +22,9 @@ class wsSocket {
         this.ws = null;
         this.opt = opt || {};
         this.networkStatus = true;
+        this.reconneMax = 100;
         reconneTimer[this.opt.key] = null;
+        reconneCount[this.opt.key] = 0;
         this.init(opt);
         this.networkWath();
         this.defaultEvenv();
@@ -29,27 +32,50 @@ class wsSocket {
 
     defaultEvenv(){
         this.vm.$on('timeout',()=>{
-            this.init(this.opt);
+            this.reconne();
         });
     }
 
-    networkWath(){
-        window.addEventListener("online", ()=>{
-            this.networkStatus = true;
-            this.reconne();
+    guid() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0,
+                v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
         });
-        window.addEventListener("offline", ()=>{
+    }
+
+    addHandler(element, type, handler) {
+        if (element.addEventListener) {
+            element.addEventListener(type, handler, false);
+        } else if (element.attachEvent) {
+            element.attachEvent("on" + type, handler);
+        } else {
+            element["on" + type] = handler;
+        }
+    }
+
+    networkWath(){
+
+        this.addHandler(window,'online',()=>{
+            this.networkStatus = true;
+            console.log('联网了')
+            this.reconne();
+        })
+        this.addHandler(window,'offline',()=>{
             this.networkStatus = false;
             this.socketStatus = false;
+            console.log('断网了')
         });
     }
 
     reconne(){
-        if(reconneTimer[this.opt.key] || this.socketStatus){
+        debugger
+        if(reconneTimer[this.opt.key] || this.socketStatus || reconneCount[this.opt.key] > this.reconneMax){
             return;
         }
         reconneTimer[this.opt.key] = setInterval(()=>{
             this.init(this.opt);
+            reconneCount[this.opt.key] ++;
         },2000)
     }
 
@@ -94,6 +120,8 @@ class wsSocket {
             this.ws.onclose = this.onClose.bind(this);
         }
 
+        console.log(this.opt.key)
+
     }
 
     ping() {
@@ -104,15 +132,21 @@ class wsSocket {
     }
 
     send(data) {
+        if(data.type === 'user'){
+            debugger
+        }
+
+        console.log(data,this.socketStatus ,this.ws.readyState,this.networkStatus,this.ws)
         if(!this.socketStatus || this.ws.readyState === 0 || !this.networkStatus){
-            this.init(this.opt);
+            this.reconne();
         }
         return new Promise((resolve, reject) => {
             try {
                 this.ws.send(JSON.stringify(data));
                 resolve({ status: true });
             } catch(e) {
-                reject({ status: false })
+                console.log(e)
+                reject({ status: false,socketStatus: this.socketStatus,networkStatus:this.networkStatus})
             }
         });
     }
@@ -122,6 +156,7 @@ class wsSocket {
     }
 
     onClose() {
+        console.log('timer=',this.timer)
         this.timer && clearInterval(this.timer);
         this.timer = null;
         this.opt.close && this.opt.close();
@@ -130,6 +165,7 @@ class wsSocket {
     }
 
     onError(e) {
+        console.log('timer=',this.timer)
         this.timer && clearInterval(this.timer);
         this.timer = null;
         this.opt.error && this.opt.error(e);

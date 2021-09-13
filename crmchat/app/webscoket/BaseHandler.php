@@ -412,7 +412,6 @@ abstract class BaseHandler
     public function close(array $data = [], Response $response)
     {
         $usreId = $data['data']['user_id'] ?? 0;
-        $toUsreId = $data['data']['to_user_id'] ?? 0;
         $appId = $data['data']['appid'] ?? '';
         if ($usreId) {
             /** @var ChatServiceRecordServices $service */

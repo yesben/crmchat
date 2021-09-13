@@ -201,6 +201,7 @@ export default {
         });
 
         ws.$on('success', data => {
+          debugger
           this.chatStatus = true;
           let to_user_id = this.upperData.isShowTip && this.upperData.isShowTip !='undefined' ? 0 : this.chatServerData.to_user_id
             ws.send({
@@ -338,9 +339,6 @@ export default {
 
     // 文本发送
     sendText() {
-      if(!this.chatStatus){
-        return this.$Message.error('正在连接中');
-      }
       let sendMessage;
       if(!this.$refs['inputDiv']) {
         sendMessage = this.userMessage.replace(/[\r\n]/g, '');
@@ -374,6 +372,10 @@ export default {
         //   nickname: this.chatServerData.nickname,
         //   phone: this.userMessage.phone ? this.userMessage.phone : this.chatServerData.phone
         // }
+      }
+
+      if(!this.chatStatus){
+        return this.$Message.error('正在连接中');
       }
 
       this.bus.pageWs.then((ws) => {
