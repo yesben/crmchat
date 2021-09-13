@@ -233,7 +233,7 @@ abstract class BaseHandler
             } else if ($kefuOnline && $clientId && $kefuInfo) {
                 //客服不在线,但是客服在app登录了,状态保持在线,发送app推送消息
                 UniPush::dispatch([
-                    ['nickname' => $data['nickname'], 'user_id' => $userId],
+                    ['nickname' => $data['nickname'], 'user_id' => $userId, 'appid' => $appId],
                     $clientId,
                     [
                         'content' => $msn,

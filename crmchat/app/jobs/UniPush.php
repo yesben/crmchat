@@ -87,10 +87,18 @@ class UniPush extends BaseJobs
                 'url' => $url
             ])
         ];
+        /** @var ChatServiceDialogueRecordServices $logServices */
+        $logServices = app()->make(ChatServiceDialogueRecordServices::class);
+        $allUnMessagesCount = $logServices->getMessageNum([
+            'appid' => $userInfo['appid'],
+            'to_user_id' => $userInfo['user_id'],
+            'type' => 0
+        ]);
         $ios = new IosOptions();
         $ios->body = $messageOption->body;
         $ios->title = $messageOption->title;
         $ios->payload = $messageOption->payload;
+        $ios->autoBadge = $allUnMessagesCount;
         $android = new AndroidOptions();
         $android->body = $messageOption->body;
         $android->title = $messageOption->title;

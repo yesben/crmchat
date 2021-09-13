@@ -29,6 +29,8 @@ class IosOptions extends OptionsBase
 
     public $payload;
 
+    public $autoBadge;
+
     /**
      * @return array
      */
@@ -47,7 +49,7 @@ class IosOptions extends OptionsBase
                 'sound' => 'sound'
             ],
             'payload'    => json_encode($this->payload),
-            'auto_badge' => '+1'
+            'auto_badge' => $this->autoBadge
         ];
     }
 }
