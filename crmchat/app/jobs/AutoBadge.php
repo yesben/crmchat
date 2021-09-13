@@ -13,6 +13,7 @@ namespace app\jobs;
 
 
 use app\services\chat\ChatServiceDialogueRecordServices;
+use app\services\chat\ChatServiceRecordServices;
 use app\services\chat\ChatServiceServices;
 use crmeb\basic\BaseJobs;
 use crmeb\services\uniPush\PushMessage;
@@ -41,13 +42,12 @@ class AutoBadge extends BaseJobs
         if (!$clientId) {
             return true;
         }
-        /** @var ChatServiceDialogueRecordServices $logServices */
-        $logServices = app()->make(ChatServiceDialogueRecordServices::class);
-        $allUnMessagesCount = $logServices->getMessageNum([
+        /** @var ChatServiceRecordServices $logServices */
+        $logServices = app()->make(ChatServiceRecordServices::class);
+        $allUnMessagesCount = $logServices->sum([
             'appid' => $appId,
-            'to_user_id' => $userId,
-            'type' => 0
-        ]);
+            'user_id' => $userId,
+        ], 'mssage_num');
         /** @var PushMessage $pushMessage */
         $pushMessage = app()->make(PushMessage::class);
         $pushMessage->userBadge([$clientId], $allUnMessagesCount == 0 ? '0' : '-' . $allUnMessagesCount);

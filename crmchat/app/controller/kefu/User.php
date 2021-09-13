@@ -289,13 +289,13 @@ class User extends AuthController
 
     /**
      * 获取当前客服所有没读条数
-     * @param ChatServiceDialogueRecordServices $services
+     * @param ChatServiceRecordServices $services
      * @return mixed
      */
-    public function getMessageCount(ChatServiceDialogueRecordServices $services)
+    public function getMessageCount(ChatServiceRecordServices $services)
     {
         AutoBadge::dispatch([$this->kefuInfo['user_id'], 0, $this->kefuInfo['appid']]);
-        return $this->success(['count' => $services->getMessageNum(['appid' => $this->kefuInfo['appid'], 'to_user_id' => $this->kefuInfo['user_id'], 'type' => 0])]);
+        return $this->success(['count' => $services->sum(['appid' => $this->kefuInfo['appid'], 'user_id' => $this->kefuInfo['user_id']], 'mssage_num')]);
     }
 
     /**

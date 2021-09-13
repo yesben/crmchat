@@ -12,6 +12,7 @@
 namespace app\jobs;
 
 
+use app\services\chat\ChatServiceRecordServices;
 use crmeb\basic\BaseJobs;
 use crmeb\services\uniPush\options\AndroidOptions;
 use crmeb\services\uniPush\options\IosOptions;
@@ -87,13 +88,12 @@ class UniPush extends BaseJobs
                 'url' => $url
             ])
         ];
-        /** @var ChatServiceDialogueRecordServices $logServices */
-        $logServices = app()->make(ChatServiceDialogueRecordServices::class);
-        $allUnMessagesCount = $logServices->getMessageNum([
+        /** @var ChatServiceRecordServices $logServices */
+        $logServices = app()->make(ChatServiceRecordServices::class);
+        $allUnMessagesCount = $logServices->sum([
             'appid' => $userInfo['appid'],
-            'to_user_id' => $userInfo['user_id'],
-            'type' => 0
-        ]);
+            'user_id' => $userInfo['user_id'],
+        ], 'mssage_num');
         $ios = new IosOptions();
         $ios->body = $messageOption->body;
         $ios->title = $messageOption->title;
