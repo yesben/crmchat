@@ -29,4 +29,5 @@ return array(
     '841780ea2e1d6545ea3a253239d59c05' => $vendorDir . '/qiniu/php-sdk/src/Qiniu/functions.php',
     '1cfd2761b63b0a29ed23657ea394cb2d' => $vendorDir . '/topthink/think-captcha/src/helper.php',
     'af46dcea2921209ac30627b964175f13' => $vendorDir . '/topthink/think-swoole/src/helpers.php',
+    '1321e588482ab4f62b9b60af70c4918e' => $vendorDir . '/xiaodi/think-pullword/src/helper.php',
 );

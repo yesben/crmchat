@@ -30,6 +30,7 @@ class ComposerStaticInitf16474ac994ccc25392f403933800b79
         '841780ea2e1d6545ea3a253239d59c05' => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu/functions.php',
         '1cfd2761b63b0a29ed23657ea394cb2d' => __DIR__ . '/..' . '/topthink/think-captcha/src/helper.php',
         'af46dcea2921209ac30627b964175f13' => __DIR__ . '/..' . '/topthink/think-swoole/src/helpers.php',
+        '1321e588482ab4f62b9b60af70c4918e' => __DIR__ . '/..' . '/xiaodi/think-pullword/src/helper.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -90,6 +91,7 @@ class ComposerStaticInitf16474ac994ccc25392f403933800b79
         ),
         'P' => 
         array (
+            'PullWord\\' => 9,
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
@@ -124,23 +126,14 @@ class ComposerStaticInitf16474ac994ccc25392f403933800b79
             'FormBuilder\\' => 12,
             'Firebase\\JWT\\' => 13,
         ),
-        'E' => 
-        array (
-            'Endroid\\QrCode\\' => 15,
-        ),
         'D' => 
         array (
             'Doctrine\\Common\\Lexer\\' => 22,
-            'DASPRiD\\Enum\\' => 13,
         ),
         'C' => 
         array (
             'Channel\\' => 8,
             'Carbon\\' => 7,
-        ),
-        'B' => 
-        array (
-            'BaconQrCode\\' => 12,
         ),
         'A' => 
         array (
@@ -285,6 +278,10 @@ class ComposerStaticInitf16474ac994ccc25392f403933800b79
         array (
             0 => __DIR__ . '/..' . '/qcloud_sts/qcloud-sts-sdk/src',
         ),
+        'PullWord\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/xiaodi/think-pullword/src',
+        ),
         'Psr\\SimpleCache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
@@ -357,17 +354,9 @@ class ComposerStaticInitf16474ac994ccc25392f403933800b79
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
-        'Endroid\\QrCode\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/endroid/qr-code/src',
-        ),
         'Doctrine\\Common\\Lexer\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/lexer/lib/Doctrine/Common/Lexer',
-        ),
-        'DASPRiD\\Enum\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/dasprid/enum/src',
         ),
         'Channel\\' => 
         array (
@@ -376,10 +365,6 @@ class ComposerStaticInitf16474ac994ccc25392f403933800b79
         'Carbon\\' => 
         array (
             0 => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon',
-        ),
-        'BaconQrCode\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
         ),
         'Alipay\\EasySDK\\' => 
         array (
