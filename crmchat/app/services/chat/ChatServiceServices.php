@@ -411,28 +411,26 @@ class ChatServiceServices extends BaseServices
             );
             //回复给用户
             SwooleTaskService::user($app)->type('reply')->to($toUserId)->data($data)->push();
-        } else {
-            //回复给客服
-            $_userInfo = $userService->getUserInfo($toUserId, ['nickname', 'avatar', 'type', 'is_tourist']);
-            $nickname = $_userInfo['nickname'] ?? '';
-            $avatar = $_userInfo['avatar'] ?? '';
-            $formType = $_userInfo['type'] ?? 0;
-            $isTourist = $_userInfo['is_tourist'] ?? 0;
-            $recored = $serviceRecored->setApp($app)->saveRecord(
-                $appId,
-                $toUserId,
-                $userId,
-                $msg,
-                (int)$formType,
-                1,
-                $unMessagesCount,
-                (int)$isTourist,
-                $nickname,
-                $avatar,
-                1
-            );
-
-            SwooleTaskService::kefu($app)->type('recored')->to($userId)->data($recored)->push();
         }
+        //回复给客服
+        $_userInfo = $userService->getUserInfo($toUserId, ['nickname', 'avatar', 'type', 'is_tourist']);
+        $nickname = $_userInfo['nickname'] ?? '';
+        $avatar = $_userInfo['avatar'] ?? '';
+        $formType = $_userInfo['type'] ?? 0;
+        $isTourist = $_userInfo['is_tourist'] ?? 0;
+        $recored = $serviceRecored->setApp($app)->saveRecord(
+            $appId,
+            $toUserId,
+            $userId,
+            $msg,
+            (int)$formType,
+            1,
+            $unMessagesCount,
+            (int)$isTourist,
+            $nickname,
+            $avatar,
+            1
+        );
+        SwooleTaskService::kefu($app)->type('recored')->to($userId)->data($recored)->push();
     }
 }
