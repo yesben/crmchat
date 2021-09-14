@@ -55,6 +55,7 @@ class UniPush extends BaseJobs
         $option = new PushOptions();
         $messageOption = new PushMessageOptions();
         $messageOption->title = $userInfo['nickname'];
+        $messageOption->badgeAddNum = 1;
         switch ((int)($message['msn_type'] ?? 0)) {
             case ChatServiceDialogueRecordServices::MSN_TYPE_TXT:
                 $messageOption->body = $message['content'] ?? '';
@@ -92,7 +93,7 @@ class UniPush extends BaseJobs
         $logServices = app()->make(ChatServiceRecordServices::class);
         $allUnMessagesCount = $logServices->sum([
             'appid' => $userInfo['appid'],
-            'user_id' => $userInfo['user_id'],
+            'user_id' => $userInfo['to_user_id'],
         ], 'mssage_num');
         $ios = new IosOptions();
         $ios->body = $messageOption->body;

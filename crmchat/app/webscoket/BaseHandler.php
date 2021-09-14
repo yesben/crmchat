@@ -233,7 +233,7 @@ abstract class BaseHandler
             } else if ($kefuOnline && $clientId && $kefuInfo) {
                 //客服不在线,但是客服在app登录了,状态保持在线,发送app推送消息
                 UniPush::dispatch([
-                    ['nickname' => $data['nickname'], 'user_id' => $userId, 'appid' => $appId],
+                    ['nickname' => $data['nickname'], 'to_user_id' => $to_user_id, 'user_id' => $userId, 'appid' => $appId],
                     $clientId,
                     [
                         'content' => $msn,
@@ -245,7 +245,7 @@ abstract class BaseHandler
                 ]);
             } else if (!$kefuOnline && $kefuInfo) {
                 //客服不在线,app端也不在线,自动转接给在线的客服
-                $this->authTransfer($response, $data['appid'], $userId, $to_user_id);
+//                $this->authTransfer($response, $data['appid'], $userId, $to_user_id);
             }
         }
 
