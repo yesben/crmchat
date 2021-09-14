@@ -413,7 +413,7 @@ class ChatServiceServices extends BaseServices
             SwooleTaskService::user($app)->type('reply')->to($toUserId)->data($data)->push();
         }
         //回复给客服
-        $_userInfo = $userService->getUserInfo($toUserId, ['nickname', 'avatar', 'type', 'is_tourist']);
+        $_userInfo = $userService->getUserInfo($userId, ['nickname', 'avatar', 'type', 'is_tourist']);
         $nickname = $_userInfo['nickname'] ?? '';
         $avatar = $_userInfo['avatar'] ?? '';
         $formType = $_userInfo['type'] ?? 0;
