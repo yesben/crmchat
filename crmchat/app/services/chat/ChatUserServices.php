@@ -153,10 +153,25 @@ class ChatUserServices extends BaseServices
      */
     public function getKefuMobileStatistics(string $time)
     {
-        return [
+        $res = [
             'tourist' => $this->dao->getKefuMobileStatisticsList($time, 1),
             'list' => $this->dao->getKefuMobileStatisticsList($time, 0),
         ];
+
+        foreach ($res['tourist'] as &$item) {
+            if (strstr($item['time'], '-') !== false) {
+                $item['time'] = explode('-', $item['time']);
+                $item['time'] = $item['time'][count($item['time']) - 1];
+            }
+        }
+        foreach ($res['list'] as &$item) {
+            if (strstr($item['time'], '-') !== false) {
+                $item['time'] = explode('-', $item['time']);
+                $item['time'] = $item['time'][count($item['time']) - 1];
+            }
+        }
+
+        return $res;
     }
 
     /**
