@@ -201,6 +201,7 @@ class ChatServiceServices extends BaseServices
             if ($save) {
                 $userInfo->save();
             }
+            $userInfo = $userInfo->toArray();
         }
 
         $toUserId = $this->dao->count(['appid' => $appId, 'status' => 1, 'user_id' => $toUserId]) ? $toUserId : 0;
@@ -251,8 +252,8 @@ class ChatServiceServices extends BaseServices
         $result['serviceList'] = array_reverse($logServices->tidyChat($serviceLogList));
         try {
             $app = app();
-            Timer::after(1000, function () use ($app, $appId, $toUserId, $userId) {
-                $this->welcomeWords($app, $appId, $toUserId, $userId);
+            Timer::after(1000, function () use ($app, $appId, $toUserId, $userId, $userInfo) {
+                $this->welcomeWords($app, $appId, $toUserId, $userId, $userInfo);
             });
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -359,7 +360,7 @@ class ChatServiceServices extends BaseServices
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function welcomeWords(App $app, string $appId, int $userId, int $toUserId)
+    public function welcomeWords(App $app, string $appId, int $userId, int $toUserId, array $userInfo)
     {
         $this->dao->setApp($app);
         /** @var ChatServiceDialogueRecordServices $logServices */
@@ -413,11 +414,10 @@ class ChatServiceServices extends BaseServices
             SwooleTaskService::user($app)->type('reply')->to($toUserId)->data($data)->push();
         }
         //回复给客服
-        $_userInfo = $userService->getUserInfo($userId, ['nickname', 'avatar', 'type', 'is_tourist']);
-        $nickname = $_userInfo['nickname'] ?? '';
-        $avatar = $_userInfo['avatar'] ?? '';
-        $formType = $_userInfo['type'] ?? 0;
-        $isTourist = $_userInfo['is_tourist'] ?? 0;
+        $nickname = $userInfo['nickname'] ?? '';
+        $avatar = $userInfo['avatar'] ?? '';
+        $formType = $userInfo['type'] ?? 0;
+        $isTourist = $userInfo['is_tourist'] ?? 0;
         $recored = $serviceRecored->setApp($app)->saveRecord(
             $appId,
             $toUserId,
