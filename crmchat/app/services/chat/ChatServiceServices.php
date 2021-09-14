@@ -22,6 +22,7 @@ use crmeb\services\DisyllabicWords;
 use crmeb\services\FormBuilder;
 use crmeb\services\SwooleTaskService;
 use FormBuilder\Exception\FormBuilderException;
+use PullWord\PullWord;
 use Swoole\Timer;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
@@ -251,8 +252,6 @@ class ChatServiceServices extends BaseServices
         try {
             $app = app();
             Timer::after(1000, function () use ($app, $appId, $toUserId, $userId) {
-                $newApp = clone $app;
-                App::setInstance($newApp);
                 $this->welcomeWords($app, $appId, $toUserId, $userId);
             });
         } catch (\Exception $e) {
@@ -296,10 +295,13 @@ class ChatServiceServices extends BaseServices
             return false;
         }
         $data['msn'] = '';
-//        /** @var SystemConfigServices $configService */
-//        $configService = $app->make(SystemConfigServices::class);
-//        $words = new DisyllabicWords(['appCode' => json_decode($configService->setApp($app)->getConfigValue('disyllabic_app_code'), true)]);
+        /** @var PullWord $words */
+        $pullWord = app()->make(PullWord::class);
+        $result = $pullWord->pull($msg)->get();
         $keyword = [];
+        foreach ($result as $item) {
+            $keyword[] = $item['t'];
+        }
         array_push($keyword, $msg);
         if ($keyword) {
             /** @var ChatAutoReplyServices $authReplyService */
@@ -359,9 +361,10 @@ class ChatServiceServices extends BaseServices
      */
     public function welcomeWords(App $app, string $appId, int $userId, int $toUserId)
     {
+        $this->dao->setApp($app);
         /** @var ChatServiceDialogueRecordServices $logServices */
         $logServices = $app->make(ChatServiceDialogueRecordServices::class);
-        $unMessagesCount = $logServices->count(['chat' => [$userId, $toUserId]]);
+        $unMessagesCount = $logServices->setApp($app)->count(['chat' => [$userId, $toUserId]]);
         /** @var ChatServiceDialogueRecordServices $logServices */
         $logServices = $app->make(ChatServiceDialogueRecordServices::class)->setApp($app);
         $msg = $this->dao->value(['user_id' => $userId, 'appid' => $appId], 'welcome_words');
