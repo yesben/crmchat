@@ -372,7 +372,6 @@ class ChatServiceServices extends BaseServices
         $userService = $app->make(ChatUserServices::class)->setApp($app);
         /** @var ChatServiceRecordServices $serviceRecored */
         $serviceRecored = $app->make(ChatServiceRecordServices::class)->setApp($app);
-        $authReply = false;
         if (!$unMessagesCount && $msg) {
             $data = [
                 'add_time' => time(),
@@ -411,9 +410,7 @@ class ChatServiceServices extends BaseServices
                 $online ?: 0
             );
             //回复给用户
-            if ($authReply) {
-                SwooleTaskService::user($app)->type('reply')->to($toUserId)->data($data)->push();
-            }
+            SwooleTaskService::user($app)->type('reply')->to($toUserId)->data($data)->push();
         } else {
             //回复给客服
             $_userInfo = $userService->getUserInfo($toUserId, ['nickname', 'avatar', 'type', 'is_tourist']);
