@@ -79,7 +79,7 @@ class UniPush extends BaseJobs
         $url = '/pages/view/customerServer/index?to_user_id=' . $userInfo['user_id'];
         $messageOption->clickType = 'payload';
         $messageOption->payload = json_encode(['url' => $url, 'type' => 'url']);
-        $messageOption->channelLevel = 4;
+        $messageOption->channelLevel = 3;
         $option->setAudience($clientId);
         $option->setPushMessage($messageOption);
         $option->pushChannel = [
@@ -103,7 +103,7 @@ class UniPush extends BaseJobs
         $android = new AndroidOptions();
         $android->body = $messageOption->body;
         $android->title = $messageOption->title;
-        $android->payload = $android->title;
+        $android->payload = $messageOption->payload;
         $option->setPushChannel($android, $ios);
         $res = $uniPush->push($option);
         Log::error(['option' => $option->toArray(), 'res' => $res->toArray()]);
