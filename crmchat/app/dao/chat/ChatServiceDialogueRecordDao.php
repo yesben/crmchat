@@ -17,6 +17,7 @@ use crmeb\basic\BaseDao;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
+use think\facade\Db;
 
 /**
  * Class ChatServiceDialogueRecordDao
@@ -94,9 +95,7 @@ class ChatServiceDialogueRecordDao extends BaseDao
         })->when(!$upperId, function ($query) use ($limit) {
             $query->limit($limit)->order('id DESC');
         })->when($userId && $toUserId, function ($query) use ($userId, $toUserId) {
-            $query->where(function ($query) use ($userId, $toUserId) {
-                $query->where('user_id|to_user_id', $userId)->whereOr('to_user_id', $toUserId);
-            });
+            $query->where(Db::raw('(user = ' . $toUserId . 'or to_user_id = ' . $toUserId . ') and ( user_id in (' . $userId . ',' . $toUserId . ') and to_user_id in(' . $userId . ',' . $toUserId . '))'));
         })->with($with)->select()->toArray();
     }
 
