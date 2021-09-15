@@ -81,10 +81,22 @@ class ChatServiceDialogueRecordDao extends BaseDao
      */
     public function getChatList(array $where, int $limit = 20, int $upperId = 0, array $with = [])
     {
+        $userId = $where['user_id'] ?? 0;
+        $toUserId = $where['to_user_id'] ?? 0;
+        if (isset($where['user_id'])) {
+            unset($where['user_id']);
+        }
+        if (isset($where['to_user_id'])) {
+            unset($where['to_user_id']);
+        }
         return $this->search($where)->when($upperId, function ($query) use ($upperId, $limit) {
             $query->where('id', '<', $upperId)->limit($limit)->order('id DESC');
         })->when(!$upperId, function ($query) use ($limit) {
             $query->limit($limit)->order('id DESC');
+        })->when($userId && $toUserId, function ($query) use ($userId, $toUserId) {
+            $query->where(function ($query) use ($userId, $toUserId) {
+                $query->where('user_id|to_user_id', $userId)->whereOr('to_user_id', $toUserId);
+            });
         })->with($with)->select()->toArray();
     }
 

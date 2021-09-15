@@ -62,12 +62,12 @@ class KefuHandler extends BaseHandler
             return $response->fail('您登录的客服用户不存在');
         }
 
-        /** @var ChatServiceRecordServices $service */
-        $service = app()->make(ChatServiceRecordServices::class);
-        $service->updateRecord(['to_user_id' => $user['id']], ['online' => 1]);
-        /** @var ChatServiceServices $service */
-        $service = app()->make(ChatServiceServices::class);
-        $service->update(['user_id' => $user['id']], ['online' => 1]);
+//        /** @var ChatServiceRecordServices $service */
+//        $service = app()->make(ChatServiceRecordServices::class);
+//        $service->updateRecord(['to_user_id' => $user['id']], ['online' => 1]);
+//        /** @var ChatServiceServices $service */
+//        $service = app()->make(ChatServiceServices::class);
+//        $service->update(['user_id' => $user['id']], ['online' => 1]);
 
         return $response->success(['uid' => $user['id'], 'appid' => $kefuInfo['appid']]);
     }
@@ -95,6 +95,9 @@ class KefuHandler extends BaseHandler
             /** @var ChatServiceServices $service */
             $service = app()->make(ChatServiceServices::class);
             $service->update(['user_id' => $user['user_id']], ['online' => $online]);
+            /** @var ChatServiceRecordServices $service */
+            $service = app()->make(ChatServiceRecordServices::class);
+            $service->updateRecord(['to_user_id' => $user['id']], ['online' => $online]);
             if ($user['to_user_id']) {
                 $fd = $this->room->uidByFd($user['to_user_id']);
                 //给当前正在聊天的用户发送上下线消息
