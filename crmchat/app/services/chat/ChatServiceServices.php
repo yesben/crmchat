@@ -248,7 +248,7 @@ class ChatServiceServices extends BaseServices
             'to_user_nickname' => $toUserInfo['nickname'],
             'to_user_avatar' => $toUserInfo['avatar']
         ];
-        $serviceLogList = $logServices->getServiceChatList(['appid' => $appId, 'chat' => [$userId, $toUserId]], $limit, $idTo);
+        $serviceLogList = $logServices->getServiceChatList(['appid' => $appId, 'user_id' => $userId, 'to_user_id' => $toUserId], $limit, $idTo);
         $result['serviceList'] = array_reverse($logServices->tidyChat($serviceLogList));
         try {
             $app = app();
@@ -297,7 +297,7 @@ class ChatServiceServices extends BaseServices
         }
         $data['msn'] = '';
         /** @var PullWord $words */
-        $pullWord = app()->make(PullWord::class);
+        $pullWord = $app->make(PullWord::class);
         $result = $pullWord->pull($msg)->get();
         $keyword = [];
         foreach ($result as $item) {
@@ -425,7 +425,7 @@ class ChatServiceServices extends BaseServices
             $msg,
             (int)$formType,
             1,
-            $unMessagesCount,
+            0,
             (int)$isTourist,
             $nickname,
             $avatar,
