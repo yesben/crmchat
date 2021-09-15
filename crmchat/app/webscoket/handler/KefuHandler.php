@@ -61,13 +61,16 @@ class KefuHandler extends BaseHandler
         if (!isset($user['id'])) {
             return $response->fail('您登录的客服用户不存在');
         }
-
+        //不是在app端把在后台替换到前台
+        if (isset($data['app']) && !$data['app']) {
+            /** @var ChatServiceServices $service */
+            $service = app()->make(ChatServiceServices::class);
+            $service->update(['user_id' => $user['id']], ['is_backstage' => 1]);
+        }
 //        /** @var ChatServiceRecordServices $service */
 //        $service = app()->make(ChatServiceRecordServices::class);
 //        $service->updateRecord(['to_user_id' => $user['id']], ['online' => 1]);
-//        /** @var ChatServiceServices $service */
-//        $service = app()->make(ChatServiceServices::class);
-//        $service->update(['user_id' => $user['id']], ['online' => 1]);
+
 
         return $response->success(['uid' => $user['id'], 'appid' => $kefuInfo['appid']]);
     }

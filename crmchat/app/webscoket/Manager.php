@@ -87,6 +87,7 @@ class Manager extends Websocket
     {
         $type = $request->get('type');
         $token = $request->get('token');
+        $app = $request->get('app', 0);
         if (!$token || !in_array($type, self::USER_TYPE)) {
             return $this->server->close($fd);
         }
@@ -94,7 +95,7 @@ class Manager extends Websocket
         $this->nowRoom->type($type);
 
         try {
-            $data = $this->exec($type, 'login', [$fd, $request->get('form_type', null), ['token' => $token], $this->response])->getData();
+            $data = $this->exec($type, 'login', [$fd, $request->get('form_type', null), ['token' => $token, 'app' => $app], $this->response])->getData();
         } catch (\Throwable $e) {
             return $this->server->close($fd);
         }

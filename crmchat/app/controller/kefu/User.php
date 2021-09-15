@@ -307,6 +307,7 @@ class User extends AuthController
     public function updateService(ChatServiceServices $services)
     {
         $clientId = $this->request->post('client_id', '');
+        $services->update(['client_id' => $clientId], ['client_id' => '']);
         $services->update($this->kefuId, ['client_id' => $clientId]);
         AutoBadge::dispatch([$this->kefuInfo['user_id'], 0, $this->kefuInfo['appid']]);
         return $this->success();

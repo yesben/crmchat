@@ -95,7 +95,12 @@ class ChatServiceDialogueRecordDao extends BaseDao
         })->when(!$upperId, function ($query) use ($limit) {
             $query->limit($limit)->order('id DESC');
         })->when($userId && $toUserId, function ($query) use ($userId, $toUserId) {
-            $query->where(Db::raw('(user = ' . $toUserId . 'or to_user_id = ' . $toUserId . ') and ( user_id in (' . $userId . ',' . $toUserId . ') and to_user_id in(' . $userId . ',' . $toUserId . '))'));
+            $query->where(function ($query) use ($userId, $toUserId) {
+                $query->where('user_id|to_user_id', $toUserId);
+//                $query->where('user_id|to_user_id', $toUserId)->whereOr(function ($query) use ($userId, $toUserId) {
+//                    $query->whereIn('user_id', [$userId, $toUserId])->whereIn('to_user_id', [$userId, $toUserId]);
+//                });
+            });
         })->with($with)->select()->toArray();
     }
 
