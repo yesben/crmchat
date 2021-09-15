@@ -418,11 +418,13 @@ class ChatServiceServices extends BaseServices
         $avatar = $userInfo['avatar'] ?? '';
         $formType = $userInfo['type'] ?? 0;
         $isTourist = $userInfo['is_tourist'] ?? 0;
-        $recored = $serviceRecored->setApp($app)->saveRecord(
+        $serviceRecored->setApp($app);
+        $count = $serviceRecored->count(['appid' => $appId, 'user_id' => $userId, 'to_user_id' => $toUserId]);
+        $recored = $serviceRecored->saveRecord(
             $appId,
             $toUserId,
             $userId,
-            $msg,
+            $count ? '' : $msg,
             (int)$formType,
             1,
             0,
