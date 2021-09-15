@@ -58,12 +58,12 @@ class User extends AuthController
      * 获取当前登录客服
      * @return mixed
      */
-    public function getKefuInfo()
+    public function getKefuInfo(ChatServiceServices $services)
     {
         $kefuInfo = $this->kefuInfo->toArray();
         $kefuInfo['password'] = '******';
         $kefuInfo['site_title'] = sys_config('site_name');
-        $kefuInfo['user_ids'] = $this->services->getColumn(['appid' => $kefuInfo['appid']], 'user_id');
+        $kefuInfo['user_ids'] = $services->getColumn(['appid' => $kefuInfo['appid']], 'user_id');
         return $this->success($kefuInfo);
     }
 
