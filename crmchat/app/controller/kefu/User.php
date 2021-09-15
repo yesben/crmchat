@@ -63,6 +63,7 @@ class User extends AuthController
         $kefuInfo = $this->kefuInfo->toArray();
         $kefuInfo['password'] = '******';
         $kefuInfo['site_title'] = sys_config('site_name');
+        $kefuInfo['user_ids'] = $this->services->getColumn(['appid' => $kefuInfo['appid']], 'user_id');
         return $this->success($kefuInfo);
     }
 
