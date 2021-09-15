@@ -299,6 +299,7 @@ class Service extends AuthController
     {
         $this->kefuInfo['site_name'] = sys_config('site_name');
         $this->kefuInfo['config_export_open'] = sys_config('config_export_open');
+        $this->kefuInfo['user_ids'] = $this->services->getColumn(['appid' => $this->kefuInfo['appid']], 'user_id');
         return $this->success($this->kefuInfo->toArray());
     }
 
