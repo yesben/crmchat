@@ -65,12 +65,8 @@ class KefuHandler extends BaseHandler
         if (isset($data['app']) && !$data['app']) {
             /** @var ChatServiceServices $service */
             $service = app()->make(ChatServiceServices::class);
-            $service->update(['user_id' => $user['id']], ['is_backstage' => 1]);
+            $service->update($kefuInfo['id'], ['is_backstage' => 1]);
         }
-//        /** @var ChatServiceRecordServices $service */
-//        $service = app()->make(ChatServiceRecordServices::class);
-//        $service->updateRecord(['to_user_id' => $user['id']], ['online' => 1]);
-
 
         return $response->success(['uid' => $user['id'], 'appid' => $kefuInfo['appid']]);
     }
