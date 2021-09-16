@@ -38,14 +38,14 @@ use Carbon\Carbon;
 class Test
 {
     protected $app;
-    
+
 
     public function index(Room $room)
     {
 
-        dump($room->getTable()->get('user')->count());
-        dump($room->getTable()->get('user')->size);
-        dump($room->getTable()->get('user')->memorySize);
+        dump($room->getTable()->count());
+        dump($room->getTable()->size);
+        dump($room->getTable()->memorySize);
 
         return;
 

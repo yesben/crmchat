@@ -15,6 +15,7 @@ import Vue from 'vue';
 
 let reconneTimer = {};
 let reconneCount = {};
+let connectGuid = {};
 
 class wsSocket {
     constructor(opt) {
@@ -23,6 +24,7 @@ class wsSocket {
         this.opt = opt || {};
         this.networkStatus = true;
         this.reconneMax = 100;
+        this.connectLing = false;
         reconneTimer[this.opt.key] = null;
         reconneCount[this.opt.key] = 0;
         this.init(opt);
@@ -31,9 +33,10 @@ class wsSocket {
     }
 
     defaultEvenv(){
-        this.vm.$on('timeout',()=>{
-            this.reconne();
-        });
+        this.vm.$on('timeout',this.timeoutEvent.bind(this));
+    }
+    timeoutEvent(){
+        this.reconne();
     }
 
     guid() {
@@ -59,11 +62,15 @@ class wsSocket {
         this.addHandler(window,'online',()=>{
             this.networkStatus = true;
             console.log('联网了')
-            this.reconne();
+            this.ws.close();
+            this.vm.$on('timeout',this.timeoutEvent);
         })
         this.addHandler(window,'offline',()=>{
             this.networkStatus = false;
             this.socketStatus = false;
+            this.timer && clearInterval(this.timer);
+            this.timer = null;
+            this.vm.$off('timeout',this.timeoutEvent);
             console.log('断网了')
         });
     }
@@ -73,21 +80,35 @@ class wsSocket {
             return;
         }
         reconneTimer[this.opt.key] = setInterval(()=>{
-            this.init(this.opt);
-            reconneCount[this.opt.key] ++;
+            //断线连接中发现状态为真就不用再连接
+            if(this.socketStatus){
+                return;
+            }
+            //正在连接中也不需要在连接了
+            if(!this.connectLing){
+                console.log('重新连接')
+                this.init(this.opt);
+                reconneCount[this.opt.key] ++;
+            }
         },2000)
     }
 
     onOpen(key = false) {
-        this.opt.open && this.opt.open();
-        let that = this;
+        //关闭断线重连定时器
         clearInterval(reconneTimer[this.opt.key]);
         reconneTimer[this.opt.key] = null;
-        that.ping();
+
+        this.connectLing = false;
+        this.opt.open && this.opt.open();
+        reconneCount[this.opt.key] = 0
         this.socketStatus = true;
+        this.ping();
     }
 
     init(opt) {
+        if(this.socketStatus){
+            return;
+        }
         let wsUrl = ''
         let hostUrl = wss(Setting.wsSocketUrl);
 
@@ -100,26 +121,20 @@ class wsSocket {
             wsUrl = hostUrl + `?type=kefu` + '&token=' + `${Cookies.get("kefu_token")}`;
         }
         if(opt.key == 3) {
-            console.log(opt.form);
             wsUrl = `${hostUrl}?type=user&form=${opt.form}&token=${opt.token}`;
         }
-
-
-        // if (opt.token) {
-        //     wsUrl += '&token=' + opt.token
-        // } else
         if(opt.tourist_uid) {
             wsUrl += '&tourist_uid=' + opt.tourist_uid
         }
         if(wsUrl) {
+            this.connectLing = true;
+            // connectGuid[opt.key] = this.guid();
             this.ws = new WebSocket(wsUrl);
             this.ws.onopen = this.onOpen.bind(this);
             this.ws.onerror = this.onError.bind(this);
             this.ws.onmessage = this.onMessage.bind(this);
             this.ws.onclose = this.onClose.bind(this);
         }
-
-        console.log(this.opt.key)
 
     }
 
@@ -150,7 +165,7 @@ class wsSocket {
     }
 
     onClose() {
-        console.log('timer=',this.timer)
+        this.connectLing = false;
         this.timer && clearInterval(this.timer);
         this.timer = null;
         this.opt.close && this.opt.close();
@@ -159,7 +174,7 @@ class wsSocket {
     }
 
     onError(e) {
-        console.log('timer=',this.timer)
+        this.connectLing = false;
         this.timer && clearInterval(this.timer);
         this.timer = null;
         this.opt.error && this.opt.error(e);

@@ -13,7 +13,7 @@
                   <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
                   <div>Loading</div>
                 </Spin>
-                <div class="chat-item" v-for="(item,index) in records" :key="index" :class="[{'right-box':item.user_id == kefuInfo.user_id},{'gary':item.msn_type==5}]" :id="`chat_${item.id}`">
+                <div class="chat-item" v-for="(item,index) in records" :key="index" :class="[{'right-box':kefuInfo.user_ids.indexOf(item.user_id) !== -1},{'gary':item.msn_type==5}]" :id="`chat_${item.id}`">
                   <div class="time" v-show="item.show">{{item.time }}</div>
                   <div class="flex-box">
                     <div class="avatar">
@@ -352,6 +352,7 @@ export default {
             ).offsetHeight;
           });
         });
+
         ws.$on('recored',(data)=>{
           console.log(data)
           this.$refs.chatList.updateUserList(data,true);
