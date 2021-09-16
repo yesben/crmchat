@@ -50,7 +50,7 @@
                 </div>
                 <!-- 图片信息 -->
                 <div class="chart_list_item_img" v-if="item.msn_type == 3">
-                  <img v-lazy="item.msn" />
+                  <img v-lazy="item.msn" @load="imageLoad" />
                 </div>
                 <!-- 图文信息 -->
                 <div class="chart_list_item_imgOrText" v-if="item.msn_type == 5">
@@ -140,7 +140,7 @@ export default {
   },
   created() {
     // this.connentServer(); // 连接webSocket 服务 [mixins 方法]
-    // this.getUserRecord(); // 查看当前是否有客服在线 
+    // this.getUserRecord(); // 查看当前是否有客服在线
   },
   computed: {
     records() {

@@ -50,7 +50,6 @@ import Viewer from 'v-viewer'
 import VueDND from 'awe-dnd'
 import formCreate from '@form-create/iview'
 import modalForm from '@/utils/modalForm'
-import videoCloud from '@/utils/videoCloud'
 import { modalSure } from '@/utils/public'
 import { authLapse } from '@/utils/authLapse'
 import auth from '@/utils/auth'
@@ -89,7 +88,6 @@ if(process.env.NODE_ENV !== 'production') require('@/mock');
 window.Promise = Promise;
 Vue.prototype.$modalForm = modalForm;
 Vue.prototype.$modalSure = modalSure;
-Vue.prototype.$videoCloud = videoCloud;
 Vue.prototype.$authLapse = authLapse;
 Vue.prototype.$wechat = Auth;
 Vue.prototype.$dialog = dialog;

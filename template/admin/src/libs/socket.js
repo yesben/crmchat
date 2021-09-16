@@ -69,7 +69,6 @@ class wsSocket {
     }
 
     reconne(){
-        debugger
         if(reconneTimer[this.opt.key] || this.socketStatus || reconneCount[this.opt.key] > this.reconneMax){
             return;
         }
@@ -132,11 +131,6 @@ class wsSocket {
     }
 
     send(data) {
-        if(data.type === 'user'){
-            debugger
-        }
-
-        console.log(data,this.socketStatus ,this.ws.readyState,this.networkStatus,this.ws)
         if(!this.socketStatus || this.ws.readyState === 0 || !this.networkStatus){
             this.reconne();
         }
@@ -201,7 +195,6 @@ function createSocket(key, flag, token, tourist_uid, type, form) {
                 },
                 message(res) {
                     const { type, data = {} } = JSON.parse(res.data);
-                    console.log(type)
                     ws.vm.$emit(type, data);
                 },
                 close(e) {
