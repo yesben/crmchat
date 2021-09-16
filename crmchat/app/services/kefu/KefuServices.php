@@ -98,10 +98,7 @@ class KefuServices extends BaseServices
         $where = ['chat' => [$kfuUserId, $userId]];
         $messageData = $service->getMessageOne($where);
         $messageData = $messageData ? $messageData->toArray() : [];
-        $count = $service->getMessageCount($where);
-        $limit = 100;
-        $pageNum = $count ? ceil($count / $limit) : 0;
-        $record = $this->transaction(function () use ($where, $limit, $pageNum, $messageData, $appid, $service, $kfuUserId, $userId, $kefuToUserId) {
+        $record = $this->transaction(function () use ($where, $messageData, $appid, $service, $kfuUserId, $userId, $kefuToUserId) {
             /** @var ChatServiceRecordServices $serviceRecord */
             $serviceRecord = app()->make(ChatServiceRecordServices::class);
             $info = $serviceRecord->get(['user_id' => $kfuUserId, 'to_user_id' => $userId, 'appid' => $appid], ['id', 'type', 'message_type', 'is_tourist', 'avatar', 'nickname']);
@@ -121,12 +118,6 @@ class KefuServices extends BaseServices
             $res = $res && $serviceRecord->delete(['user_id' => $userId, 'to_user_id' => $kfuUserId, 'appid' => $appid]);
             if (!$record && !$res) {
                 throw new ValidateException('转接客服失败');
-            }
-            //同步聊天消息
-            if ($pageNum) {
-                for ($i = 0; $i < $pageNum; $i++) {
-                    ServiceTransfer::dispatch([$where, $kfuUserId, $kefuToUserId, $i, $limit]);
-                }
             }
             return $record;
         });

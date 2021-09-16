@@ -238,20 +238,16 @@ export default {
           let status = false
           that.userList.forEach((el, index, arr) => {
             if(data.recored.id == el.id) {
-
               status = true
-              if(data.recored.is_tourist == that.hdTabCur) {
-                console.log(data.recored, that.hdTabCur);
-                let oldVal = data.recored
-                arr.splice(index, 1)
-                if(index == 0) {
-                  oldVal.index = index
-                  this.$emit('setDataId', oldVal)
-                  oldVal.mssage_num = 0
-                }
-
-                arr.unshift(oldVal)
+              let oldVal = data.recored
+              arr.splice(index, 1)
+              if(index == 0) {
+                oldVal.index = index
+                this.$emit('setDataId', oldVal)
+                oldVal.mssage_num = 0
               }
+              arr.unshift(oldVal)
+
               this.$Notice.info({
                 title: '您有一条转接消息！'
               });
@@ -263,7 +259,7 @@ export default {
         })
 
         ws.$on('mssage_num', data => {
-          console.log('mssage_num',data)
+          // console.log('mssage_num',data)
           if(data.recored.id) {
             let status = false
             that.userList.forEach((el, index, arr) => {
