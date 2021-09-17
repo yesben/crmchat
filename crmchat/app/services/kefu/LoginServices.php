@@ -63,7 +63,9 @@ class LoginServices extends BaseServices
             throw new ValidateException('您已被禁止登录');
         }
         $token = $this->createToken($kefuInfo->id, 'kefu');
-        $kefuInfo->online = 1;
+        if ($kefuInfo->update_time == 0) {
+            $kefuInfo->online = 1;
+        }
         $kefuInfo->update_time = time();
         $kefuInfo->ip = request()->ip();
         $kefuInfo->status = 1;

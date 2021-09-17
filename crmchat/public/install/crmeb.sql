@@ -115,6 +115,8 @@ CREATE TABLE IF NOT EXISTS `eb_chat_service` (
   `is_backstage` TINYINT(1) NOT NULL DEFAULT '1' COMMENT '1=前台运行;0=后台运行',
   `auto_reply` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '自动回复',
   `welcome_words` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '欢迎语',
+  `update_time` int(10) NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `ip` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '访问IP',
   `client_id` varchar(50) NOT NULL DEFAULT '' COMMENT 'client_id'
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='客服表';
 
