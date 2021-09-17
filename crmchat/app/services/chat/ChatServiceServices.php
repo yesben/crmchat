@@ -215,7 +215,10 @@ class ChatServiceServices extends BaseServices
             /** @var ChatServiceAuxiliaryServices $transfeerService */
             $transfeerService = app()->make(ChatServiceAuxiliaryServices::class);
             $relationId = $transfeerService->value(['appid' => $appId, 'binding_id' => $userId], 'relation_id');
-            $toUserId = $relationId ?: $toUserId;
+            if ($relationId) {
+                //转接客服不在线继续随机分配
+                $toUserId = $this->dao->count(['appid' => $appId, 'online' => 1, 'status' => 1, 'user_id' => $relationId]) ? $relationId : 0;
+            }
         }
         //对话人不再,重新查找
         if (!$toUserId) {
