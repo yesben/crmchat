@@ -98,6 +98,19 @@ class ChatServiceDialogueRecordDao extends BaseDao
     }
 
     /**
+     * 获取是否用户的聊天记录条数
+     * @param string $appid
+     * @param int $userId
+     * @return int
+     */
+    public function chatCount(string $appid, int $userId)
+    {
+        return $this->getModel()->where(['appid' => $appid])->where(function ($query) use ($userId) {
+            $query->where('user_id|to_user_id', $userId);
+        })->count();
+    }
+
+    /**
      * 清楚去年的聊天记录
      * @return bool
      */
