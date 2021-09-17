@@ -64,11 +64,15 @@ class ChatUserServices extends BaseServices
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getUserInfo(int $uid, array $field = ['*'], array $with = [])
+    public function getUserInfo(string $appId, int $uid, array $field = ['*'], array $with = [])
     {
-        return $this->dao->get($uid, $field, $with);
+        return $this->dao->get(['user_id' => $uid, 'appid' => $appId], $field, $with);
     }
 
+    /**
+     * @param App $app
+     * @return $this
+     */
     public function setApp(App $app)
     {
         $this->dao->setApp($app);

@@ -140,7 +140,11 @@ class User extends AuthController
      */
     public function userInfo(ChatUserServices $services, $userId)
     {
-        return $this->success($services->getUserInfo((int)$userId, ['*'], ['label'])->toArray());
+        $userInfo = $services->getUserInfo($this->kefuInfo['appid'], (int)$userId, ['*'], ['label']);
+        if (!$userInfo) {
+            return $this->fail('用户不存在');
+        }
+        return $this->success($userInfo->toArray());
     }
 
     /**

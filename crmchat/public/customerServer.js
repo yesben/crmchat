@@ -1,4 +1,3 @@
-
 // 图片
 var base64ImageObject = {
     // 手机端客服图片
@@ -100,16 +99,17 @@ function initCustomerServer(option) {
 
     // 判断当前环境下的设备是pc端 || 移动端, 将客户信息挂载到iframe的链接上
     this.setMatchMedia = () => {
-        if(!this.settingObj.deviceType){
+        if (!this.settingObj.deviceType) {
             const matchMedia = window.matchMedia;
             // 自动判断启动端 pc 或是 移动
-            if(matchMedia('(max-width: 600px)').matches) {
+            if (matchMedia('(max-width: 600px)').matches) {
                 this.settingObj.deviceType = 'Mobile';
-            } else if(matchMedia('(max-width: 992px)').matches) {
+            } else if (matchMedia('(max-width: 992px)').matches) {
                 this.settingObj.deviceType = 'pc';
             } else {
                 this.settingObj.deviceType = 'pc';
-            };
+            }
+            ;
         }
         // console.log(this.settingObj.deviceType);
         // 获取客服客户相关参数
@@ -118,11 +118,11 @@ function initCustomerServer(option) {
             deviceType: this.settingObj.deviceType,
             windowStyle: this.settingObj.windowStyle,
             isShowTip: this.settingObj.isShowTip,
-            kefuid:this.settingObj.kefuid
+            kefuid: this.settingObj.kefuid
         };
         this.settingObj.openUrl += `?` + toParams(params) + `&`;
         let customerServerData = '';
-        if(this.settingObj.sendUserData && Object.keys(this.settingObj.sendUserData).length) {
+        if (this.settingObj.sendUserData && Object.keys(this.settingObj.sendUserData).length) {
             customerServerData = toParams(this.settingObj.sendUserData);
             this.settingObj.openUrl += `${customerServerData}&`;
         }
@@ -134,7 +134,7 @@ function initCustomerServer(option) {
         let iframeHtml = `<iframe src="${this.settingObj.openUrl}" frameborder="0" class="iframe_contanier" style="width:100%; height:100%;"></iframe>`;
         var app = document.createElement('div');
         app.setAttribute('id', 'app');
-        if(this.settingObj.deviceType == 'Mobile') {
+        if (this.settingObj.deviceType == 'Mobile') {
             // 联系客服按钮dom结构 移动端悬浮按钮样式
             let kefuMobilehtml = `
             <div class="customerServer_container_mobile" id="${this.settingObj.domId}">
@@ -155,32 +155,32 @@ function initCustomerServer(option) {
             fwuss.addEventListener('touchstart', (e) => {
 
                 var ev = e || window.event;
-            var touch = ev.targetTouches[0];
-            oL = touch.clientX - fwuss.offsetLeft;
-            oT = touch.clientY - fwuss.offsetTop;
+                var touch = ev.targetTouches[0];
+                oL = touch.clientX - fwuss.offsetLeft;
+                oT = touch.clientY - fwuss.offsetTop;
 
-            document.addEventListener("touchmove", defaultEvent, false);
+                document.addEventListener("touchmove", defaultEvent, false);
             })
             fwuss.addEventListener('touchmove', (e) => {
                 var ev = e || window.event;
-            var touch = ev.targetTouches[0];
-            var oLeft = touch.clientX - oL;
-            var oTop = touch.clientY - oT;
-            if(oLeft < 0) {
-                oLeft = 0;
-            } else if(oLeft >= maxW) {
-                oLeft = maxW;
-            }
-            if(oTop < 0) {
-                oTop = 0;
-            } else if(oTop >= maxH) {
-                oTop = maxH;
-            }
-            fwuss.style.left = oLeft + 'px';
-            fwuss.style.top = oTop + 'px';
+                var touch = ev.targetTouches[0];
+                var oLeft = touch.clientX - oL;
+                var oTop = touch.clientY - oT;
+                if (oLeft < 0) {
+                    oLeft = 0;
+                } else if (oLeft >= maxW) {
+                    oLeft = maxW;
+                }
+                if (oTop < 0) {
+                    oTop = 0;
+                } else if (oTop >= maxH) {
+                    oTop = maxH;
+                }
+                fwuss.style.left = oLeft + 'px';
+                fwuss.style.top = oTop + 'px';
             });
 
-            fwuss.addEventListener('touchend', function() {
+            fwuss.addEventListener('touchend', function () {
                 document.removeEventListener("touchmove", defaultEvent);
             });
 
@@ -206,7 +206,6 @@ function initCustomerServer(option) {
         }
 
 
-
         // 创建完毕后，添加样式，样式可以从外部传入
         this.iframeLayout = document.createElement('div');
         this.iframeLayout.setAttribute('id', 'iframe_content');
@@ -220,7 +219,7 @@ function initCustomerServer(option) {
         this.connentServerDom = document.querySelector(`#${this.settingObj.domId}`);
 
         // 判断联系客服按钮是否默认展示
-        if(this.settingObj.isShowTip === false) {
+        if (this.settingObj.isShowTip === false) {
             this.connentServerDom.style.display = 'none';
         }
         // 获取 iframe 弹框dom对象，便于后期数据交互
@@ -231,7 +230,7 @@ function initCustomerServer(option) {
     // 设置基本样式样式
     this.batchSetStyle = () => {
         Object.keys(customerServerStyleObject).forEach(item => {
-            if(document.querySelector(`.${item}`)) {
+            if (document.querySelector(`.${item}`)) {
                 this.setStyleOfCustomerServer(document.querySelector(`.${item}`), customerServerStyleObject[item]);
             }
         })
@@ -256,7 +255,7 @@ function initCustomerServer(option) {
 
         }
         // 判断设备的类型，是移动端或是pc端
-        if(this.settingObj.deviceType == 'Mobile') {
+        if (this.settingObj.deviceType == 'Mobile') {
             this.setStyleOfCustomerServer(this.iframeLayout, mobileInitStyle);
         } else {
             this.setStyleOfCustomerServer(this.iframeLayout, pcInitStyle);
@@ -272,55 +271,57 @@ function initCustomerServer(option) {
         window.addEventListener("message", e => {
 
             // 关闭弹框
-        if(e.data.type == 'closeWindow') {
-            if(this.settingObj.deviceType == 'Mobile') {
-                this.iframeLayout.style.top = '100%';
-            } else if(this.settingObj.windowStyle == 'center') {
+            if (e.data.type == 'closeWindow') {
+                if (this.settingObj.deviceType == 'Mobile') {
+                    this.iframeLayout.style.top = '100%';
+                } else if (this.settingObj.windowStyle == 'center') {
+                    this.setStyleOfCustomerServer(this.iframeLayout, {
+                        display: 'none'
+                    });
+
+                } else {
+                    this.iframeLayout.style.bottom = '-645px';
+                    this.iframeLayout.style.opacity = '0';
+
+                }
+                if (this.settingObj.isShowTip !== false) {
+                    this.connentServerDom.style.display = 'block';
+                }
+
+            }
+            // 收取未读消息
+            if (e.data.type == 'message_num') {
+
+                if (e.data.num > 0) {
+                    this.connent_count.style.display = 'flex';
+                    this.connent_count.innerHTML = e.data.num;
+                } else {
+                    this.connent_count.style.display = 'none';
+                }
+            }
+
+            // 跳转到离线留言界面
+            if (e.data.type == 'customerOutLine') {
+                this.outLine = true;
                 this.setStyleOfCustomerServer(this.iframeLayout, {
-                    display: 'none'
-                });
-
-            } else {
-                this.iframeLayout.style.bottom = '-645px';
-                this.iframeLayout.style.opacity = '0';
+                    width: this.outLine ? '378px' : '730px',
+                })
+            }
+            // 监听，跳转回中间页，重置outline（来自反馈成功界面）
+            if (e.data.type == 'reload') {
+                this.outLine = false;
 
             }
-            this.connentServerDom.style.display = 'block';
 
-        }
-        // 收取未读消息
-        if(e.data.type == 'message_num') {
-
-            if(e.data.num > 0) {
-                this.connent_count.style.display = 'flex';
-                this.connent_count.innerHTML = e.data.num;
-            } else {
-                this.connent_count.style.display = 'none';
-            }
-        }
-
-        // 跳转到离线留言界面
-        if(e.data.type == 'customerOutLine') {
-            this.outLine = true;
-            this.setStyleOfCustomerServer(this.iframeLayout, {
-                width: this.outLine ? '378px' : '730px',
-            })
-        }
-        // 监听，跳转回中间页，重置outline（来自反馈成功界面）
-        if(e.data.type == 'reload') {
-            this.outLine = false;
-
-        }
-
-    });
+        });
 
     };
     // 打开客服聊天框
     this.getCustomeServer = () => {
 
-        if(this.settingObj.deviceType == 'Mobile') {
+        if (this.settingObj.deviceType == 'Mobile') {
             this.iframeLayout.style.top = '0';
-        } else if(this.settingObj.windowStyle == 'center') {
+        } else if (this.settingObj.windowStyle == 'center') {
             this.setStyleOfCustomerServer(this.iframeLayout, {
                 top: 0,
                 left: 0,
@@ -342,19 +343,23 @@ function initCustomerServer(option) {
         }
         //悬浮按钮隐藏
         this.connentServerDom.style.display = 'none';
-        this.iframe_contanier.contentWindow.postMessage({ type: 'getImgOrText', productInfo: this.settingObj.productInfo }, "*"); // 传送图文数据
-        this.iframe_contanier.contentWindow.postMessage({ type: 'openCustomeServer' }, "*"); //通知iframe 打开了客服弹框
+        this.iframe_contanier.contentWindow.postMessage({
+            type: 'getImgOrText',
+            productInfo: this.settingObj.productInfo
+        }, "*"); // 传送图文数据
+        this.iframe_contanier.contentWindow.postMessage({type: 'openCustomeServer'}, "*"); //通知iframe 打开了客服弹框
     }
 
     // 更新传送的图文信息
     this.postProductMessage = (productInfo) => {
-        this.iframe_contanier.contentWindow.postMessage({ type: 'getImgOrText', productInfo: productInfo }, "*"); // 传送图文数据
+        this.iframe_contanier.contentWindow.postMessage({type: 'getImgOrText', productInfo: productInfo}, "*"); // 传送图文数据
     }
 
 
 }
+
 //初始化
-initCustomerServer.prototype.init = function() {
+initCustomerServer.prototype.init = function () {
     this.setMatchMedia();
     this.createCustomerServerContainer();
     this.batchSetStyle();
@@ -367,13 +372,13 @@ initCustomerServer.prototype.init = function() {
     })
 };
 //封装全局设置样式方法
-initCustomerServer.prototype.setStyleOfCustomerServer = function(dom, styleObj) {
+initCustomerServer.prototype.setStyleOfCustomerServer = function (dom, styleObj) {
     Object.keys(styleObj).forEach(item => {
         dom['style'][item] = styleObj[item]
     })
 };
 //封装全局获取openUle方法
-initCustomerServer.prototype.getOpenUrl = function() {
+initCustomerServer.prototype.getOpenUrl = function () {
     return this.settingObj.openUrl;
 }
 
@@ -392,13 +397,13 @@ function ajax(options) {
     var xhr = null;
     var params = options.data;
     //创建对象
-    if(window.XMLHttpRequest) {
+    if (window.XMLHttpRequest) {
         xhr = new XMLHttpRequest()
     } else {
         xhr = new ActiveXObject("Microsoft.XMLHTTP");
     }
 
-    switch(options.type) {
+    switch (options.type) {
         case 'GET':
             xhr.open(options.type, options.url + "?" + params, options.async);
             xhr.send(null);
@@ -413,8 +418,8 @@ function ajax(options) {
             break;
     }
 
-    xhr.onreadystatechange = function() {
-        if(xhr.readyState == 4 && xhr.status == 200) {
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
             options.success(xhr.responseText);
         }
     }
@@ -424,8 +429,8 @@ function ajax(options) {
 // 将Object 改装成以 & 符号连接的字符串
 function toParams(param) {
     var result = ""
-    for(let name in param) {
-        if(typeof param[name] != 'function') {
+    for (let name in param) {
+        if (typeof param[name] != 'function') {
             result += "&" + name + "=" + encodeURI(param[name]);
         }
     }
@@ -435,7 +440,7 @@ function toParams(param) {
 
 //set session
 function setSen(k, val) {
-    if(typeof val == 'string') {
+    if (typeof val == 'string') {
         sessionStorage.setItem(k, val);
         return val;
     }
@@ -448,15 +453,17 @@ function getSen(k) {
     let uu = sessionStorage.getItem(k);
 
     try {
-        if(typeof JSON.parse(uu) != 'number') {
+        if (typeof JSON.parse(uu) != 'number') {
             uu = JSON.parse(uu);
         }
-    } catch(e) { }
+    } catch (e) {
+    }
     return uu;
 }
+
 //set local
 function setLoc(k, val) {
-    if(typeof val == 'string') {
+    if (typeof val == 'string') {
         localStorage.setItem(k, val);
         return val;
     }
@@ -469,20 +476,21 @@ function getLoc(k) {
     let uu = localStorage.getItem(k);
 
     try {
-        if(typeof JSON.parse(uu) != 'number') {
+        if (typeof JSON.parse(uu) != 'number') {
             uu = JSON.parse(uu);
         }
-    } catch(e) { }
+    } catch (e) {
+    }
     return uu;
 }
 
 //序列化对象和数组
 function serialize(data) {
-    if(data != null && data != '') {
+    if (data != null && data != '') {
         try {
             return JSON.parse(JSON.stringify(data));
-        } catch(e) {
-            if(data instanceof Array) {
+        } catch (e) {
+            if (data instanceof Array) {
                 return [];
             }
             return {};
