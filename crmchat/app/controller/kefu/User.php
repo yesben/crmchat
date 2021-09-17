@@ -253,7 +253,7 @@ class User extends AuthController
     {
         $key = trim(ltrim($this->request->header(Config::get('cookie.token_name')), 'Bearer'));
         CacheService::redisHandler()->delete($key);
-        $services->update(['user_id' => $this->kefuInfo['user_id'], 'appid' => $this->kefuInfo['appid']], ['online' => 0]);
+        $services->update(['user_id' => $this->kefuInfo['user_id'], 'appid' => $this->kefuInfo['appid']], ['online' => 0, 'client_id' => '']);
         return $this->success();
     }
 

@@ -71,7 +71,7 @@ canCustomerServer.getCustomeServer();
                 <br>uid:用户ID
                 <br>nickName:用户昵称
                 <br>phone:用户手机号
-                <br>kefuid:客服ID
+                <br>kefu_id:客服ID
                 </p>
                 <div class="other-wrap">
                     <a @click="getCopy('NormalCodeTextareakaifa2')" class="btn btn-blue btn-large" href="javascript:void(0);"><span>复制代码</span></a>

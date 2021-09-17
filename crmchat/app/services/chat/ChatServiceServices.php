@@ -248,7 +248,7 @@ class ChatServiceServices extends BaseServices
             'to_user_nickname' => $toUserInfo['nickname'],
             'to_user_avatar' => $toUserInfo['avatar']
         ];
-        $serviceLogList = $logServices->getServiceChatList(['appid' => $appId, 'user_id' => $userId, 'to_user_id' => $toUserId], $limit, $idTo);
+        $serviceLogList = $logServices->getServiceChatList(['appid' => $appId, 'to_user_id' => $userId], $limit, $idTo);
         $result['serviceList'] = array_reverse($logServices->tidyChat($serviceLogList));
         try {
             $app = app();

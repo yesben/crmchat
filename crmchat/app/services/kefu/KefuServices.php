@@ -77,7 +77,7 @@ class KefuServices extends BaseServices
         $service = app()->make(ChatServiceDialogueRecordServices::class);
         [$page, $limit] = $this->getPageValue();
         AutoBadge::dispatch([$userId, $toUserId, $appId]);
-        return array_reverse($service->tidyChat($service->getServiceChatList(['user_id' => $userId, 'to_user_id' => $toUserId], $limit, $upperId)));
+        return array_reverse($service->tidyChat($service->getServiceChatList(['appid' => $appId, 'to_user_id' => $toUserId], $limit, $upperId)));
     }
 
     /**
