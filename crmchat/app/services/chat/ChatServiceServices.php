@@ -180,6 +180,7 @@ class ChatServiceServices extends BaseServices
         $uid = $user['uid'] ?? 0;
         /** @var ChatUserServices $userServices */
         $userServices = app()->make(ChatUserServices::class);
+        //查找用户,没用自动生成游客
         $userInfo = $userServices->get(['uid' => $uid, 'appid' => $appId]);
         if (!$uid || !$userInfo) {
             /** @var ApplicationServices $appService */
@@ -203,12 +204,22 @@ class ChatServiceServices extends BaseServices
             }
             $userInfo = $userInfo->toArray();
         }
-
+        //获取当前分配客服
         $toUserId = $this->dao->count(['appid' => $appId, 'status' => 1, 'user_id' => $toUserId]) ? $toUserId : 0;
         if (!$toUserId && $kefuId) {
             $toUserId = $this->dao->value(['appid' => $appId, 'status' => 1, 'id' => $kefuId], 'user_id');
         }
+        //是否为自动分配的客服
+        if ($toUserId) {
+            //查找当前用户有没有被转接,转接了使用转接人的to_user_id
+            /** @var ChatServiceAuxiliaryServices $transfeerService */
+            $transfeerService = app()->make(ChatServiceAuxiliaryServices::class);
+            $relationId = $transfeerService->value(['appid' => $appId, 'binding_id' => $userId], 'relation_id');
+            $toUserId = $relationId ?: $toUserId;
+        }
+        //对话人不再,重新查找
         if (!$toUserId) {
+            //查找当前在线客服
             $serviceInfoList = $this->getServiceList(['appid' => $appId, 'status' => 1, 'online' => 1]);
             if (!count($serviceInfoList)) {
                 throw new ValidateException('暂无客服人员在线，请稍后联系');
@@ -233,6 +244,7 @@ class ChatServiceServices extends BaseServices
                 throw new ValidateException('暂无客服人员在线，请稍后联系');
             }
         }
+        //组合数据
         $toUserInfo = $this->dao->get(['user_id' => $toUserId], ['nickname', 'avatar']);
         /** @var ChatServiceDialogueRecordServices $logServices */
         $logServices = app()->make(ChatServiceDialogueRecordServices::class);
@@ -248,9 +260,11 @@ class ChatServiceServices extends BaseServices
             'to_user_nickname' => $toUserInfo['nickname'],
             'to_user_avatar' => $toUserInfo['avatar']
         ];
+        //查找聊天记录
         $serviceLogList = $logServices->getServiceChatList(['appid' => $appId, 'to_user_id' => $userId], $limit, $idTo);
         $result['serviceList'] = array_reverse($logServices->tidyChat($serviceLogList));
         try {
+            //欢迎语
             $app = app();
             Timer::after(1000, function () use ($app, $appId, $toUserId, $userId, $userInfo) {
                 $this->welcomeWords($app, $appId, $toUserId, $userId, $userInfo);

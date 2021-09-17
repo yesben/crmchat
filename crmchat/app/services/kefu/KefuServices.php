@@ -95,10 +95,12 @@ class KefuServices extends BaseServices
         }
         /** @var ChatServiceDialogueRecordServices $service */
         $service = app()->make(ChatServiceDialogueRecordServices::class);
+        /** @var ChatServiceAuxiliaryServices $transfeerService */
+        $transfeerService = app()->make(ChatServiceAuxiliaryServices::class);
         $where = ['chat' => [$kfuUserId, $userId]];
         $messageData = $service->getMessageOne($where);
         $messageData = $messageData ? $messageData->toArray() : [];
-        $record = $this->transaction(function () use ($where, $messageData, $appid, $service, $kfuUserId, $userId, $kefuToUserId) {
+        $record = $this->transaction(function () use ($transfeerService, $where, $messageData, $appid, $service, $kfuUserId, $userId, $kefuToUserId) {
             /** @var ChatServiceRecordServices $serviceRecord */
             $serviceRecord = app()->make(ChatServiceRecordServices::class);
             $info = $serviceRecord->get(['user_id' => $kfuUserId, 'to_user_id' => $userId, 'appid' => $appid], ['id', 'type', 'message_type', 'is_tourist', 'avatar', 'nickname']);
@@ -116,6 +118,11 @@ class KefuServices extends BaseServices
             );
             $res = $serviceRecord->delete(['user_id' => $kfuUserId, 'to_user_id' => $userId, 'appid' => $appid]);
             $res = $res && $serviceRecord->delete(['user_id' => $userId, 'to_user_id' => $kfuUserId, 'appid' => $appid]);
+            $res = $res && $transfeerService->saveAuxliary([
+                    'binding_id' => $userId,
+                    'relation_id' => $kefuToUserId,
+                    'appid' => $appid
+                ]);
             if (!$record && !$res) {
                 throw new ValidateException('转接客服失败');
             }

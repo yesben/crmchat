@@ -45,17 +45,19 @@ class ChatServiceAuxiliaryServices extends BaseServices
      */
     public function saveAuxliary(array $data)
     {
-        $auxliaryInfo = $this->dao->get(['type' => 0, 'binding_id' => $data['binding_id'], 'relation_id' => $data['relation_id']]);
+        $auxliaryInfo = $this->dao->get(['type' => 0, 'appid' => $data['appid'], 'binding_id' => $data['binding_id'], 'relation_id' => $data['relation_id']]);
         if ($auxliaryInfo) {
+            $auxliaryInfo->relation_id = $data['relation_id'];
             $auxliaryInfo->update_time = time();
             return $auxliaryInfo->save();
         } else {
             return $this->dao->save([
-                'type'        => 0,
-                'binding_id'  => $data['binding_id'],
+                'type' => 0,
+                'appid' => $data['appid'],
+                'binding_id' => $data['binding_id'],
                 'relation_id' => $data['relation_id'],
                 'update_time' => time(),
-                'add_time'    => time(),
+                'add_time' => time(),
             ]);
         }
     }

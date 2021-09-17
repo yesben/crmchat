@@ -13,6 +13,7 @@ namespace app\webscoket;
 
 use app\jobs\ServiceTransfer;
 use app\jobs\UniPush;
+use app\services\chat\ChatServiceAuxiliaryServices;
 use app\services\chat\ChatServiceDialogueRecordServices;
 use app\services\chat\ChatServiceRecordServices;
 use app\services\chat\ChatServiceServices;
@@ -288,7 +289,9 @@ abstract class BaseHandler
         $messageData = $messageData ? $messageData->toArray() : [];
 
         try {
-            $record = $service->transaction(function () use ($messageData, $appid, $service, $kfuUserId, $userId, $kefuToUserId) {
+            /** @var ChatServiceAuxiliaryServices $transfeerService */
+            $transfeerService = app()->make(ChatServiceAuxiliaryServices::class);
+            $record = $service->transaction(function () use ($messageData, $appid, $transfeerService, $service, $kfuUserId, $userId, $kefuToUserId) {
                 /** @var ChatServiceRecordServices $serviceRecord */
                 $serviceRecord = app()->make(ChatServiceRecordServices::class);
                 $info = $serviceRecord->get(['user_id' => $kfuUserId, 'to_user_id' => $userId, 'appid' => $appid], ['id', 'type', 'message_type', 'is_tourist', 'avatar', 'nickname']);
@@ -306,6 +309,11 @@ abstract class BaseHandler
                 );
                 $res = $serviceRecord->delete(['user_id' => $kfuUserId, 'to_user_id' => $userId, 'appid' => $appid]);
                 $res = $res && $serviceRecord->delete(['user_id' => $userId, 'to_user_id' => $kfuUserId, 'appid' => $appid]);
+                $res = $res && $transfeerService->saveAuxliary([
+                        'binding_id' => $userId,
+                        'relation_id' => $kefuToUserId,
+                        'appid' => $appid
+                    ]);
                 if (!$record && !$res) {
                     throw new ValidateException('转接客服失败');
                 }
