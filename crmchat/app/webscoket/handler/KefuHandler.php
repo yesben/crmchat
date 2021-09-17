@@ -96,7 +96,7 @@ class KefuHandler extends BaseHandler
             $service->update(['user_id' => $user['user_id']], ['online' => $online]);
             /** @var ChatServiceRecordServices $service */
             $service = app()->make(ChatServiceRecordServices::class);
-            $service->updateRecord(['to_user_id' => $user['id']], ['online' => $online]);
+            $service->updateRecord(['to_user_id' => $user['user_id']], ['online' => $online]);
             if ($user['to_user_id']) {
                 $fd = $this->room->uidByFd($user['to_user_id']);
                 //给当前正在聊天的用户发送上下线消息
