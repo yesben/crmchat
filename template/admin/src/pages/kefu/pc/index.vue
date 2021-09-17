@@ -279,6 +279,7 @@ export default {
     console.log(Setting.apiBaseURL, this.upload);
     serviceInfo().then(res => {
       this.kefuInfo = res.data;
+      this.online = !!this.kefuInfo.online
       if(this.kefuInfo.site_name) {
         document.title = this.kefuInfo.site_name;
       } else {
