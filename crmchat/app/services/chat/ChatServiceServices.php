@@ -298,7 +298,8 @@ class ChatServiceServices extends BaseServices
         $data['msn'] = '';
         /** @var PullWord $words */
         $pullWord = $app->make(PullWord::class);
-        $result = $pullWord->pull($msg)->get();
+        $result = $pullWord->pull($msg)->toJson()->get();
+        $result = json_decode($result, true);
         $keyword = [];
         foreach ($result as $item) {
             $keyword[] = $item['t'];
