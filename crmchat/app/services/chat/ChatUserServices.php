@@ -66,7 +66,7 @@ class ChatUserServices extends BaseServices
      */
     public function getUserInfo(string $appId, int $uid, array $field = ['*'], array $with = [])
     {
-        return $this->dao->get(['user_id' => $uid, 'appid' => $appId], $field, $with);
+        return $this->dao->get(['id' => $uid, 'appid' => $appId], $field, $with);
     }
 
     /**
