@@ -96,7 +96,8 @@ function initCustomerServer(option) {
     this.settingObj.kefuid = option.kefuid || 0; // 指定客服，默认随机
     this.settingObj.sendUserData = option.sendUserData || {}; // 用户信息，默认游客
     this.settingObj.productInfo = option.productInfo || {}; // 携带产品信息，默认空
-
+    this.appDom = null;
+    this.initStatus = false;//是否初始化过
     // 判断当前环境下的设备是pc端 || 移动端, 将客户信息挂载到iframe的链接上
     this.setMatchMedia = () => {
         if (!this.settingObj.deviceType) {
@@ -133,6 +134,7 @@ function initCustomerServer(option) {
     this.createCustomerServerContainer = () => {
         let iframeHtml = `<iframe src="${this.settingObj.openUrl}" frameborder="0" class="iframe_contanier" style="width:100%; height:100%;"></iframe>`;
         var app = document.createElement('div');
+        this.appDom = app;
         app.setAttribute('id', 'app');
         if (this.settingObj.deviceType == 'Mobile') {
             // 联系客服按钮dom结构 移动端悬浮按钮样式
@@ -319,6 +321,11 @@ function initCustomerServer(option) {
     // 打开客服聊天框
     this.getCustomeServer = () => {
 
+        //检测是否初始化过
+        if(this.initStatus === false){
+            this.init();
+        }
+
         if (this.settingObj.deviceType == 'Mobile') {
             this.iframeLayout.style.top = '0';
         } else if (this.settingObj.windowStyle == 'center') {
@@ -358,6 +365,12 @@ function initCustomerServer(option) {
 
 }
 
+initCustomerServer.prototype.destroy = function(){
+    this.appDom.remove()
+    this.iframeLayout.remove();
+    this.initStatus = false;
+}
+
 //初始化
 initCustomerServer.prototype.init = function () {
     this.setMatchMedia();
@@ -365,11 +378,10 @@ initCustomerServer.prototype.init = function () {
     this.batchSetStyle();
     this.initPositionStyle();
     this.loadwindow();
-
+    this.initStatus = true;
+    this.connentServerDom.removeEventListener('click',this.getCustomeServer);
     // 联系客服小按钮，点击事件
-    this.connentServerDom.addEventListener('click', () => {
-        this.getCustomeServer();
-    })
+    this.connentServerDom.addEventListener('click', this.getCustomeServer)
 };
 //封装全局设置样式方法
 initCustomerServer.prototype.setStyleOfCustomerServer = function (dom, styleObj) {
