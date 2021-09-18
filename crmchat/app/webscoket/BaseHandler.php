@@ -153,7 +153,7 @@ abstract class BaseHandler
 
         /** @var ChatUserServices $userService */
         $userService = app()->make(ChatUserServices::class);
-        $_userInfo = $userService->getUserInfo($appId, $data['user_id'], ['nickname', 'avatar', 'is_tourist']);
+        $_userInfo = $userService->getUserInfo($data['user_id'], ['nickname', 'avatar', 'is_tourist']);
         $isTourist = $_userInfo['is_tourist'];
         $data['nickname'] = $_userInfo['nickname'] ?? '';
         $data['avatar'] = $_userInfo['avatar'] ?? '';

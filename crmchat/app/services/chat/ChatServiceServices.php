@@ -342,7 +342,7 @@ class ChatServiceServices extends BaseServices
 
         /** @var ChatUserServices $userService */
         $userService = $app->make(ChatUserServices::class);
-        $_userInfo = $userService->setApp($app)->getUserInfo($appId, $data['user_id'], ['nickname', 'avatar', 'is_tourist']);
+        $_userInfo = $userService->setApp($app)->getUserInfo($data['user_id'], ['nickname', 'avatar', 'is_tourist']);
         $isTourist = $_userInfo['is_tourist'];
         $data['nickname'] = $_userInfo['nickname'] ?? '';
         $data['avatar'] = $_userInfo['avatar'] ?? '';
@@ -407,7 +407,7 @@ class ChatServiceServices extends BaseServices
             $data = $data->toArray();
             $data['_add_time'] = $data['add_time'];
             $data['add_time'] = strtotime($data['add_time']);
-            $_userInfo = $userService->setApp($app)->getUserInfo($appId, $data['user_id'], ['nickname', 'avatar', 'is_tourist', 'type']);
+            $_userInfo = $userService->setApp($app)->getUserInfo($data['user_id'], ['nickname', 'avatar', 'is_tourist', 'type']);
             $isTourist = $_userInfo['is_tourist'];
             $data['nickname'] = $_userInfo['nickname'] ?? '';
             $data['avatar'] = $_userInfo['avatar'] ?? '';

@@ -57,16 +57,16 @@ class ChatUserServices extends BaseServices
 
     /**
      * 获取用户数据
-     * @param int $uid
+     * @param int $userId
      * @param string[] $field
      * @return array|\think\Model|null
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getUserInfo(string $appId, int $uid, array $field = ['*'], array $with = [])
+    public function getUserInfo(int $userId, array $field = ['*'], array $with = [])
     {
-        return $this->dao->get(['id' => $uid, 'appid' => $appId], $field, $with);
+        return $this->dao->get($userId, $field, $with);
     }
 
     /**
