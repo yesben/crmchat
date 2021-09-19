@@ -222,14 +222,14 @@ class Menus extends AuthController
     {
         $this->app->route->setTestMode(true);
         $this->app->route->clear();
-        $path  = $this->app->getRootPath() . 'route' . DIRECTORY_SEPARATOR;
+        $path = $this->app->getRootPath() . 'route' . DIRECTORY_SEPARATOR;
         $files = is_dir($path) ? scandir($path) : [];
         foreach ($files as $file) {
             if (strpos($file, '.php')) {
                 include $path . $file;
             }
         }
-        $ruleList    = $this->app->route->getRuleList();
+        $ruleList = $this->app->route->getRuleList();
         $ruleNewList = [];
         foreach ($ruleList as $item) {
             if (Str::contains($item['rule'], 'api/admin')) {
@@ -237,10 +237,10 @@ class Menus extends AuthController
             }
         }
         foreach ($ruleNewList as $key => &$value) {
-            $only           = $value['option']['only'] ?? [];
-            $route          = is_string($value['route']) ? explode('/', $value['route']) : [];
+            $only = $value['option']['only'] ?? [];
+            $route = is_string($value['route']) ? explode('/', $value['route']) : [];
             $value['route'] = is_string($value['route']) ? $value['route'] : '';
-            $action         = $route[count($route) - 1] ?? null;
+            $action = $route[count($route) - 1] ?? null;
             if ($only && $action && !in_array($action, $only)) {
                 unset($ruleNewList[$key]);
             }
@@ -249,15 +249,13 @@ class Menus extends AuthController
                 unset($ruleNewList[$key]);
             }
         }
-        $ruleList    = $ruleNewList;
+        $ruleList = $ruleNewList;
         $menuApiList = $this->services->getColumn(['auth_type' => 2, 'is_del' => 0], "concat(`api_url`,'_',lower(`methods`)) as rule");
         if ($menuApiList) $menuApiList = array_column($menuApiList, 'rule');
-        $list      = [];
+        $list = [];
         $allAction = ['delete', 'index', 'update', 'edit', 'save', 'create', 'read'];
         foreach ($ruleList as $item) {
-            $item['rule'] = str_replace('adminapi/', '', $item['rule']);
-            if (!in_array($item['rule'] . '_' . $item['method'], $menuApiList) && isset($item['option']['middleware']) && in_array('app\\http\\middleware\\admin\\AdminCkeckRoleMiddleware', $item['option']['middleware'])) {
-
+            if (!in_array($item['rule'] . '_' . $item['method'], $menuApiList)) {
                 $option = $item['option']['real_name'] ?? null;
                 if (is_array($option)) {
                     foreach ($allAction as $action) {
@@ -272,7 +270,7 @@ class Menus extends AuthController
                 $item['real_name'] = $real_name;
                 unset($item['option']);
                 $item['method'] = strtoupper($item['method']);
-                $list[]         = $item;
+                $list[] = $item;
             }
         }
 

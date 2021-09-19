@@ -43,7 +43,7 @@ class UserHandler extends BaseHandler
 
         try {
             /** @var ApplicationServices $services */
-            $services    = app()->make(ApplicationServices::class);
+            $services = app()->make(ApplicationServices::class);
             $application = $services->parseToken($token);
         } catch (\Throwable $e) {
             return $response->fail($e->getMessage());
@@ -68,7 +68,7 @@ class UserHandler extends BaseHandler
             //给所有在线客服人员发送当前用户上线消息
             $this->manager->pushing($this->room->getKefuRoomAll(), $response->message('user_online', [
                 'user_id' => $user['id'],
-                'online'  => 1
+                'online' => 1
             ])->getData(), $this->fd);
         }
 
@@ -89,13 +89,14 @@ class UserHandler extends BaseHandler
             return $response->fail('连接不存在');
         }
         $appId = $frame['appid'];
-        $user  = [
-            'uid'      => $data['uid'] ?? 0,
+        $update = $data['update'] ?? 0;
+        $user = [
+            'uid' => $data['uid'] ?? 0,
             'nickname' => $data['nickname'] ?? '',
-            'avatar'   => $data['avatar'] ?? '',
-            'phone'    => $data['phone'] ?? '',
-            'openid'   => $data['openid'] ?? '',
-            'type'   => $data['type'] ?? 0,
+            'avatar' => $data['avatar'] ?? '',
+            'phone' => $data['phone'] ?? '',
+            'openid' => $data['openid'] ?? '',
+            'type' => $data['type'] ?? 0,
         ];
         if (!$user['uid']) {
             return $response->fail('缺少UID');
@@ -134,7 +135,7 @@ class UserHandler extends BaseHandler
 
         $this->manager->pushing($this->room->getKefuRoomAll(), $response->message('user_online', [
             'user_id' => $userInfo['id'],
-            'online'  => 1
+            'online' => 1
         ])->getData(), $this->fd);
 
         return $response->success('user');
