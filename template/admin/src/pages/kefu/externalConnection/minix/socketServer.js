@@ -265,12 +265,6 @@ export default {
           parent.postMessage({ type: 'onMessageTransfer', data: data }, "*");
         })
 
-
-        // let num = 1;
-        // setInterval(() => {
-        //   parent.postMessage({ type: 'message_num', num: num++ }, "*");
-        // }, 1000)
-
       })
     },
 

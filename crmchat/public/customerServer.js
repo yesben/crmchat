@@ -13,14 +13,29 @@ var customerServer = null;
 window.$chat = {
     event: {},
     on(name, fun) {
-        this.event[name] = fun;
+        if(this.event[name] == undefined){
+            this.event[name] = [];
+        }
+        this.event[name].push(fun);
     },
     emit(name, attr) {
-        if (this.event[name] && typeof this.event[name] === 'function') {
-            this.event[name](...attr)
+        if(this.event[name] && this.event[name].length){
+            this.event[name].map(item=>{
+                if(typeof item === 'function'){
+                    item(...attr)
+                }
+            })
         }
     }
 };
+
+//放入默认事件
+window.$chat.on('postMessage',function (type,data) {
+    if(!this.iframe_contanier){
+        return;
+    }
+    this.iframe_contanier.contentWindow.postMessage({type: type, data: data}, "*"); // 传送图文数据
+});
 
 const settingObj = {};
 
@@ -381,14 +396,6 @@ function initCustomerServer(option) {
     }
 
 
-}
-
-//触发事件
-initCustomerServer.prototype.trigger = function (eventName, data) {
-    console.log(this.initStatus)
-    if (this.initStatus) {
-        this.iframe_contanier.contentWindow.postMessage({type: eventName, data: data}, '*');
-    }
 }
 
 //销毁事件

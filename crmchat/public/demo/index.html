@@ -60,7 +60,7 @@
             return;
         }
         var option = {
-            openUrl: 'http://localhost:8080',
+            openUrl: 'https://chat.crmeb.net',
             token: 'e8bcc017f50e55c63b5352c4257c8904',
         };
         var canCustomerServer = new initCustomerServer(option);
@@ -117,6 +117,9 @@
     }
 
     //其他全局事件
+
+    //触发事件
+    // window.$chat.emit('postMessage',['touchend',{uid:10}]);
 
     //自动实例化后事件
     //authInit = true 后监听事件可以拿到实例化后的客服对象
