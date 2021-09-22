@@ -135,7 +135,7 @@ function initCustomerServer(option) {
         let iframeHtml = `<iframe src="${this.settingObj.openUrl}" frameborder="0" class="iframe_contanier" style="width:100%; height:100%;"></iframe>`;
         var app = document.createElement('div');
         this.appDom = app;
-        app.setAttribute('id', 'app');
+        app.setAttribute('id', 'chat-app');
         if (this.settingObj.deviceType == 'Mobile') {
             // 联系客服按钮dom结构 移动端悬浮按钮样式
             let kefuMobilehtml = `
@@ -322,7 +322,7 @@ function initCustomerServer(option) {
     this.getCustomeServer = () => {
 
         //检测是否初始化过
-        if(this.initStatus === false){
+        if (this.initStatus === false) {
             this.init();
         }
 
@@ -365,7 +365,22 @@ function initCustomerServer(option) {
 
 }
 
-initCustomerServer.prototype.destroy = function(){
+//触发事件
+initCustomerServer.prototype.trigger = function (eventName, data) {
+    console.log(this.initStatus)
+    if (this.initStatus) {
+        this.iframe_contanier.contentWindow.postMessage({type: eventName, data: data}, '*');
+    }
+}
+
+initCustomerServer.prototype.addEventMessageListener = function(){
+    window.addEventListener('message',function(event) {
+        console.log('received response:  ',event.data);
+    },false);
+}
+
+//销毁事件
+initCustomerServer.prototype.destroy = function () {
     this.appDom.remove()
     this.iframeLayout.remove();
     this.initStatus = false;
@@ -378,8 +393,9 @@ initCustomerServer.prototype.init = function () {
     this.batchSetStyle();
     this.initPositionStyle();
     this.loadwindow();
+    this.addEventMessageListener();
     this.initStatus = true;
-    this.connentServerDom.removeEventListener('click',this.getCustomeServer);
+    this.connentServerDom.removeEventListener('click', this.getCustomeServer);
     // 联系客服小按钮，点击事件
     this.connentServerDom.addEventListener('click', this.getCustomeServer)
 };
