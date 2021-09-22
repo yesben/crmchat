@@ -373,10 +373,10 @@ initCustomerServer.prototype.trigger = function (eventName, data) {
     }
 }
 
-initCustomerServer.prototype.addEventMessageListener = function(){
-    window.addEventListener('message',function(event) {
-        console.log('received response:  ',event.data);
-    },false);
+initCustomerServer.prototype.addEventMessageListener = function () {
+    window.addEventListener('message', function (event) {
+        console.log('received response:  ', event.data);
+    }, false);
 }
 
 //销毁事件
@@ -412,6 +412,15 @@ initCustomerServer.prototype.getOpenUrl = function () {
 
 //vue 开发调试专用，vue开发请去掉下一行注释
 // export default initCustomerServer;
+window.onload = function () {
+    var chatJava = document.getElementById('chat');
+    if (chatJava) {
+        var option = JSON.parse(chatJava.getAttribute('option') || '');
+        if(option.authInit){
+            new initCustomerServer(option).init();
+        }
+    }
+}
 
 // let useCustomerServer = new initCustomerServer(option);
 // useCustomerServer.init();
