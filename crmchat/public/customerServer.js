@@ -7,6 +7,21 @@ var base64ImageObject = {
     // 关闭客服服务，向下按钮
     putItAway: 'data:image/png;base64,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'
 }
+var customerServer = null;
+
+//事件添加和执行
+window.$chat = {
+    event: {},
+    on(name, fun) {
+        this.event[name] = fun;
+    },
+    emit(name, attr) {
+        if (this.event[name] && typeof this.event[name] === 'function') {
+            this.event[name](...attr)
+        }
+    }
+};
+
 const settingObj = {};
 
 //悬浮按钮样式
@@ -271,7 +286,7 @@ function initCustomerServer(option) {
     this.loadwindow = () => {
         // 接收来自iframe中的参数
         window.addEventListener("message", e => {
-
+            window.$chat.emit(e.data.type, [e.data]);
             // 关闭弹框
             if (e.data.type == 'closeWindow') {
                 if (this.settingObj.deviceType == 'Mobile') {
@@ -291,12 +306,13 @@ function initCustomerServer(option) {
                 }
 
             }
-            // 收取未读消息
-            if (e.data.type == 'message_num') {
 
-                if (e.data.num > 0) {
+            // 收取未读消息
+            if (e.data.type == 'onMessageNum') {
+
+                if (e.data.data.num > 0) {
                     this.connent_count.style.display = 'flex';
-                    this.connent_count.innerHTML = e.data.num;
+                    this.connent_count.innerHTML = e.data.data.num;
                 } else {
                     this.connent_count.style.display = 'none';
                 }
@@ -355,6 +371,8 @@ function initCustomerServer(option) {
             productInfo: this.settingObj.productInfo
         }, "*"); // 传送图文数据
         this.iframe_contanier.contentWindow.postMessage({type: 'openCustomeServer'}, "*"); //通知iframe 打开了客服弹框
+        //打开聊天窗事件
+        window.$chat.emit('openChatWin');
     }
 
     // 更新传送的图文信息
@@ -373,12 +391,6 @@ initCustomerServer.prototype.trigger = function (eventName, data) {
     }
 }
 
-initCustomerServer.prototype.addEventMessageListener = function () {
-    window.addEventListener('message', function (event) {
-        console.log('received response:  ', event.data);
-    }, false);
-}
-
 //销毁事件
 initCustomerServer.prototype.destroy = function () {
     this.appDom.remove()
@@ -393,11 +405,12 @@ initCustomerServer.prototype.init = function () {
     this.batchSetStyle();
     this.initPositionStyle();
     this.loadwindow();
-    this.addEventMessageListener();
     this.initStatus = true;
     this.connentServerDom.removeEventListener('click', this.getCustomeServer);
     // 联系客服小按钮，点击事件
     this.connentServerDom.addEventListener('click', this.getCustomeServer)
+    //初始化事件
+    window.$chat.emit('init');
 };
 //封装全局设置样式方法
 initCustomerServer.prototype.setStyleOfCustomerServer = function (dom, styleObj) {
@@ -410,14 +423,21 @@ initCustomerServer.prototype.getOpenUrl = function () {
     return this.settingObj.openUrl;
 }
 
+window.getChatInstance = function () {
+    return customerServer;
+}
+
 //vue 开发调试专用，vue开发请去掉下一行注释
 // export default initCustomerServer;
 window.onload = function () {
     var chatJava = document.getElementById('chat');
     if (chatJava) {
         var option = JSON.parse(chatJava.getAttribute('option') || '');
-        if(option.authInit){
-            new initCustomerServer(option).init();
+        if (option.authInit) {
+            customerServer = new initCustomerServer(option);
+            customerServer.init();
+
+            window.$chat.emit('chatAuthAfter', [customerServer]);
         }
     }
 }
