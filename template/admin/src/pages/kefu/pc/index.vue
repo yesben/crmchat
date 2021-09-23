@@ -274,12 +274,12 @@ export default {
     //     deep:true
     // }
   },
-  created() {
+   created() {
     this.upload = Setting.apiBaseURL.replace('admin', 'kefu') + '/upload'
     console.log(Setting.apiBaseURL, this.upload);
     serviceInfo().then(res => {
       this.kefuInfo = res.data;
-      this.online = !!this.kefuInfo.online
+      // this.online = !!this.kefuInfo.online
       if(this.kefuInfo.site_name) {
         document.title = this.kefuInfo.site_name;
       } else {
@@ -322,7 +322,8 @@ export default {
         ws.$on('close',()=>{
           this.toChat = false;
         })
-        ws.$on('success',()=>{
+        ws.$on('success',(data)=>{
+
           this.isShow = true;
           let toChat = this.userActive ? this.userActive.to_user_id : this.userActive;
           if(!this.toChat && toChat){
@@ -334,6 +335,7 @@ export default {
               type: "to_chat",
             });
             this.toChat = true;
+            this.online = !!data.online
           }
         });
         ws.$on(["reply", "chat"], (data) => {

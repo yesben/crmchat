@@ -64,11 +64,14 @@ class KefuHandler extends BaseHandler
         /** @var ChatServiceServices $service */
         $service = app()->make(ChatServiceServices::class);
         //不是在app端把在后台替换到前台
-        if (isset($data['app']) && !$data['app']) {
+        if ((isset($data['app']) && !$data['app']) || !isset($data['app'])) {
+            $online = 1;
             $service->update($kefuInfo['id'], ['is_backstage' => 1, 'online' => 1]);
+        } else {
+            $online = $service->value($kefuInfo['id'], 'online');
         }
 
-        return $response->success(['uid' => $user['id'], 'appid' => $kefuInfo['appid']]);
+        return $response->success(['uid' => $user['id'], 'online' => (int)$online, 'appid' => $kefuInfo['appid']]);
     }
 
     /**
