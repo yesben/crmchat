@@ -82,7 +82,7 @@ class Config extends AuthController
         $data = $this->request->postMore([
             'menu_name',
             'type',
-            'input_type',
+            ['input_type', ''],
             'config_tab_id',
             ['parameter', ''],
             ['upload_type', ''],
@@ -116,7 +116,7 @@ class Config extends AuthController
             $this->services->valiDateRadioAndCheckbox($data);
         }
         $data['value'] = json_encode($data['value']);
-        $config        = $this->services->getOne(['menu_name' => $data['menu_name']]);
+        $config = $this->services->getOne(['menu_name' => $data['menu_name']]);
         if ($config) {
             $this->services->update($config['id'], $data, 'id');
         } else {
