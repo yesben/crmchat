@@ -820,6 +820,7 @@ INSERT INTO `eb_system_menus` (`id`, `pid`, `icon`, `menu_name`, `module`, `cont
 CREATE TABLE IF NOT EXISTS `eb_auxiliary` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `binding_id` int(10) NOT NULL DEFAULT '0' COMMENT '绑定id',
+  `appid` varchar(32) NOT NULL DEFAULT '' COMMENT 'APPid',
   `relation_id` int(10) NOT NULL DEFAULT '0' COMMENT '关联id',
   `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '类型0=客服转接辅助，1=商品和分类辅助，2=优惠券和商品辅助',
   `other` varchar(2048) NOT NULL DEFAULT '' COMMENT '其他数据为json',
