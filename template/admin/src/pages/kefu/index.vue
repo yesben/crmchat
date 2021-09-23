@@ -69,8 +69,8 @@ export default {
       autoLogin: true,
       imgcode: '',
       formInline: {
-        username: 'kefu',
-        password: 'kefu123',
+        username: '',
+        password: '',
         code: ''
       },
       ruleInline: {
