@@ -113,7 +113,7 @@ class Manager extends Websocket
         $this->nowRoom->add($fd, $data['data']['appid'] ?? '', $uid);
         $this->pingService->createPing($fd, time(), $this->cache_timeout);
         $this->send($fd, $this->response->message('ping', ['now' => time()]));
-        return $this->send($fd, $this->response->success());
+        return $this->send($fd, $this->response->success($data['data']));
     }
 
     public function login($type, $uid, $fd)

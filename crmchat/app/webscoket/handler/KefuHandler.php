@@ -68,7 +68,7 @@ class KefuHandler extends BaseHandler
             $online = 1;
             $service->update($kefuInfo['id'], ['is_backstage' => 1, 'online' => 1]);
         } else {
-            $online = $service->value($kefuInfo['id'], 'online');
+            $online = $service->value(['id' => $kefuInfo['id']], 'online');
         }
 
         return $response->success(['uid' => $user['id'], 'online' => (int)$online, 'appid' => $kefuInfo['appid']]);
