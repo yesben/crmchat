@@ -32,10 +32,6 @@ class SwooleStartListen implements ListenerInterface
     public function handle($event): void
     {
         try {
-            app()->db->query("SET GLOBAL sql_mode='NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'");
-        } catch (\Exception $e) {
-        }
-        try {
             //重启过后重置房间人
             /** @var Room $room */
             $room = app()->make(Room::class);
