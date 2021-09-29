@@ -108,7 +108,7 @@ class Install extends Command
             throw new \Exception('您的php版本过低，不能安装本软件，兼容php版本7.1~7.4，谢谢！');
         }
 
-        if (phpversion() > '7.4') {
+        if (phpversion() > '7.5') {
             throw new \Exception('您的php版本太高，不能安装本软件，兼容php版本7.1~7.4，谢谢！');
         }
 
