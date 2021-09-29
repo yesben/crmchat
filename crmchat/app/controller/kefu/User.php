@@ -95,10 +95,10 @@ class User extends AuthController
 
         $services->update($this->kefuId, $data);
         $update = [];
-        if ($data['avatar'] != $this->kefuInfo['avatar']) {
+        if ($data['avatar']) {
             $update['avatar'] = $data['avatar'];
         }
-        if ($data['nickname'] != $this->kefuInfo['nickname']) {
+        if ($data['nickname']) {
             $update['nickname'] = $data['nickname'];
         }
         if ($update) {
