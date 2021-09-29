@@ -67,9 +67,8 @@ class KefuHandler extends BaseHandler
         if ((isset($data['app']) && !$data['app']) || !isset($data['app'])) {
             $online = 1;
             $service->update($kefuInfo['id'], ['is_backstage' => 1, 'online' => 1]);
-            /** @var ChatUserServices $userService */
-            $userService = app()->make(ChatUserServices::class);
-            $userService->update(['id' => $user['user_id']], ['online' => 1]);
+            $user->online = 1;
+            $user->save();
         } else {
             $online = $service->value(['id' => $kefuInfo['id']], 'online');
         }

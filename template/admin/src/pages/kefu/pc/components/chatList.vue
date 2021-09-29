@@ -257,7 +257,21 @@ export default {
             if(data.recored.is_tourist == this.hdTabCur) { this.userList.unshift(data.recored) }
           }
         })
-
+        //已被转接走
+        ws.$on('rm_transfer',data=>{
+          let rmIndex = -1;
+          that.userList.forEach((value, index) => {
+            if(value.id == data.recored.id){
+              rmIndex = index
+            }
+          })
+          if(rmIndex !== -1){
+            this.userList.splice(rmIndex,1)
+            if(this.userList.length){
+              this.$emit('setDataId', this.userList[0])
+            }
+          }
+        })
         ws.$on('mssage_num', data => {
           // console.log('mssage_num',data)
           if(data.recored.id) {

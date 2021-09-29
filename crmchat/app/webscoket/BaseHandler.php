@@ -290,12 +290,12 @@ abstract class BaseHandler
         $messageData = $messageData ? $messageData->toArray() : [];
 
         try {
+            /** @var ChatServiceRecordServices $serviceRecord */
+            $serviceRecord = app()->make(ChatServiceRecordServices::class);
+            $info = $serviceRecord->get(['user_id' => $kfuUserId, 'to_user_id' => $userId, 'appid' => $appid], ['id', 'type', 'message_type', 'is_tourist', 'avatar', 'nickname']);
             /** @var ChatServiceAuxiliaryServices $transfeerService */
             $transfeerService = app()->make(ChatServiceAuxiliaryServices::class);
-            $record = $service->transaction(function () use ($messageData, $appid, $transfeerService, $service, $kfuUserId, $userId, $kefuToUserId) {
-                /** @var ChatServiceRecordServices $serviceRecord */
-                $serviceRecord = app()->make(ChatServiceRecordServices::class);
-                $info = $serviceRecord->get(['user_id' => $kfuUserId, 'to_user_id' => $userId, 'appid' => $appid], ['id', 'type', 'message_type', 'is_tourist', 'avatar', 'nickname']);
+            $record = $service->transaction(function () use ($info, $serviceRecord, $messageData, $appid, $transfeerService, $service, $kfuUserId, $userId, $kefuToUserId) {
                 $record = $serviceRecord->saveRecord(
                     $appid,
                     $userId,
@@ -327,8 +327,9 @@ abstract class BaseHandler
             } else {
                 $keufInfo = (object)[];
             }
-
-            $version = $services->value(['id' => $userId], 'version');
+            /** @var ChatUserServices $userService */
+            $userService = app()->make(ChatUserServices::class);
+            $version = $userService->value(['id' => $userId], 'version');
             if ($version) {
                 $record['nickname'] = '[' . $version . ']' . $record['nickname'];
             }
@@ -342,7 +343,7 @@ abstract class BaseHandler
             $kefuUserFd = $this->manager->getUserIdByFds($kfuUserId);
             if ($kefuUserFd) {
                 $this->manager->pushing($kefuUserFd, $response->message('rm_transfer', [
-                    'recored' => $record
+                    'recored' => $info->toArray()
                 ]));
             }
             //告知用户对接此用户聊天
