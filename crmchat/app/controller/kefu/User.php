@@ -73,7 +73,7 @@ class User extends AuthController
      * @param ChatServiceServices $services
      * @return mixed
      */
-    public function updateKefu(ChatServiceValidate $validate, ChatServiceServices $services, ChatServiceRecordServices $recordServices)
+    public function updateKefu(ChatServiceValidate $validate, ChatServiceServices $services, ChatUserServices $userServices)
     {
         $data = $this->request->postMore([
             ['nickname', ''],
@@ -102,7 +102,8 @@ class User extends AuthController
             $update['nickname'] = $data['nickname'];
         }
         if ($update) {
-            $recordServices->update(['to_user_id' => $this->kefuId], $update);
+            $this->services->update(['to_user_id' => $this->kefuId], $update);
+            $userServices->update(['uid' => $this->kefuInfo['user_id']], $update);
         }
 
         return $this->success('修改成功');
