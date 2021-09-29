@@ -16,7 +16,7 @@ use think\Model;
 /**
  * Trait ServicesTrait
  * @package crmeb\traits
- * @method array|Model|null get($id, ?array $field = []) 获取一条数据
+ * @method array|Model|null get($id, ?array $field = [], array $with = []) 获取一条数据
  * @method array|Model|null getOne(array $where, ?string $field = '*') 获取一条数据（不走搜素器）
  * @method string|null batchUpdate(array $ids, array $data, ?string $key = null) 批量修改
  * @method float sum(array $where, string $field, bool $search = false) 求和

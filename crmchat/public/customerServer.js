@@ -13,15 +13,15 @@ var customerServer = null;
 window.$chat = {
     event: {},
     on(name, fun) {
-        if(this.event[name] == undefined){
+        if (this.event[name] == undefined) {
             this.event[name] = [];
         }
         this.event[name].push(fun);
     },
     emit(name, attr) {
-        if(this.event[name] && this.event[name].length){
-            this.event[name].map(item=>{
-                if(typeof item === 'function'){
+        if (this.event[name] && this.event[name].length) {
+            this.event[name].map(item => {
+                if (typeof item === 'function') {
                     item(...attr)
                 }
             })
@@ -30,8 +30,8 @@ window.$chat = {
 };
 
 //放入默认事件
-window.$chat.on('postMessage',function (type,data) {
-    if(!this.iframe_contanier){
+window.$chat.on('postMessage', function (type, data) {
+    if (!this.iframe_contanier) {
         return;
     }
     this.iframe_contanier.contentWindow.postMessage({type: type, data: data}, "*"); // 传送图文数据
@@ -126,6 +126,7 @@ function initCustomerServer(option) {
     this.settingObj.kefuid = option.kefuid || 0; // 指定客服，默认随机
     this.settingObj.sendUserData = option.sendUserData || {}; // 用户信息，默认游客
     this.settingObj.productInfo = option.productInfo || {}; // 携带产品信息，默认空
+    this.settingObj.version = option.version || ''//版本号
     this.appDom = null;
     this.initStatus = false;//是否初始化过
     // 判断当前环境下的设备是pc端 || 移动端, 将客户信息挂载到iframe的链接上
@@ -155,8 +156,10 @@ function initCustomerServer(option) {
         let customerServerData = '';
         if (this.settingObj.sendUserData && Object.keys(this.settingObj.sendUserData).length) {
             customerServerData = toParams(this.settingObj.sendUserData);
-            this.settingObj.openUrl += `${customerServerData}&`;
+            this.settingObj.openUrl += `${customerServerData}`;
         }
+
+        this.settingObj.openUrl += '&version=' + this.settingObj.version
     }
 
 
