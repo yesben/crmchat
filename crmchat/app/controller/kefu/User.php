@@ -103,7 +103,7 @@ class User extends AuthController
         }
         if ($update) {
             $this->services->update(['to_user_id' => $this->kefuId], $update);
-            $userServices->update(['uid' => $this->kefuInfo['user_id']], $update);
+            $userServices->update(['id' => $this->kefuInfo['user_id']], $update);
         }
 
         return $this->success('修改成功');
