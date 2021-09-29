@@ -208,9 +208,9 @@ abstract class BaseHandler
                 }
             });
         }
-
+        $toUserOnline = !!$userService->value(['id' => $to_user_id], 'online');
         //是否在线
-        if ($online && $_userInfo['online']) {
+        if ($online && $toUserOnline) {
             $this->manager->pushing($toUserFd, $response->message('reply', $data)->getData());
         } else {
             //用户在线，可是没有和当前用户进行聊天，给当前用户发送未读条数
