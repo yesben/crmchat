@@ -230,6 +230,8 @@ CREATE TABLE IF NOT EXISTS `eb_chat_user` (
   `is_tourist` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否游客',
   `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '用户类型 0 = pc , 1 = 微信 ，2 = 小程序 ，3 = H5, 4 = APP',
   `sex` tinyint(1) NOT NULL DEFAULT '0' COMMENT '性别',
+  `online` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '1=在线,0=离线',
+  `version` varchar(50) NOT NULL DEFAULT '0' COMMENT '版本号',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='客服用户';

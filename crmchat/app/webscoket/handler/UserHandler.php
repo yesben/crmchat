@@ -16,7 +16,7 @@ namespace app\webscoket\handler;
 use app\services\ApplicationServices;
 use app\services\chat\ChatServiceDialogueRecordServices;
 use app\services\chat\ChatServiceRecordServices;
-use app\services\user\UserAuthServices;
+use app\services\chat\ChatUserServices;
 use app\webscoket\BaseHandler;
 use app\webscoket\Response;
 use think\response\Json;
@@ -115,6 +115,9 @@ class UserHandler extends BaseHandler
         /** @var ChatServiceRecordServices $service */
         $service = app()->make(ChatServiceRecordServices::class);
         $service->update(['to_user_id' => $userInfo['id']], ['online' => 1]);
+        /** @var ChatUserServices $userService */
+        $userService = app()->make(ChatUserServices::class);
+        $userService->update(['id' => $userInfo['id']], ['online' => 1]);
 
         $toUserId = $data['to_user_id'] ?? 0;
         if ($toUserId) {

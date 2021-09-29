@@ -51,7 +51,7 @@ class ChatServiceRecord extends BaseModel
     {
         return $this->hasOne(ChatService::class, 'uid', 'to_uid')->field(['nickname', 'uid', 'avatar'])->bind([
             'kefu_nickname' => 'nickname',
-            'kefu_avatar'   => 'avatar',
+            'kefu_avatar' => 'avatar',
         ]);
     }
 
@@ -61,7 +61,7 @@ class ChatServiceRecord extends BaseModel
      */
     public function user()
     {
-        return $this->hasOne(ChatUser::class, 'id', 'to_user_id')->field(['id', 'nickname', 'remark_nickname']);
+        return $this->hasOne(ChatUser::class, 'id', 'to_user_id')->field(['id', 'nickname', 'remark_nickname', 'version']);
     }
 
     /**
@@ -109,6 +109,21 @@ class ChatServiceRecord extends BaseModel
     {
         if ($value !== '') {
             $query->where('is_tourist', $value);
+        }
+    }
+
+    /**
+     *
+     * @param $value
+     * @param $data
+     * @return string
+     */
+    public function getNickNameAttr($value, $data)
+    {
+        if (isset($this->user->version) && $this->user->version) {
+            return '[.' . $this->user->version . '.]' . $value;
+        } else {
+            return $value;
         }
     }
 }

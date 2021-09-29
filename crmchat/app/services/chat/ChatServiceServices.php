@@ -451,6 +451,9 @@ class ChatServiceServices extends BaseServices
             $avatar,
             1
         );
+        if (isset($userInfo['version']) && $userInfo['version']) {
+            $recored['nickname'] = '[' . $userInfo['version'] . ']' . $recored['nickname'];
+        }
         SwooleTaskService::kefu($app)->type('recored')->to($userId)->data($recored)->push();
     }
 }

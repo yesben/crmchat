@@ -13,6 +13,7 @@ namespace app\services\kefu;
 
 
 use app\dao\chat\ChatServiceDao;
+use app\services\chat\ChatUserServices;
 use crmeb\basic\BaseServices;
 use crmeb\exceptions\AuthException;
 use crmeb\services\CacheService;
@@ -71,6 +72,9 @@ class LoginServices extends BaseServices
         //不再app端登录或者,没有登录过,自动上线
         if (!$kefuInfo->is_app || $kefuInfo->update_time == 0) {
             $kefuInfo->online = 1;
+            /** @var ChatUserServices $service */
+            $service = app()->make(ChatUserServices::class);
+            $service->update(['id' => $kefuInfo['user_id']], ['online' => 1]);
         }
         $kefuInfo->update_time = time();
         $kefuInfo->save();

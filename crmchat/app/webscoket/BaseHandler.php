@@ -153,7 +153,7 @@ abstract class BaseHandler
 
         /** @var ChatUserServices $userService */
         $userService = app()->make(ChatUserServices::class);
-        $_userInfo = $userService->getUserInfo($data['user_id'], ['nickname', 'avatar', 'is_tourist']);
+        $_userInfo = $userService->getUserInfo($data['user_id'], ['nickname', 'avatar', 'version', 'is_tourist', 'online']);
         $isTourist = $_userInfo['is_tourist'];
         $data['nickname'] = $_userInfo['nickname'] ?? '';
         $data['avatar'] = $_userInfo['avatar'] ?? '';
@@ -176,7 +176,7 @@ abstract class BaseHandler
             $data['avatar'],
             $userOnline
         );
-
+        $data['recored']['nickname'] = isset($_userInfo['version']) && $_userInfo['version'] ? '[' . $_userInfo['version'] . ']' . $data['recored']['nickname'] : $data['recored']['nickname'];
         $data['recored']['_update_time'] = date('Y-m-d H:i', $data['recored']['update_time']);
         /** @var ChatServiceServices $services */
         $services = app()->make(ChatServiceServices::class);
@@ -210,7 +210,7 @@ abstract class BaseHandler
         }
 
         //是否在线
-        if ($online) {
+        if ($online && $_userInfo['online']) {
             $this->manager->pushing($toUserFd, $response->message('reply', $data)->getData());
         } else {
             //用户在线，可是没有和当前用户进行聊天，给当前用户发送未读条数
@@ -250,10 +250,11 @@ abstract class BaseHandler
             }
         }
 
-        $data['recored'] = $serviceRecored->get(['user_id' => $userId, 'to_user_id' => $to_user_id]);
+        $data['recored'] = $serviceRecored->get(['user_id' => $userId, 'to_user_id' => $to_user_id], ['*'], ['user']);
         if ($data['recored']) {
             $data['recored'] = $data['recored']->toArray();
             $data['recored']['_update_time'] = date('Y-m-d H:i', $data['recored']['update_time']);
+            $data['recored']['nickname'] = isset($data['recored']['user']['version']) && $data['recored']['user']['version'] ? '[' . $data['recored']['user']['version'] . ']' . $data['recored']['nickname'] : $data['recored']['nickname'];
         }
         return $response->message('chat', $data);
     }
@@ -327,13 +328,23 @@ abstract class BaseHandler
                 $keufInfo = (object)[];
             }
 
+            $version = $services->value(['id' => $userId], 'version');
+            if ($version) {
+                $record['nickname'] = '[' . $version . ']' . $record['nickname'];
+            }
             //给转接的客服发送消息通知
             $kefuToUserIdFd = $this->manager->getUserIdByFds($kefuToUserId);
             $this->manager->pushing($kefuToUserIdFd, $response->message('transfer', [
                 'recored' => $record,
                 'kefuInfo' => $keufInfo
             ]));
-
+            //给当前客服发送此用户已被转接走的消息通知
+            $kefuUserFd = $this->manager->getUserIdByFds($kfuUserId);
+            if ($kefuUserFd) {
+                $this->manager->pushing($kefuUserFd, $response->message('rm_transfer', [
+                    'recored' => $record
+                ]));
+            }
             //告知用户对接此用户聊天
             $keufToInfo = $services->get(['user_id' => $kefuToUserId], ['avatar', 'nickname']);
             $userIdFd = $this->manager->getUserIdByFds($userId);
@@ -414,14 +425,16 @@ abstract class BaseHandler
         $usreId = $data['data']['user_id'] ?? 0;
         $appId = $data['data']['appid'] ?? '';
         if ($usreId) {
-            /** @var ChatServiceRecordServices $service */
-            $service = app()->make(ChatServiceRecordServices::class);
-            $service->updateRecord(['to_user_id' => $usreId], ['online' => 0]);
-
             /** @var ChatServiceServices $service */
             $service = app()->make(ChatServiceServices::class);
             if (!$service->value(['appid' => $appId, 'user_id' => $usreId], 'is_app')) {
                 $service->update(['user_id' => $usreId], ['online' => 0]);
+                /** @var ChatServiceRecordServices $recordSService */
+                $recordSService = app()->make(ChatServiceRecordServices::class);
+                $recordSService->updateRecord(['to_user_id' => $usreId], ['online' => 0]);
+                /** @var ChatUserServices $userService */
+                $userService = app()->make(ChatUserServices::class);
+                $userService->update(['id' => $usreId], ['online' => 0]);
             }
 
             $this->manager->pushing($this->room->getKefuRoomAll(), $response->message('online', [

@@ -86,6 +86,9 @@ class ChatServiceRecordServices extends BaseServices
             if (isset($item['user']['remark_nickname']) && $item['user']['remark_nickname']) {
                 $item['nickname'] = $item['user']['remark_nickname'];
             }
+            if (isset($item['user']['version']) && $item['user']['version']) {
+                $item['nickname'] = '[' . $item['user']['version'] . ']' . $item['nickname'];
+            }
         }
         return $list;
     }
@@ -153,11 +156,11 @@ class ChatServiceRecordServices extends BaseServices
             $info->online = $online;
             if ($avatar) $info->avatar = $avatar;
             if ($nickname) $info->nickname = $nickname;
-            $info->save();
+            $res = $info->save();
             $this->dao->update(['user_id' => $userId, 'to_user_id' => $toUserid], ['message' => $message, 'message_type' => $messageType]);
-            return $info->toArray();
+//            return $info->toArray();
         } else {
-            return $this->dao->save([
+            $res = $this->dao->save([
                 'user_id' => $toUserid,
                 'to_user_id' => $userId,
                 'type' => $type,
@@ -171,8 +174,16 @@ class ChatServiceRecordServices extends BaseServices
                 'update_time' => time(),
                 'is_tourist' => $isTourist,
                 'appid' => $appid
-            ])->toArray();
+            ]);//->toArray();
         }
+
+        $res->append(['user']);
+
+        $data = $res->toArray();
+        if (isset($data['user']['version']) && $data['user']['version']) {
+            $data['nickname'] = '[' . $data['user']['version'] . ']' . $data['nickname'];
+        }
+        return $data;
     }
 
     /**

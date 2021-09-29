@@ -19,6 +19,7 @@ use app\services\chat\ChatServiceAuxiliaryServices;
 use app\services\chat\ChatServiceDialogueRecordServices;
 use app\services\chat\ChatServiceRecordServices;
 use app\services\chat\ChatServiceServices;
+use app\services\chat\ChatUserServices;
 use crmeb\basic\BaseServices;
 use crmeb\services\SwooleTaskService;
 use think\db\exception\DataNotFoundException;
@@ -135,6 +136,14 @@ class KefuServices extends BaseServices
             } else {
                 $keufInfo = (object)[];
             }
+
+            /** @var ChatUserServices $services */
+            $services = app()->make(ChatUserServices::class);
+            $version = $services->value(['id' => $userId], 'version');
+            if ($version) {
+                $record['nickname'] = '[' . $version . ']' . $record['nickname'];
+            }
+
             //给转接的客服发送消息通知
             SwooleTaskService::kefu()->type('transfer')->to($kefuToUserId)->data(['recored' => $record, 'kefuInfo' => $keufInfo])->push();
             //告知用户对接此用户聊天
