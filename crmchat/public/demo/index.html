@@ -40,7 +40,14 @@
 </div>
 
 </body>
-<script src="https://chat.crmeb.net/customerServer.js"></script>
+<!--普通加载需要手动实例化代码-->
+<script src="./../customerServer.js"></script>
+
+<!--简易加载无需多余代码加载完js就可使用-->
+<!--id="chat" 为固定id不可修改-->
+<!--option 参数和之前的参数一样,-->
+<!--增加了"authInit":true 为true才会自动加载-->
+<!--<script src="/../customerServer.js" id="chat" option='{"authInit":true,"openUrl":"https://chat.crmeb.net","isShowTip":true,"token":"e8bcc017f50e55c63b5352c4257c8904"}'></script>-->
 <script>
     var demostatus = {
         demo0:false,
@@ -108,6 +115,45 @@
         demostatus.demo3 = true;
 //    canCustomerServer.getCustomeServer();
     }
+
+    //其他全局事件
+
+    //触发事件
+    // window.$chat.emit('postMessage',['touchend',{uid:10}]);
+
+    //自动实例化后事件
+    //authInit = true 后监听事件可以拿到实例化后的客服对象
+    window.$chat.on('chatAuthAfter',function (instance) {
+
+    });
+    //关闭弹窗事件
+    window.$chat.on('closeWindow',function () {
+        console.log('关闭弹窗')
+    })
+    //消息回执事件
+    window.$chat.on('onMessageChat',function (data) {
+
+    });
+    //消息数量更新事件
+    window.$chat.on('onMessageNum',function (data) {
+
+    });
+    //转接事件
+    window.$chat.on('onMessageTransfer',function (data) {
+
+    });
+    //登录成功回执事件
+    window.$chat.on('onMessageSuccess',function () {
+
+    })
+    //发送图片后的事件
+    window.$chat.on('sendImage',function (data) {
+
+    })
+    //发送图文消息后的事件
+    window.$chat.on('sendImageText',function (data) {
+
+    })
 
 
 </script>

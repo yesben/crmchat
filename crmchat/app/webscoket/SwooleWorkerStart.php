@@ -61,7 +61,6 @@ class SwooleWorkerStart implements ListenerInterface
     {
         if (0 == $this->server->worker_id) {
             $this->timer($event);
-            $this->configMysql($event);
         }
         if ($this->server->worker_id == ($this->config->get('swoole.server.options.worker_num')) && $this->config->get('swoole.websocket.enable', false)) {
             $this->ping();
@@ -122,7 +121,7 @@ class SwooleWorkerStart implements ListenerInterface
      */
     public function configMysql(App $app)
     {
-        $app->db->query('SET sql_mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"');
+
     }
 
 }

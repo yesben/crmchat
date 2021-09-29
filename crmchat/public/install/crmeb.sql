@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `eb_chat_service` (
 --
 
 INSERT INTO `eb_chat_service` (`id`, `appid`, `mer_id`, `user_id`, `online`, `account`, `password`, `avatar`, `nickname`, `phone`, `add_time`, `status`, `notify`, `customer`, `uniqid`) VALUES
-(10, '202116257358989495', 0, 1, 1, 'kefu', '$2y$10$Iv0RLY8c/X06Qr3q740z7eftEWn1PixEixvKO.wtjklk6P1KwoKIK', 'https://qiniu.crmeb.net/attach/2021/07/0c699202107201838374542.png', 'CRM 客服', '15594500000', 1626777835, 1, 0, 0, '');
+(10, '202116257358989495', 0, 1, 1, 'kefu', '$2y$10$Iv0RLY8c/X06Qr3q740z7eftEWn1PixEixvKO.wtjklk6P1KwoKIK', 'https://chat.crmeb.net/uploads/attach/2021/09/20210906/c79d19dbfda66026ec891d188386cbb7.png', 'CRM 客服', '15594500000', 1626777835, 1, 0, 0, '');
 
 -- --------------------------------------------------------
 
@@ -239,7 +239,7 @@ CREATE TABLE IF NOT EXISTS `eb_chat_user` (
 --
 
 INSERT INTO `eb_chat_user` (`id`, `uid`, `group_id`, `nickname`, `avatar`, `phone`, `last_ip`, `appid`, `remarks`, `is_delete`, `is_kefu`, `is_tourist`, `type`, `sex`, `create_time`, `update_time`) VALUES
-(1, 1, 0, 'CRM 客服', 'https://qiniu.crmeb.net/attach/2021/07/0c699202107201838374542.png', '15594500000', '', '202116257358989495', '', 0, 0, 0, 0, 0, '2021-07-20 10:43:56', '2021-07-20 10:43:56');
+(1, 1, 0, 'CRM 客服', 'https://chat.crmeb.net/uploads/attach/2021/09/20210906/c79d19dbfda66026ec891d188386cbb7.png', '15594500000', '', '202116257358989495', '', 0, 0, 0, 0, 0, '2021-07-20 10:43:56', '2021-07-20 10:43:56');
 
 -- --------------------------------------------------------
 
@@ -332,13 +332,14 @@ CREATE TABLE IF NOT EXISTS `eb_system_attachment` (
 --
 
 INSERT INTO `eb_system_attachment` (`att_id`, `name`, `att_dir`, `satt_dir`, `att_size`, `att_type`, `pid`, `time`, `image_type`, `module_type`, `real_name`) VALUES
-(1, '客服图标', 'https://qiniu.crmeb.net/attach/2021/07/0c699202107201838374542.png', 'https://qiniu.crmeb.net/attach/2021/07/0c699202107201838374542.png', '', '', 0, 0, 1, 1, '客服图标'),
-(2, '客服logo', 'https://qiniu.crmeb.net/attach/2021/07/caa3e202107201838361256.png', 'https://qiniu.crmeb.net/attach/2021/07/caa3e202107201838361256.png', '', '', 0, 0, 1, 1, '客服logo'),
-(3, '图标', 'https://qiniu.crmeb.net/attach/2021/07/45f9c202107201838358522.png', 'https://qiniu.crmeb.net/attach/2021/07/45f9c202107201838358522.png', '', '', 0, 0, 1, 1, '图标'),
-(49, '客服头像1', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/fcc758713087632dc785fff3d37db928.png', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/fcc758713087632dc785fff3d37db928.png', '', '', 0, 0, 1, 1, '客服头像一'),
-(50, '客服头像二', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/d4398c5d36757c1b1ed1f21202bea1c0.png', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/d4398c5d36757c1b1ed1f21202bea1c0.png', '', '', 0, 0, 1, 1, '客服头像二'),
-(51, '客服头像三', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/1b244797f8b86b4cc0665d75d160aa30.png', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/1b244797f8b86b4cc0665d75d160aa30.png', '', '', 0, 0, 1, 1, '客服头像三'),
-(52, '客服头像四', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/1f05bd27a6af2da438dc2bb689995fc5.png', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/1f05bd27a6af2da438dc2bb689995fc5.png', '', '', 0, 0, 1, 1, '客服头像四');
+(49, '客服头像1', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/fcc758713087632dc785fff3d37db928.png', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/fcc758713087632dc785fff3d37db928.png', '', '', 0, 0, 1, 1, '4'),
+(50, '客服头像二', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/d4398c5d36757c1b1ed1f21202bea1c0.png', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/d4398c5d36757c1b1ed1f21202bea1c0.png', '', '', 0, 0, 1, 1, '3'),
+(51, '客服头像三', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/1b244797f8b86b4cc0665d75d160aa30.png', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/1b244797f8b86b4cc0665d75d160aa30.png', '', '', 0, 0, 1, 1, '2'),
+(52, '客服头像四', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/1f05bd27a6af2da438dc2bb689995fc5.png', 'https://demo40.crmeb.net/uploads/attach/2020/11/20201110/1f05bd27a6af2da438dc2bb689995fc5.png', '', '', 0, 0, 1, 1, '1'),
+(102, '1a00ec6542246a5828ad89df1b216275.png', '/uploads/attach/2021/09/20210906/1a00ec6542246a5828ad89df1b216275.png', '/uploads/attach/2021/09/20210906/1a00ec6542246a5828ad89df1b216275.png', '0', 'image/jpeg', 0, 1630891764, 1, 1, '客服图标.png'),
+(103, '32645ce20cd8b945598d06bd2a31dd2a.png', '/uploads/attach/2021/09/20210906/32645ce20cd8b945598d06bd2a31dd2a.png', '/uploads/attach/2021/09/20210906/32645ce20cd8b945598d06bd2a31dd2a.png', '0', 'image/jpeg', 0, 1630891772, 1, 1, '白底图标.png'),
+(104, 'c79d19dbfda66026ec891d188386cbb7.png', '/uploads/attach/2021/09/20210906/c79d19dbfda66026ec891d188386cbb7.png', '/uploads/attach/2021/09/20210906/c79d19dbfda66026ec891d188386cbb7.png', '0', 'image/jpeg', 0, 1630891871, 1, 1, '客服图标.png'),
+(105, '6972cb96c04079eb1952ef43a04c6fbf.png', '/uploads/attach/2021/09/20210906/6972cb96c04079eb1952ef43a04c6fbf.png', '/uploads/attach/2021/09/20210906/6972cb96c04079eb1952ef43a04c6fbf.png', '0', 'image/jpeg', 0, 1630891891, 1, 1, '客服logo.png');
 
 -- --------------------------------------------------------
 
@@ -383,8 +384,8 @@ CREATE TABLE IF NOT EXISTS `eb_system_config` (
 
 INSERT INTO `eb_system_config` (`id`, `menu_name`, `type`, `input_type`, `config_tab_id`, `parameter`, `upload_type`, `required`, `width`, `high`, `value`, `info`, `desc`, `sort`, `status`) VALUES
 (1, 'site_name', 'text', 'input', 1, '', 0, 'required:true', 100, 0, '"CRMEB"', '网站名称', '网站名称很多地方会显示的，建议认真填写', 10, 1),
-(2, 'site_url', 'text', 'input', 1, '', 0, 'required:true,url:true', 100, 0, '"http:\\/\\/chattest.lfmn.fun"', '网站地址', '安装自动配置，不要轻易修改，更换会影响网站访问、接口请求、本地文件储存、支付回调、微信授权、支付、小程序图片访问、部分二维码、官方授权等', 5, 1),
-(3, 'site_logo', 'upload', '', 1, '', 1, '', 0, 0, '"https:\\/\\/qiniu.crmeb.net\\/attach\\/2021\\/07\\/caa3e202107201838361256.png"', '后台大LOGO', '菜单展开左上角logo,建议尺寸[170*50]', 3, 1),
+(2, 'site_url', 'text', 'input', 1, '', 0, 'required:true,url:true', 100, 0, '""', '网站地址', '安装自动配置，不要轻易修改，更换会影响网站访问、接口请求、本地文件储存、支付回调、微信授权、支付、小程序图片访问、部分二维码、官方授权等', 5, 1),
+(3, 'site_logo', 'upload', '', 1, '', 1, '', 0, 0, '"https:\\/\\/chat.crmeb.net\\/uploads\\/attach\\/2021\\/09/\\20210906\\/6972cb96c04079eb1952ef43a04c6fbf.png"', '后台大LOGO', '菜单展开左上角logo,建议尺寸[170*50]', 3, 1),
 (5, 'seo_title', 'text', 'input', 1, '', 0, 'required:true', 100, 0, '"CRMEB"', 'SEO标题', 'SEO标题', 0, 0),
 (108, 'upload_type', 'radio', '', 31, '1=>本地存储\n2=>七牛云存储\n3=>阿里云OSS\n4=>腾讯COS', 1, '', 0, 0, '1', '上传类型', '文件储存配置，注意：一旦配置就不要轻易修改，会导致文件不能使用', 40, 1),
 (109, 'uploadUrl', 'text', 'input', 32, '', 0, 'url:true', 100, 0, '""', '空间域名 Domain', '空间域名 Domain', 0, 1),
@@ -394,7 +395,7 @@ INSERT INTO `eb_system_config` (`id`, `menu_name`, `type`, `input_type`, `config
 (118, 'storage_region', 'text', 'input', 32, '', 0, '', 100, 0, '""', 'Endpoint', '所属地域', 0, 1),
 (142, 'tengxun_map_key', 'text', 'input', 68, '', 0, '', 100, 0, '', '腾讯地图KEY', '腾讯地图KEY，申请地址：https://lbs.qq.com', 0, 1),
 (144, 'cache_config', 'text', 'input', 1, '', 0, '', 100, 0, '"86400"', '网站缓存时间', '配置全局缓存时间（秒），默认留空为永久缓存', 0, 1),
-(168, 'site_logo_square', 'upload', '', 1, '', 1, '', 0, 0, '"https:\\/\\/qiniu.crmeb.net\\/attach\\/2021\\/07\\/45f9c202107201838358522.png"', '后台小LOGO', '后台菜单缩进小LOGO，尺寸180*180', 1, 1),
+(168, 'site_logo_square', 'upload', '', 1, '', 1, '', 0, 0, '"https:\\/\\/chat.crmeb.net/\\uploads\\/attach\\/2021\\/09/\\/20210906\\/32645ce20cd8b945598d06bd2a31dd2a.png"', '后台小LOGO', '后台菜单缩进小LOGO，尺寸180*180', 1, 1),
 (171, 'login_logo', 'upload', '', 1, '', 1, '', 0, 0, '', '后台登录页LOGO', '后台登录页LOGO，建议尺寸270x75', 4, 1),
 (172, 'qiniu_uploadUrl', 'text', 'input', 33, '', 0, '', 100, 0, '""', '空间域名 Domain', '空间域名 Domain', 0, 1),
 (173, 'qiniu_accessKey', 'text', 'input', 33, '', 0, '', 100, 0, '""', 'accessKey', 'accessKey', 0, 1),
@@ -407,7 +408,7 @@ INSERT INTO `eb_system_config` (`id`, `menu_name`, `type`, `input_type`, `config
 (180, 'tengxun_storage_name', 'text', 'input', 34, '', 0, '', 100, 0, '""', '存储桶名称', '存储桶名称', 0, 1),
 (181, 'tengxun_storage_region', 'text', 'input', 34, '', 0, '', 100, 0, '""', '所属地域', '所属地域', 0, 1),
 (305, 'service_feedback', 'textarea', '', 69, '', 0, '', 100, 7, '"\\u5c0a\\u656c\\u7684\\u7528\\u6237\\uff0c\\u5ba2\\u670d\\u5f53\\u524d\\u4e0d\\u5728\\u7ebf\\uff0c\\u6709\\u95ee\\u9898\\u8bf7\\u7559\\u8a00\\uff0c\\u6211\\u4eec\\u4f1a\\u7b2c\\u4e00\\u65f6\\u95f4\\u8fdb\\u884c\\u5904\\u7406\\uff01\\uff01\\uff01"', '客服反馈', '客服反馈头部文字', 0, 1),
-(323, 'tourist_avatar', 'upload', '', 69, '', 2, '', 0, 0, '["https:\\/\\/demo40.crmeb.net\\/uploads\\/attach\\/2020\\/11\\/20201110\\/1f05bd27a6af2da438dc2bb689995fc5.png","https:\\/\\/demo40.crmeb.net\\/uploads\\/attach\\/2020\\/11\\/20201110\\/1b244797f8b86b4cc0665d75d160aa30.png","https:\\/\\/demo40.crmeb.net\\/uploads\\/attach\\/2020\\/11\\/20201110\\/d4398c5d36757c1b1ed1f21202bea1c0.png","https:\\/\\/demo40.crmeb.net\\/uploads\\/attach\\/2020\\/11\\/20201110\\/fcc758713087632dc785fff3d37db928.png"]', '客服游客头像', '客服游客头像', 0, 1);
+(306, 'tourist_avatar', 'upload', '', '69', '', '2', '', '0', '0', '[\"https:\\/\\/demo40.crmeb.net\\/uploads\\/attach\\/2020\\/11\\/20201110\\/1b244797f8b86b4cc0665d75d160aa30.png\",\"https:\\/\\/demo40.crmeb.net\\/uploads\\/attach\\/2020\\/11\\/20201110\\/d4398c5d36757c1b1ed1f21202bea1c0.png\",\"https:\\/\\/demo40.crmeb.net\\/uploads\\/attach\\/2020\\/11\\/20201110\\/fcc758713087632dc785fff3d37db928.png\",\"https:\\/\\/chat.crmeb.net\\/uploads\\/attach\\/2021\\/08\\/20210811\\/6ba99e3765d19fb35c23792b4143bb49.png\"]', '客服游客头像', '客服游客头像', '0', '1');
 
 -- --------------------------------------------------------
 
@@ -492,99 +493,6 @@ CREATE TABLE IF NOT EXISTS `eb_system_log` (
 --
 -- 转存表中的数据 `eb_system_log`
 --
-
-INSERT INTO `eb_system_log` (`id`, `admin_id`, `admin_name`, `path`, `page`, `method`, `ip`, `type`, `add_time`, `merchant_id`) VALUES
-(7857, 1, 'admin', 'api/admin/menuslist', '获取菜单', '', '1.80.112.217', 'system', 1626775810, 0),
-(7858, 1, 'admin', 'api/admin/setting/config/header_basics', '基本配置编辑头部数据', '', '1.80.112.217', 'system', 1626775810, 0),
-(7859, 1, 'admin', 'api/admin/jnotice', '消息通知', '', '1.80.112.217', 'system', 1626775810, 0),
-(7860, 1, 'admin', 'api/admin/logo', '获取logo', '', '1.80.112.217', 'system', 1626775810, 0),
-(7861, 1, 'admin', 'api/admin/setting/config/edit_basics', '基本配置编辑表单', '', '1.80.112.217', 'system', 1626775810, 0),
-(7862, 1, 'admin', 'api/admin/chart', '客户首页统计', '', '1.80.112.217', 'system', 1626775958, 0),
-(7863, 1, 'admin', 'api/admin/jnotice', '消息通知', '', '1.80.112.217', 'system', 1626775958, 0),
-(7864, 1, 'admin', 'api/admin/menuslist', '获取菜单', '', '1.80.112.217', 'system', 1626775958, 0),
-(7865, 1, 'admin', 'api/admin/logo', '获取logo', '', '1.80.112.217', 'system', 1626775958, 0),
-(7866, 1, 'admin', 'api/admin/chart/sum', '客户统计', '', '1.80.112.217', 'system', 1626775958, 0),
-(7867, 1, 'admin', 'api/admin/user/index', '用户列表', '', '1.80.112.217', 'system', 1626776141, 0),
-(7868, 1, 'admin', 'api/admin/user/label/all', '获取全部标签', '', '1.80.112.217', 'system', 1626776141, 0),
-(7869, 1, 'admin', 'api/admin/user/group', '获取分组列表接口', '', '1.80.112.217', 'system', 1626776141, 0),
-(7870, 1, 'admin', 'api/admin/user/label', '保存标签接口', '', '1.80.112.217', 'system', 1626776141, 0),
-(7871, 1, 'admin', 'api/admin/chat/kefu', '客服列表', '', '1.80.112.217', 'system', 1626776144, 0),
-(7872, 1, 'admin', 'api/admin/chat/kefu/add', '添加客服表单', '', '1.80.112.217', 'system', 1626776145, 0),
-(7873, 1, 'admin', 'api/admin/setting/config/header_basics', '基本配置编辑头部数据', '', '1.80.112.217', 'system', 1626776156, 0),
-(7874, 1, 'admin', 'api/admin/setting/config/edit_basics', '基本配置编辑表单', '', '1.80.112.217', 'system', 1626776156, 0),
-(7875, 1, 'admin', 'api/admin/menuslist', '获取菜单', '', '1.80.112.217', 'system', 1626776288, 0),
-(7876, 1, 'admin', 'api/admin/jnotice', '消息通知', '', '1.80.112.217', 'system', 1626776288, 0),
-(7877, 1, 'admin', 'api/admin/logo', '获取logo', '', '1.80.112.217', 'system', 1626776288, 0),
-(7878, 1, 'admin', 'api/admin/setting/config/header_basics', '基本配置编辑头部数据', '', '1.80.112.217', 'system', 1626776288, 0),
-(7879, 1, 'admin', 'api/admin/setting/config/edit_basics', '基本配置编辑表单', '', '1.80.112.217', 'system', 1626776288, 0),
-(7880, 1, 'admin', 'api/admin/app', '获取应用列表接口', '', '1.80.112.217', 'system', 1626776292, 0),
-(7881, 1, 'admin', 'api/admin/setting/config/header_basics', '基本配置编辑头部数据', '', '1.80.112.217', 'system', 1626777712, 0),
-(7882, 1, 'admin', 'api/admin/setting/config/edit_basics', '基本配置编辑表单', '', '1.80.112.217', 'system', 1626777712, 0),
-(7883, 1, 'admin', 'api/admin/file/file', '图片附件列表', '', '1.80.112.217', 'system', 1626777716, 0),
-(7884, 1, 'admin', 'api/admin/file/category', '获取附件分类列表接口', '', '1.80.112.217', 'system', 1626777716, 0),
-(7885, 1, 'admin', 'api/admin/file/category', '获取附件分类列表接口', '', '1.80.112.217', 'system', 1626777745, 0),
-(7886, 1, 'admin', 'api/admin/file/file', '图片附件列表', '', '1.80.112.217', 'system', 1626777745, 0),
-(7887, 1, 'admin', 'api/admin/setting/config/save_basics', '基本配置保存数据', '', '1.80.112.217', 'system', 1626777750, 0),
-(7888, 1, 'admin', 'api/admin/setting/config/save_basics', '基本配置保存数据', '', '1.80.112.217', 'system', 1626777771, 0),
-(7889, 1, 'admin', 'api/admin/menuslist', '获取菜单', '', '1.80.112.217', 'system', 1626777773, 0),
-(7890, 1, 'admin', 'api/admin/setting/config/header_basics', '基本配置编辑头部数据', '', '1.80.112.217', 'system', 1626777773, 0),
-(7891, 1, 'admin', 'api/admin/logo', '获取logo', '', '1.80.112.217', 'system', 1626777773, 0),
-(7892, 1, 'admin', 'api/admin/setting/config/edit_basics', '基本配置编辑表单', '', '1.80.112.217', 'system', 1626777773, 0),
-(7893, 1, 'admin', 'api/admin/jnotice', '消息通知', '', '1.80.112.217', 'system', 1626777773, 0),
-(7894, 1, 'admin', 'api/admin/chat/kefu', '客服列表', '', '1.80.112.217', 'system', 1626777786, 0),
-(7895, 1, 'admin', 'api/admin/chat/kefu/add', '添加客服表单', '', '1.80.112.217', 'system', 1626777788, 0),
-(7896, 1, 'admin', 'api/admin/file/category', '获取附件分类列表接口', '', '1.80.112.217', 'system', 1626777792, 0),
-(7897, 1, 'admin', 'api/admin/file/file', '图片附件列表', '', '1.80.112.217', 'system', 1626777792, 0),
-(7898, 1, 'admin', 'api/admin/chat/kefu', '客服列表', '', '1.80.112.217', 'system', 1626777828, 0),
-(7899, 1, 'admin', 'api/admin/chat/kefu', '客服列表', '', '1.80.112.217', 'system', 1626777835, 0),
-(7900, 1, 'admin', 'api/admin/chat/speechcraftcate', '获取话术分类列表接口', '', '1.80.112.217', 'system', 1626777838, 0),
-(7901, 1, 'admin', 'api/admin/chat/speechcraft', '获取话术列表接口', '', '1.80.112.217', 'system', 1626777838, 0),
-(7902, 1, 'admin', 'api/admin/chat/kefu', '客服列表', '', '1.80.112.217', 'system', 1626777838, 0),
-(7903, 1, 'admin', 'api/admin/chat/kefu/login/<id>', '客服登录', '', '1.80.112.217', 'system', 1626777841, 0),
-(7904, 1, 'admin', 'api/admin/user/label/all', '获取全部标签', '', '1.80.112.217', 'system', 1626777847, 0),
-(7905, 1, 'admin', 'api/admin/user/index', '用户列表', '', '1.80.112.217', 'system', 1626777847, 0),
-(7906, 1, 'admin', 'api/admin/user/group', '获取分组列表接口', '', '1.80.112.217', 'system', 1626777847, 0),
-(7907, 1, 'admin', 'api/admin/user/label', '保存标签接口', '', '1.80.112.217', 'system', 1626777847, 0),
-(7908, 1, 'admin', 'api/admin/user/group', '获取分组列表接口', '', '1.80.112.217', 'system', 1626777851, 0),
-(7909, 1, 'admin', 'api/admin/user/label/cate', '获取标签分类列表接口', '', '1.80.112.217', 'system', 1626777852, 0),
-(7910, 1, 'admin', 'api/admin/user/label', '保存标签接口', '', '1.80.112.217', 'system', 1626777852, 0),
-(7911, 1, 'admin', 'api/admin/user/label', '保存标签接口', '', '1.80.112.217', 'system', 1626777852, 0),
-(7912, 1, 'admin', 'api/admin/chat/feedback', '获取用户反馈列表接口', '', '1.80.112.217', 'system', 1626777854, 0),
-(7913, 1, 'admin', 'api/admin/chat/speechcraftcate', '获取话术分类列表接口', '', '1.80.112.217', 'system', 1626777855, 0),
-(7914, 1, 'admin', 'api/admin/chat/speechcraft', '获取话术列表接口', '', '1.80.112.217', 'system', 1626777855, 0),
-(7915, 1, 'admin', 'api/admin/chat/kefu', '客服列表', '', '1.80.112.217', 'system', 1626777855, 0),
-(7916, 1, 'admin', 'api/admin/chart/sum', '客户统计', '', '1.80.112.217', 'system', 1626777856, 0),
-(7917, 1, 'admin', 'api/admin/chart', '客户首页统计', '', '1.80.112.217', 'system', 1626777856, 0),
-(7918, 1, 'admin', 'api/admin/chart/sum', '客户统计', '', '1.80.112.217', 'system', 1626777860, 0),
-(7919, 1, 'admin', 'api/admin/chart', '客户首页统计', '', '1.80.112.217', 'system', 1626777860, 0),
-(7920, 1, 'admin', 'api/admin/menuslist', '获取菜单', '', '1.80.112.217', 'system', 1626777863, 0),
-(7921, 1, 'admin', 'api/admin/jnotice', '消息通知', '', '1.80.112.217', 'system', 1626777863, 0),
-(7922, 1, 'admin', 'api/admin/chart/sum', '客户统计', '', '1.80.112.217', 'system', 1626777863, 0),
-(7923, 1, 'admin', 'api/admin/chart', '客户首页统计', '', '1.80.112.217', 'system', 1626777863, 0),
-(7924, 1, 'admin', 'api/admin/logo', '获取logo', '', '1.80.112.217', 'system', 1626777863, 0),
-(7925, 1, 'admin', 'api/admin/chart/sum', '客户统计', '', '1.80.112.217', 'system', 1626777909, 0),
-(7926, 1, 'admin', 'api/admin/chart', '客户首页统计', '', '1.80.112.217', 'system', 1626777909, 0),
-(7927, 1, 'admin', 'api/admin/jnotice', '消息通知', '', '1.80.112.217', 'system', 1626777909, 0),
-(7928, 1, 'admin', 'api/admin/menuslist', '获取菜单', '', '1.80.112.217', 'system', 1626777909, 0),
-(7929, 1, 'admin', 'api/admin/logo', '获取logo', '', '1.80.112.217', 'system', 1626777909, 0),
-(7930, 1, 'admin', 'api/admin/user/index', '用户列表', '', '1.80.112.217', 'system', 1626777926, 0),
-(7931, 1, 'admin', 'api/admin/user/label/all', '获取全部标签', '', '1.80.112.217', 'system', 1626777926, 0),
-(7932, 1, 'admin', 'api/admin/user/label', '保存标签接口', '', '1.80.112.217', 'system', 1626777926, 0),
-(7933, 1, 'admin', 'api/admin/user/group', '获取分组列表接口', '', '1.80.112.217', 'system', 1626777926, 0),
-(7934, 1, 'admin', 'api/admin/chat/kefu', '客服列表', '', '1.80.112.217', 'system', 1626777982, 0),
-(7935, 1, 'admin', 'api/admin/chat/speechcraftcate', '获取话术分类列表接口', '', '1.80.112.217', 'system', 1626777985, 0),
-(7936, 1, 'admin', 'api/admin/chat/speechcraft', '获取话术列表接口', '', '1.80.112.217', 'system', 1626777985, 0),
-(7937, 1, 'admin', 'api/admin/chat/feedback', '获取用户反馈列表接口', '', '1.80.112.217', 'system', 1626777986, 0),
-(7938, 1, 'admin', 'api/admin/chat/kefu', '客服列表', '', '1.80.112.217', 'system', 1626777987, 0),
-(7939, 1, 'admin', 'api/admin/chat/kefu/add', '添加客服表单', '', '1.80.112.217', 'system', 1626777988, 0),
-(7940, 1, 'admin', 'api/admin/setting/config/header_basics', '基本配置编辑头部数据', '', '1.80.112.217', 'system', 1626778196, 0),
-(7941, 1, 'admin', 'api/admin/setting/config/edit_basics', '基本配置编辑表单', '', '1.80.112.217', 'system', 1626778196, 0),
-(7942, 1, 'admin', 'api/admin/setting/config/edit_basics', '基本配置编辑表单', '', '1.80.112.217', 'system', 1626778196, 0),
-(7943, 1, 'admin', 'api/admin/setting/config/edit_basics', '基本配置编辑表单', '', '1.80.112.217', 'system', 1626778198, 0),
-(7944, 1, 'admin', 'api/admin/file/file', '图片附件列表', '', '1.80.112.217', 'system', 1626778229, 0),
-(7945, 1, 'admin', 'api/admin/file/category', '获取附件分类列表接口', '', '1.80.112.217', 'system', 1626778229, 0),
-(7946, 1, 'admin', 'api/admin/setting/config/save_basics', '基本配置保存数据', '', '1.80.112.217', 'system', 1626778240, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -618,7 +526,6 @@ CREATE TABLE IF NOT EXISTS `eb_system_menus` (
 --
 -- 转存表中的数据 `eb_system_menus`
 --
-
 INSERT INTO `eb_system_menus` (`id`, `pid`, `icon`, `menu_name`, `module`, `controller`, `action`, `api_url`, `methods`, `params`, `sort`, `is_show`, `is_show_path`, `access`, `menu_path`, `path`, `auth_type`, `header`, `is_header`, `unique_auth`, `is_del`) VALUES
 (7, 0, 'md-home', '统计', 'admin', 'index', '', '', '', '[]', 127, 1, 0, 1, '/admin/home/', '', 1, 'home', 1, 'admin-index-index', 0),
 (9, 0, 'md-person', '用户管理', 'admin', 'user.user', '', '', '', '[]', 100, 1, 0, 1, '/admin/user', '', 1, 'user', 1, 'admin-user', 0),
@@ -734,8 +641,8 @@ INSERT INTO `eb_system_menus` (`id`, `pid`, `icon`, `menu_name`, `module`, `cont
 (1008, 9, '', '用户标签', 'admin', '', '', '', '', '[]', 0, 1, 0, 1, '/admin/user/label', '9', 1, '', 0, 'user-user-label', 0),
 (1009, 1008, '', '获取添加标签分类表单', 'admin', '', '', '/api/admin/user/label/cate/create', 'GET', '[]', 0, 0, 0, 1, '', '9/1008', 2, '', 0, 'admin-user-label_add', 0),
 (1011, 12, '', '代码获取', 'admin', '', '', '', '', '[]', 0, 1, 0, 1, '/admin/system/code', '12', 1, '', 0, 'admin-system-code', 0),
-(1012, 7, '', '客户统计', 'admin', '', '', 'api/admin/chart/sum', 'GET', '[]', 0, 0, 0, 1, '', '7', 2, '', 0, '', 0),
-(1013, 7, '', '客户首页统计', 'admin', '', '', 'api/admin/chart', 'GET', '[]', 0, 0, 0, 1, '', '7', 2, '', 0, '', 0),
+(1012, 7, '', '客户统计', 'admin', '', '', 'api/admin/chart/sum', 'GET', '[]', 0, 1, 0, 1, '', '7', 2, '', 0, '', 0),
+(1013, 7, '', '客户首页统计', 'admin', '', '', 'api/admin/chart', 'GET', '[]', 0, 1, 0, 1, '', '7', 2, '', 0, '', 0),
 (1014, 585, '', '获取修改用户表单', 'admin', '', '', 'api/admin/user/edit/<id>', 'GET', '[]', 0, 0, 0, 1, '', '9/10/585', 2, '', 0, '', 0),
 (1015, 585, '', '修改用户', 'admin', '', '', 'api/admin/user/update/<id>', 'PUT', '[]', 0, 0, 0, 1, '', '9/10/585', 2, '', 0, '', 0),
 (1016, 585, '', '用户列表', 'admin', '', '', 'api/admin/user/index', 'GET', '[]', 0, 0, 0, 1, '', '9/10/585', 2, '', 0, '', 0),
@@ -761,9 +668,9 @@ INSERT INTO `eb_system_menus` (`id`, `pid`, `icon`, `menu_name`, `module`, `cont
 (1037, 1008, '', '获取标签列表接口', 'admin', '', '', 'api/admin/user/label', 'GET', '[]', 0, 0, 0, 1, '', '9/1008', 2, '', 0, '', 0),
 (1038, 585, '', '获取全部标签', 'admin', '', '', 'api/admin/user/label/all', 'GET', '[]', 0, 0, 0, 1, '', '9/10/585', 2, '', 0, 'admin-user-set_label', 0),
 (1039, 585, '', '批量修改用户标签', 'admin', '', '', 'api/admin/user/batch/label', 'PUT', '[]', 0, 0, 0, 1, '', '9/10/585', 2, '', 0, '', 0),
-(1040, 7, '', '获取logo', 'admin', '', '', 'api/admin/logo', 'GET', '[]', 0, 0, 0, 1, '', '7', 2, '', 0, '', 0),
-(1041, 7, '', '消息通知', 'admin', '', '', 'api/admin/jnotice', 'GET', '[]', 0, 0, 0, 1, '', '7', 2, '', 0, '', 0),
-(1042, 7, '', '获取菜单', 'admin', '', '', 'api/admin/menusList', 'GET', '[]', 0, 0, 0, 1, '', '7', 2, '', 0, '', 0),
+(1040, 7, '', '获取logo', 'admin', '', '', 'api/admin/logo', 'GET', '[]', 0, 1, 0, 1, '', '7', 2, '', 0, '', 0),
+(1041, 7, '', '消息通知', 'admin', '', '', 'api/admin/jnotice', 'GET', '[]', 0, 1, 0, 1, '', '7', 2, '', 0, '', 0),
+(1042, 7, '', '获取菜单', 'admin', '', '', 'api/admin/menusList', 'GET', '[]', 0, 1, 0, 1, '', '7', 2, '', 0, '', 0),
 (1043, 1011, '', '获取应用列表接口', 'admin', '', '', 'api/admin/app', 'GET', '[]', 0, 0, 0, 1, '', '12/1011', 2, '', 0, '', 0),
 (1044, 1011, '', '保存应用接口', 'admin', '', '', 'api/admin/app', 'POST', '[]', 0, 0, 0, 1, '', '12/1011', 2, '', 0, '', 0),
 (1045, 1011, '', '获取应用创建接口', 'admin', '', '', 'api/admin/app/create', 'GET', '[]', 0, 0, 0, 1, '', '12/1011', 2, '', 0, '', 0),
@@ -784,7 +691,7 @@ INSERT INTO `eb_system_menus` (`id`, `pid`, `icon`, `menu_name`, `module`, `cont
 (1060, 743, '', '获取修改话术接口', 'admin', '', '', 'api/admin/chat/speechcraft/<id>/edit', 'GET', '[]', 0, 0, 0, 1, '', '165/679/743', 2, '', 0, '', 0),
 (1061, 743, '', '获取话术详情接口', 'admin', '', '', 'api/admin/chat/speechcraft/<id>', 'GET', '[]', 0, 0, 0, 1, '', '165/679/743', 2, '', 0, '', 0),
 (1062, 789, '', '获取话术分类详情接口', 'admin', '', '', 'api/admin/chat/speechcraftcate/<id>', 'GET', '[]', 0, 0, 0, 1, '', '165/679/743/789', 2, '', 0, '', 0),
-(1063, 25, '', '附件管理', 'admin', '', '', '', '', '[]', 0, 0, 0, 1, '/admin/system/attachment', '25', 1, '', 0, '', 0),
+(1063, 25, '', '附件管理', 'admin', '', '', '', '', '[]', 0, 1, 1, 1, '/admin/system/attachment', '25', 1, '', 0, '', 0),
 (1064, 1063, '', '图片附件列表', 'admin', '', '', 'api/admin/file/file', 'GET', '[]', 0, 0, 0, 1, '', '25/1063', 2, '', 0, '', 0),
 (1065, 1063, '', '删除图片', 'admin', '', '', 'api/admin/file/file/delete', 'POST', '[]', 0, 0, 0, 1, '', '25/1063', 2, '', 0, '', 0),
 (1066, 1063, '', '移动图片分类表单', 'admin', '', '', 'api/admin/file/file/move', 'GET', '[]', 0, 0, 0, 1, '', '25/1063', 2, '', 0, '', 0),
@@ -801,8 +708,8 @@ INSERT INTO `eb_system_menus` (`id`, `pid`, `icon`, `menu_name`, `module`, `cont
 (1077, 1063, '', '删除附件分类接口', 'admin', '', '', 'api/admin/file/category/<id>', 'DELETE', '[]', 0, 0, 0, 1, '', '25/1063', 2, '', 0, '', 0),
 (1078, 20, '', '删除管理员接口', 'admin', '', '', 'api/admin/setting/admin/<id>', 'DELETE', '[]', 0, 0, 0, 1, '', '12/14/20', 2, '', 0, '', 0),
 (1079, 21, '', '获取修改权限菜单接口', 'admin', '', '', 'api/admin/setting/menus/<id>/edit', 'GET', '[]', 0, 0, 0, 1, '', '12/14/21', 2, '', 0, '', 0),
-(1080, 7, '', '退出登陆', 'admin', '', '', 'api/admin/setting/admin/logout', 'GET', '[]', 0, 0, 0, 1, '', '7', 2, '', 0, '', 0),
-(1082, 25, '', '管理员中心', 'admin', '', '', '', '', '[]', 0, 0, 0, 1, '/admin/system/user', '25', 1, '', 0, '', 0),
+(1080, 7, '', '退出登陆', 'admin', '', '', 'api/admin/setting/admin/logout', 'GET', '[]', 0, 1, 0, 1, '', '7', 2, '', 0, '', 0),
+(1082, 25, '', '管理员中心', 'admin', '', '', '', '', '[]', 0, 1, 1, 1, '/admin/system/user', '25', 1, '', 0, '', 0),
 (1083, 1082, '', '修改当前管理员信息', 'admin', '', '', 'api/admin/setting/update_admin', 'PUT', '[]', 0, 0, 0, 1, '', '25/1082', 2, '', 0, '', 0),
 (1084, 1082, '', '获取当前管理员信息', 'admin', '', '', 'api/admin/setting/info', 'GET', '[]', 0, 0, 0, 1, '', '25/1082', 2, '', 0, '', 0),
 (1085, 476, '', '组合数据全部', 'admin', '', '', 'api/admin/setting/group_all', 'GET', '[]', 0, 0, 0, 1, '', '25/56/112/476', 2, '', 0, '', 0),
@@ -813,13 +720,20 @@ INSERT INTO `eb_system_menus` (`id`, `pid`, `icon`, `menu_name`, `module`, `cont
 (1090, 23, '', '获取修改系统配置接口', 'admin', '', '', 'api/admin/setting/config/<id>/edit', 'GET', '[]', 0, 0, 0, 1, '', '12/23', 2, '', 0, '', 0),
 (1091, 462, '', '修改配置分类状态', 'admin', '', '', 'api/admin/setting/config_class/set_status/<id>/<status>', 'PUT', '[]', 0, 0, 0, 1, '', '25/56/111/462', 2, '', 0, '', 0),
 (1092, 462, '', '获取配置分类详情接口', 'admin', '', '', 'api/admin/setting/config_class/<id>', 'GET', '[]', 0, 0, 0, 1, '', '25/56/111/462', 2, '', 0, '', 0),
-(1093, 476, '', '获取组合数据资源详情接口', 'admin', '', '', 'api/admin/setting/group_data/<id>', 'GET', '[]', 0, 0, 0, 1, '', '25/56/112/476', 2, '', 0, '', 0);
+(1093, 476, '', '获取组合数据资源详情接口', 'admin', '', '', 'api/admin/setting/group_data/<id>', 'GET', '[]', 0, 0, 0, 1, '', '25/56/112/476', 2, '', 0, '', 0),
+(1097, 423, '', '自动回复列表', 'admin', '', '', 'api/admin/chat/reply', 'GET', '[]', 0, 0, 0, 1, '', '165/678/423', 2, '', 0, '', 0),
+(1098, 423, '', '删除自动回复', 'admin', '', '', 'api/admin/chat/reply/<id>', 'DELETE', '[]', 0, 0, 0, 1, '', '165/678/423', 2, '', 0, '', 0),
+(1099, 423, '', '保存自动回复', 'admin', '', '', 'api/admin/chat/reply/<id>', 'POST', '[]', 0, 0, 0, 1, '', '165/678/423', 2, '', 0, '', 0),
+(1100, 423, '', '获取自动回复表单', 'admin', '', '', 'api/admin/chat/reply/<id>', 'GET', '[]', 0, 0, 0, 1, '', '165/678/423', 2, '', 0, '', 0),
+(1101, 585, '', '用户标签搜索列表', 'admin', '', '', 'api/admin/user/user_label', 'GET', '[]', 0, 0, 0, 1, '', '9/10/585', 2, '', 0, '', 0),
+(1102, 1011, '', '重置token', 'admin', '', '', 'api/admin/app/reset/<id>', 'PUT', '[]', 0, 0, 0, 1, '', '12/1011', 2, '', 0, '', 0);
 
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `eb_auxiliary` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `binding_id` int(10) NOT NULL DEFAULT '0' COMMENT '绑定id',
+  `appid` varchar(32) NOT NULL DEFAULT '' COMMENT 'APPid',
   `relation_id` int(10) NOT NULL DEFAULT '0' COMMENT '关联id',
   `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '类型0=客服转接辅助，1=商品和分类辅助，2=优惠券和商品辅助',
   `other` varchar(2048) NOT NULL DEFAULT '' COMMENT '其他数据为json',

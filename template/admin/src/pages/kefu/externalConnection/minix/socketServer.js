@@ -87,6 +87,14 @@ export default {
           this.toChat = true;
         })
       }
+      //自定义发送消息
+      if(e.data.type === 'chat' && e.data.data){
+        if(e.data.data.type){
+          this.bus.pageWs.then((ws) => {
+            ws.send({type:e.data.data.type,data:e.data.data.data});
+          })
+        }
+      }
 
 
     });
@@ -188,10 +196,17 @@ export default {
           this.chatServerData.serviceList.push(data);
           this.userMessage = '';
           this.goPageBottom(); // 滑动到页面底部
+
         });
 
         ws.$on("reply", (data) => {
-          this.mp3.play();
+          try {
+            this.mp3.play();
+          }catch (e) {
+
+          }
+
+          parent.postMessage({ type: 'onMessageChat', data: data }, "*");
         });
 
         ws.$on('success', data => {
@@ -221,6 +236,7 @@ export default {
               this.toChat = true;
             }
           }
+          parent.postMessage({ type: 'onMessageSuccess', data: {} }, "*");
         })
 
         ws.$on('mssage_num', data => {
@@ -228,8 +244,7 @@ export default {
             this.mp3.play();
             this.unReadMesage = data.num;
           }
-
-          parent.postMessage({ type: 'message_num', num: data.num }, "*");
+          parent.postMessage({ type: 'onMessageNum', data: {num:data.num} }, "*");
         })
 
 
@@ -246,13 +261,9 @@ export default {
           ws.send({ type: 'to_chat', data: { id: data.toUid } });
           this.toChat = true;
           document.title =  `正在和${data.nickname}对话中 - ${this.chatServerData.site_name}`
+
+          parent.postMessage({ type: 'onMessageTransfer', data: data }, "*");
         })
-
-
-        // let num = 1;
-        // setInterval(() => {
-        //   parent.postMessage({ type: 'message_num', num: num++ }, "*");
-        // }, 1000)
 
       })
     },
@@ -277,6 +288,7 @@ export default {
             other: this.productMessage
           }
         })
+        parent.postMessage({ type: 'sendImageText', data: this.productMessage }, "*");
       })
       this.isShowProductModel = false;
       this.goPageBottom();
@@ -313,6 +325,7 @@ export default {
       serviceUpload(param).then(res => {
         if(res.status == 200) {
           this.sendMsg(res.data.url, 3);
+          parent.postMessage({ type: 'sendImage', data: {url:res.data.url} }, "*");
           this.$refs['inputDiv'].innerText = '';
         }
       })

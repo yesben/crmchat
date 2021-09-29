@@ -32,10 +32,10 @@ class InstallController
             return '你已经安装过该系统，如果想重新安装，请先删除install目录下的 install.lock 文件，然后再安装。';
         }
         @set_time_limit(1000);
-        if ('7.1.0' > phpversion()) {
+        if ('7.1' > phpversion()) {
             return '您的php版本过低，不能安装本软件，兼容php版本7.1~7.3，谢谢！';
         }
-        if (phpversion() > '7.4') {
+        if (phpversion() > '7.5') {
             return '您的php版本太高，不能安装本软件，兼容php版本7.1~7.3，谢谢！';
         }
         date_default_timezone_set('PRC');

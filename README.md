@@ -22,10 +22,10 @@
 ### 客服端访问 <a target="_blank" href="http://chat.crmeb.net/kefu/pc_list">点击体验</a>账号密码：kefu kefu123
 ### 后台演示 <a target="_blank" href="http://chat.crmeb.net/admin">点击体验</a>账号密码：demo demo
 ### app下载
-![输入图片说明](readme/image/apperweima.png)
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0918/160600_24741898_1491977.png "屏幕截图.png")
 
 ### 开源交流群
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0913/115033_a90b101e_1491977.png "屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0922/151442_1eafb02b_1491977.png "屏幕截图.png")
 ### 访问地址
 
 ### 后台访问地址：
