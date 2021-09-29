@@ -156,11 +156,11 @@ class ChatServiceRecordServices extends BaseServices
             $info->online = $online;
             if ($avatar) $info->avatar = $avatar;
             if ($nickname) $info->nickname = $nickname;
-            $res = $info->save();
+            $info->save();
             $this->dao->update(['user_id' => $userId, 'to_user_id' => $toUserid], ['message' => $message, 'message_type' => $messageType]);
 //            return $info->toArray();
         } else {
-            $res = $this->dao->save([
+            $info = $this->dao->save([
                 'user_id' => $toUserid,
                 'to_user_id' => $userId,
                 'type' => $type,
@@ -177,9 +177,9 @@ class ChatServiceRecordServices extends BaseServices
             ]);//->toArray();
         }
 
-        $res->append(['user']);
+        $info->append(['user']);
 
-        $data = $res->toArray();
+        $data = $info->toArray();
         if (isset($data['user']['version']) && $data['user']['version']) {
             $data['nickname'] = '[' . $data['user']['version'] . ']' . $data['nickname'];
         }
