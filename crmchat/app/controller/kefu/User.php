@@ -264,11 +264,12 @@ class User extends AuthController
      * 退出登陆
      * @return mixed
      */
-    public function logout(ChatServiceServices $services)
+    public function logout(ChatServiceServices $services, ChatUserServices $userServices)
     {
         $key = trim(ltrim($this->request->header(Config::get('cookie.token_name')), 'Bearer'));
         CacheService::redisHandler()->delete($key);
-        $services->update(['user_id' => $this->kefuInfo['user_id'], 'appid' => $this->kefuInfo['appid']], ['online' => 0, 'client_id' => '']);
+        $services->update(['user_id' => $this->kefuInfo['user_id'], 'appid' => $this->kefuInfo['appid']], ['online' => 0, 'client_id' => '', 'is_app' => 0, 'is_backstage' => 0]);
+        $userServices->update(['id' => $this->kefuInfo['user_id']], ['online' => 0]);
         return $this->success();
     }
 
