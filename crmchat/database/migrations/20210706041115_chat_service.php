@@ -38,13 +38,18 @@ class ChatService extends Migrator
         $table->addColumn('avatar', 'string', ['limit' => 255, 'default' => '', 'comment' => '客服头像']);
         $table->addColumn('nickname', 'string', ['limit' => 50, 'default' => '', 'comment' => '代理名称']);
         $table->addColumn('phone', 'string', ['limit' => 32, 'default' => '', 'comment' => '客服电话']);
+        $table->addColumn('ip', 'string', ['limit' => 50, 'default' => '', 'comment' => 'IP']);
         $table->addColumn('add_time', 'integer', ['limit' => 10, 'default' => 0, 'comment' => '添加时间']);
+        $table->addColumn('update_time', 'integer', ['limit' => 10, 'default' => 0, 'comment' => '更新时间']);
         $table->addColumn('status', 'boolean', ['limit' => 1, 'default' => 0, 'comment' => '客服状态，0隐藏1显示']);
         $table->addColumn('notify', 'boolean', ['limit' => 1, 'default' => 0, 'comment' => '订单通知1开启0关闭']);
         $table->addColumn('customer', 'boolean', ['limit' => 1, 'default' => 0, 'comment' => '是否展示统计管理']);
         $table->addColumn('is_app', 'boolean', ['limit' => 1, 'default' => 0, 'comment' => '是否为APP登陆']);
         $table->addColumn('uniqid', 'string', ['limit' => 35, 'default' => '', 'comment' => '扫码登录唯一值']);
         $table->addColumn('client_id', 'string', ['limit' => 100, 'default' => '', 'comment' => 'clientID']);
+        $table->addColumn('auto_reply', 'boolean', ['limit' => 1, 'default' => 0, 'comment' => '自动回复']);
+        $table->addColumn('is_backstage', 'boolean', ['limit' => 1, 'default' => 0, 'comment' => '是否在前台运行']);
+        $table->addColumn('welcome_words', 'string', ['limit' => 500, 'default' => '', 'comment' => '欢迎语']);
         $table->addIndex('account');
         $table->addIndex('phone');
         $table->create();

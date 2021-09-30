@@ -292,7 +292,7 @@ abstract class BaseHandler
         try {
             /** @var ChatServiceRecordServices $serviceRecord */
             $serviceRecord = app()->make(ChatServiceRecordServices::class);
-            $info = $serviceRecord->get(['user_id' => $kfuUserId, 'to_user_id' => $userId, 'appid' => $appid], ['id', 'type', 'message_type', 'is_tourist', 'avatar', 'nickname']);
+            $info = $serviceRecord->get(['user_id' => $kfuUserId, 'to_user_id' => $userId, 'appid' => $appid], ['id', 'user_id', 'to_user_id', 'type', 'message_type', 'is_tourist', 'avatar', 'nickname']);
             /** @var ChatServiceAuxiliaryServices $transfeerService */
             $transfeerService = app()->make(ChatServiceAuxiliaryServices::class);
             $record = $service->transaction(function () use ($info, $serviceRecord, $messageData, $appid, $transfeerService, $service, $kfuUserId, $userId, $kefuToUserId) {
