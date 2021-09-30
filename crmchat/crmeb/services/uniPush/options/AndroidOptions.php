@@ -31,26 +31,30 @@ class AndroidOptions extends OptionsBase
     public $payload = '';
 
     /**
+     * 华为角标
+     * @var int
+     */
+    public $HWbadgeNum = 0;
+
+    /**
      * @return array
      */
     public function toArray()
     {
         $publicData = get_object_vars($this);
-        $data       = [];
+        $data = [];
         foreach ($publicData as $key => $value) {
             $data[Str::snake($key)] = $value;
         }
         return [
             'ups' => [
                 'notification' => $data,
-                'options'      => [
+                'options' => [
                     'VV' => ['classification' => 1],
                     'HW' => [
-                        '/message/android/notification/image'      => '',
-                        '/message/android/notification/style'      => 1,
-                        '/message/android/notification/big_title'  => $data['title'],
-                        '/message/android/notification/big_body'   => $data['body'],
-                        '/message/android/notification/importance' => 'NORMAL'
+                        '/message/android/notification/big_title' => $data['title'],
+                        '/message/android/notification/big_body' => $data['body'],
+                        '/message/android/notification/badge/set_num' => $this->HWbadgeNum
                     ],
                 ]
             ],

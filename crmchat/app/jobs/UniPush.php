@@ -104,6 +104,7 @@ class UniPush extends BaseJobs
         $android->body = $messageOption->body;
         $android->title = $messageOption->title;
         $android->payload = $messageOption->payload;
+        $android->HWbadgeNum = $ios->autoBadge;
         $option->setPushChannel($android, $ios);
         $res = $uniPush->push($option);
         Log::error(['option' => $option->toArray(), 'res' => $res->toArray()]);
