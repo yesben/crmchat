@@ -279,11 +279,9 @@ export default {
             that.userList.forEach((el, index, arr) => {
               if(data.recored.id == el.id) {
                 status = true
-                if(data.recored.is_tourist == that.hdTabCur) {
-                  let oldVal = data.recored
-                  arr.splice(index, 1)
-                  arr.unshift(oldVal)
-                }
+                let oldVal = data.recored
+                arr.splice(index, 1)
+                arr.unshift(oldVal)
               }
             })
             if(!status) {
