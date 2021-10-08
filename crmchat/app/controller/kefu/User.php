@@ -155,7 +155,10 @@ class User extends AuthController
         if (!$userInfo) {
             return $this->fail('用户不存在');
         }
-        return $this->success($userInfo->toArray());
+        $userInfo = $userInfo->toArray();
+        //兼容前端取值错误
+        $userInfo['to_user_id'] = $userInfo['id'];
+        return $this->success($userInfo);
     }
 
     /**
