@@ -32,6 +32,7 @@ use app\validate\chat\ChatServiceValidate;
 use crmeb\services\CacheService;
 use crmeb\services\UploadService;
 use crmeb\utils\Character;
+use Psr\SimpleCache\InvalidArgumentException;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
@@ -56,6 +57,7 @@ class User extends AuthController
 
     /**
      * 获取当前登录客服
+     * @param ChatServiceServices $services
      * @return mixed
      */
     public function getKefuInfo(ChatServiceServices $services)
@@ -71,6 +73,7 @@ class User extends AuthController
      * 个人中心修改客服信息
      * @param ChatServiceValidate $validate
      * @param ChatServiceServices $services
+     * @param ChatUserServices $userServices
      * @return mixed
      */
     public function updateKefu(ChatServiceValidate $validate, ChatServiceServices $services, ChatUserServices $userServices)
@@ -111,6 +114,7 @@ class User extends AuthController
 
     /**
      * 获取客户列表
+     * @param Character $character
      * @param string $nickname
      * @return mixed
      * @throws DataNotFoundException
@@ -133,6 +137,8 @@ class User extends AuthController
 
     /**
      * 获取当前客服和用户的聊天记录
+     * @param string $nickname
+     * @param string $is_tourist
      * @return mixed
      * @throws DataNotFoundException
      * @throws DbException
@@ -148,6 +154,9 @@ class User extends AuthController
      * @param ChatUserServices $services
      * @param $userId
      * @return mixed
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
      */
     public function userInfo(ChatUserServices $services, $userId)
     {
@@ -176,6 +185,9 @@ class User extends AuthController
      * 获取所有用户标签下面的用户
      * @param ChatUserLabelServices $services
      * @return mixed
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
      */
     public function getLabelAll(ChatUserLabelServices $services)
     {
@@ -199,7 +211,7 @@ class User extends AuthController
      * 设置分组
      * @param ChatUserGroupServices $services
      * @param ChatUserServices $userServices
-     * @param $uid
+     * @param $userId
      * @param $id
      * @return mixed
      */
@@ -225,7 +237,7 @@ class User extends AuthController
     /**
      * 设置用户标签
      * @param ChatUserLabelAssistServices $services
-     * @param $uid
+     * @param $userId
      * @return mixed
      */
     public function setUserLabel(ChatUserLabelAssistServices $services, $userId)
@@ -265,7 +277,10 @@ class User extends AuthController
 
     /**
      * 退出登陆
+     * @param ChatServiceServices $services
+     * @param ChatUserServices $userServices
      * @return mixed
+     * @throws InvalidArgumentException
      */
     public function logout(ChatServiceServices $services, ChatUserServices $userServices)
     {
@@ -279,8 +294,9 @@ class User extends AuthController
     /**
      * 图片上传
      * @param Request $request
+     * @param SystemAttachmentServices $services
      * @return mixed
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function upload(Request $request, SystemAttachmentServices $services)
     {
@@ -337,6 +353,7 @@ class User extends AuthController
     /**
      * 修改用户信息
      * @param ChatUserServices $services
+     * @param ChatServiceRecordServices $recordServices
      * @param $userId
      * @return mixed
      */
