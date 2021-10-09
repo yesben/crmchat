@@ -162,6 +162,7 @@ class Room
         $nowkey = $this->tableFdPrefix . $key;
         $res = true;
         if (is_array($field)) {
+            $this->getTable()->del($nowkey);
             $res = $this->getTable()->set($nowkey, $field);
         } else if (!is_array($field) && $value !== null) {
             $data = $this->getTable()->get($nowkey);
@@ -169,6 +170,7 @@ class Room
                 return false;
             }
             $data[$field] = $value;
+            $this->getTable()->del($nowkey);
             $res = $this->getTable()->set($nowkey, $data);
         }
         return $res;
