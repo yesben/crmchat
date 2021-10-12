@@ -51,7 +51,7 @@ class LoginServices extends BaseServices
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function authLogin(string $account, string $password = null, int $isApp = 0)
+    public function authLogin(string $account, string $password = null, int $isApp = 0, string $clientId = null)
     {
         $kefuInfo = $this->dao->get(['account' => $account]);
         if (!$kefuInfo) {
@@ -75,6 +75,9 @@ class LoginServices extends BaseServices
             /** @var ChatUserServices $service */
             $service = app()->make(ChatUserServices::class);
             $service->update(['id' => $kefuInfo['user_id']], ['online' => 1]);
+        }
+        if ($clientId) {
+            $kefuInfo->client_id = $clientId;
         }
         $kefuInfo->update_time = time();
         $kefuInfo->save();
