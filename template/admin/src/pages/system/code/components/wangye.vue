@@ -7,15 +7,30 @@
 
     <div class="fenlei">
       <div class="code-content-wrap">
-        <textarea id="NormalCodeTextarea1" class="code" rows="10">
-<script src="{{siteUrl}}/customerServer.js"></script>
+        <textarea id="NormalCodeTextarea1" class="code" rows="20">
 <script>
-    var option = {
-        openUrl: '{{siteUrl}}',
-        token: '{{tokeninfo.token_md5}}'
-    };
-    var canCustomerServer = new initCustomerServer(option);
-    canCustomerServer.init();
+  (function() {
+  _s = document.createElement('script');
+  _s.src="{{siteUrl}}/customerServer.js"
+  _s.onload = function(){
+  var option = {
+        "authInit":true,
+        openUrl: '{{siteUrl}}/',
+        token: '4109fbb2d7bc3d5559348278816a20bc',
+        kefuid:'',//默认为空自动对接客服，可填写指定客服ID
+        isShowTip: true, // 初始化成功后，界面右下角会自动创建 “联系客服按钮”， 如无需默认展示，则填写false即可,默认为true
+        mobileIcon: '', //  手机端悬浮客服图片
+        pcIcon: '', // pc端悬浮客服图片
+        windowStyle:'center',//默认空 右下角小弹窗， center 普通中间弹窗样式
+        domId: 'customerServerTip',//展示在页面右下角联系客服的dom的id，可根据id获取到dom后自行修改样式, 默认为customerServerTip
+        insertDomNode: '.getCode_container', // SPA应用必填，html文件单独引入选填，表示插入客服弹窗的 dom节点，一般为当前界面的根节点，默认为body
+        "version":"v4"
+      };
+      var canCustomerServer = new initCustomerServer(option);
+      canCustomerServer.init();
+  }
+  document.head.appendChild(_s)
+  })();
 </script>
             </textarea>
         <div class="other-wrap">
