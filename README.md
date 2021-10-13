@@ -28,13 +28,9 @@
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/1008/090709_33e65b58_1491977.png "屏幕截图.png")
 ### 访问地址
 
-### 后台访问地址：
+后台访问地址：http://域名/admin 
 
-http://域名/admin 
-
-### 客服后台访问地址
-
-http://域名/kefu
+客服后台访问地址：http://域名/kefu
 
 ### 页面展示
 
