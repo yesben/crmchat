@@ -38,12 +38,12 @@ http://域名/kefu
 
 ### 页面展示
 
-![输入图片说明](readme/image/2.jpg)
-![输入图片说明](readme/image/3.jpg)
+![输入图片说明](readme/images/2.jpg)
+![输入图片说明](readme/images/3.jpg)
 
 ### APP功能展示图
 
-![输入图片说明](readme/image/1.jpg)
+![输入图片说明](readme/images/1.jpg)
 
 
 ### 开发规范
