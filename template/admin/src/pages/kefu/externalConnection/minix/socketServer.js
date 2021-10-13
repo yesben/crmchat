@@ -50,8 +50,10 @@ export default {
     // 获取url参数
     this.upperData = this.$route.query;
     // 更新token
-    if(this.upperData.token != getLoc('mobile_token')) {
-      setLoc('mobile_token', this.upperData.token);
+    let tokenName = this.$route.query.tokenName || 'token';
+    const token = this.$route.query[tokenName];
+    if(token != getLoc('mobile_token')) {
+      setLoc('mobile_token', token);
     }
     // 将url参数存入缓存
     Object.keys(this.upperData).forEach(item => {

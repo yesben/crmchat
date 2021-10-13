@@ -19,10 +19,8 @@ export default {
     // 重定向方法，判断是否是移动端环境，跳转对应界面
     redirect() {
       //      console.log('index');
-      const token = this.$route.query.token;
-
-      //      console.log(this.$route.query);
-
+      let tokenName = this.$route.query.tokenName || 'token';
+      const token = this.$route.query[tokenName];
       setLoc('mobile_token', token);
       if(this.$route.query.deviceType == "pc" || this.$route.query.deviceType == "Desktop") {
         this.$router.push({ name: 'customerServerPc', query: this.$route.query });
