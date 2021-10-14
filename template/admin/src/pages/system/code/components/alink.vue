@@ -2,6 +2,19 @@
     <div class="content">
         <p class="font-w">使用简介</p>
         <p class="text-i">A链接可以在网页中或内容中添加A链接使用，可以在自己站点使用，也可以发布的外站使用，或者自己生成链接二维码使用;</p>
+        <p class="font-w">超链接参数说明</p>
+                <p class="text-i">
+                    <br>token:与后台交互的凭证
+                    <br>noCanClose:PC端是否显示广告
+                <br>deviceType:手动适应浏览器类型Mobile移动端
+                <br>uid:用户ID
+                <br>nickName:用户昵称
+                <br>phone:用户手机号
+                <br>sex:用户
+                <br>avatar:用户
+                <br>openid:用户
+                <br>kefu_id:客服ID
+                </p>
         <Divider />
         <p class="typetitle">第一种，自动识别浏览器A链接使用</p>
 
