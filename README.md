@@ -2,18 +2,16 @@
 
 ## 项目简介
 
-  本系统(CRMChat)是采用Swoole4+Tp6+Redis+Vue+Mysql开发的独立高性能客服系统，客服系统用户端支持Pc端、移动端、小程序、文章中接入客服，利用超链接、网页内嵌、二维码、定制对接等方式让网上所有通道都可以快速通过本系统联系到商家，商家端支持Pc端、移动端（App）随时随地接收到用户的各种咨询，商家可以添加话术库、也可以对用户进行分组、加标签、加备注进行管理，是一款互联网链接商家的一个桥梁，也是商家客户管理的工具，本开源项目遵循最开放的木兰协议，可以随意使用。商家端APP也不用您自己辛苦上架了，我们提供App工具可以直接下载配置使用。在使用过程中遇到问题随时留言，也欢迎各位大神参与本项目一起完善！！！
+  本系统(CRMChat)是采用Swoole4+Tp6+Redis+Vue+Mysql开发的独立高性能客服系统，客服系统用户端支持Pc端、移动端、小程序、文章中接入客服，利用超链接、网页内嵌、二维码、定制对接等方式让网上所有通道都可以快速通过本系统联系到商家，商家端支持Pc端、移动端（App）随时随地接收到用户的各种咨询，商家可以添加话术库、也可以对用户进行分组、加标签、加备注进行管理，是一款互联网链接商家的一个桥梁，也是商家客户管理的工具，本开源项目遵循最开放的木兰协议，可以随意使用。商家端APP也不用您自己辛苦上架了，我们提供App工具可以直接下载配置使用， **让您快速拥有一套强大的私有客服系统** 。在使用过程中遇到问题随时留言，也欢迎各位大神参与本项目一起完善！！！
 > 如果对您有帮助，您可以点右上角 "Star" 支持一下 谢谢！
 
-### 演示地址
-### 用户端访问<a target="_blank" href='http://chat.crmeb.net/demo/index.html'>点击体验</a>
-### 客服端访问 <a target="_blank" href="http://chat.crmeb.net/kefu/pc_list">点击体验</a>账号密码：kefu kefu123
-### 后台演示 <a target="_blank" href="http://chat.crmeb.net/admin">点击体验</a>账号密码：demo demo
-### 安卓app下载,目前APP Store,小米,华为,oppo应用商店搜索"CRMchat"都可下载
+### 演示信息
+#### 用户端访问<a target="_blank" href='http://chat.crmeb.net/demo/index.html'>【点击体验】</a>
+#### PC客服端访问 <a target="_blank" href="http://chat.crmeb.net/kefu/pc_list">【点击体验】</a>账号密码：kefu kefu123
+#### 管理后台演示 <a target="_blank" href="http://chat.crmeb.net/admin">【点击体验】</a>账号密码：demo demo
+#### 客服端app：安卓app下载,目前APP Store,小米,华为,oppo应用商店搜索"CRMchat"都可下载
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0918/160600_24741898_1491977.png "屏幕截图.png")
 
-
-### 页面展示
 
 ![输入图片说明](readme/images/2/2_01.jpg)
 ![输入图片说明](readme/images/2/2_02.jpg)
