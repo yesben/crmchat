@@ -14,7 +14,7 @@
 
 ### 开源交流群
 
-![输入图片说明](https://images.gitee.com/uploads/images/2021/1016/151157_56d17f6c_1491977.png "屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/1016/151414_07483011_1491977.png "屏幕截图.png")
 
 ![输入图片说明](readme/images/2/2_01.jpg)
 ![输入图片说明](readme/images/2/2_02.jpg)
