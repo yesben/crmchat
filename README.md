@@ -9,9 +9,12 @@
 #### 用户端访问<a target="_blank" href='http://chat.crmeb.net/demo/index.html'>【点击体验】</a>
 #### PC客服端访问 <a target="_blank" href="http://chat.crmeb.net/kefu/pc_list">【点击体验】</a>账号密码：kefu kefu123
 #### 管理后台演示 <a target="_blank" href="http://chat.crmeb.net/admin">【点击体验】</a>账号密码：demo demo
-#### 客服端app：安卓app下载,目前APP Store,小米,华为,oppo应用商店搜索"CRMchat"都可下载
+#### 客服端app：安卓app下载,目前APP Store,小米,华为,oppo，vivo应用商店搜索"CRMchat"都可下载
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0918/160600_24741898_1491977.png "屏幕截图.png")
 
+### 开源交流群
+
+![输入图片说明](https://images.gitee.com/uploads/images/2021/1016/151157_56d17f6c_1491977.png "屏幕截图.png")
 
 ![输入图片说明](readme/images/2/2_01.jpg)
 ![输入图片说明](readme/images/2/2_02.jpg)
