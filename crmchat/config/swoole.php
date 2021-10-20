@@ -35,10 +35,10 @@ return is_win() ? [] : [
         'room'          => [
             'type'  => 'table',
             'table' => [
-                'room_rows'   => 4096,
-                'room_size'   => 2048,
-                'client_rows' => 8192,
-                'client_size' => 2048,
+                'room_rows'   => 40960,
+                'room_size'   => 2048 * 20,
+                'client_rows' => 81920,
+                'client_size' => 2048 * 20,
             ],
             'redis' => [
                 'host'          => '127.0.0.1',
@@ -95,7 +95,6 @@ return is_win() ? [] : [
                 ['name' => 'tourist', 'type' => Table::TYPE_INT],
                 ['name' => 'is_open', 'type' => Table::TYPE_INT],
                 ['name' => 'appid', 'size' => 1024, 'type' => Table::TYPE_STRING],
-                ['name' => 'is_close', 'type' => Table::TYPE_INT],
             ]
         ]
     ],

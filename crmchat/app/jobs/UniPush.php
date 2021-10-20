@@ -69,10 +69,8 @@ class UniPush extends BaseJobs
             case ChatServiceDialogueRecordServices::MSN_TYPE_VOICE:
                 $messageOption->body = '[音频]';
                 break;
-            case ChatServiceDialogueRecordServices::MSN_TYPE_GOODS:
-                $messageOption->body = '[图文]' . ($message['other']['store_name'] ?? '');
-                break;
             case ChatServiceDialogueRecordServices::MSN_TYPE_ORDER:
+            case ChatServiceDialogueRecordServices::MSN_TYPE_GOODS:
                 $messageOption->body = '[图文]' . ($message['other']['store_name'] ?? '');
                 break;
         }

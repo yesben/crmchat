@@ -85,35 +85,6 @@ class Room
     }
 
     /**
-     * 修改
-     * @param string $fd
-     * @param $field
-     * @param null $value
-     * @return bool|mixed
-     */
-    public function clientUpdate(string $fd, $field, $value = null)
-    {
-        $res = true;
-        if (is_array($field)) {
-            $res = $this->getTable('client')->set($fd, $field);
-        } else if (!is_array($field) && $value !== null) {
-            $data = $this->getTable('client')->get($fd);
-            if (!$data) {
-                return false;
-            }
-            if (is_array($field)) {
-                foreach ($field as $key) {
-                    $data[$key] = $value[$key] ?? 0;
-                }
-            } else {
-                $data[$field] = $value;
-            }
-            $res = $this->getTable('client')->set($fd, $data);
-        }
-        return $res;
-    }
-
-    /**
      * 添加fd
      * @param string $key fd
      * @param int $uid 用户uid
@@ -124,8 +95,16 @@ class Room
     public function add(string $key, string $appid, int $userId = 0, int $toUserId = 0, int $tourist = 0)
     {
         $nowkey = $this->tableFdPrefix . $key;
-        $data = ['fd' => $key, 'is_open' => 1, 'appid' => $appid, 'type' => $this->type ?: 'user', 'user_id' => $userId, 'to_user_id' => $toUserId, 'tourist' => $tourist];
-        $res = $this->getTable()->set($nowkey, $data);
+        $data   = [
+            'fd'         => $key,
+            'is_open'    => 1,
+            'appid'      => $appid,
+            'type'       => $this->type ?: 'user',
+            'user_id'    => $userId,
+            'to_user_id' => $toUserId,
+            'tourist'    => $tourist
+        ];
+        $res    = $this->getTable()->set($nowkey, $data);
         $this->cache->sAdd(self::USER_INFO_FD_PRE, $key . '=' . $userId);
         $this->delRepeatUidFd($userId, $key);
         if ($this->type) {
@@ -145,7 +124,6 @@ class Room
      */
     public function deleteFd(string $type, $userId, $fd)
     {
-        $this->cache->sRem('client', $fd);
         $this->cache->sRem(self::USER_INFO_FD_PRE, $fd . '=' . $userId);
         $this->cache->sRem(self::USER_INFO_FD_PRE . '_' . $type, $fd . '=' . $userId);
     }
@@ -160,7 +138,7 @@ class Room
     public function update(string $key, $field = null, $value = null)
     {
         $nowkey = $this->tableFdPrefix . $key;
-        $res = true;
+        $res    = true;
         if (is_array($field)) {
             $this->getTable()->del($nowkey);
             $res = $this->getTable()->set($nowkey, $field);
@@ -210,7 +188,7 @@ class Room
      */
     public function delsMembers(int $userId = 0, string $type = '')
     {
-        $fds = $this->getRoomAll($type);
+        $fds        = $this->getRoomAll($type);
         $removeData = [];
         foreach ($fds as $fd => $id) {
             if ($id == $userId) {
@@ -247,9 +225,9 @@ class Room
      */
     public function uidByFd(int $userId)
     {
-        $fds = $this->getRoomAll($this->type);
+        $fds        = $this->getRoomAll($this->type);
         $this->type = '';
-        $fd = [];
+        $fd         = [];
         foreach ($fds as $k => $v) {
             if ($v == $userId) {
                 $fd[] = $k;
@@ -267,7 +245,7 @@ class Room
     public function kefuUidByFd(int $userId)
     {
         $this->type = 'kefu';
-        $fd = $this->uidByFd($userId);
+        $fd         = $this->uidByFd($userId);
         $this->type = '';
         return $fd;
     }
@@ -300,8 +278,8 @@ class Room
      */
     public function remove()
     {
-        $all = $this->cache->sMembers(self::USER_INFO_FD_PRE);
-        $res = $this->cache->sRem(self::USER_INFO_FD_PRE, ...$all);
+        $all      = $this->cache->sMembers(self::USER_INFO_FD_PRE);
+        $res      = $this->cache->sRem(self::USER_INFO_FD_PRE, ...$all);
         $typeList = $this->cache->sMembers(self::TYPE_NAME);
         if ($typeList) {
             foreach ($typeList as $item) {
@@ -322,7 +300,7 @@ class Room
     public function getRoomAll(string $type = '')
     {
         $fdAll = [];
-        $all = $this->cache->sMembers(self::USER_INFO_FD_PRE . ($type ? '_' . $type : ''));
+        $all   = $this->cache->sMembers(self::USER_INFO_FD_PRE . ($type ? '_' . $type : ''));
         foreach ($all as $item) {
             [$fd, $uid] = explode('=', $item);
             $fdAll[(string)$fd] = (int)$uid;
@@ -352,7 +330,7 @@ class Room
         if (!$userId) {
             return true;
         }
-        $fds = $fds ?: $this->getRoomAll($type);
+        $fds    = $fds ?: $this->getRoomAll($type);
         $remove = [];
         foreach ($fds as $fd => $item) {
             if ($userId == $item && $key && $key != $fd) {
