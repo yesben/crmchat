@@ -315,7 +315,7 @@ function initCustomerServer(option) {
                     });
 
                 } else {
-                    this.iframeLayout.style.bottom = '-645px';
+                    this.iframeLayout.style.bottom = '-660px';
                     this.iframeLayout.style.opacity = '0';
 
                 }
