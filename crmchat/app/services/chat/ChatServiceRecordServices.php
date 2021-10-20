@@ -157,7 +157,7 @@ class ChatServiceRecordServices extends BaseServices
             if ($avatar) $info->avatar = $avatar;
             if ($nickname) $info->nickname = $nickname;
             $info->save();
-            $this->dao->update(['user_id' => $userId, 'to_user_id' => $toUserid], ['message' => $message, 'message_type' => $messageType]);
+            $this->dao->update(['user_id' => $userId, 'to_user_id' => $toUserid], ['update_time'=> time(),'message' => $message, 'message_type' => $messageType]);
 //            return $info->toArray();
         } else {
             $info = $this->dao->save([
