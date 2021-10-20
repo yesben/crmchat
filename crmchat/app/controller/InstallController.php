@@ -314,30 +314,30 @@ class InstallController
                     $email    = trim($post['manager_email']);
                     if (!function_exists('mysqli_connect')) {
                         $arr['msg'] = "请安装 mysqli 扩展!";
-                        return json_encode($arr);
+                        return $arr;
                     }
                     $conn = @mysqli_connect($dbHost, $dbUser, $dbPwd, NULL, $post['dbport']);
                     if (mysqli_connect_errno($conn)) {
                         $arr['msg'] = "连接数据库失败!" . mysqli_connect_error($conn);
-                        return json_encode($arr);
+                        return $arr;
                     }
                     mysqli_set_charset($conn, "utf8"); //,character_set_client=binary,sql_mode='';
                     $version = mysqli_get_server_info($conn);
                     if ($version < 5.1) {
                         $arr['msg'] = '数据库版本太低! 必须5.1以上';
-                        return json_encode($arr);
+                        return $arr;
                     }
 
                     if (!mysqli_select_db($conn, $dbName)) {
                         //创建数据时同时设置编码
                         if (!mysqli_query($conn, "CREATE DATABASE IF NOT EXISTS `" . $dbName . "` DEFAULT CHARACTER SET utf8;")) {
                             $arr['msg'] = '数据库 ' . $dbName . ' 不存在，也没权限创建新的数据库！';
-                            return json_encode($arr);
+                            return $arr;
                         }
                         if ($n == -1) {
                             $arr['n']   = 0;
                             $arr['msg'] = "成功创建数据库:{$dbName}<br>";
-                            return json_encode($arr);
+                            return $arr;
                         }
                         mysqli_select_db($conn, $dbName);
                     }
