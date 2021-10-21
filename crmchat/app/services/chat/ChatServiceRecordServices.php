@@ -53,7 +53,7 @@ class ChatServiceRecordServices extends BaseServices
     {
         $labelId = explode(',', $labelId);
         $labelId = array_filter($labelId);
-        $list = $this->dao->getServiceList(['appid' => $appid, 'label_id' => $labelId, 'user_id' => $userId, 'title' => $nickname, 'is_tourist' => 0], 0, 0, ['user']);
+        $list    = $this->dao->getServiceList(['appid' => $appid, 'label_id' => $labelId, 'user_id' => $userId, 'title' => $nickname, 'is_tourist' => 0], 0, 0, ['user']);
         foreach ($list as &$item) {
             if (isset($item['user']['remark_nickname']) && $item['user']['remark_nickname']) {
                 $item['nickname'] = $item['user']['remark_nickname'];
@@ -79,8 +79,7 @@ class ChatServiceRecordServices extends BaseServices
         $list = $this->dao->getServiceList(['appid' => $appid, 'user_id' => $userId, 'title' => $nickname, 'is_tourist' => $isTourist], $page, $limit, ['user']);
         foreach ($list as &$item) {
             if ($item['message_type'] == 1) {
-                $item['message'] = preg_replace('/\[em-[a-z_]+\]/', '[表情]', $item['message'], -1);
-                $item['message'] = Str::truncateUtf8String($item['message'], 15, '');
+                $item['message'] = $this->getMessage($item['message']);
             }
             $item['_update_time'] = date('Y-m-d H:i', $item['update_time']);
             if (isset($item['user']['remark_nickname']) && $item['user']['remark_nickname']) {
@@ -91,6 +90,24 @@ class ChatServiceRecordServices extends BaseServices
             }
         }
         return $list;
+    }
+
+    /**
+     * 聊天消息格式化
+     * @param string $str
+     * @return string
+     */
+    protected function getMessage(string $str)
+    {
+        $str = preg_replace('/\[em-[a-z_]+\]/', '[表情]', $str, -1);
+        $str = Str::truncateUtf8String($str, 15, '');
+        foreach (['[', '[表', '[表情'] as $item) {
+            if (($num = mb_strrpos($str, $item)) !== false) {
+                $str = mb_substr($str, 0, $num);
+                break;
+            }
+        }
+        return $str;
     }
 
     /**
@@ -151,29 +168,29 @@ class ChatServiceRecordServices extends BaseServices
             $info->type = $type;
             if ($message !== '') $info->message = $message;
             $info->message_type = $messageType;
-            $info->update_time = time();
-            $info->mssage_num = $num;
-            $info->online = $online;
+            $info->update_time  = time();
+            $info->mssage_num   = $num;
+            $info->online       = $online;
             if ($avatar) $info->avatar = $avatar;
             if ($nickname) $info->nickname = $nickname;
             $info->save();
-            $this->dao->update(['user_id' => $userId, 'to_user_id' => $toUserid], ['update_time'=> time(),'message' => $message, 'message_type' => $messageType]);
+            $this->dao->update(['user_id' => $userId, 'to_user_id' => $toUserid], ['update_time' => time(), 'message' => $message, 'message_type' => $messageType]);
 //            return $info->toArray();
         } else {
             $info = $this->dao->save([
-                'user_id' => $toUserid,
-                'to_user_id' => $userId,
-                'type' => $type,
-                'online' => $online,
-                'message' => $message,
-                'avatar' => $avatar,
-                'nickname' => $nickname,
+                'user_id'      => $toUserid,
+                'to_user_id'   => $userId,
+                'type'         => $type,
+                'online'       => $online,
+                'message'      => $message,
+                'avatar'       => $avatar,
+                'nickname'     => $nickname,
                 'message_type' => $messageType,
-                'mssage_num' => $num,
-                'add_time' => time(),
-                'update_time' => time(),
-                'is_tourist' => $isTourist,
-                'appid' => $appid
+                'mssage_num'   => $num,
+                'add_time'     => time(),
+                'update_time'  => time(),
+                'is_tourist'   => $isTourist,
+                'appid'        => $appid
             ]);//->toArray();
         }
 
@@ -193,9 +210,9 @@ class ChatServiceRecordServices extends BaseServices
      */
     public function getKefuSum(int $id = 0)
     {
-        $all = $this->dao->count(['user_id' => $id]);
-        $toDayKefu = $this->dao->count(['time' => 'today', 'user_id' => $id, 'is_tourist' => 1]);
-        $month = $this->dao->count(['time' => 'month', 'user_id' => $id]);
+        $all          = $this->dao->count(['user_id' => $id]);
+        $toDayKefu    = $this->dao->count(['time' => 'today', 'user_id' => $id, 'is_tourist' => 1]);
+        $month        = $this->dao->count(['time' => 'month', 'user_id' => $id]);
         $toDayTourist = $this->dao->count(['time' => 'today', 'user_id' => $id, 'is_tourist' => 0]);
         return compact('all', 'toDayKefu', 'month', 'toDayTourist');
     }
@@ -212,22 +229,22 @@ class ChatServiceRecordServices extends BaseServices
      */
     public function getKefuStatistics(int $id, int $year, int $month)
     {
-        $date = Carbon::create($year, $month);
+        $date      = Carbon::create($year, $month);
         $startTime = strtotime($date->startOfMonth()->toDateTimeString());
-        $endTime = strtotime($date->lastOfMonth()->toDateTimeString()) + 86399;
+        $endTime   = strtotime($date->lastOfMonth()->toDateTimeString()) + 86399;
 
         return [
-            'list' => $this->dao->kefuStatistics([
-                'user_id' => $id,
+            'list'    => $this->dao->kefuStatistics([
+                'user_id'    => $id,
                 'is_tourist' => 0,
-                'startTime' => $startTime,
-                'endTime' => $endTime,
+                'startTime'  => $startTime,
+                'endTime'    => $endTime,
             ]),
             'tourist' => $this->dao->kefuStatistics([
-                'user_id' => $id,
+                'user_id'    => $id,
                 'is_tourist' => 1,
-                'startTime' => $startTime,
-                'endTime' => $endTime,
+                'startTime'  => $startTime,
+                'endTime'    => $endTime,
             ])
         ];
     }
