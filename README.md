@@ -234,7 +234,7 @@ ThinkPHP6.0遵循PSR-2命名规范和PSR-4自动加载规范，并且注意如�
   运行环境要求PHP7.1 ~ 7.4。不支持windows环境运行
 
 ### 开源交流群
-![输入图片说明](https://images.gitee.com/uploads/images/2021/1016/151505_d2bf6c90_1491977.png "屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/1025/103345_0f4dc282_1491977.png "屏幕截图.png")
 
 本项目包含的第三方源码和二进制文件之版权信息另行标注。
 
