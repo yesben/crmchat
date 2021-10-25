@@ -432,28 +432,28 @@ class ChatServiceServices extends BaseServices
             SwooleTaskService::user($app)->type('reply')->to($toUserId)->data($data)->push();
         }
         //回复给客服
-        $nickname = $userInfo['nickname'] ?? '';
-        $avatar = $userInfo['avatar'] ?? '';
-        $formType = $userInfo['type'] ?? 0;
-        $isTourist = $userInfo['is_tourist'] ?? 0;
-        $serviceRecored->setApp($app);
-        $count = $serviceRecored->count(['appid' => $appId, 'user_id' => $userId, 'to_user_id' => $toUserId]);
-        $recored = $serviceRecored->saveRecord(
-            $appId,
-            $toUserId,
-            $userId,
-            $count ? '' : $msg,
-            (int)$formType,
-            1,
-            0,
-            (int)$isTourist,
-            $nickname,
-            $avatar,
-            1
-        );
-        if (isset($userInfo['version']) && $userInfo['version']) {
-            $recored['nickname'] = '[' . $userInfo['version'] . ']' . $recored['nickname'];
-        }
-        SwooleTaskService::kefu($app)->type('recored')->to($userId)->data($recored)->push();
+//        $nickname = $userInfo['nickname'] ?? '';
+//        $avatar = $userInfo['avatar'] ?? '';
+//        $formType = $userInfo['type'] ?? 0;
+//        $isTourist = $userInfo['is_tourist'] ?? 0;
+//        $serviceRecored->setApp($app);
+//        $count = $serviceRecored->count(['appid' => $appId, 'user_id' => $userId, 'to_user_id' => $toUserId]);
+//        $recored = $serviceRecored->saveRecord(
+//            $appId,
+//            $toUserId,
+//            $userId,
+//            $count ? '' : $msg,
+//            (int)$formType,
+//            1,
+//            0,
+//            (int)$isTourist,
+//            $nickname,
+//            $avatar,
+//            1
+//        );
+//        if (isset($userInfo['version']) && $userInfo['version']) {
+//            $recored['nickname'] = '[' . $userInfo['version'] . ']' . $recored['nickname'];
+//        }
+//        SwooleTaskService::kefu($app)->type('recored')->to($userId)->data($recored)->push();
     }
 }
