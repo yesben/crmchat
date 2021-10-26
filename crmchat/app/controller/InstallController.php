@@ -477,7 +477,7 @@ class InstallController
                             return $arr;
                         } else {
                             $message = '成功添加管理员<br />成功写入配置文件<br>安装完成．';
-                            return array('n' => 999998, 'msg' => $message);
+                            $arr = array('n' => 999998, 'msg' => $message);
                         }
                     }
 
