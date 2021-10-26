@@ -126,7 +126,9 @@ export default {
         let xAxis = []
         keArr.forEach((val, index) => {
           xAxis.push(val.month)
-          seriesYou.push(youArr[index].number)
+          if(youArr[index]){
+            seriesYou.push(youArr[index].number)
+          }
           seriesKe.push(val.number)
         })
         //console.log(seriesKe)

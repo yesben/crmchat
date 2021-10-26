@@ -1,6 +1,6 @@
 <template>
   <Row :gutter="24">
-    <Col v-bind="grid" class="ivu-mb" span="6">
+    <Col class="ivu-mb" span="6">
     <Card :bordered="false" dis-hover :padding="12">
       <p slot="title">
         <span>全部客户</span>
@@ -15,7 +15,7 @@
       </div>
     </Card>
     </Col>
-    <Col v-bind="grid" class="ivu-mb" span="6">
+    <Col class="ivu-mb" span="6">
     <Card :bordered="false" dis-hover :padding="12">
       <p slot="title">
         <span>新增客户</span>
@@ -31,7 +31,7 @@
       </div>
     </Card>
     </Col>
-    <Col v-bind="grid" class="ivu-mb" span="6">
+    <Col class="ivu-mb" span="6">
     <Card :bordered="false" dis-hover :padding="12">
       <p slot="title">
         <span>新增游客</span>
@@ -47,7 +47,7 @@
       </div>
     </Card>
     </Col>
-    <Col v-bind="grid" class="ivu-mb" span="6">
+    <Col class="ivu-mb" span="6">
     <Card :bordered="false" dis-hover :padding="12">
       <p slot="title">
         <span>新增客户</span>
