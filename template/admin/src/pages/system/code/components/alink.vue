@@ -10,9 +10,9 @@
                 <br>uid:用户ID
                 <br>nickName:用户昵称
                 <br>phone:用户手机号
-                <br>sex:用户
-                <br>avatar:用户
-                <br>openid:用户
+                <br>sex:用户性别
+                <br>avatar:用户头像
+                <br>openid:用户openid
                 <br>kefu_id:客服ID
                 </p>
         <Divider />
