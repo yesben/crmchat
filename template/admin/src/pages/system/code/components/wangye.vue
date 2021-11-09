@@ -15,14 +15,13 @@
   _s.onload = function(){
   var option = {
         "authInit":true,
-        openUrl: '{{siteUrl}}/',
+        openUrl: '{{siteUrl}}',
         token: '4109fbb2d7bc3d5559348278816a20bc',
         kefuid:'',//默认为空自动对接客服，可填写指定客服ID
         isShowTip: true, // 初始化成功后，界面右下角会自动创建 “联系客服按钮”， 如无需默认展示，则填写false即可,默认为true
         mobileIcon: '', //  手机端悬浮客服图片
         pcIcon: '', // pc端悬浮客服图片
-        windowStyle:'center',//默认空 右下角小弹窗， center 普通中间弹窗样式       
-        "version":"v4"
+        windowStyle:'center',//默认空 右下角小弹窗， center 普通中间弹窗样式
       };
       var canCustomerServer = new initCustomerServer(option);
       canCustomerServer.init();
@@ -38,7 +37,7 @@
       </div>
 
     </div>
-    
+
 
     <div class="fenlei">
       <p class="font-w">小贴士</p>
@@ -61,7 +60,9 @@ export default {
 
   },
   methods: {
-    
+      jiazai(){
+          window.open(`${location.origin}/chat/index?token=${this.tokeninfo.token_md5}&noCanClose=1`)
+      },
     getCopy(id) {
       this.$emit('cgetCopy', id);
     },
