@@ -163,7 +163,8 @@ export default {
       isLoad: false,
       scrollTop: 0,
       emojiList: emojiList,
-      inputConType: 1
+      inputConType: 1,
+      deviceType:'pc',
     }
   },
   computed: {

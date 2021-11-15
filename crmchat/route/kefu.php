@@ -40,6 +40,7 @@ Route::group('api', function () {
 
                 Route::get('list', 'User/getUserList')->name('getUserList');//获取当前客服的客户列表
                 Route::get('record', 'User/recordList')->name('recordList');//和客服聊天过的用户
+                Route::get('recordAll', 'User/recordAllList')->name('recordAllList');//客服聊天过的全部用户ID和未读消息
                 Route::get('count', 'User/getMessageCount')->name('getMessageCount');//未读条数
                 Route::get('info/:userId', 'User/userInfo')->name('getUserInfo');//用户详细信息
                 Route::get('label', 'User/getUserLabel')->name('getUserLabel');//用户标签
@@ -95,7 +96,7 @@ Route::group('api', function () {
 
         Route::miss(function () {
             if (app()->request->isOptions()) {
-                $header = Config::get('cookie.header');
+                $header                                = Config::get('cookie.header');
                 $header['Access-Control-Allow-Origin'] = app()->request->header('origin');
                 return Response::create('ok')->code(200)->header($header);
             } else

@@ -40,6 +40,7 @@ class ChatServiceRecord extends Migrator
         $table->addColumn('add_time', 'integer', ['limit' => 10, 'default' => 0, 'comment' => '添加时间']);
         $table->addColumn('update_time', 'integer', ['limit' => 10, 'default' => 0, 'comment' => '更新时间']);
         $table->addColumn('mssage_num', 'integer', ['limit' => 10, 'default' => 0, 'comment' => '消息条数']);
+        $table->addColumn('delete_time', 'integer', ['limit' => 10, 'default' => null, 'comment' => '更新时间']);
         $table->addColumn('message', 'text', ['comment' => '消息内容']);
         $table->addColumn('message_type', 'boolean', ['limit' => 1, 'default' => 0, 'comment' => '消息类型']);
         $table->addIndex('to_uid');

@@ -354,8 +354,8 @@ class InstallController
                     for ($i = $n; $i < $counts; $i++) {
                         $sql = trim($sqlFormat[$i]);
                         if (strstr($sql, 'CREATE TABLE')) {
-                            preg_match('/CREATE TABLE (IF NOT EXISTS)? `eb_([^ ]*)`/is', $sql, $matches);
-                            mysqli_query($conn, "DROP TABLE IF EXISTS `$matches[2]");
+                            preg_match('/CREATE TABLE(\sIF NOT EXISTS)? `eb_([^ ]*)`/is', $sql, $matches);
+                            mysqli_query($conn, "DROP TABLE IF EXISTS `$matches[2]`");
                             $sql = str_replace('`eb_', '`' . $dbPrefix, $sql);//替换表前缀
                             $ret = mysqli_query($conn, $sql);
                             if ($ret) {

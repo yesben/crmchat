@@ -75,9 +75,12 @@ class ChatServiceRecordDao extends BaseDao
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function getServiceList(array $where, int $page, int $limit, array $with = [])
+    public function getServiceList(array $where, int $page, int $limit, array $with = [], array $field = ['*'])
     {
         $labelId = isset($where['label_id']) ? $where['label_id'] : [];
+        if (isset($where['unread'])) {
+            unset($where['unread']);
+        }
         unset($where['label_id']);
         return $this->search($where)->when($page && $limit, function ($query) use ($page, $limit) {
             $query->page($page, $limit);
@@ -87,7 +90,8 @@ class ChatServiceRecordDao extends BaseDao
             $query->whereIn('user_id', function ($query) use ($labelId) {
                 $query->name('chat_user_label_assist')->whereIn('label_id', $labelId)->field(['user_id']);
             });
-        })->order('update_time desc')->select()->toArray();
+        })->whereNull('delete_time')->field($field)->order('update_time desc')
+            ->select()->toArray();
     }
 
     /**

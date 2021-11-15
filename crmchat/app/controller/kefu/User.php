@@ -62,10 +62,10 @@ class User extends AuthController
      */
     public function getKefuInfo(ChatServiceServices $services)
     {
-        $kefuInfo = $this->kefuInfo->toArray();
-        $kefuInfo['password'] = '******';
+        $kefuInfo               = $this->kefuInfo->toArray();
+        $kefuInfo['password']   = '******';
         $kefuInfo['site_title'] = sys_config('site_name');
-        $kefuInfo['user_ids'] = $services->getColumn(['appid' => $kefuInfo['appid']], 'user_id');
+        $kefuInfo['user_ids']   = $services->getColumn(['appid' => $kefuInfo['appid']], 'user_id');
         return $this->success($kefuInfo);
     }
 
@@ -144,9 +144,19 @@ class User extends AuthController
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function recordList(string $nickname = '', $is_tourist = '')
+    public function recordList(string $nickname = '', $is_tourist = '', $unreadId = 0)
     {
-        return $this->success($this->services->getServiceList($this->kefuInfo['appid'], (int)$this->kefuInfo['user_id'], $nickname, $is_tourist));
+        return $this->success($this->services->getServiceList($this->kefuInfo['appid'], (int)$this->kefuInfo['user_id'], $nickname, $is_tourist, $unreadId));
+    }
+
+    /**
+     * 获取全部消息id
+     * @param string $nickname
+     * @return mixed
+     */
+    public function recordAllList(string $nickname = '')
+    {
+        return $this->success($this->services->getRecordAllList($this->kefuInfo['appid'], (int)$this->kefuInfo['user_id'], $nickname));
     }
 
     /**
@@ -306,7 +316,7 @@ class User extends AuthController
         if (!$data['filename']) return $this->fail('参数有误');
         if (CacheService::has('start_uploads_' . $request->kefuId()) && CacheService::get('start_uploads_' . $request->kefuId()) >= 100) return $this->fail('非法操作');
         $upload = UploadService::init();
-        $info = $upload->to('store/comment')->validate()->move($data['filename']);
+        $info   = $upload->to('store/comment')->validate()->move($data['filename']);
         if ($info === false) {
             return $this->fail($upload->getError());
         }
@@ -359,7 +369,7 @@ class User extends AuthController
      */
     public function updateUser(ChatUserServices $services, ChatServiceRecordServices $recordServices, $userId)
     {
-        $data = $this->request->postMore([
+        $data   = $this->request->postMore([
             ['nickname', ''],
             ['remark_nickname', ''],
             ['sex', ''],
@@ -403,9 +413,9 @@ class User extends AuthController
 
         validate(ChatServiceFeedbackValidate::class)->check($data);
 
-        $data['content'] = htmlspecialchars($data['content']);
+        $data['content']  = htmlspecialchars($data['content']);
         $data['add_time'] = time();
-        $data['uid'] = $this->kefuInfo['user_id'];
+        $data['uid']      = $this->kefuInfo['user_id'];
         $services->save($data);
         return $this->success('保存成功');
     }
@@ -471,7 +481,7 @@ class User extends AuthController
     public function getUserAgreement()
     {
         /** @var CacheServices $cache */
-        $cache = app()->make(CacheServices::class);
+        $cache   = app()->make(CacheServices::class);
         $content = $cache->getDbCache('user_agreement', '');
         return $this->success(compact('content'));
     }
@@ -494,17 +504,17 @@ class User extends AuthController
         if (!$data['to_user_id'] || !$data['msn']) {
             return $this->fail('缺少参数');
         }
-        $data['appid'] = $this->kefuInfo['appid'];
-        $data['user_id'] = $this->kefuInfo['user_id'];
+        $data['appid']    = $this->kefuInfo['appid'];
+        $data['user_id']  = $this->kefuInfo['user_id'];
         $data['add_time'] = time();
-        $res = $recordServices->save($data);
+        $res              = $recordServices->save($data);
 
         if (!$res) {
             return $this->fail('插入失败');
         }
-        $res = $res->toArray();
-        $res['nickname'] = $this->kefuInfo['nickname'];
-        $res['avatar'] = $this->kefuInfo['avatar'];
+        $res              = $res->toArray();
+        $res['nickname']  = $this->kefuInfo['nickname'];
+        $res['avatar']    = $this->kefuInfo['avatar'];
         $res['_add_time'] = date('Y-m-d H:i:s', $data['add_time']);
         return $this->success($res);
     }

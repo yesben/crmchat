@@ -73,10 +73,10 @@ class ChatServiceRecordServices extends BaseServices
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function getServiceList(string $appid, int $userId, string $nickname, $isTourist = '')
+    public function getServiceList(string $appid, int $userId, string $nickname, $isTourist = '', $unreadId = 0)
     {
         [$page, $limit] = $this->getPageValue();
-        $list = $this->dao->getServiceList(['appid' => $appid, 'user_id' => $userId, 'title' => $nickname, 'is_tourist' => $isTourist], $page, $limit, ['user']);
+        $list = $this->dao->getServiceList(['unreadId' => $unreadId, 'appid' => $appid, 'user_id' => $userId, 'title' => $nickname, 'is_tourist' => $isTourist], $page, $limit, ['user']);
         foreach ($list as &$item) {
             if ($item['message_type'] == 1) {
                 $item['message'] = $this->getMessage($item['message']);
@@ -90,6 +90,21 @@ class ChatServiceRecordServices extends BaseServices
             }
         }
         return $list;
+    }
+
+    /**
+     * 获取全部消息id
+     * @param string $appid
+     * @param int $userId
+     * @param string $nickname
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function getRecordAllList(string $appid, int $userId, string $nickname)
+    {
+        return $this->dao->getServiceList(['appid' => $appid, 'user_id' => $userId, 'title' => $nickname], 0, 0, [], ['id', 'mssage_num']);
     }
 
     /**

@@ -1,6 +1,7 @@
 import { mobileScoket } from '@/libs/socket';
 import { userRecord, serviceUpload, serviceAdv } from '@/api/kefu';
 import { setLoc, getLoc } from '@/libs/util'
+import { mapState } from 'vuex';
 import Cookies from "js-cookie";
 
 var mp3 = require('@/assets/video/notice.wav');
@@ -34,6 +35,9 @@ export default {
       advertisement: '' // 广告
     }
   },
+  computed: {
+    ...mapState('media', ['isMobile']),
+  },
   // 指令粘贴指令定义
   directives: {
     paste: {
@@ -46,7 +50,7 @@ export default {
     },
   },
   created() {
-
+    this.redirect();
     // 获取url参数
     this.upperData = this.$route.query;
     // 更新token
@@ -115,6 +119,17 @@ export default {
     }
   },
   methods: {
+    redirect(){
+      if (this.isMobile && this.deviceType == 'mobile'){
+
+      } else if(this.isMobile && this.deviceType == 'pc'){
+        this.$router.push({ name: 'customerServerMobile', query: this.$route.query })
+      } else if(!this.isMobile && this.deviceType == 'pc'){
+
+      } else if(!this.isMobile && this.deviceType == 'mobile'){
+        this.$router.push({ name: 'customerServerPc', query: this.$route.query });
+      }
+    },
     // 获取客服广告
     getServiceAdv() {
       serviceAdv().then(res => {

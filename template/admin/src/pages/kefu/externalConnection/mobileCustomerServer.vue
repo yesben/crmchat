@@ -135,7 +135,8 @@ export default {
       isLoad: false,
       scrollTop: 0,
       emojiList: emojiList,
-      pCont: ''
+      pCont: '',
+      deviceType:'mobile',
     }
   },
   created() {

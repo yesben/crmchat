@@ -186,6 +186,7 @@ CREATE TABLE IF NOT EXISTS `eb_chat_service_record` (
   `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 = pc,1=微信，2=小程序，3=H5',
   `add_time` int(10) NOT NULL DEFAULT '0' COMMENT '添加时间',
   `update_time` int(10) NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `delete_time` INT(10) NULL DEFAULT NULL COMMENT '删除字段',
   `mssage_num` int(10) NOT NULL DEFAULT '0' COMMENT '消息条数',
   `message` text NOT NULL COMMENT '消息内容',
   `message_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '消息类型'
