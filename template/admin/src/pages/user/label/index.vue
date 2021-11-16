@@ -9,8 +9,11 @@
       <Col span="3" class="left-wrapper">
       <Menu :theme="theme3" :active-name="sortName" width="auto">
         <MenuGroup>
-          <MenuItem :name="item.id" class="menu-item" :class="index===current?'showOn':''" v-for="(item,index) in labelSort" :key="index" @click.native="bindMenuItem(item,index)">
-          {{item.name}}
+          <MenuItem :name="item.id" class="menu-item" :class="{ showOn: index===current, 'ivu-menu-item-all': !index }" v-for="(item,index) in labelSort" :key="index" @click.native="bindMenuItem(item,index)">
+          <div>
+              <Icon :style="{ visibility: index ? 'visible' : 'hidden' }" type="md-menu" />
+              {{item.name}}
+          </div>
           <div class="icon-box" v-if="index!=0">
             <Icon type="ios-more" size="24" @click.stop="showMenu(item)" />
           </div>
@@ -62,7 +65,9 @@
 
 <script>
 import { mapState } from 'vuex';
-import { userLabelAll, userLabelApi, userLabelAddApi, userLabelEdit, userLabelCreate, userUpdateApi } from '@/api/user';
+import { userLabelAll, userLabelApi, userLabelAddApi, userLabelEdit, userLabelCreate, userUpdateApi, sortGroupLabel, sortUserLabel } from '@/api/user';
+import { Icon } from 'iview';
+import { Sortable } from "sortablejs";
 export default {
   name: 'user_label',
   data() {
@@ -76,6 +81,20 @@ export default {
       },
       loading: false,
       columns1: [
+          {
+              title: ' ',
+              width: 50,
+              render: (h) => {
+                  return h(Icon, {
+                      style: {
+                          cursor: 'move'
+                      },
+                      attrs: {
+                          type: 'md-menu'
+                      }
+                  });
+              },
+          },
         {
           title: 'ID',
           key: 'id',
@@ -99,9 +118,11 @@ export default {
         cate_id: ''
       },
       labelLists: [],
+      labelListsArr: [],
       total: 0,
       theme3: 'light',
       labelSort: [],
+      labelSortArr: [],
       sortName: '',
       current: 0
     }
@@ -121,7 +142,51 @@ export default {
     this.getUserLabelAll();
     this.getList()
   },
+  mounted() {
+      this.$nextTick(() => {
+          this.createGroupSortable();
+          this.createUserSortable();
+      });
+  },
   methods: {
+    //   拖拽分组排序
+      createGroupSortable() {
+          new Sortable(document.querySelector('.ivu-menu-item-group ul'), {
+              filter: '.ivu-menu-item-all',
+              preventOnFilter: true,
+              onEnd: ({ newIndex, oldIndex }) => {
+                  let row = this.labelSortArr.splice(oldIndex, 1)[0];
+                  this.labelSortArr.splice(newIndex || oldIndex, 0, row);
+                  this.labelSort = [];
+                  this.$nextTick(() => {
+                      this.labelSort = this.labelSortArr;
+                  });
+                  if (!newIndex) {
+                      return;
+                  }
+                  sortGroupLabel(row.id, row).catch(err => {
+                      this.$Message.error(err.msg);
+                  });
+              }
+          });
+      },
+    //   拖拽标签排序
+      createUserSortable() {
+          new Sortable(document.querySelector('.ivu-table-tbody'), {
+              onEnd: ({ newIndex, oldIndex }) => {
+                  let row = this.labelListsArr.splice(oldIndex, 1)[0];
+                  this.labelListsArr.splice(newIndex, 0, row);
+                  this.labelLists = [];
+                  this.$nextTick(() => {
+                      this.labelLists = this.labelListsArr;
+                  });
+                  row.sort = newIndex;
+                  sortUserLabel(row.id, row).catch(err => {
+                      this.$Message.error(err.msg);
+                  });
+              }
+          });
+      },
     // 添加
     add() {
       this.$modalForm(userLabelAddApi()).then(() => this.getList());
@@ -132,6 +197,7 @@ export default {
       userLabelApi(this.labelFrom).then(async res => {
         let data = res.data;
         this.labelLists = data.list;
+        this.labelListsArr = data.list;
         this.total = data.count;
         this.loading = false;
       }).catch(res => {
@@ -180,7 +246,8 @@ export default {
           this.labelFrom.cate_id = res.data.data[0].id
           this.getList();
         }
-        this.labelSort = res.data.data
+        this.labelSort = res.data.data;
+        this.labelSortArr = res.data.data;
       })
     },
     // 显示标签小菜单
@@ -278,6 +345,10 @@ export default {
     top: -11px;
     width: auto;
     min-width: 121px;
+  }
+
+  .ivu-icon-md-menu {
+      cursor: move
   }
 }
 </style>
