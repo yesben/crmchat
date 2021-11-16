@@ -35,6 +35,7 @@ class ChatUserLabelCateServices extends CategoryServices
     {
         return [
             Form::input('name', '分类名称', $cateInfo['name'] ?? ''),
+            Form::number('sort', '排序', $cateInfo['sort'] ?? 0),
         ];
     }
 
@@ -78,7 +79,7 @@ class ChatUserLabelCateServices extends CategoryServices
         }]);
         if ($id) {
             /** @var ChatUserLabelAssistServices $service */
-            $service = app()->make(ChatUserLabelAssistServices::class);
+            $service  = app()->make(ChatUserLabelAssistServices::class);
             $labelIds = $service->getColumn(['user_id' => $id], 'label_id');
             foreach ($labelAll as &$item) {
                 if ($item['label']) {

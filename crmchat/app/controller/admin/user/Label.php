@@ -68,6 +68,7 @@ class Label extends AuthController
         $data = $this->request->postMore([
             ['cate_id', 0],
             ['label', ''],
+            ['sort', 0]
         ]);
         if (!$data['label']) {
             return $this->fail('标签名称必须填写');
@@ -108,6 +109,7 @@ class Label extends AuthController
         $data = $this->request->postMore([
             ['cate_id', 0],
             ['label', ''],
+            ['sort', 0],
         ]);
         if (!$data['label']) {
             return $this->fail('标签名称必须填写');
@@ -115,7 +117,7 @@ class Label extends AuthController
         if (!$data['cate_id']) {
             return $this->fail('请选择标签分类');
         }
-
+        
         $this->services->update($id, $data);
 
         return $this->success('修改成功');

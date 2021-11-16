@@ -58,6 +58,7 @@ class LabelCate extends AuthController
     {
         $data = $this->request->postMore([
             ['name', ''],
+            ['sort', 0]
         ]);
         if (!$data['name']) {
             return $this->fail('请输入分类名称');
@@ -94,6 +95,7 @@ class LabelCate extends AuthController
     {
         $data = $this->request->postMore([
             ['name', ''],
+            ['sort', 0]
         ]);
         if (!$data['name']) {
             return $this->fail('请输入分类名称');

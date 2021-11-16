@@ -160,6 +160,22 @@ class User extends AuthController
     }
 
     /**
+     * @param $id
+     * @return mixed
+     */
+    public function deleteRecordUser($id)
+    {
+        if (!$id) {
+            return $this->fail('缺少参数');
+        }
+        if ($this->services->update($id, ['delete_time' => date('Y-m-d H:i:s')])) {
+            return $this->success('删除成功');
+        } else {
+            return $this->fail('删除失败');
+        }
+    }
+
+    /**
      * 获取用户信息
      * @param ChatUserServices $services
      * @param $userId
