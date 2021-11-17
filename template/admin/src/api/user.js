@@ -548,3 +548,31 @@ export function putUserLabel(uid, data) {
         data
     });
 }
+
+/**
+ * 修改分组
+ * @param {*} id 
+ * @param {*} data 
+ * @returns 
+ */
+export function sortGroupLabel(id, data) {
+    return request({
+        url: `user/group/${id}`,
+        method: 'put',
+        data
+    });
+}
+
+/**
+ * 修改标签
+ * @param {*} id 
+ * @param {*} data 
+ * @returns 
+ */
+export function sortUserLabel(id, data) {
+    return request({
+        url: `user/label/${id}`,
+        method: 'put',
+        data
+    });
+}
