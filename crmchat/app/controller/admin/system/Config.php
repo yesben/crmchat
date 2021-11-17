@@ -116,7 +116,7 @@ class Config extends AuthController
             $this->services->valiDateRadioAndCheckbox($data);
         }
         $data['value'] = json_encode($data['value']);
-        $config = $this->services->getOne(['menu_name' => $data['menu_name']]);
+        $config        = $this->services->getOne(['menu_name' => $data['menu_name']]);
         if ($config) {
             $this->services->update($config['id'], $data, 'id');
         } else {
@@ -300,6 +300,34 @@ class Config extends AuthController
             $config_tab = $services->getConfigTab($pid);
         }
         return $this->success(compact('config_tab'));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function setKefuIcon()
+    {
+        [$kefuIconUrl, $kefuIconType] = $this->request->postMore([
+            ['kefu_icon_url3', ''],
+            ['kefu_icon_type', '']
+        ]);
+        $this->services->update('kefu_icon_url3', ['value' => json_encode($kefuIconUrl)], 'menu_name');
+        $this->services->update('kefu_icon_type', ['value' => json_encode($kefuIconType)], 'menu_name');
+        \crmeb\services\SystemConfigService::clear();
+        return $this->success('保存成功');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getKefuIcon()
+    {
+        return $this->success([
+            'kefu_icon_url1' => sys_config('kefu_icon_url1'),
+            'kefu_icon_url2' => sys_config('kefu_icon_url2'),
+            'kefu_icon_url3' => sys_config('kefu_icon_url3'),
+            'kefu_icon_type' => sys_config('kefu_icon_type'),
+        ]);
     }
 
 }

@@ -117,7 +117,7 @@ class Label extends AuthController
         if (!$data['cate_id']) {
             return $this->fail('请选择标签分类');
         }
-        
+
         $this->services->update($id, $data);
 
         return $this->success('修改成功');
