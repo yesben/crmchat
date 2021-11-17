@@ -323,6 +323,8 @@ class Config extends AuthController
     public function getKefuIcon()
     {
         return $this->success([
+            'kefu_icon_url1' => sys_config('kefu_icon_url1'),
+            'kefu_icon_url2' => sys_config('kefu_icon_url2'),
             'kefu_icon_url3' => sys_config('kefu_icon_url3'),
             'kefu_icon_type' => sys_config('kefu_icon_type'),
         ]);
