@@ -33,3 +33,14 @@ UPDATE `eb_chat_user` SET `online` = 1 WHERE `id` = (SELECT `user_id` FROM `eb_c
 ALTER TABLE `eb_chat_service_record` ADD `delete_time` INT(10) NULL DEFAULT NULL COMMENT '删除字段' AFTER `update_time`;
 -- 2021/11/16新增
 ALTER TABLE `eb_chat_user_label` ADD `sort` INT(10) NOT NULL DEFAULT '0' COMMENT '排序' AFTER `cate_id`;
+-- 2021/11/18新增
+CREATE TABLE `eb_qrcode` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL DEFAULT '' COMMENT '二维码名称',
+  `url` varchar(255) NOT NULL DEFAULT '' COMMENT '地址',
+  `user_ids` varchar(255) NOT NULL DEFAULT '' COMMENT '用户ids',
+  `appid` varchar(35) NOT NULL DEFAULT '' COMMENT 'APPID',
+  `sort` int(10) NOT NULL DEFAULT '0' COMMENT '排序',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='二维码';

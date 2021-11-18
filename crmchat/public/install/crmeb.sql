@@ -758,6 +758,18 @@ CREATE TABLE IF NOT EXISTS `eb_system_role` (
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态'
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='身份管理表';
 
+
+CREATE TABLE IF NOT EXISTS `eb_qrcode` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL DEFAULT '' COMMENT '二维码名称',
+  `url` varchar(255) NOT NULL DEFAULT '' COMMENT '地址',
+  `user_ids` varchar(255) NOT NULL DEFAULT '' COMMENT '用户ids',
+  `appid` varchar(35) NOT NULL DEFAULT '' COMMENT 'APPID',
+  `sort` int(10) NOT NULL DEFAULT '0' COMMENT '排序',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='二维码';
+
 --
 -- Indexes for dumped tables
 --
