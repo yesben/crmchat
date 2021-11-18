@@ -54,7 +54,7 @@ class ApplicationServices extends BaseServices
     public function getList(array $where)
     {
         [$page, $limit] = $this->getPageValue();
-        $list = $this->dao->getDataList($where, ['*'], 'id', $page, $limit);
+        $list  = $this->dao->getDataList($where, ['*'], 'id', $page, $limit);
         $count = $this->dao->count();
         return compact('list', 'count');
     }
@@ -115,6 +115,14 @@ class ApplicationServices extends BaseServices
     }
 
     /**
+     * @return mixed
+     */
+    public function getAppId()
+    {
+        return $this->dao->value(['is_delete' => 0], 'appid');
+    }
+
+    /**
      * 创建或者更新用户
      * @param string $appid
      * @param array $userData
@@ -123,12 +131,12 @@ class ApplicationServices extends BaseServices
      */
     public function createUser(string $appid, array $userData = [])
     {
-        $uid = $userData['uid'] ?? 0;
+        $uid      = $userData['uid'] ?? 0;
         $nickname = $userData['nickname'] ?? '';
-        $avatar = $userData['avatar'] ?? '';
-        $phone = $userData['phone'] ?? '';
-        $openid = $userData['openid'] ?? '';
-        $type = $userData['type'] ?? 0;
+        $avatar   = $userData['avatar'] ?? '';
+        $phone    = $userData['phone'] ?? '';
+        $openid   = $userData['openid'] ?? '';
+        $type     = $userData['type'] ?? 0;
 
         $redis = CacheService::redisHandler();
         if ($userInfo = $redis->get($appid . '-' . $uid)) {
@@ -139,10 +147,10 @@ class ApplicationServices extends BaseServices
         $userServices = app()->make(ChatUserServices::class);
         if ($uid && ($userInfo = $userServices->get(['uid' => $uid, 'appid' => $appid]))) {
             $userInfo->nickname = $nickname;
-            $userInfo->avatar = $avatar;
-            $userInfo->phone = $phone;
-            $userInfo->openid = $openid;
-            $userInfo->type = $type;
+            $userInfo->avatar   = $avatar;
+            $userInfo->phone    = $phone;
+            $userInfo->openid   = $openid;
+            $userInfo->type     = $type;
             $userInfo->save();
 
             $redis->set($appid . '-' . $uid, $userInfo->toArray(), 86400);
@@ -156,24 +164,24 @@ class ApplicationServices extends BaseServices
                 $rand1 = mt_rand(10, 99);
                 mt_srand();
                 $rand2 = mt_rand(1000, 9999);
-                $uid = date('Y') . $rand1 . $rand2;
+                $uid   = date('Y') . $rand1 . $rand2;
             }
             if (!$nickname) {
                 $nickname = '游客' . $uid;
             }
             if (!$avatar) {
                 $touristAvatar = sys_config('tourist_avatar');
-                $avatar = Arr::getArrayRandKey(is_array($touristAvatar) ? $touristAvatar : []);
-                $avatar = link_url($avatar);
+                $avatar        = Arr::getArrayRandKey(is_array($touristAvatar) ? $touristAvatar : []);
+                $avatar        = link_url($avatar);
             }
             $userInfo = $userServices->save([
-                'uid' => $uid,
-                'nickname' => $nickname,
-                'avatar' => $avatar,
-                'phone' => $phone,
-                'appid' => $appid,
-                'openid' => $openid,
-                'type' => $type,
+                'uid'        => $uid,
+                'nickname'   => $nickname,
+                'avatar'     => $avatar,
+                'phone'      => $phone,
+                'appid'      => $appid,
+                'openid'     => $openid,
+                'type'       => $type,
                 'is_tourist' => $isTourist,
             ]);
             if (!$userInfo) {

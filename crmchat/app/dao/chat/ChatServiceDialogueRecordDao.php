@@ -45,6 +45,23 @@ class ChatServiceDialogueRecordDao extends BaseDao
     }
 
     /**
+     * @param array $where
+     * @return \crmeb\basic\BaseModel|mixed|\think\Model
+     */
+    public function getDialogueRecord(array $where = [])
+    {
+        return $this->search(['time' => $where['time'] ?? ''])->when(isset($where['msn']) && $where['msn'] !== '', function ($query) use ($where) {
+            $query->whereLike('msn', '%' . $where['msn'] . '%');
+        })->when(isset($where['appid']) && $where['appid'] !== '', function ($query) use ($where) {
+            $query->where('appid', $where['appid']);
+        })->when(isset($where['kefu_id']) && $where['kefu_id'] !== '', function ($query) use ($where) {
+            $query->where(function ($query) use ($where) {
+                $query->where('user_id', $where['kefu_id'])->whereOr('to_user_id', $where['kefu_id']);
+            });
+        });
+    }
+
+    /**
      * 获取聊天记录下的uid和to_uid
      * @param int $uid
      * @return mixed

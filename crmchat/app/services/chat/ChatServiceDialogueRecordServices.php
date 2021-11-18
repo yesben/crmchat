@@ -78,9 +78,28 @@ class ChatServiceDialogueRecordServices extends BaseServices
         return $this;
     }
 
+    /**
+     * @param array $where
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function getDialogueRecord(array $where)
     {
-
+        $list  = $this->dao->getDialogueRecord($where)->select()->toArray();
+        $count = $this->dao->getDialogueRecord($where)->count();
+        /** @var ChatServiceRecordServices $service */
+        $service = app()->make(ChatServiceRecordServices::class);
+        /** @var ChatUserServices $userService */
+        $userService = app()->make(ChatUserServices::class);
+        $data        = [
+            'record'  => $service->count(),
+            'tourist' => $userService->count(['is_tourist' => 1]),
+            'user'    => $userService->count(['is_tourist' => 0]),
+            'count'   => $this->dao->getDialogueRecord()->count()
+        ];
+        return compact('list', 'count', 'data');
     }
 
     /**
@@ -90,7 +109,7 @@ class ChatServiceDialogueRecordServices extends BaseServices
      */
     public function getChatUserIds(int $userId)
     {
-        $list = $this->dao->getServiceUserUids($userId);
+        $list     = $this->dao->getServiceUserUids($userId);
         $arr_user = $arr_to_user = [];
         foreach ($list as $key => $value) {
             array_push($arr_user, $value["user_id"]);
@@ -114,7 +133,7 @@ class ChatServiceDialogueRecordServices extends BaseServices
     public function getChatLogList(array $where)
     {
         [$page, $limit] = $this->getPageValue();
-        $list = $this->dao->getServiceList($where, $page, $limit);
+        $list  = $this->dao->getServiceList($where, $page, $limit);
         $count = $this->dao->count($where);
         return compact('list', 'count');
     }
@@ -145,8 +164,8 @@ class ChatServiceDialogueRecordServices extends BaseServices
     {
         foreach ($list as &$item) {
             $item['_add_time'] = $item['add_time'];
-            $item['add_time'] = strtotime($item['_add_time']);
-            $item['msn_type'] = (int)$item['msn_type'];
+            $item['add_time']  = strtotime($item['_add_time']);
+            $item['msn_type']  = (int)$item['msn_type'];
             if (!isset($item['nickname'])) {
                 $item['nickname'] = '';
             }
@@ -157,16 +176,16 @@ class ChatServiceDialogueRecordServices extends BaseServices
             if (!$item['avatar'] && !$item['nickname']) {
                 if ($item['userThis']['id'] == $item['user_id']) {
                     $item['nickname'] = $item['userThis']['nickname'] ?? '';
-                    $item['avatar'] = $item['userThis']['avatar'] ?? '';
+                    $item['avatar']   = $item['userThis']['avatar'] ?? '';
                 } else if ($item['userTO']['id'] == $item['user_id']) {
                     $item['nickname'] = $item['userTO']['nickname'] ?? '';
-                    $item['avatar'] = $item['userTO']['avatar'] ?? '';
+                    $item['avatar']   = $item['userTO']['avatar'] ?? '';
                 } else if ($item['userTO']['id'] == $item['to_user_id']) {
                     $item['nickname'] = $item['userTO']['nickname'] ?? '';
-                    $item['avatar'] = $item['userTO']['avatar'] ?? '';
+                    $item['avatar']   = $item['userTO']['avatar'] ?? '';
                 } else if ($item['userThis']['id'] == $item['to_user_id']) {
                     $item['nickname'] = $item['userThis']['nickname'] ?? '';
-                    $item['avatar'] = $item['userThis']['avatar'] ?? '';
+                    $item['avatar']   = $item['userThis']['avatar'] ?? '';
                 }
             }
         }

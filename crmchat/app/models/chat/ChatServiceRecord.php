@@ -15,6 +15,7 @@ namespace app\models\chat;
 use crmeb\basic\BaseModel;
 use crmeb\traits\ModelTrait;
 use think\Model;
+use think\model\concern\SoftDelete;
 
 /**
  * 聊天记录
@@ -23,7 +24,7 @@ use think\Model;
  */
 class ChatServiceRecord extends BaseModel
 {
-    use ModelTrait;
+    use SoftDelete, ModelTrait;
 
     /**
      * 表名
@@ -51,7 +52,7 @@ class ChatServiceRecord extends BaseModel
     {
         return $this->hasOne(ChatService::class, 'uid', 'to_uid')->field(['nickname', 'uid', 'avatar'])->bind([
             'kefu_nickname' => 'nickname',
-            'kefu_avatar' => 'avatar',
+            'kefu_avatar'   => 'avatar',
         ]);
     }
 

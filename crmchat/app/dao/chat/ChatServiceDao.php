@@ -86,4 +86,20 @@ class ChatServiceDao extends BaseDao
     {
         return $this->getModel()->whereNotIn('user_id', $where['notUid'])->update($data);
     }
+
+    /**
+     * 获取客服选项
+     * @param array $where
+     * @param array $field
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getKefuSelect(array $where, array $field = [])
+    {
+        return $this->getModel()->when(isset($where['appid']), function ($query) use ($where) {
+            $query->where('appid', $where['appid']);
+        })->where('status', 1)->field($field ?: ['account as label', 'id as value'])->select()->toArray();
+    }
 }

@@ -53,6 +53,7 @@ class ChatServiceRecordDao extends BaseDao
         $this->search(['time' => 'last week', 'timeKey' => 'update_time', 'is_tourist' => 1])->delete();
     }
 
+
     /**
      *
      * @param array $where
@@ -78,9 +79,6 @@ class ChatServiceRecordDao extends BaseDao
     public function getServiceList(array $where, int $page, int $limit, array $with = [], array $field = ['*'])
     {
         $labelId = isset($where['label_id']) ? $where['label_id'] : [];
-        if (isset($where['unread'])) {
-            unset($where['unread']);
-        }
         unset($where['label_id']);
         return $this->search($where)->when($page && $limit, function ($query) use ($page, $limit) {
             $query->page($page, $limit);
@@ -90,7 +88,13 @@ class ChatServiceRecordDao extends BaseDao
             $query->whereIn('user_id', function ($query) use ($labelId) {
                 $query->name('chat_user_label_assist')->whereIn('label_id', $labelId)->field(['user_id']);
             });
-        })->whereNull('delete_time')->field($field)->order('update_time desc')
+        })->when(isset($where['group_id']) && $where['group_id'], function ($query) use ($where) {
+            $query->whereIn('user_id', function ($query) use ($where) {
+                $query->name('chat_user')->whereIn('group_id', $where['group_id'])->field(['id']);
+            });
+        })->when(isset($where['delete']), function ($query) {
+            $query->whereNull('delete_time');
+        })->field($field)->order('update_time desc')
             ->select()->toArray();
     }
 

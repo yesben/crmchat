@@ -13,47 +13,35 @@ namespace app\controller\admin\chat;
 
 
 use app\controller\admin\AuthController;
-use app\services\chat\ChatServiceDialogueRecordServices;
-use app\services\chat\ChatServiceServices;
+use app\services\other\SiteStatisticsServices;
 
 /**
- * Class ServiceDialogueRecord
- * @package app\controller\admin\chat
+ * Class SiteStatistics
+ * @package app\controller\admin\system
  */
-class ServiceDialogueRecord extends AuthController
+class SiteStatistics extends AuthController
 {
-
     /**
-     * ServiceDialogueRecord constructor.
-     * @param ChatServiceDialogueRecordServices $services
+     * SiteStatistics constructor.
+     * @param SiteStatisticsServices $services
      */
-    public function __construct(ChatServiceDialogueRecordServices $services)
+    public function __construct(SiteStatisticsServices $services)
     {
         parent::__construct();
         $this->services = $services;
     }
 
     /**
-     * @param ChatServiceServices $services
      * @return mixed
-     */
-    public function kefu(ChatServiceServices $services)
-    {
-        return $this->success($services->getColumn(['status' => 1], 'appid,id,nickname'));
-    }
-
-    /**
-     * @return mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     public function index()
     {
         $where = $this->request->getMore([
-            ['kefu_id', ''],
-            ['msn', ''],
-            ['time', ''],
-            ['appid', '']
+            ['province', ''],
         ]);
 
-        return $this->success($this->services->getDialogueRecord($where));
+        return $this->success($this->services->getList($where));
     }
 }

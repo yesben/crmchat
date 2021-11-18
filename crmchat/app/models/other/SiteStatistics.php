@@ -9,61 +9,33 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 
-namespace app\models;
+namespace app\models\other;
 
 
 use crmeb\basic\BaseModel;
-use think\Model;
 
-/**
- * Class ApplicationDao
- * @package app\models
- */
-class Application extends BaseModel
+class SiteStatistics extends BaseModel
 {
 
     /**
-     * 表名
      * @var string
      */
-    protected $name = 'application';
+    protected $name = 'site_statistics';
 
     /**
-     * 主键
      * @var string
      */
-    protected $key = 'id';
-
-    /**
-     * name搜索
-     * @param Model $query
-     * @param $value
-     */
-    public function searchNameLikeAttr($query, $value)
-    {
-        if ($value) {
-            $query->whereLike('name|appid', '%' . $value . '%');
-        }
-    }
-
-    /**
-     * name搜索
-     * @param Model $query
-     * @param $value
-     */
-    public function searchNameAttr($query, $value)
-    {
-        if ($value) {
-            $query->where('name', $value);
-        }
-    }
+    protected $pk = 'id';
 
     /**
      * @param $query
      * @param $value
      */
-    public function searchIsDeleteAttr($query, $value)
+    public function searchProvinceAttr($query, $value)
     {
-        $query->where('is_delete', $value);
+        if ($value !== '') {
+            $query->whereLike('province', '%' . $value . '%');
+        }
     }
+
 }
