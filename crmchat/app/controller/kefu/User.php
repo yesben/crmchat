@@ -37,6 +37,7 @@ use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
 use think\facade\Config;
+use think\facade\Db;
 
 /**
  * Class User
@@ -146,8 +147,8 @@ class User extends AuthController
      */
     public function recordList(string $nickname = '', $is_tourist = '', $labelId = '', $groupId = '')
     {
-        $labelId = explode(',', $labelId);
-        $groupId = explode(',', $groupId);
+        $labelId = array_filter(explode(',', $labelId));
+        $groupId = array_filter(explode(',', $groupId));
         return $this->success($this->services->getServiceList($this->kefuInfo['appid'], (int)$this->kefuInfo['user_id'], $nickname, $is_tourist, $labelId, $groupId));
     }
 
