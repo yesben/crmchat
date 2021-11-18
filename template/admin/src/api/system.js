@@ -420,3 +420,16 @@ export function saveUserAgreementApi(data) {
         data
     })
 }
+/**
+ * 获取客服图标上传配置/保存客服图标配置
+ * @param {*} method 
+ * @param {*} data 
+ * @returns 
+ */
+export function kfIcon(method, data) {
+    return request({
+        url: 'setting/config/kefu',
+        method: method || 'get',
+        data: data || {}
+    })
+}

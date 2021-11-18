@@ -115,5 +115,14 @@ export default {
       },
       component: () => import('@/pages/setting/storeService/feedback')
     },
+    {
+        path: 'system_group_data/kf_icon',
+        name: `${pre}kfIcon`,
+        meta: {
+            auth: ['setting-system-group_data-kf_icon'],
+            title: '客服图标'
+        },
+        component: () => import('@/pages/system/group/kfIcon')
+    }
   ]
 }
