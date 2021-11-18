@@ -67,10 +67,15 @@ Route::group('api', function () {
          * 客服 相关路由
          */
         Route::group('chat', function () {
-            //随机客服二维码
+            //站点统计
+            Route::get('statistics', 'SiteStatistics/index')->option(['real_name' => '站点统计']);
+            //获取随机客服二维码
             Route::get('qrcode', 'Qrcode/index')->option(['real_name' => '获取随机客服二维码']);
+            //获取随机客服二维码表单
             Route::get('qrcode/:id', 'Qrcode/create')->option(['real_name' => '获取随机客服二维码表单']);
+            //保存随机客服二维码
             Route::post('qrcode/:id', 'Qrcode/save')->option(['real_name' => '保存随机客服二维码']);
+            //删除随机客服二维码
             Route::delete('qrcode/:id', 'Qrcode/delete')->option(['real_name' => '删除随机客服二维码']);
             //客服列表
             Route::get('kefu', 'Service/index')->option(['real_name' => '客服列表']);
