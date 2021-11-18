@@ -144,10 +144,11 @@ class User extends AuthController
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function recordList(string $nickname = '', $is_tourist = '', $labelId = '')
+    public function recordList(string $nickname = '', $is_tourist = '', $labelId = '', $groupId = '')
     {
         $labelId = explode(',', $labelId);
-        return $this->success($this->services->getServiceList($this->kefuInfo['appid'], (int)$this->kefuInfo['user_id'], $nickname, $is_tourist, $labelId));
+        $groupId = explode(',', $groupId);
+        return $this->success($this->services->getServiceList($this->kefuInfo['appid'], (int)$this->kefuInfo['user_id'], $nickname, $is_tourist, $labelId, $groupId));
     }
 
     /**
