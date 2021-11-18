@@ -92,7 +92,9 @@ class ChatServiceRecordDao extends BaseDao
             $query->whereIn('user_id', function ($query) use ($where) {
                 $query->name('chat_user')->whereIn('group_id', $where['group_id'])->field(['id']);
             });
-        })->whereNull('delete_time')->field($field)->order('update_time desc')
+        })->when(isset($where['delete']), function ($query) {
+            $query->whereNull('delete_time');
+        })->field($field)->order('update_time desc')
             ->select()->toArray();
     }
 
