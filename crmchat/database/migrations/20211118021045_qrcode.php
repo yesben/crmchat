@@ -1,9 +1,8 @@
 <?php
 
 use think\migration\Migrator;
-use think\migration\db\Column;
 
-class ChatAutoReply extends Migrator
+class Qrcode extends Migrator
 {
     /**
      * Change Method.
@@ -28,13 +27,13 @@ class ChatAutoReply extends Migrator
      */
     public function change()
     {
-        $table = $this->table('chat_auto_reply', ['comment' => '自动回复表']);
-        $table->addColumn('keyword', 'string', ['limit' => 10, 'default' => 0, 'comment' => '关键字']);
-        $table->addColumn('content', 'string', ['limit' => 10, 'default' => 0, 'comment' => '回复内容']);
-        $table->addColumn('user_id', 'integer', ['limit' => 10, 'default' => 0, 'comment' => '用户id']);
+        $table = $this->table('qrcode', ['comment' => '二维码']);
+        $table->addColumn('name', 'string', ['limit' => 255, 'default' => 0, 'comment' => '二维码名称']);
+        $table->addColumn('url', 'string', ['limit' => 255, 'default' => 0, 'comment' => '地址']);
+        $table->addColumn('user_ids', 'string', ['limit' => 255, 'default' => 0, 'comment' => '用户ids']);
         $table->addColumn('appid', 'string', ['limit' => 35, 'default' => '', 'comment' => 'APPID']);
         $table->addColumn('sort', 'integer', ['limit' => 10, 'default' => '', 'comment' => '排序']);
-        $table->addColumn('add_time', 'integer', ['limit' => 10, 'default' => 0, 'comment' => '添加时间']);
+        $table->addColumn('create_time', 'timestamp', ['default' => 'CURRENT_TIMESTAMP', 'comment' => '添加时间']);
         $table->create();
     }
 }

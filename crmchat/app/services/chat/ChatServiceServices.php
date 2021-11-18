@@ -13,12 +13,9 @@ namespace app\services\chat;
 
 
 use app\dao\chat\ChatServiceDao;
-use app\jobs\WelcomeWords;
 use app\services\ApplicationServices;
-use app\services\system\config\SystemConfigServices;
 use crmeb\basic\BaseServices;
 use crmeb\exceptions\AdminException;
-use crmeb\services\DisyllabicWords;
 use crmeb\services\FormBuilder;
 use crmeb\services\SwooleTaskService;
 use FormBuilder\Exception\FormBuilderException;
@@ -34,6 +31,7 @@ use think\facade\Log;
 /**
  * Class ChatServiceServices
  * @package app\services\chat
+ * @mixin ChatServiceDao
  */
 class ChatServiceServices extends BaseServices
 {

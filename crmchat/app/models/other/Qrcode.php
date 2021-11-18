@@ -9,61 +9,50 @@
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
 
-namespace app\models;
+namespace app\models\other;
 
 
 use crmeb\basic\BaseModel;
-use think\Model;
 
-/**
- * Class ApplicationDao
- * @package app\models
- */
-class Application extends BaseModel
+class Qrcode extends BaseModel
 {
 
     /**
-     * 表名
      * @var string
      */
-    protected $name = 'application';
+    protected $name = 'qrcode';
 
     /**
-     * 主键
      * @var string
      */
-    protected $key = 'id';
+    protected $pk = 'id';
 
     /**
-     * name搜索
-     * @param Model $query
      * @param $value
+     * @return array|mixed
      */
-    public function searchNameLikeAttr($query, $value)
+    public function getUserIdsAttr($value)
     {
-        if ($value) {
-            $query->whereLike('name|appid', '%' . $value . '%');
-        }
+        return $value ? array_map('intval', json_decode($value, true)) : [];
     }
 
     /**
-     * name搜索
-     * @param Model $query
      * @param $value
+     * @return false|string
      */
-    public function searchNameAttr($query, $value)
+    public function setUserIdsAttr($value)
     {
-        if ($value) {
-            $query->where('name', $value);
-        }
+        return json_encode($value);
     }
 
     /**
      * @param $query
      * @param $value
      */
-    public function searchIsDeleteAttr($query, $value)
+    public function searchNameAttr($query, $value)
     {
-        $query->where('is_delete', $value);
+        if ($value !== '') {
+            $query->whereLike('name', '%' . $value . '%');
+        }
     }
 }
