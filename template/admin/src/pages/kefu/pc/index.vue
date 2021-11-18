@@ -100,7 +100,8 @@
               </div>
             </div>
             <div class="textarea-box" style="position:relative;">
-              <Input v-model="chatCon" type="textarea" :rows="4" @keydown.enter="sendText" placeholder="请输入文字内容" @on-enter="sendText" style="font-size:14px" />
+              <!-- <Input v-model="chatCon" type="textarea" :rows="4" @keydown.enter="sendText" placeholder="请输入文字内容" @on-enter="sendText" style="font-size:14px" /> -->
+              <div ref="editable" class="editable" contenteditable="true" @keydown.enter="sendText" @paste="handlePaste" @input="handleInput"></div>
               <div class="send-btn">
                 <Button class="btns" type="primary" :disabled="disabled" @click.stop="sendText">发送</Button>
               </div>
@@ -158,6 +159,7 @@ import { serviceList } from '@/api/kefu'
 import { mapState } from 'vuex'
 import { getCookies } from '@/libs/util'
 import { serviceInfo } from '@/api/kefu_mobile'
+import request from '@/libs/request'
 
 // 将所得数组，按照 num 数量进行分组
 const chunk = function(arr, num) {
@@ -186,6 +188,9 @@ export default {
     authReply
     // goodsDetail,
     // orderDetail
+  },
+  directives: {
+
   },
   data() {
     return {
@@ -316,6 +321,30 @@ export default {
 
   },
   methods: {
+      handleInput() {
+          let chatCon = this.$refs.editable.innerText.replace(/[\r\n]/g, '');
+          this.chatCon = chatCon.trim();
+      },
+      handlePaste(event) {
+        let clipboardDataItem = event.clipboardData.items[0];
+        if (clipboardDataItem.type.indexOf('image/') != -1) {
+            let file = clipboardDataItem.getAsFile();
+            let formData = new FormData();
+            formData.append('filename', 'file');
+            formData.append('file', file);
+            console.log(this.upload);
+            request({
+                url: this.upload,
+                method: 'post',
+                data: formData
+            }).then(res => {
+                this.sendMsg(res.data.url, 3);
+                this.$refs.editable.innerText = '';
+            }).catch(err => {
+                this.$Message.error(err.msg);
+            });
+        }
+      },
     // 建立scoket 连接
     wsAgain() {
       this.bus.pageWs.then((ws) => {
@@ -494,13 +523,21 @@ export default {
     },
     // 文本发送
     sendText() {
-      let chatCon = this.chatCon.replace(/[\r\n]/g, '');
-      if(!chatCon){
-        this.chatCon = '';
+    //   let chatCon = this.chatCon.replace(/[\r\n]/g, '');
+    //   if(!chatCon){
+    //     this.chatCon = '';
+    //     return this.$Message.error('请输入内容');
+    //   }
+    //   this.sendMsg(chatCon, 1)
+    //   this.chatCon = '';
+    let chatCon = this.$refs.editable.innerText.replace(/[\r\n]/g, '');
+    if (!chatCon) {
         return this.$Message.error('请输入内容');
-      }
-      this.sendMsg(chatCon, 1)
-      this.chatCon = '';
+    }
+    this.chatCon = chatCon;
+    this.sendMsg(chatCon, 1);
+    this.$refs.editable.innerText = '';
+    this.chatCon = '';
     },
 
     // 统一发送处理
@@ -798,6 +835,8 @@ textarea.ivu-input {
       }
 
       .chat-textarea {
+          display: flex;
+          flex-direction: column;
         height: 214px;
         border-top: 1px solid #ECECEC;
 
@@ -885,6 +924,33 @@ textarea.ivu-input {
               }
             }
           }
+        }
+
+        .textarea-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .editable {
+            flex: 1;
+            padding: 4px 7px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #515a6e;
+
+            &:focus-visible {
+                outline: 0;
+            }
+
+            /deep/ img {
+                max-width: 100%;
+                max-height: 100%;
+                vertical-align: bottom;
+            }
         }
       }
     }

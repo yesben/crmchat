@@ -1,8 +1,41 @@
 <template>
   <div class="chatList">
     <div class="search_box">
-      <Input prefix="ios-search" placeholder="搜索用户名称" @on-enter="bindSearch" @on-change="inputChange" />
-
+      <Input prefix="ios-search" placeholder="搜索用户名称" @on-enter="bindSearch" @on-change="inputChange">
+      <Icon slot="prepend" type="ios-search" />
+      <Poptip v-model="visible" slot="append" placement="right-start" width="350">
+          <Icon type="ios-funnel-outline" />
+          <Tabs v-model="tabOn" slot="content">
+              <TabPane label="标签筛选" name="1">
+                  <div class="item-group">
+                      <div v-for="item in labelList" :key="item.id" class="item">
+                        <div class="item-title">{{ item.name }}</div>
+                        <div class="cell-group">
+                            <span v-for="cell in item.label" :key="cell.id" :class="{ on: labelOn == cell.id }" class="cell" @click="labelOn = cell.id">意向一般</span>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="button-group">
+                      <Button type="primary" ghost @click="visible = false">取消</Button>
+                      <Button type="primary" @click="filterSubmit">确定</Button>
+                  </div>
+              </TabPane>
+              <TabPane label="分组筛选" name="2">
+                  <div class="item-group">
+                      <div class="item">
+                        <div class="cell-group">
+                            <span v-for="cell in userGroupList" :key="cell.id" :class="{ on: groupOn == cell.id }" class="cell" @click="groupOn = cell.id">{{ cell.group_name }}</span>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="button-group">
+                      <Button type="primary" ghost @click="visible = false">取消</Button>
+                      <Button type="primary" @click="filterSubmit">确定</Button>
+                  </div>
+              </TabPane>
+          </Tabs>
+      </Poptip>
+      </Input>
     </div>
     <div class="tab-head">
       <div class="item" :class="{active:item.key == hdTabCur}" v-for="(item, index) in hdTab" :key="index" @click="changeTab(item)">{{item.title}}</div>
@@ -57,7 +90,7 @@
 <script>
 import { Socket } from '@/libs/socket';
 import dayjs from 'dayjs'
-import { record } from '@/api/kefu'
+import { record, userLabel, userGroupApi } from '@/api/kefu'
 import { HappyScroll } from 'vue-happy-scroll'
 import empty from "../../components/empty";
 import { forEach } from "../../../../libs/tools";
@@ -180,6 +213,12 @@ export default {
           size: '5px'
         }
       },
+      visible: false,
+      labelOn: -1,
+      groupOn: -1,
+      labelList: [],
+      userGroupList: [],
+      tabOn: '1'
     }
   },
   filters: {
@@ -195,9 +234,28 @@ export default {
       this.nickname = data
     })
     this.getList();
+    // this.userLabel();
     // this.wsStart();
+    userLabel().then(res => {
+        this.labelList = res.data;
+    });
+    userGroupApi().then(res => {
+        this.userGroupList = res.data;
+    });
   },
   methods: {
+      filterSubmit() {
+          if (this.tabOn == '1') {
+            if (this.labelOn == -1) {
+                return this.$Message.info('请选择筛选条件');
+            }
+          } else {
+            if (this.groupOn == -1) {
+              return this.$Message.info('请选择筛选条件');
+            }
+          }
+          this.visible = false;
+      },
     // 搜索
     bindSearch(e) {
       this.$emit('search', e.target.value);
@@ -516,6 +574,102 @@ export default {
 
 .search_box {
   margin: 10px 5px 0 5px;
+}
+
+.ivu-input-wrapper {
+    /deep/ .ivu-poptip-body {
+        padding: 0;
+    }
+
+    /deep/ .ivu-tabs-nav {
+        float: none;
+        display: inline-block;
+        
+        .ivu-tabs-ink-bar {
+            background-color: #1890FF;
+        }
+    }
+
+    /deep/ .ivu-tabs-tab {
+        height: 50px;
+        padding: 0 16px;
+        line-height: 50px;
+
+        &.ivu-tabs-tab-focused {
+            color: #1890FF;
+        }
+    }
+
+    .ivu-tabs-tabpane {
+        display: flex;
+        flex-direction: column;
+        min-height: 300px;
+        padding: 14px;
+
+        .item-group {
+            flex: 1;
+            min-height: 0;
+        }
+
+        .item {
+            ~ .item {
+                margin-top: 14px;
+            }
+        }
+
+        .item-title {
+            font-size: 13px;
+            line-height: 18px;
+            text-align: left;
+            color: #333333;
+        }
+
+        .cell-group {
+            margin: 12px -8px 0 0;
+            text-align: left;
+            white-space: normal;
+        }
+
+        .cell {
+            display: inline-block;
+            height: 28px;
+            padding: 0 12px;
+            border-radius: 2px;
+            margin: 0 8px 8px 0;
+            background-color: #EEEEEE;
+            font-size: 13px;
+            line-height: 28px;
+            color: #333333;
+            cursor pointer;
+
+            &.on {
+                background-color: #1890FF;
+                color: #FFFFFF;
+            }
+        }
+
+        .button-group {
+            text-align: right;
+        }
+
+        .ivu-btn-primary {
+            width: 76px;
+            height: 28px;
+            padding: 0;
+            margin: 0;
+            background-color: #1890FF;
+            font-size: 13px;
+            line-height: 26px;
+            color: #FFFFFF;
+
+            &.ivu-btn-ghost {
+                margin-right: 10px;
+                border-color: #1890FF;
+                background-color: transparent;
+                color: #1890FF;
+            }
+        }
+    }
 }
 </style>
 
