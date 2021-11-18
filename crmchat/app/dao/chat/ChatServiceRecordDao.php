@@ -53,6 +53,7 @@ class ChatServiceRecordDao extends BaseDao
         $this->search(['time' => 'last week', 'timeKey' => 'update_time', 'is_tourist' => 1])->delete();
     }
 
+
     /**
      *
      * @param array $where
@@ -78,9 +79,6 @@ class ChatServiceRecordDao extends BaseDao
     public function getServiceList(array $where, int $page, int $limit, array $with = [], array $field = ['*'])
     {
         $labelId = isset($where['label_id']) ? $where['label_id'] : [];
-        if (isset($where['unread'])) {
-            unset($where['unread']);
-        }
         unset($where['label_id']);
         return $this->search($where)->when($page && $limit, function ($query) use ($page, $limit) {
             $query->page($page, $limit);

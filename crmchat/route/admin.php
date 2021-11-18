@@ -95,6 +95,8 @@ Route::group('api', function () {
             Route::get('kefu/record/:id', 'Service/chat_user')->option(['real_name' => '聊天记录']);
             //查看对话
             Route::get('kefu/chat_list', 'Service/chat_list')->option(['real_name' => '查看对话']);
+            //查看所有聊天记录
+            Route::get('record', 'ServiceDialogueRecord/index')->option(['real_name' => '查看所有聊天记录']);
             //客服话术资源路由
             Route::resource('speechcraft', 'ServiceSpeechcraft')->option(['real_name' => [
                 'index'  => '获取话术列表接口',

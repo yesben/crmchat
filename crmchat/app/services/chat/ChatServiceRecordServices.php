@@ -73,10 +73,10 @@ class ChatServiceRecordServices extends BaseServices
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function getServiceList(string $appid, int $userId, string $nickname, $isTourist = '', $unreadId = 0)
+    public function getServiceList(string $appid, int $userId, string $nickname, $isTourist = '', $labelId = [])
     {
         [$page, $limit] = $this->getPageValue();
-        $list = $this->dao->getServiceList(['unreadId' => $unreadId, 'appid' => $appid, 'user_id' => $userId, 'title' => $nickname, 'is_tourist' => $isTourist], $page, $limit, ['user']);
+        $list = $this->dao->getServiceList(['label_id' => $labelId, 'appid' => $appid, 'user_id' => $userId, 'title' => $nickname, 'is_tourist' => $isTourist], $page, $limit, ['user']);
         foreach ($list as &$item) {
             if ($item['message_type'] == 1) {
                 $item['message'] = $this->getMessage($item['message']);

@@ -33,16 +33,24 @@ class ServiceDialogueRecord extends AuthController
         $this->services = $services;
     }
 
+    /**
+     * @param ChatServiceServices $services
+     * @return mixed
+     */
     public function kefu(ChatServiceServices $services)
     {
         return $this->success($services->getColumn(['status' => 1], 'appid,id,nickname'));
     }
 
+    /**
+     * @return mixed
+     */
     public function index()
     {
         $where = $this->request->getMore([
             ['kefu_id', ''],
             ['msn', ''],
+            ['time', ''],
             ['appid', '']
         ]);
 
