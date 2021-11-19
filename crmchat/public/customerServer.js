@@ -460,9 +460,26 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function request(url,method,data,header) {
+    new Promise(function (resolve, reject) {
+        ajax({
+            url:url,
+            method:method,
+            data:data,
+            header:header,
+            success:function (res) {
+                resolve(res);
+            },
+            error:function (error) {
+                reject(error)
+            }
+        });
+    });
+}
+
 function ajax(options) {
     var xhr = null;
-    var params = options.data;
+    var params = options.data || null;
     //创建对象
     if (window.XMLHttpRequest) {
         xhr = new XMLHttpRequest()
@@ -470,13 +487,13 @@ function ajax(options) {
         xhr = new ActiveXObject("Microsoft.XMLHTTP");
     }
 
-    switch (options.type) {
+    switch (options.method) {
         case 'GET':
-            xhr.open(options.type, options.url + "?" + params, options.async);
-            xhr.send(null);
+            xhr.open(options.method, options.url + "?" + params, options.async || true);
+            xhr.send(params ? toParams(params) : null);
             break;
         case 'POST':
-            xhr.open(options.type, options.url, options.async);
+            xhr.open(options.method || 'POST', options.url, options.async || true);
             xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
             xhr.setRequestHeader("Authori-zation", `Bearer ${token}`);
             xhr.send(JSON.stringify(params));
@@ -487,7 +504,9 @@ function ajax(options) {
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
-            options.success(xhr.responseText);
+            options.success && options.success(xhr.responseText);
+        }else{
+            options.error && options.error(xhr.responseText);
         }
     }
 }

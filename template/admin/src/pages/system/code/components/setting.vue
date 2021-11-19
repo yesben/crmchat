@@ -1,7 +1,7 @@
 <template>
     <div class="content">
         <p class="font-w">使用简介</p>
-        <p class="text-i">token重置后，数据将全部更新，历史数据将会失效，请谨慎操作。</p>
+        <p class="text-i">token重置后，需要更新用户端的token，旧token将无法访问</p>
         <div class="fenlei">
             <div class="code-content-wrap">
                <textarea id="NormalCodeTextareatoken3" class="code textarea" rows="5">

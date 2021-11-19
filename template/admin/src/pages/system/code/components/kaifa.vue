@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 </div>
-            
+
             <div class="fenlei">
             <p class="font-w">2、如果您的项目是基于webpack或其他工具构建的，并且您不想通过操作html文件来引入js，则推荐您在入口文件中写下以下代码</p>
                 <div class="code-content-wrap">
@@ -33,7 +33,7 @@
                     <div class="other-wrap">
                     <a @click="getCopy('NormalCodeTextarea2')" class="btn btn-blue btn-large" href="javascript:void(0);"><span>复制代码</span></a>
                     </div>
-                </div>      
+                </div>
             </div>
         </div>
         <p class="typetitle">第二步，设置参数并初始化</p>
@@ -86,7 +86,7 @@ canCustomerServer.getCustomeServer();
 
                 </textarea>
 
-                
+
                 <div class="other-wrap">
                     <a class="btn btn-blue btn-large mr10" @click="jiazai" href="javascript:void(0);">加载客服窗口</a>
                     <a class="btn btn-blue btn-large mr10" @click="tanchuang" href="javascript:void(0);">弹开聊天框</a>
@@ -94,6 +94,57 @@ canCustomerServer.getCustomeServer();
                 </div>
             </div>
 
+        </div>
+        <p class="typetitle">事件说明</p>
+        <div  class="fenlei">
+            <p class="font-w">只有使用js引入的形式才能使用事件</p>
+            <div class="code-content-wrap">
+                <textarea id="NormalCodeTextareakaifa3" class="code" rows="45">
+
+<script src="{{siteUrl}}/customerServer.js" id="chat" option='{"authInit":true,"openUrl":"{{siteUrl}}","isShowTip":true,"token":"{{tokeninfo.token_md5}}"}'></script>
+<script>
+    //自动实例化对象
+    var canCustomerServer
+     //authInit = true 后监听事件可以拿到实例化后的客服对象
+     window.$chat.on('chatAuthAfter',function (instance) {
+         canCustomerServer = instance;
+     });
+
+    //触发事件
+    // window.$chat.emit('postMessage',['touchend',{uid:10}]);
+
+    //关闭弹窗事件
+    window.$chat.on('closeWindow',function () {
+        console.log('关闭弹窗')
+    })
+    //消息回执事件
+    window.$chat.on('onMessageChat',function (data) {
+
+    });
+    //消息数量更新事件
+    window.$chat.on('onMessageNum',function (data) {
+
+    });
+    //转接事件
+    window.$chat.on('onMessageTransfer',function (data) {
+
+    });
+    //登录成功回执事件
+    window.$chat.on('onMessageSuccess',function () {
+
+    })
+    //发送图片后的事件
+    window.$chat.on('sendImage',function (data) {
+
+    })
+    //发送图文消息后的事件
+    window.$chat.on('sendImageText',function (data) {
+
+    })
+
+</script>
+                </textarea>
+            </div>
         </div>
         <div class="fenlei">
             <p class="font-w">小贴士</p>
