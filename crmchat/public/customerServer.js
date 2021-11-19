@@ -113,8 +113,10 @@ const customerServerStyleObject = new customerServerStyle();
 //初始化函数
 function initCustomerServer(option) {
     this.outLine = false; // 是否在离线界面
+    this.openChat = false;//是否需要打开聊天窗口
     this.settingObj = settingObj;
-    this.settingObj.openUrl = `${option.openUrl || location.origin}/chat/index`; //服务器地址加路由, 若不传入则自动获取引入应用所在服务器的域名
+    this.baseUrl = option.openUrl || location.origin;
+    this.settingObj.openUrl = `${this.baseUrl}/chat/index`; //服务器地址加路由, 若不传入则自动获取引入应用所在服务器的域名
     this.settingObj.domId = option.customerServerTip || 'customerServerTip'; //浮动客服dom
     this.settingObj.insertDomNode = option.insertDomNode || 'body' // 插入的标签
     this.settingObj.token = option.token; // token为必填项
@@ -352,9 +354,8 @@ function initCustomerServer(option) {
         });
 
     };
-    // 打开客服聊天框
-    this.getCustomeServer = () => {
 
+    this.openChatWin = () => {
         //检测是否初始化过
         if (this.initStatus === false) {
             this.init();
@@ -393,6 +394,15 @@ function initCustomerServer(option) {
         window.$chat.emit('openChatWin');
     }
 
+    // 打开客服聊天框
+    this.getCustomeServer = () => {
+        this.openChat = true;
+        if (this.initStatus) {
+            this.openChatWin();
+            this.openChat = false;
+        }
+    }
+
     // 更新传送的图文信息
     this.postProductMessage = (productInfo) => {
         this.iframe_contanier.contentWindow.postMessage({type: 'getImgOrText', productInfo: productInfo}, "*"); // 传送图文数据
@@ -408,19 +418,34 @@ initCustomerServer.prototype.destroy = function () {
     this.initStatus = false;
 }
 
-//初始化
-initCustomerServer.prototype.init = function () {
+initCustomerServer.prototype.runInit = function () {
     this.setMatchMedia();
     this.createCustomerServerContainer();
     this.batchSetStyle();
     this.initPositionStyle();
     this.loadwindow();
     this.initStatus = true;
-    this.connentServerDom.removeEventListener('click', this.getCustomeServer);
+    this.connentServerDom.removeEventListener('click', this.openChatWin);
     // 联系客服小按钮，点击事件
-    this.connentServerDom.addEventListener('click', this.getCustomeServer)
+    this.connentServerDom.addEventListener('click', this.openChatWin)
     //初始化事件
     window.$chat.emit('init');
+
+    if (this.openChat) {
+        this.openChatWin();
+        this.openChat = false;
+    }
+}
+
+//初始化
+initCustomerServer.prototype.init = function () {
+    request(this.baseUrl + '/api/mobile/service/icon', 'get', null, this.settingObj.token).then(res => {
+        this.settingObj.pcIcon = res.data.icon
+        this.settingObj.mobileIcon = res.data.icon
+        this.runInit();
+    }).catch(err => {
+        this.runInit();
+    })
 };
 //封装全局设置样式方法
 initCustomerServer.prototype.setStyleOfCustomerServer = function (dom, styleObj) {
@@ -460,26 +485,30 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function request(url,method,data,header) {
-    new Promise(function (resolve, reject) {
+function request(url, method, data, token, header) {
+    return new Promise(function (resolve, reject) {
         ajax({
-            url:url,
-            method:method,
-            data:data,
-            header:header,
-            success:function (res) {
+            url: url,
+            method: method,
+            data: data,
+            token: token,
+            header: header,
+            success: function (res) {
                 resolve(res);
             },
-            error:function (error) {
+            error: function (error) {
                 reject(error)
             }
         });
     });
 }
 
+
 function ajax(options) {
     var xhr = null;
-    var params = options.data || null;
+    var params = options.data || '';
+    var token = options.token
+    options.method = options.method || 'get'
     //创建对象
     if (window.XMLHttpRequest) {
         xhr = new XMLHttpRequest()
@@ -487,15 +516,17 @@ function ajax(options) {
         xhr = new ActiveXObject("Microsoft.XMLHTTP");
     }
 
-    switch (options.method) {
+    xhr.open(options.method, options.url + "?" + params, options.async || true);
+    xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    if (token) {
+        xhr.setRequestHeader("Authori-zation", `Bearer ${token}`);
+    }
+
+    switch (options.method.toUpperCase()) {
         case 'GET':
-            xhr.open(options.method, options.url + "?" + params, options.async || true);
-            xhr.send(params ? toParams(params) : null);
+            xhr.send(params ? toParams(params) : '');
             break;
         case 'POST':
-            xhr.open(options.method || 'POST', options.url, options.async || true);
-            xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-            xhr.setRequestHeader("Authori-zation", `Bearer ${token}`);
             xhr.send(JSON.stringify(params));
             break;
         default:
@@ -503,10 +534,17 @@ function ajax(options) {
     }
 
     xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            options.success && options.success(xhr.responseText);
-        }else{
-            options.error && options.error(xhr.responseText);
+        try {
+            if (xhr.readyState == 4) {
+                var response = xhr.responseText ? JSON.parse(xhr.responseText) : {};
+                if (response.status == 200) {
+                    options.success && options.success(response);
+                } else {
+                    options.error && options.error(response);
+                }
+            }
+        } catch (e) {
+            options.error && options.error(e);
         }
     }
 }
