@@ -45,7 +45,27 @@ class QrcodeServices extends BaseServices
     public function getList(array $where)
     {
         [$page, $limit] = $this->getPageValue();
-        $list  = $this->dao->getDataList($where, ['*'], 'id', $page, $limit);
+        $list    = $this->dao->getDataList($where, ['*'], 'id', $page, $limit);
+        $userIds = [];
+        foreach ($list as &$item) {
+            if ($item['user_ids']) {
+                $userIds = array_merge($userIds, $item['user_ids']);
+            }
+        }
+        $userIds = array_merge(array_unique($userIds));
+        if ($userIds) {
+            /** @var ChatServiceServices $service */
+            $service  = app()->make(ChatServiceServices::class);
+            $kefuList = $service->getColumn(['id' => $userIds], 'account', 'id');
+            foreach ($list as &$item) {
+                $item['user_account'] = [];
+                foreach ($kefuList as $id => $account) {
+                    if (in_array($item['user_ids'], $id)) {
+                        $item['user_account'][] = $account;
+                    }
+                }
+            }
+        }
         $count = $this->dao->count($where);
         return compact('list', 'count');
     }
