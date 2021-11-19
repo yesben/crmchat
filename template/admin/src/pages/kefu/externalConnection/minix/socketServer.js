@@ -116,7 +116,10 @@ export default {
         }
       },
       deep: true
-    }
+    },
+    isMobile(n){
+      this.redirect();
+    },
   },
   methods: {
     redirect(){
