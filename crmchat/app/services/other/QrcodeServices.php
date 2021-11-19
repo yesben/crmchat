@@ -88,7 +88,6 @@ class QrcodeServices extends BaseServices
      */
     public function saveQrcode(array $data, int $id = 0)
     {
-        $data['user_ids'] = json_encode($data['user_ids']);
         if ($id) {
             $this->dao->update($id, $data);
         } else {
