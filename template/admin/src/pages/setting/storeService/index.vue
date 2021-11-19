@@ -33,6 +33,8 @@
         </template>
 
         <template slot-scope="{ row, index }" slot="action">
+          <a @click="handleCopy(row)">复制</a>
+          <Divider type="vertical" />
           <a @click="edit(row)">编辑</a>
           <Divider type="vertical" />
           <a @click="del(row,'删除客服',index)">删除</a>
@@ -83,6 +85,13 @@
       </div>
     </Modal>
     <auto-reply ref="AutoReply" :userId="userId" :appId="appId"></auto-reply>
+    <Modal v-model="modal" :title="modalTitle" footer-hide>
+        <div ref="qrcode" class="qrcode-wrap"></div>
+        <div class="qrcode-text">{{ qrcodeText }}</div>
+        <div class="button-wrap">
+            <Button type="primary" v-clipboard="{ value: qrcodeText, success: handleCopySuccess }">复制</Button>
+        </div>
+    </Modal>
   </div>
 </template>
 
@@ -93,7 +102,9 @@ import {
   kefuListApi, kefucreateApi, kefuaddApi, kefuAddApi,
   kefusetStatusApi, kefuEditApi, kefuRecordApi, kefuChatlistApi, kefuLogin
 } from '@/api/setting'
+import { adminAppCustomer } from '@/api/kefu';
 import AutoReply from "./compoents/AutoReply";
+import QRCode from 'qrcodejs2';
 export default {
   name: 'index',
   filters: {
@@ -298,13 +309,49 @@ export default {
       },
       selections: [],
       rows: {},
-      rowRecord: {}
+      rowRecord: {},
+      modal: false,
+      modalTitle: '',
+      qrcodeTextStart: `${window.location.origin}/chat/index?noCanClose=1`,
+      qrcodeText: ''
     }
   },
   created() {
+    adminAppCustomer().then(res => {
+        if (res.status == 200 && res.data.list.length) {
+            this.qrcodeTextStart += `&token=${res.data.list[0].token}`;
+        }
+    });
     this.getList()
   },
   methods: {
+    // 复制成功
+    handleCopySuccess() {
+        this.$Message.success({
+            content: '复制成功',
+            onClose: () => {
+                this.modal = false;
+            }
+        });
+    },
+    // 点击列表的复制
+    handleCopy(row) {
+        this.modalTitle = row.nickname;
+        this.qrcodeText = `${this.qrcodeTextStart}&kefu_id=${row.id}`;
+        if (this.qrcode) {
+            this.qrcode.makeCode(this.qrcodeText);
+        } else {
+            this.qrcode = new QRCode(this.$refs.qrcode, {
+                text: this.qrcodeText,
+                width: 128,
+                height: 128,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.L
+            });   
+        }
+        this.modal = true;
+    },
     auth(item){
       this.userId = item.user_id
       this.appId = item.appid
@@ -587,5 +634,19 @@ export default {
 // margin-left: 18px;
 .scollhide::-webkit-scrollbar {
   display: none;
+}
+
+.qrcode-wrap /deep/ img {
+    margin: 0 auto;
+}
+
+.qrcode-text {
+    margin-top: 16px;
+    word-break: break-all;
+}
+
+.button-wrap {
+    margin-top: 16px;
+    text-align: center;
 }
 </style>
