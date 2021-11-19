@@ -78,7 +78,7 @@ class QrcodeServices extends BaseServices
             FormBuilder::select('user_ids', '选择客服', $codeInfo['user_ids'] ?? [])->required()->options($data)->multiple(true),
             FormBuilder::number('sort', '排序', $codeInfo['sort'] ?? 0),
         ];
-        return create_form($id ? '编辑二维码' : '添加二维码', $rule, '/chat/qrcode/save/' . $id);
+        return create_form($id ? '编辑二维码' : '添加二维码', $rule, '/chat/qrcode/' . $id);
     }
 
     /**
