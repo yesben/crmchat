@@ -45,7 +45,27 @@ class QrcodeServices extends BaseServices
     public function getList(array $where)
     {
         [$page, $limit] = $this->getPageValue();
-        $list  = $this->dao->getDataList($where, ['*'], 'id', $page, $limit);
+        $list    = $this->dao->getDataList($where, ['*'], 'id', $page, $limit);
+        $userIds = [];
+        foreach ($list as &$item) {
+            if ($item['user_ids']) {
+                $userIds = array_merge($userIds, $item['user_ids']);
+            }
+        }
+        $userIds = array_merge(array_unique($userIds));
+        if ($userIds) {
+            /** @var ChatServiceServices $service */
+            $service  = app()->make(ChatServiceServices::class);
+            $kefuList = $service->getColumn(['id' => $userIds], 'account', 'id');
+            foreach ($list as &$item) {
+                $item['user_account'] = [];
+                foreach ($kefuList as $id => $account) {
+                    if (in_array($item['user_ids'], $id)) {
+                        $item['user_account'][] = $account;
+                    }
+                }
+            }
+        }
         $count = $this->dao->count($where);
         return compact('list', 'count');
     }
@@ -78,7 +98,7 @@ class QrcodeServices extends BaseServices
             FormBuilder::select('user_ids', '选择客服', $codeInfo['user_ids'] ?? [])->required()->options($data)->multiple(true),
             FormBuilder::number('sort', '排序', $codeInfo['sort'] ?? 0),
         ];
-        return create_form($id ? '编辑二维码' : '添加二维码', $rule, '/chat/qrcode/save/' . $id);
+        return create_form($id ? '编辑二维码' : '添加二维码', $rule, '/chat/qrcode/' . $id);
     }
 
     /**
@@ -88,7 +108,6 @@ class QrcodeServices extends BaseServices
      */
     public function saveQrcode(array $data, int $id = 0)
     {
-        $data['user_ids'] = json_encode($data['user_ids']);
         if ($id) {
             $this->dao->update($id, $data);
         } else {

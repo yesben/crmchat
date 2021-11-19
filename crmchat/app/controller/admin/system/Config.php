@@ -310,7 +310,7 @@ class Config extends AuthController
         [$kefuIconUrl, $kefuIconType] = $this->request->postMore([
             ['kefu_icon_url3', ''],
             ['kefu_icon_type', '']
-        ]);
+        ], true);
         $this->services->update('kefu_icon_url3', ['value' => json_encode($kefuIconUrl)], 'menu_name');
         $this->services->update('kefu_icon_type', ['value' => json_encode($kefuIconType)], 'menu_name');
         \crmeb\services\SystemConfigService::clear();

@@ -116,7 +116,10 @@ export default {
         }
       },
       deep: true
-    }
+    },
+    isMobile(n){
+      this.redirect();
+    },
   },
   methods: {
     redirect(){
@@ -156,7 +159,6 @@ export default {
 
       userRecord(postData).then(res => {
           this.chatServerData = res.data;
-          console.log(this.chatServerData);
           this.$nextTick(() => {
             this.happyScroll = !this.happyScroll;
           })

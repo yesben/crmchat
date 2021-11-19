@@ -36,6 +36,7 @@ class AdminAuthTokenMiddleware implements MiddlewareInterface
         Request::macro('isAdminLogin', function () use (&$adminInfo) {
             return !is_null($adminInfo);
         });
+
         Request::macro('adminId', function () use (&$adminInfo) {
             return $adminInfo['id'];
         });
