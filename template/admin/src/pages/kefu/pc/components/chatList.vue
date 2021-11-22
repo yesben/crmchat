@@ -3,7 +3,7 @@
     <div class="search_box">
       <Input prefix="ios-search" placeholder="搜索用户名称" @on-enter="bindSearch" @on-change="inputChange">
       <Icon slot="prepend" type="ios-search" />
-      <Poptip v-model="visible" slot="append" placement="right-start" width="350">
+      <Poptip v-model="visible" slot="append" placement="right-start" width="350" @on-popper-show="onPopperShow">
           <Icon type="ios-funnel-outline" />
           <Tabs v-model="tabOn" slot="content">
               <TabPane label="标签筛选" name="1">
@@ -11,26 +11,26 @@
                       <div v-for="item in labelList" :key="item.id" class="item">
                         <div class="item-title">{{ item.name }}</div>
                         <div class="cell-group">
-                            <span v-for="cell in item.label" :key="cell.id" :class="{ on: labelOn == cell.id }" class="cell" @click="labelOn = cell.id">意向一般</span>
+                            <span v-for="cell in item.label" :key="cell.id" :class="{ on: cell.id == item.labelOn }" class="cell" @click="item.labelOn = (cell.id == item.labelOn ? -1 : cell.id)">{{ cell.label }}</span>
                         </div>
                     </div>
                   </div>
                   <div class="button-group">
                       <Button type="primary" ghost @click="visible = false">取消</Button>
-                      <Button type="primary" @click="filterSubmit">确定</Button>
+                      <Button type="primary" @click="onFilter">确定</Button>
                   </div>
               </TabPane>
               <TabPane label="分组筛选" name="2">
                   <div class="item-group">
                       <div class="item">
                         <div class="cell-group">
-                            <span v-for="cell in userGroupList" :key="cell.id" :class="{ on: groupOn == cell.id }" class="cell" @click="groupOn = cell.id">{{ cell.group_name }}</span>
+                            <span v-for="cell in userGroupList" :key="cell.id" :class="{ on: cell.groupOn }" class="cell" @click="cell.groupOn = !cell.groupOn">{{ cell.group_name }}</span>
                         </div>
                     </div>
                   </div>
                   <div class="button-group">
                       <Button type="primary" ghost @click="visible = false">取消</Button>
-                      <Button type="primary" @click="filterSubmit">确定</Button>
+                      <Button type="primary" @click="onFilter">确定</Button>
                   </div>
               </TabPane>
           </Tabs>
@@ -185,6 +185,8 @@ export default {
       limit: 15,
       isScroll: true,
       nickname: '',
+      labelId: '',
+      groupId: '',
       isSearch: false,
       ops: {
         vuescroll: {
@@ -214,8 +216,8 @@ export default {
         }
       },
       visible: false,
-      labelOn: -1,
-      groupOn: -1,
+    //   labelOn: -1,
+    //   groupOn: -1,
       labelList: [],
       userGroupList: [],
       tabOn: '1'
@@ -231,29 +233,60 @@ export default {
   mounted() {
 
     this.bus.$on('change', data => {
-      this.nickname = data
+    //   this.nickname = data
+    for (const key in data) {
+        if (Object.hasOwnProperty.call(data, key)) {
+            this[key] = data[key];
+        }
+    }
     })
     this.getList();
     // this.userLabel();
     // this.wsStart();
     userLabel().then(res => {
+        res.data.forEach(item => {
+            item.labelOn = -1;
+        });
         this.labelList = res.data;
     });
     userGroupApi().then(res => {
+        res.data.forEach(item => {
+            item.groupOn = false;
+        });
         this.userGroupList = res.data;
     });
   },
   methods: {
-      filterSubmit() {
+      onPopperShow() {
+          this.labelId = '';
+          this.groupId = '';
+      },
+      onFilter() {
           if (this.tabOn == '1') {
-            if (this.labelOn == -1) {
-                return this.$Message.info('请选择筛选条件');
+            this.labelList.forEach(item => {
+                if (item.labelOn != -1) {
+                    this.labelId += this.labelId ? `,${item.labelOn}` : item.labelOn;
+                }
+            });
+            if (!this.labelId) {
+                return this.$Message.info('请选择标签筛选条件');
             }
           } else {
-            if (this.groupOn == -1) {
-              return this.$Message.info('请选择筛选条件');
+            this.userGroupList.forEach(item => {
+                if (item.groupOn) {
+                    this.groupId += this.groupId ? `,${item.id}` : item.id;
+                }
+            });
+            if (!this.groupId) {
+              return this.$Message.info('请选择分组筛选条件');
             }
           }
+          this.nickname = '';
+          this.page = 1;
+          this.isScroll = true
+          this.userList = []
+          this.isSearch = true
+          this.getList();
           this.visible = false;
       },
     // 搜索
@@ -263,7 +296,7 @@ export default {
     // inputChange
     inputChange(e) {
       console.log(e.target.value)
-      this.bus.$emit('change', e.target.value)
+      this.bus.$emit('change', { nickname: e.target.value })
     },
     deleteUserList(item){
       this.userList.forEach((el, index, arr) => {
@@ -371,6 +404,8 @@ export default {
       if(!this.isScroll) return
       record({
         nickname: this.nickname,
+        labelId: this.labelId,
+        groupId: this.groupId,
         page: this.page,
         limit: this.limit,
         is_tourist: this.hdTabCur === 1 ? '' : 0
