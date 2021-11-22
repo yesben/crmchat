@@ -69,9 +69,11 @@ class Service extends AuthController
         if ($kefuUd && $toUserId) {
             $toUserId = 0;
         }
+        //指定客服id和随机客服id有限使用客服id
         if ($kefuUd && $kefuRand) {
             $kefuRand = 0;
         }
+        //指定客服后，随机客服取消
         if ($toUserId && $kefuRand) {
             $kefuRand = 0;
             $kefuUd   = 0;
