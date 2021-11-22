@@ -85,11 +85,11 @@ class ChatServiceRecordDao extends BaseDao
         })->when(count($with), function ($query) use ($with) {
             $query->with($with);
         })->when($labelId, function ($query) use ($labelId) {
-            $query->whereIn('user_id', function ($query) use ($labelId) {
+            $query->whereIn('to_user_id', function ($query) use ($labelId) {
                 $query->name('chat_user_label_assist')->whereIn('label_id', $labelId)->field(['user_id']);
             });
         })->when(isset($where['group_id']) && $where['group_id'], function ($query) use ($where) {
-            $query->whereIn('user_id', function ($query) use ($where) {
+            $query->whereIn('to_user_id', function ($query) use ($where) {
                 $query->name('chat_user')->whereIn('group_id', $where['group_id'])->field(['id']);
             });
         })->when(isset($where['delete']), function ($query) {
