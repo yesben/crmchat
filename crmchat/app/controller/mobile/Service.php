@@ -47,12 +47,13 @@ class Service extends AuthController
      */
     public function getRecordList()
     {
-        [$idTo, $limit, $toUserId, $cookieUid, $kefuUd] = $this->request->getMore([
+        [$idTo, $limit, $toUserId, $cookieUid, $kefuUd, $kefuRand] = $this->request->getMore([
             ['idTo', 0],
             ['limit', 10],
             ['toUserId', 0],
             ['cookieUid', 0],
-            ['kefu_id', 0]
+            ['kefu_id', 0],
+            ['kefu_rand', 0],
         ], true);
 
         $user = $this->request->getMore([
@@ -68,7 +69,16 @@ class Service extends AuthController
         if ($kefuUd && $toUserId) {
             $toUserId = 0;
         }
-        return app('json')->successful($this->services->getRecord($this->appId, $user, $idTo, $limit, $toUserId, (int)$cookieUid, (int)$kefuUd));
+        //指定客服id和随机客服id有限使用客服id
+        if ($kefuUd && $kefuRand) {
+            $kefuRand = 0;
+        }
+        //指定客服后，随机客服取消
+        if ($toUserId && $kefuRand) {
+            $kefuRand = 0;
+            $kefuUd   = 0;
+        }
+        return app('json')->successful($this->services->getRecord($this->appId, $user, $idTo, $limit, $toUserId, (int)$cookieUid, (int)$kefuUd, (int)$kefuRand));
     }
 
     /**

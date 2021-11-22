@@ -60,7 +60,7 @@ class QrcodeServices extends BaseServices
             foreach ($list as &$item) {
                 $item['user_account'] = [];
                 foreach ($kefuList as $id => $account) {
-                    if (in_array($item['user_ids'], $id)) {
+                    if (in_array($id, $item['user_ids'])) {
                         $item['user_account'][] = $account;
                     }
                 }
