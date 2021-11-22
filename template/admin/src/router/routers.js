@@ -16,6 +16,7 @@ import app from './modules/app'
 import system from './modules/system'
 import BasicLayout from '@/components/main'
 import frameOut from './modules/frameOut'
+import kefu from './modules/kefu'
 /**
  * 在主框架内显示
  */
@@ -105,7 +106,8 @@ const frameIn = [
     user,
     setting,
     system,
-    app
+    app,
+    kefu
 ]
 
 /**

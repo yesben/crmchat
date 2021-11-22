@@ -841,3 +841,40 @@ export function cityCleanCacheApi() {
         method: 'get'
     })
 }
+
+/**
+ * 获取随机客服二维码
+ * @returns 
+ */
+export function chatQrcode(params) {
+    return request({
+        url: 'chat/qrcode',
+        method: 'get',
+        params
+    });
+}
+
+/**
+ * 获取随机客服二维码表单
+ * @param {*} id 
+ * @returns 
+ */
+export function chatQrcodeForm(id) {
+    return request({
+        url: `chat/qrcode/${id}`,
+        method: 'get'
+    });
+}
+
+/**
+ * 站点统计
+ * @param {*} params 
+ * @returns 
+ */
+export function chatStatistics(params) {
+    return request({
+        url: 'chat/statistics',
+        method: 'get',
+        params
+    });
+}
