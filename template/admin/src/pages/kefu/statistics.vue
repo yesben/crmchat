@@ -9,7 +9,7 @@
             <Form ref="formValidate" :model="formValidate" :label-width="labelWidth" :label-position="labelPosition" class="tabform" @submit.native.prevent>
                 <Row :gutter="24" type="flex" justify="end">
                     <Col span="24" class="ivu-text-left">
-                        <FormItem label="地区搜索：" label-for="province">
+                        <FormItem label="地区：" label-for="province">
                             <Input search enter-button @on-search="onSearch" placeholder="请输入地区搜索" element-id="province" v-model="formValidate.province" style="width: 30%;display: inline-table;" class="mr" />
                         </FormItem>
                     </Col>
@@ -57,7 +57,7 @@ export default {
                 {
                     title: '网址',
                     key: 'path',
-                    minWidth: 80
+                    minWidth: 120
                 },
                 {
                     title: '浏览器',
@@ -72,7 +72,10 @@ export default {
                 {
                     title: '地区',
                     key: 'region',
-                    minWidth: 80
+                    minWidth: 80,
+                    render: (h, params) => {
+                        return h('span', `${params.row.region} ${params.row.province}`);
+                    }
                 },
             ],
             tableData: [],

@@ -878,3 +878,16 @@ export function chatStatistics(params) {
         params
     });
 }
+
+/**
+ * 查看所有聊天记录
+ * @param {*} params 
+ * @returns 
+ */
+export function chatRecord(params) {
+    return request({
+        url: 'chat/record',
+        method: 'get',
+        params
+    });
+}
