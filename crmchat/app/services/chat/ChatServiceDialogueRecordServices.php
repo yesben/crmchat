@@ -87,7 +87,8 @@ class ChatServiceDialogueRecordServices extends BaseServices
      */
     public function getDialogueRecord(array $where)
     {
-        $list  = $this->dao->getDialogueRecord($where)->select()->toArray();
+        [$page, $limit] = $this->getPageValue();
+        $list  = $this->dao->getDialogueRecord($where)->page($page, $limit)->select()->toArray();
         $count = $this->dao->getDialogueRecord($where)->count();
         /** @var ChatServiceRecordServices $service */
         $service = app()->make(ChatServiceRecordServices::class);

@@ -51,7 +51,7 @@ class ServiceDialogueRecord extends AuthController
             ['kefu_id', ''],
             ['msn', ''],
             ['time', ''],
-            ['appid', '']
+            ['appid', ''],
         ]);
 
         return $this->success($this->services->getDialogueRecord($where));
