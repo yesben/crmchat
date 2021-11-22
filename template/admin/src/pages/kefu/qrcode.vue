@@ -20,7 +20,7 @@
             </Form>
             <Table :columns="columns" :data="tableData" :loading="loading" highlight-row no-userFrom-text="暂无数据" class="ivu-mt">
                 <template slot-scope="{ row, index }" slot="picture">
-                    <img src="" v-viewer>
+                    <img :src="row.qrcode" width="61" height="61" v-viewer>
                 </template>
                 <template slot-scope="{ row, index }" slot="action">
                     <a @click="onEdit(row)">编辑</a>
@@ -36,8 +36,10 @@
 </template>
 
 <script>
+import { adminAppCustomer } from '@/api/kefu';
 import { chatQrcode, chatQrcodeForm, deleteChatQrcode } from '@/api/setting';
-import { mapState } from 'vuex'
+import { mapState } from 'vuex';
+import QRCode from 'qrcodejs2';
 
 export default {
     name: 'kefu_qrcode',
@@ -62,8 +64,11 @@ export default {
                 },
                 {
                     title: '客服',
-                    key: 'nicename',
-                    minWidth: 120
+                    key: 'user_account',
+                    minWidth: 120,
+                    render: (h, params) => {
+                        return h('span', params.row.user_account.join('，'));
+                    }
                 },
                 {
                     title: '二维码图片',
@@ -79,7 +84,9 @@ export default {
             ],
             tableData: [],
             loading: false,
-            id: 0
+            id: 0,
+            qrcodeText: `${window.location.origin}/chat/index?noCanClose=1`,
+            token: ''
         };
     },
     computed: {
@@ -94,6 +101,11 @@ export default {
         }
     },
     created() {
+        adminAppCustomer().then(res => {
+            if (res.status == 200 && res.data.list.length) {
+                this.qrcodeText += `&token=${res.data.list[0].token}`;
+            }
+        });
         this.chatQrcode();
     },
     methods: {
@@ -103,7 +115,12 @@ export default {
                 limit: this.limit,
                 name: this.formValidate.name
             }).then(res => {
-                this.tableData = res.data.data;
+                let list = res.data.list;
+                list.forEach(item => {
+                    this.qrcode = new QRCode(document.createElement('div'), `${this.qrcodeText}&kefu_rand=${item.id}`);
+                    item.qrcode =  this.qrcode._el.children[0].toDataURL();
+                });
+                this.tableData = list;
                 this.total = res.data.count;
             });
         },
@@ -119,7 +136,8 @@ export default {
         },
         // 编辑
         onEdit(row) {
-
+            console.log(row);
+            this.$modalForm(chatQrcodeForm(row.id)).then(() => this.chatQrcode());
         },
         // 删除
         onDelete(row, title, num) {
@@ -139,9 +157,7 @@ export default {
         },
         // 添加客服二维码
         add() {
-            this.$modalForm(chatQrcodeForm(this.id)).then(() => {
-                console.log(123);
-            });
+            this.$modalForm(chatQrcodeForm(this.id)).then(() => this.chatQrcode());
         }
     }
 }
