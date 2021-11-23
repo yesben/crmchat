@@ -61,7 +61,7 @@ class AppVersionServices extends BaseServices
     {
         $rule = [
             FormBuilder::input('name', '更新摘要')->required(),
-            FormBuilder::input('verison', '版本号')->required(),
+            FormBuilder::input('verisons', '版本号')->required(),
             FormBuilder::uploadFile('url', '压缩包', $this->url('/api/admin/file/upload/1', ['type' => 1], false, false))->headers([
                 'Authori-zation' => app()->request->header('Authori-zation'),
             ])->required(),

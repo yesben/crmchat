@@ -66,7 +66,7 @@ class AppVersion extends AuthController
     {
         $data = $this->request->postMore([
             ['name', ''],
-            ['verison', ''],
+            ['verisons', ''],
             ['url', ''],
             ['info', ''],
         ]);
