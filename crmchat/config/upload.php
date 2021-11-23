@@ -13,7 +13,7 @@ return [
     //默认上传模式
     'default' => 'local',
     //上传文件大小
-    'filesize' => 2097152,
+    'filesize' => 20971520,
     //上传文件后缀类型
     'fileExt' => ['jpg', 'jpeg', 'png', 'gif', 'pem', 'mp3', 'wma', 'wav', 'amr', 'mp4', 'key', 'xlsx', 'xls'],
     //上传文件类型

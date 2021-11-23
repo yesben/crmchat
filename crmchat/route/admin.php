@@ -239,6 +239,14 @@ Route::group('api', function () {
          */
         Route::group('setting', function () {
 
+            //获取APP升级包列表
+            Route::get('verison', 'system.AppVersion/index')->name('AppVerisonIndex')->option(['real_name' => '获取APP升级包列表']);
+            //删除APP升级包
+            Route::delete('verison/:id', 'system.AppVersion/delete')->name('AppVerisonDelete')->option(['real_name' => '删除APP升级包']);
+            //获取创建APP升级包表单
+            Route::get('verison/:id', 'system.AppVersion/create')->name('AppVerisonCreate')->option(['real_name' => '获取创建APP升级包表单']);
+            //保存APP升级
+            Route::post('verison/save/:id', 'system.AppVersion/save')->name('AppVerisonSave')->option(['real_name' => '保存APP升级']);
             //管理员退出登陆
             Route::get('admin/logout', 'system.Admin/logout')->name('SystemAdminLogout')->option(['real_name' => '退出登陆']);
             //修改管理员状态

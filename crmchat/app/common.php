@@ -703,12 +703,13 @@ if (!function_exists('create_form')) {
      * @return array
      * @throws \FormBuilder\Exception\FormBuilderException
      */
-    function create_form(string $title, array $field, $url, string $method = 'POST')
+    function create_form(string $title, array $field, $url, string $method = 'POST', array $data = [])
     {
         $form = Form::createForm((string)$url);//提交地址
         $form->setMethod($method);//提交方式
         $form->setRule($field);//表单字段
         $form->setTitle($title);//表单标题
+        $form->formData($data);
         $rules      = $form->formRule();
         $title      = $form->getTitle();
         $action     = $form->getAction();
