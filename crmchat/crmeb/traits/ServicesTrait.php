@@ -22,7 +22,7 @@ use think\Model;
  * @method float sum(array $where, string $field, bool $search = false) 求和
  * @method mixed update($id, array $data, ?string $field = null) 修改数据
  * @method bool be($map, string $field = '') 查询一条数据是否存在
- * @method mixed value(array $where, string $field) 获取指定条件下的数据
+ * @method mixed value($where, string $field) 获取指定条件下的数据
  * @method int count(array $where = []) 读取数据条数
  * @method int getCount(array $where = []) 获取某些条件总数（不走搜素器）
  * @method array getColumn(array $where, string $field, string $key = '') 获取某个字段数组（不走搜素器）

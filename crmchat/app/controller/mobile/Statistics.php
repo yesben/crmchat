@@ -46,6 +46,7 @@ class Statistics extends AuthController
         if (!$data['ip'] || !$data['path']) {
             return $this->fail('缺少参数');
         }
-        return $this->success($this->services->saveSite($data));
+        $this->services->saveSite($data);
+        return $this->success('添加成功');
     }
 }

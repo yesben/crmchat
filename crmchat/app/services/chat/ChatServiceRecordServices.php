@@ -49,11 +49,9 @@ class ChatServiceRecordServices extends BaseServices
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function getUserList(string $appid, int $userId, string $nickname, string $labelId)
+    public function getUserList(string $appid, int $userId, string $nickname, array $labelId = [], array $groupId = [])
     {
-        $labelId = explode(',', $labelId);
-        $labelId = array_filter($labelId);
-        $list    = $this->dao->getServiceList(['appid' => $appid, 'label_id' => $labelId, 'user_id' => $userId, 'title' => $nickname, 'is_tourist' => 0], 0, 0, ['user']);
+        $list = $this->dao->getServiceList(['group_id' => $groupId, 'appid' => $appid, 'label_id' => $labelId, 'user_id' => $userId, 'title' => $nickname, 'is_tourist' => 0], 0, 0, ['user']);
         foreach ($list as &$item) {
             if (isset($item['user']['remark_nickname']) && $item['user']['remark_nickname']) {
                 $item['nickname'] = $item['user']['remark_nickname'];

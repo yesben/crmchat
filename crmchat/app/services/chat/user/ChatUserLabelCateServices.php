@@ -35,7 +35,7 @@ class ChatUserLabelCateServices extends CategoryServices
     {
         return [
             Form::input('name', '分类名称', $cateInfo['name'] ?? ''),
-            Form::number('sort', '排序', $cateInfo['sort'] ?? 0),
+//            Form::number('sort', '排序', $cateInfo['sort'] ?? 0),
         ];
     }
 

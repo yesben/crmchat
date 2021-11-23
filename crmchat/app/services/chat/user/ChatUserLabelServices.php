@@ -61,7 +61,7 @@ class ChatUserLabelServices extends BaseServices
     public function getLabeList(array $where)
     {
         [$page, $limit] = $this->getPageValue();
-        $list  = $this->dao->getDataList($where, ['*'], 'id', $page, $limit);
+        $list  = $this->dao->getDataList($where, ['*'], 'sort', $page, $limit);
         $count = $this->dao->count($where);
         return compact('list', 'count');
     }
@@ -79,7 +79,7 @@ class ChatUserLabelServices extends BaseServices
         return [
             Form::select('cate_id', '标签分类', $label['cate_id'] ?? 0)->options($options),
             Form::input('label', '标签名称', $label['label'] ?? ''),
-            Form::number('sort', '排序', $label['sort'] ?? 0),
+//            Form::number('sort', '排序', $label['sort'] ?? 0),
         ];
     }
 

@@ -103,7 +103,7 @@ export default {
     created() {
         adminAppCustomer().then(res => {
             if (res.status == 200 && res.data.list.length) {
-                this.qrcodeText += `&token=${res.data.list[0].token}`;
+                this.qrcodeText += `&token=${res.data.list[0].token_md5}`;
             }
         });
         this.chatQrcode();

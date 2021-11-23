@@ -68,7 +68,8 @@ class LabelCate extends AuthController
         }
         $data['type']     = 0;
         $data['add_time'] = time();
-        $this->services->save($data);
+        $res              = $this->services->save($data);
+        $this->services->update($res->id, ['sort' => $res->id]);
         return $this->success('添加成功');
     }
 
@@ -104,6 +105,22 @@ class LabelCate extends AuthController
         $data['type'] = 0;
 
         $this->services->update($id, $data);
+        return $this->success('修改成功');
+    }
+
+    public function move()
+    {
+        [$id, $toId] = $this->request->postMore([
+            ['id', 0],
+            ['to_id', 0],
+        ], true);
+
+        $this->services->transaction(function () use ($id, $toId) {
+            $toSort = $this->services->value($toId, 'sort');
+            $sort   = $this->services->value($id, 'sort');
+            $this->services->update($id, ['sort' => $toSort]);
+            $this->services->update($toId, ['sort' => $sort]);
+        });
         return $this->success('修改成功');
     }
 

@@ -59,14 +59,14 @@ class HttpService
      * @param int $timeout
      * @return bool|string
      */
-    public static function getRequest($url, $data = array(), $header = false, $timeout = 10)
+    public static function getRequest($url, $data = array(), $header = false, $timeout = 10, bool $code = false)
     {
         if (!empty($data)) {
             $url .= (stripos($url, '?') === false ? '?' : '&');
             $url .= (is_array($data) ? http_build_query($data) : $data);
         }
 
-        return self::request($url, 'get', array(), $header, $timeout);
+        return self::request($url, 'get', array(), $header, $timeout, $code);
     }
 
     /**
@@ -80,11 +80,11 @@ class HttpService
      */
     public static function request($url, $method = 'get', $data = array(), $header = false, $timeout = 15, bool $code = false)
     {
-        self::$status = null;
+        self::$status    = null;
         self::$curlError = null;
         self::$headerStr = null;
-  
-        $curl = curl_init($url);
+
+        $curl   = curl_init($url);
         $method = strtoupper($method);
         //请求方式
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
@@ -110,9 +110,9 @@ class HttpService
         self::$curlError = curl_error($curl);
 
         list($content, $status) = [curl_exec($curl), curl_getinfo($curl), curl_close($curl)];
-        self::$status = $status;
+        self::$status    = $status;
         self::$headerStr = trim(substr($content, 0, $status['header_size']));
-        $content = trim(substr($content, $status['header_size']));
+        $content         = trim(substr($content, $status['header_size']));
         if ($code) {
             return $content;
         }

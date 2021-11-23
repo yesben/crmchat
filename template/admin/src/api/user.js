@@ -270,6 +270,19 @@ export function userLabelAll(data) {
 }
 
 /**
+ * 修改表单分类
+ * @param id
+ * @param data
+ */
+export function userLabelCateEdit(id,data) {
+    return request({
+        url: `user/label/cate/${id}`,
+        method: 'put',
+        data
+    });
+}
+
+/**
  * 添加用户
  */
 export function getUserSaveForm() {

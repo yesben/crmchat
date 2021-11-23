@@ -153,6 +153,8 @@ Route::group('api', function () {
             Route::put('/batch/group', 'User/batchGroup')->option(['real_name' => '批量修改用户分组']);
             Route::get('/label/all', 'User/getLabelAll')->option(['real_name' => '获取全部标签']);
             Route::get('/group/all', 'User/getGroupAll')->option(['real_name' => '获取全部分组']);
+            Route::post('/label/move', 'Label/move')->option(['real_name' => '标签移动排序']);
+            Route::post('/label/move_cate', 'LabelCate/move')->option(['real_name' => '标签分类移动排序']);
 
             Route::resource('label/cate', 'LabelCate')->option(['real_name' => [
                 'index'  => '获取标签分类列表接口',
@@ -239,6 +241,14 @@ Route::group('api', function () {
          */
         Route::group('setting', function () {
 
+            //获取APP升级包列表
+            Route::get('verison', 'system.AppVersion/index')->name('AppVerisonIndex')->option(['real_name' => '获取APP升级包列表']);
+            //删除APP升级包
+            Route::delete('verison/:id', 'system.AppVersion/delete')->name('AppVerisonDelete')->option(['real_name' => '删除APP升级包']);
+            //获取创建APP升级包表单
+            Route::get('verison/:id', 'system.AppVersion/create')->name('AppVerisonCreate')->option(['real_name' => '获取创建APP升级包表单']);
+            //保存APP升级
+            Route::post('verison/save/:id', 'system.AppVersion/save')->name('AppVerisonSave')->option(['real_name' => '保存APP升级']);
             //管理员退出登陆
             Route::get('admin/logout', 'system.Admin/logout')->name('SystemAdminLogout')->option(['real_name' => '退出登陆']);
             //修改管理员状态

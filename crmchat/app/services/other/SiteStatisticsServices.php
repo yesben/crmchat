@@ -14,6 +14,7 @@ namespace app\services\other;
 
 use app\dao\other\SiteStatisticsDao;
 use crmeb\basic\BaseServices;
+use crmeb\services\QqMap;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
 use think\facade\Cache;
@@ -58,7 +59,7 @@ class SiteStatisticsServices extends BaseServices
      */
     public function ipByCity(string $ip)
     {
-        $url = "http://ip.taobao.com/service/getIpInfo.php?ip=" . $ip;
+        $url = "https://ip.taobao.com/service/getIpInfo.php?ip=" . $ip;
         $ip  = json_decode(file_get_contents($url));
         if ((string)$ip->code == '1') {
             return false;
@@ -78,9 +79,10 @@ class SiteStatisticsServices extends BaseServices
         if ($res) {
             return true;
         }
-        $city                = $this->ipByCity($data['ip']);
-        $data['province']    = $city['province'] ?? '';
-        $data['region']      = $city['city'] ?? '';
+        $map                 = new QqMap();
+        $city                = $map->getMapLocationInfo($data['ip']);
+        $data['province']    = $city->get('result.ad_info.province');
+        $data['region']      = $city->get('result.ad_info.city');
         $data['create_time'] = date('Y-m-d H:i:s');
         $res                 = $this->dao->save($data);
         if ($res) {

@@ -25,6 +25,7 @@ Route::group('api', function () {
         Route::group('user', function () {
 
             Route::get('record', 'Service/getRecordList');
+            Route::post('statistics', 'Statistics/save');
 
         })->middleware(MobileAuthTokenMiddleware::class);
 

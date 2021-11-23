@@ -214,13 +214,16 @@ abstract class BaseDao
 
     /**
      * 获取单个字段值
-     * @param array $where
+     * @param array|string|int $where
      * @param string|null $field
      * @return mixed
      */
-    public function value(array $where, ?string $field = '')
+    public function value($where, ?string $field = '')
     {
         $pk = $this->getPk();
+        if (!is_array($where)) {
+            $where = [$pk => $where];
+        }
         return $this->getModel()::where($where)->value($field ?: $pk);
     }
 
@@ -320,7 +323,7 @@ abstract class BaseDao
      */
     protected function withSearchSelect(array $withSearch, ?array $data = [])
     {
-        $with = [];
+        $with     = [];
         $respones = new \ReflectionClass($this->setModel());
         foreach ($withSearch as $fieldName) {
             $method = 'search' . Str::studly($fieldName) . 'Attr';
