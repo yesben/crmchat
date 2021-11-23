@@ -61,7 +61,7 @@ class ChatUserLabelServices extends BaseServices
     public function getLabeList(array $where)
     {
         [$page, $limit] = $this->getPageValue();
-        $list  = $this->dao->getDataList($where, ['*'], 'id', $page, $limit);
+        $list  = $this->dao->getDataList($where, ['*'], 'sort', $page, $limit);
         $count = $this->dao->count($where);
         return compact('list', 'count');
     }
