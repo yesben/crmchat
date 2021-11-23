@@ -51,24 +51,24 @@ class SystemConfigServices extends BaseServices
      * @var string[]
      */
     protected $postUrl = [
-        'setting' => [
-            'url' => '/setting/config/save_basics',
+        'setting'   => [
+            'url'  => '/setting/config/save_basics',
             'auth' => [],
         ],
-        'serve' => [
-            'url' => '/serve/sms_config/save_basics',
+        'serve'     => [
+            'url'  => '/serve/sms_config/save_basics',
             'auth' => ['short_letter_switch'],
         ],
-        'freight' => [
-            'url' => '/freight/config/save_basics',
+        'freight'   => [
+            'url'  => '/freight/config/save_basics',
             'auth' => ['express'],
         ],
-        'agent' => [
-            'url' => '/agent/config/save_basics',
+        'agent'     => [
+            'url'  => '/agent/config/save_basics',
             'auth' => ['fenxiao'],
         ],
         'marketing' => [
-            'url' => '/marketing/integral_config/save_basics',
+            'url'  => '/marketing/integral_config/save_basics',
             'auth' => ['point'],
         ]
     ];
@@ -78,124 +78,124 @@ class SystemConfigServices extends BaseServices
      * @var array[]
      */
     protected $relatedRule = [
-        'brokerage_func_status' => [
-            'son_type' => [
-                'brokerage_bindind' => '',
-                'store_brokerage_ratio' => '',
-                'store_brokerage_two' => '',
-                'user_extract_min_price' => '',
-                'user_extract_bank' => '',
-                'extract_time' => '',
-                'spread_banner' => '',
-                'uni_brokerage_price' => '',
-                'day_brokerage_price_upper' => '',
-                'is_self_brokerage' => '',
+        'brokerage_func_status'       => [
+            'son_type'   => [
+                'brokerage_bindind'              => '',
+                'store_brokerage_ratio'          => '',
+                'store_brokerage_two'            => '',
+                'user_extract_min_price'         => '',
+                'user_extract_bank'              => '',
+                'extract_time'                   => '',
+                'spread_banner'                  => '',
+                'uni_brokerage_price'            => '',
+                'day_brokerage_price_upper'      => '',
+                'is_self_brokerage'              => '',
                 'store_brokerage_binding_status' => [
-                    'son_type' => ['store_brokerage_binding_time' => ''],
+                    'son_type'   => ['store_brokerage_binding_time' => ''],
                     'show_value' => 2
                 ],
-                'store_brokerage_statu' => [
-                    'son_type' => ['store_brokerage_price' => ''],
+                'store_brokerage_statu'          => [
+                    'son_type'   => ['store_brokerage_price' => ''],
                     'show_value' => 3
                 ],
             ],
             'show_value' => 1
         ],
         'pay_success_printing_switch' => [
-            'son_type' => [
-                'develop_id' => '',
-                'printing_api_key' => '',
+            'son_type'   => [
+                'develop_id'         => '',
+                'printing_api_key'   => '',
                 'printing_client_id' => '',
-                'terminal_number' => '',
+                'terminal_number'    => '',
             ],
             'show_value' => 1
         ],
-        'wss_open' => [
-            'son_type' => [
+        'wss_open'                    => [
+            'son_type'   => [
                 'wss_local_cert' => '',
-                'wss_local_pk' => '',
+                'wss_local_pk'   => '',
             ],
             'show_value' => 1
         ],
-        'invoice_func_status' => [
-            'son_type' => [
+        'invoice_func_status'         => [
+            'son_type'   => [
                 'special_invoice_status' => '',
             ],
             'show_value' => 1
         ],
-        'member_func_status' => [
-            'son_type' => [
+        'member_func_status'          => [
+            'son_type'   => [
                 'member_price_status' => '',
-                'order_give_exp' => '',
-                'sign_give_exp' => '',
-                'invite_user_exp' => ''
+                'order_give_exp'      => '',
+                'sign_give_exp'       => '',
+                'invite_user_exp'     => ''
             ],
             'show_value' => 1
         ],
-        'balance_func_status' => [
-            'son_type' => [
-                'recharge_attention' => '',
-                'recharge_switch' => '',
+        'balance_func_status'         => [
+            'son_type'   => [
+                'recharge_attention'      => '',
+                'recharge_switch'         => '',
                 'store_user_min_recharge' => '',
             ],
             'show_value' => 1
         ],
-        'system_product_copy_type' => [
-            'son_type' => [
+        'system_product_copy_type'    => [
+            'son_type'   => [
                 'copy_product_apikey' => '',
             ],
             'show_value' => 2
         ],
-        'logistics_type' => [
-            'son_type' => [
+        'logistics_type'              => [
+            'son_type'   => [
                 'system_express_app_code' => '',
             ],
             'show_value' => 2
         ],
-        'ali_pay_status' => [
-            'son_type' => [
-                'ali_pay_appid' => '',
+        'ali_pay_status'              => [
+            'son_type'   => [
+                'ali_pay_appid'               => '',
                 'alipay_merchant_private_key' => '',
-                'alipay_public_key' => '',
+                'alipay_public_key'           => '',
             ],
             'show_value' => 1
         ],
-        'pay_weixin_open' => [
-            'son_type' => [
-                'pay_weixin_mchid' => '',
-                'pay_weixin_key' => '',
+        'pay_weixin_open'             => [
+            'son_type'   => [
+                'pay_weixin_mchid'       => '',
+                'pay_weixin_key'         => '',
                 'pay_weixin_client_cert' => '',
-                'pay_weixin_client_key' => '',
-                'paydir' => '',
+                'pay_weixin_client_key'  => '',
+                'paydir'                 => '',
             ],
             'show_value' => 1
         ],
-        'config_export_open' => [
-            'son_type' => [
-                'config_export_to_name' => '',
-                'config_export_to_tel' => '',
+        'config_export_open'          => [
+            'son_type'   => [
+                'config_export_to_name'    => '',
+                'config_export_to_tel'     => '',
                 'config_export_to_address' => '',
-                'config_export_siid' => '',
+                'config_export_siid'       => '',
             ],
             'show_value' => 1
         ],
-        'image_watermark_status' => [
-            'son_type' => [
-                'watermark_type' => [
-                    'son_type' => [
-                        'watermark_image' => '',
+        'image_watermark_status'      => [
+            'son_type'   => [
+                'watermark_type'     => [
+                    'son_type'   => [
+                        'watermark_image'   => '',
                         'watermark_opacity' => '',
-                        'watermark_rotate' => '',
+                        'watermark_rotate'  => '',
                     ],
                     'show_value' => 1
                 ],
                 'watermark_position' => '',
-                'watermark_x' => '',
-                'watermark_y' => '',
-                'watermark_type@' => [
-                    'son_type' => [
-                        'watermark_text' => '',
-                        'watermark_text_size' => '',
+                'watermark_x'        => '',
+                'watermark_y'        => '',
+                'watermark_type@'    => [
+                    'son_type'   => [
+                        'watermark_text'       => '',
+                        'watermark_text_size'  => '',
                         'watermark_text_color' => '',
                         'watermark_text_angle' => ''
                     ],
@@ -204,8 +204,8 @@ class SystemConfigServices extends BaseServices
             ],
             'show_value' => 1
         ],
-        'share_qrcode' => [
-            'son_type' => [
+        'share_qrcode'                => [
+            'son_type'   => [
                 'spread_share_forever' => '',
             ],
             'show_value' => 1
@@ -218,13 +218,13 @@ class SystemConfigServices extends BaseServices
      */
     public function __construct(SystemConfigDao $dao, FormBuilder $builder)
     {
-        $this->dao = $dao;
+        $this->dao     = $dao;
         $this->builder = $builder;
     }
 
     public function getSonConfig()
     {
-        $sonConfig = [];
+        $sonConfig  = [];
         $rolateRule = $this->relatedRule;
         if ($rolateRule) {
             foreach ($rolateRule as $key => $value) {
@@ -274,7 +274,7 @@ class SystemConfigServices extends BaseServices
     public function getConfigList(array $where)
     {
         [$page, $limit] = $this->getPageValue();
-        $list = $this->dao->getConfigList($where, $page, $limit);
+        $list  = $this->dao->getConfigList($where, $page, $limit);
         $count = $this->dao->count($where);
         foreach ($list as &$item) {
             $item['value'] = $item['value'] ? json_decode($item['value'], true) ?: '' : '';
@@ -308,7 +308,7 @@ class SystemConfigServices extends BaseServices
      */
     public function getRadioOrCheckboxValueInfo(string $menu_name, $value): string
     {
-        $option = [];
+        $option     = [];
         $config_one = $this->dao->getOne(['menu_name' => $menu_name]);
         if (!$config_one) {
             return '';
@@ -316,7 +316,7 @@ class SystemConfigServices extends BaseServices
         $parameter = explode("\n", $config_one['parameter']);
         foreach ($parameter as $k => $v) {
             if (isset($v) && strlen($v) > 0) {
-                $data = explode('=>', $v);
+                $data             = explode('=>', $v);
                 $option[$data[0]] = $data[1];
             }
         }
@@ -364,7 +364,7 @@ class SystemConfigServices extends BaseServices
         switch ($type) {
             case 'input':
                 $data['value'] = isset($data['value']) ? json_decode($data['value'], true) : '';
-                $formbuider[] = $this->builder->input($data['menu_name'], $data['info'], $data['value'])->info($data['desc'])->placeholder($data['desc'])->col(13);
+                $formbuider[]  = $this->builder->input($data['menu_name'], $data['info'], $data['value'])->info($data['desc'])->placeholder($data['desc'])->col(13);
                 break;
             case 'number':
                 $data['value'] = isset($data['value']) ? json_decode($data['value'], true) : 0;
@@ -379,11 +379,11 @@ class SystemConfigServices extends BaseServices
                 break;
             case 'color':
                 $data['value'] = isset($data['value']) ? json_decode($data['value'], true) : '';
-                $formbuider[] = $this->builder->color($data['menu_name'], $data['info'], $data['value'])->info($data['desc']);
+                $formbuider[]  = $this->builder->color($data['menu_name'], $data['info'], $data['value'])->info($data['desc']);
                 break;
             default:
                 $data['value'] = isset($data['value']) ? json_decode($data['value'], true) : '';
-                $formbuider[] = $this->builder->input($data['menu_name'], $data['info'], $data['value'])->info($data['desc'])->placeholder($data['desc'])->col(13);
+                $formbuider[]  = $this->builder->input($data['menu_name'], $data['info'], $data['value'])->info($data['desc'])->placeholder($data['desc'])->col(13);
                 break;
         }
         return $formbuider;
@@ -397,7 +397,7 @@ class SystemConfigServices extends BaseServices
     public function createTextareaForm(array $data)
     {
         $data['value'] = json_decode($data['value'], true) ?: '';
-        $formbuider[] = $this->builder->textarea($data['menu_name'], $data['info'], $data['value'])->placeholder($data['desc'])->info($data['desc'])->rows(6)->col(13);
+        $formbuider[]  = $this->builder->textarea($data['menu_name'], $data['info'], $data['value'])->placeholder($data['desc'])->info($data['desc'])->rows(6)->col(13);
         return $formbuider;
     }
 
@@ -409,14 +409,14 @@ class SystemConfigServices extends BaseServices
      */
     public function createRadioForm(array $data, $control = false, $control_two = [])
     {
-        $formbuider = [];
+        $formbuider    = [];
         $data['value'] = json_decode($data['value'], true) ?: '0';
-        $parameter = explode("\n", $data['parameter']);
-        $options = [];
+        $parameter     = explode("\n", $data['parameter']);
+        $options       = [];
         if ($parameter) {
             foreach ($parameter as $v) {
                 if (strstr($v, $this->cuttingStr) !== false) {
-                    $pdata = explode($this->cuttingStr, $v);
+                    $pdata     = explode($this->cuttingStr, $v);
                     $options[] = ['label' => $pdata[1], 'value' => (int)$pdata[0]];
                 }
             }
@@ -457,7 +457,7 @@ class SystemConfigServices extends BaseServices
             case 3:
                 $data['value'] = json_decode($data['value'], true) ?: '';
                 if (!$data['value']) $data['value'] = set_file_url($data['value']);
-                $formbuider[] = $this->builder->uploadFile($data['menu_name'], $data['info'], $this->url('/adminapi/file/upload/1', ['type' => 1], false, false), $data['value'])
+                $formbuider[] = $this->builder->uploadFile($data['menu_name'], $data['info'], request()->host() . $this->url('/adminapi/file/upload/1', ['type' => 1], false, false), $data['value'])
                     ->name('file')->info($data['desc'])->col(13)->headers([
                         'Authori-zation' => app()->request->header('Authori-zation'),
                     ]);
@@ -474,14 +474,14 @@ class SystemConfigServices extends BaseServices
      */
     public function createCheckboxForm(array $data)
     {
-        $formbuider = [];
+        $formbuider    = [];
         $data['value'] = json_decode($data['value'], true) ?: [];
-        $parameter = explode("\n", $data['parameter']);
-        $options = [];
+        $parameter     = explode("\n", $data['parameter']);
+        $options       = [];
         if ($parameter) {
             foreach ($parameter as $v) {
                 if (strstr($v, $this->cuttingStr) !== false) {
-                    $pdata = explode($this->cuttingStr, $v);
+                    $pdata     = explode($this->cuttingStr, $v);
                     $options[] = ['label' => $pdata[1], 'value' => $pdata[0]];
                 }
             }
@@ -498,14 +498,14 @@ class SystemConfigServices extends BaseServices
      */
     public function createSelectForm(array $data)
     {
-        $formbuider = [];
+        $formbuider    = [];
         $data['value'] = json_decode($data['value'], true) ?: [];
-        $parameter = explode("\n", $data['parameter']);
-        $options = [];
+        $parameter     = explode("\n", $data['parameter']);
+        $options       = [];
         if ($parameter) {
             foreach ($parameter as $v) {
                 if (strstr($v, $this->cuttingStr) !== false) {
-                    $pdata = explode($this->cuttingStr, $v);
+                    $pdata     = explode($this->cuttingStr, $v);
                     $options[] = ['label' => $pdata[1], 'value' => $pdata[0]];
                 }
             }
@@ -524,8 +524,8 @@ class SystemConfigServices extends BaseServices
                 foreach ($rv['son_type'] as $sk => $sv) {
                     if (is_array($sv) && isset($sv['son_type'])) {
                         foreach ($sv['son_type'] as $ssk => $ssv) {
-                            $tmp = $data[$sk];
-                            $tmp['console'] = $data[$ssk];
+                            $tmp                      = $data[$sk];
+                            $tmp['console']           = $data[$ssk];
                             $p_list[$rk]['console'][] = $tmp;
                         }
                     } else {
@@ -605,10 +605,10 @@ class SystemConfigServices extends BaseServices
     public function createForm(array $list)
     {
         if (!$list) return [];
-        $list = array_combine(array_column($list, 'menu_name'), $list);
+        $list       = array_combine(array_column($list, 'menu_name'), $list);
         $formbuider = [];
         $relateRule = $this->relatedRule;
-        $sonConfig = $this->getSonConfig();
+        $sonConfig  = $this->getSonConfig();
         foreach ($list as $key => $data) {
             if (in_array($key, $sonConfig)) {
                 continue;
@@ -620,23 +620,23 @@ class SystemConfigServices extends BaseServices
                 case 'radio'://单选框
                     $builder = [];
                     if (isset($relateRule[$key])) {
-                        $role = $relateRule[$key];
+                        $role               = $relateRule[$key];
                         $data['show_value'] = $role['show_value'];
                         foreach ($role['son_type'] as $sk => $sv) {
                             if (isset($list[$sk])) {
-                                $son_data = $list[$sk];
+                                $son_data               = $list[$sk];
                                 $son_data['show_value'] = $role['show_value'];
-                                $son_build = [];
+                                $son_build              = [];
                                 if (isset($sv['son_type'])) {
                                     foreach ($sv['son_type'] as $ssk => $ssv) {
                                         $son_data['show_value'] = $sv['show_value'];
-                                        $son_build[] = $this->formTypeShine($list[$ssk])[0];
+                                        $son_build[]            = $this->formTypeShine($list[$ssk])[0];
                                         unset($list[$ssk]);
                                     }
                                 }
                                 $son_build_two = [];
                                 if (isset($role['son_type'][$sk . '@'])) {
-                                    $son_type_two = $role['son_type'][$sk . '@'];
+                                    $son_type_two            = $role['son_type'][$sk . '@'];
                                     $son_data['show_value2'] = $son_type_two['show_value'];
                                     if (isset($son_type_two['son_type'])) {
                                         foreach ($son_type_two['son_type'] as $ssk => $ssv) {
@@ -722,7 +722,7 @@ class SystemConfigServices extends BaseServices
     {
         if (!$list || !$relatedRule) return false;
         $formbuider = [];
-        $new_data = array();
+        $new_data   = array();
         foreach ($list as $dk => $dv) {
             $new_data[$dv['menu_name']] = $dv;
         }
@@ -738,14 +738,14 @@ class SystemConfigServices extends BaseServices
                         foreach ($rv['son_type'] as $sk => $sv) {
                             if (isset($sv['son_type'])) {
                                 foreach ($sv['son_type'] as $ssk => $ssv) {
-                                    $son_data = $new_data[$sk];
+                                    $son_data               = $new_data[$sk];
                                     $son_data['show_value'] = $sv['show_value'];
-                                    $son_builder[] = $this->formTypeShine($son_data, $this->formTypeShine($new_data[$ssk])[0])[0];
+                                    $son_builder[]          = $this->formTypeShine($son_data, $this->formTypeShine($new_data[$ssk])[0])[0];
                                 }
                             } else {
-                                $son_data = $new_data[$sk];
+                                $son_data               = $new_data[$sk];
                                 $son_data['show_value'] = $rv['show_value'];
-                                $son_builder[] = $this->formTypeShine($son_data)[0];
+                                $son_builder[]          = $this->formTypeShine($son_data)[0];
                             }
 
                         }
@@ -781,11 +781,11 @@ class SystemConfigServices extends BaseServices
     public function getConfigForm($url, int $tabId)
     {
         /** @var SystemConfigTabServices $service */
-        $service = app()->make(SystemConfigTabServices::class);
-        $title = $service->value(['id' => $tabId], 'title');
-        $list = $this->dao->getConfigTabAllList($tabId);
+        $service    = app()->make(SystemConfigTabServices::class);
+        $title      = $service->value(['id' => $tabId], 'title');
+        $list       = $this->dao->getConfigTabAllList($tabId);
         $formbuider = $this->createForm($list);
-        $name = 'setting';
+        $name       = 'setting';
         if ($url) {
             $name = explode('/', $url)[2] ?? $name;
         }
@@ -838,8 +838,8 @@ class SystemConfigServices extends BaseServices
             throw new AdminException('修改数据不存在!');
         }
         /** @var SystemConfigTabServices $service */
-        $service = app()->make(SystemConfigTabServices::class);
-        $formbuider = [];
+        $service      = app()->make(SystemConfigTabServices::class);
+        $formbuider   = [];
         $formbuider[] = $this->builder->input('menu_name', '字段变量', $menu['menu_name'])->disabled(1);
         $formbuider[] = $this->builder->hidden('type', $menu['type']);
         $formbuider[] = $this->builder->select('config_tab_id', '分类', (int)$menu['config_tab_id'])->setOptions($service->getSelectForm());
@@ -848,7 +848,7 @@ class SystemConfigServices extends BaseServices
         switch ($menu['type']) {
             case 'text':
                 $menu['value'] = json_decode($menu['value'], true);
-                $formbuider[] = $this->builder->select('input_type', '类型', $menu['input_type'])->setOptions([
+                $formbuider[]  = $this->builder->select('input_type', '类型', $menu['input_type'])->setOptions([
                     ['value' => 'input', 'label' => '文本框']
                     , ['value' => 'dateTime', 'label' => '时间']
                     , ['value' => 'color', 'label' => '颜色']
@@ -944,40 +944,40 @@ class SystemConfigServices extends BaseServices
     public function createFormRule(int $type, int $tab_id): array
     {
         /** @var SystemConfigTabServices $service */
-        $service = app()->make(SystemConfigTabServices::class);
+        $service    = app()->make(SystemConfigTabServices::class);
         $formbuider = [];
-        $form_type = '';
-        $info_type = [];
-        $parameter = [];
+        $form_type  = '';
+        $info_type  = [];
+        $parameter  = [];
         switch ($type) {
             case 0://文本框
-                $form_type = 'text';
-                $info_type = $this->builder->select('input_type', '类型')->setOptions($this->textType());
+                $form_type   = 'text';
+                $info_type   = $this->builder->select('input_type', '类型')->setOptions($this->textType());
                 $parameter[] = $this->builder->input('value', '默认值');
                 $parameter[] = $this->builder->number('width', '文本框宽(%)', 100);
                 $parameter[] = $this->builder->input('required', '验证规则')->placeholder('多个请用,隔开例如：required:true,url:true');
                 break;
             case 1://多行文本框
-                $form_type = 'textarea';
+                $form_type   = 'textarea';
                 $parameter[] = $this->builder->textarea('value', '默认值');
                 $parameter[] = $this->builder->number('width', '文本框宽(%)', 100);
                 $parameter[] = $this->builder->number('high', '多行文本框高(%)', 5);
                 break;
             case 2://单选框
-                $form_type = 'radio';
+                $form_type   = 'radio';
                 $parameter[] = $this->builder->textarea('parameter', '配置参数')->placeholder("参数方式例如:\n1=>男\n2=>女\n3=>保密");
                 $parameter[] = $this->builder->input('value', '默认值');
                 break;
             case 3://文件上传
-                $form_type = 'upload';
+                $form_type   = 'upload';
                 $parameter[] = $this->builder->radio('upload_type', '上传类型', 1)->options($this->uploadType());
                 break;
             case 4://多选框
-                $form_type = 'checkbox';
+                $form_type   = 'checkbox';
                 $parameter[] = $this->builder->textarea('parameter', '配置参数')->placeholder("参数方式例如:\n1=>白色\n2=>红色\n3=>黑色");
                 break;
             case 5://下拉框
-                $form_type = 'select';
+                $form_type   = 'select';
                 $parameter[] = $this->builder->textarea('parameter', '配置参数')->placeholder("参数方式例如:\n1=>白色\n2=>红色\n3=>黑色");
                 break;
         }
@@ -990,7 +990,7 @@ class SystemConfigServices extends BaseServices
             $formbuider[] = $this->builder->input('info', '配置名称')->autofocus(1);
             $formbuider[] = $this->builder->input('menu_name', '字段变量')->placeholder('例如：site_url');
             $formbuider[] = $this->builder->input('desc', '配置简介');
-            $formbuider = array_merge($formbuider, $parameter);
+            $formbuider   = array_merge($formbuider, $parameter);
             $formbuider[] = $this->builder->number('sort', '排序', 0);
             $formbuider[] = $this->builder->radio('status', '状态', 1)->options($this->formStatus());
         }
@@ -1004,10 +1004,10 @@ class SystemConfigServices extends BaseServices
      */
     public function valiDateRadioAndCheckbox($data)
     {
-        $option = [];
-        $option_new = [];
+        $option            = [];
+        $option_new        = [];
         $data['parameter'] = str_replace("\r\n", "\n", $data['parameter']);//防止不兼容
-        $parameter = explode("\n", $data['parameter']);
+        $parameter         = explode("\n", $data['parameter']);
         if (count($parameter) < 2) {
             throw new AdminException('请输入正确格式的配置参数');
         }
@@ -1195,8 +1195,8 @@ WSS;
     {
         try {
             $config_data = $post['store_brokerage_binding_status'];
-            $config_one = $this->dao->getOne(['menu_name' => 'store_brokerage_binding_status']);
-            $config_old = json_decode($config_one['value'], true);
+            $config_one  = $this->dao->getOne(['menu_name' => 'store_brokerage_binding_status']);
+            $config_old  = json_decode($config_one['value'], true);
             if ($config_old != 2 && $config_data == 2) {
                 //自动解绑上级绑定
 

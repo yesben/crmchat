@@ -79,7 +79,7 @@ class ChatUserLabelServices extends BaseServices
         return [
             Form::select('cate_id', '标签分类', $label['cate_id'] ?? 0)->options($options),
             Form::input('label', '标签名称', $label['label'] ?? ''),
-            Form::number('sort', '排序', $label['sort'] ?? 0),
+//            Form::number('sort', '排序', $label['sort'] ?? 0),
         ];
     }
 
