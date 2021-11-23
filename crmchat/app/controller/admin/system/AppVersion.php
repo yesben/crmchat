@@ -66,13 +66,13 @@ class AppVersion extends AuthController
     {
         $data = $this->request->postMore([
             ['name', ''],
-            ['verisons', ''],
+            ['verisons_num', ''],
             ['url', ''],
             ['info', ''],
         ]);
 
         $verison = $this->services->max();
-        if ($data['verisons'] < $verison) {
+        if ($data['verisons_num'] < $verison) {
             return $this->fail('您输入的版本号必须大于：' . $verison . '版本号');
         }
         if ($id) {

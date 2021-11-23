@@ -28,7 +28,7 @@ class AppVersionDao extends BaseDao
      * @param string $field
      * @return mixed
      */
-    public function max(array $where = [], string $field = 'versions')
+    public function max(array $where = [], string $field = 'verisons_num')
     {
         return $this->search($where)->max($field);
     }
