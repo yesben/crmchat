@@ -37,7 +37,7 @@
 
 <script>
 import { adminAppCustomer } from '@/api/kefu';
-import { chatQrcode, chatQrcodeForm, deleteChatQrcode } from '@/api/setting';
+import { chatQrcode, chatQrcodeForm } from '@/api/setting';
 import { mapState } from 'vuex';
 import QRCode from 'qrcodejs2';
 
@@ -136,7 +136,6 @@ export default {
         },
         // 编辑
         onEdit(row) {
-            console.log(row);
             this.$modalForm(chatQrcodeForm(row.id)).then(() => this.chatQrcode());
         },
         // 删除

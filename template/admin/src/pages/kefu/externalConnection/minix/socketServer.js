@@ -1,5 +1,5 @@
 import { mobileScoket } from '@/libs/socket';
-import { userRecord, serviceUpload, serviceAdv } from '@/api/kefu';
+import { userRecord, serviceUpload, serviceAdv, userStatistics } from '@/api/kefu';
 import { setLoc, getLoc } from '@/libs/util'
 import { mapState } from 'vuex';
 import Cookies from "js-cookie";
@@ -106,6 +106,9 @@ export default {
     });
 
     this.getServiceAdv();
+
+    this.userStatistics();
+    
   },
   watch: {
     productMessage: {
@@ -122,6 +125,29 @@ export default {
     },
   },
   methods: {
+    userStatistics() {
+        let ua = window.navigator.userAgent;
+        let browser = '';
+        if (ua.indexOf('MSIE') != -1 && (!!window.ActiveXObject || 'ActiveXObject' in window)) {
+            browser = 'IE';
+        } else if (ua.indexOf('Firefox') != -1) {
+            browser = 'Firefox';
+        } else if (ua.indexOf('Chrome') != -1) {
+            browser = 'Chrome';
+        } else if (ua.indexOf('Opera') != -1) {
+            browser = 'Opera';
+        } else if (ua.indexOf('Safari') != -1) {
+            browser = 'Safari';
+        } else if (ua.indexOf('Netscape') != -1) {
+            browser = 'Netscape';
+        }
+        userStatistics({
+            ip: window.returnCitySN.cip,
+            path: window.location.href,
+            source: window.parent.location.href,
+            browser: browser
+        });
+      },
     redirect(){
       if (this.isMobile && this.deviceType == 'mobile'){
 

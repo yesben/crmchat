@@ -550,29 +550,27 @@ export function putUserLabel(uid, data) {
 }
 
 /**
- * 修改分组
- * @param {*} id 
+ * 标签移动排序
  * @param {*} data 
  * @returns 
  */
-export function sortGroupLabel(id, data) {
+export function userLabelMove(data) {
     return request({
-        url: `user/group/${id}`,
-        method: 'put',
+        url: 'user/label/move',
+        method: 'post',
         data
     });
 }
 
 /**
- * 修改标签
- * @param {*} id 
+ * 标签分类移动排序
  * @param {*} data 
  * @returns 
  */
-export function sortUserLabel(id, data) {
+export function userLabelMoveCate(data) {
     return request({
-        url: `user/label/${id}`,
-        method: 'put',
+        url: 'user/label/move_cate',
+        method: 'post',
         data
     });
 }

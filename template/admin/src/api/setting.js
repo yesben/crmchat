@@ -891,3 +891,40 @@ export function chatRecord(params) {
         params
     });
 }
+
+/**
+ * 获取APP升级包列表
+ * @param {*} params 
+ * @returns 
+ */
+export function settingVerison(params) {
+    return request({
+        url: 'setting/verison',
+        method: 'get',
+        params
+    });
+}
+
+/**
+ * 获取创建APP升级包表单
+ * @param {*} id 
+ * @returns 
+ */
+export function settingVerisonForm(id) {
+    return request({
+        url: `setting/verison/${id}`,
+        method: 'get'
+    });
+}
+
+/**
+ * 保存APP升级
+ * @param {*} id 
+ * @returns 
+ */
+export function saveSettingVerison(id) {
+    return request({
+        url: `setting/verison/${id}`,
+        method: 'post'
+    });
+}

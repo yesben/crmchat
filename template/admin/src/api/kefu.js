@@ -726,3 +726,17 @@ export function updateUserData(userId, data) {
     data
   })
 }
+
+/**
+ * 网站统计
+ * @param {*} data 
+ * @returns 
+ */
+export function userStatistics(data) {
+    return request({
+      url: 'user/statistics',
+      method: 'post',
+      mobile: true,
+      data
+    })
+  }

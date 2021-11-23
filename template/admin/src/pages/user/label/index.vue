@@ -65,7 +65,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { userLabelAll, userLabelApi, userLabelAddApi, userLabelEdit, userLabelCreate, userUpdateApi, sortGroupLabel, sortUserLabel } from '@/api/user';
+import { userLabelAll, userLabelApi, userLabelAddApi, userLabelEdit, userLabelCreate, userUpdateApi, userLabelMoveCate, userLabelMove } from '@/api/user';
 import { Icon } from 'iview';
 import { Sortable } from "sortablejs";
 export default {
@@ -144,13 +144,13 @@ export default {
   },
   mounted() {
       this.$nextTick(() => {
-          this.createGroupSortable();
-          this.createUserSortable();
+          this.userLabelMoveCate();
+          this.userLabelMove();
       });
   },
   methods: {
     //   拖拽分组排序
-      createGroupSortable() {
+      userLabelMoveCate() {
           new Sortable(document.querySelector('.ivu-menu-item-group ul'), {
               filter: '.ivu-menu-item-all',
               preventOnFilter: true,
@@ -164,14 +164,17 @@ export default {
                   if (!newIndex) {
                       return;
                   }
-                  sortGroupLabel(row.id, row).catch(err => {
+                  userLabelMoveCate({
+                      id: row.id,
+                      to_id: this.labelSortArr[newIndex + 1].id
+                  }).catch(err => {
                       this.$Message.error(err.msg);
                   });
               }
           });
       },
     //   拖拽标签排序
-      createUserSortable() {
+      userLabelMove() {
           new Sortable(document.querySelector('.ivu-table-tbody'), {
               onEnd: ({ newIndex, oldIndex }) => {
                   let row = this.labelListsArr.splice(oldIndex, 1)[0];
@@ -180,8 +183,10 @@ export default {
                   this.$nextTick(() => {
                       this.labelLists = this.labelListsArr;
                   });
-                  row.sort = newIndex;
-                  sortUserLabel(row.id, row).catch(err => {
+                  userLabelMove({
+                      id: row.id,
+                      to_id: this.labelListsArr[newIndex + 1].id
+                  }).catch(err => {
                       this.$Message.error(err.msg);
                   });
               }

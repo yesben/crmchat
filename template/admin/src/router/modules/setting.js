@@ -123,6 +123,15 @@ export default {
             title: '客服图标'
         },
         component: () => import('@/pages/system/group/kfIcon')
+    },
+    {
+        path: 'app/version',
+        name: `${pre}version`,
+        meta: {
+            auth: ['setting-app-version'],
+            title: 'APP在线升级'
+        },
+        component: () => import('@/pages/setting/version/index')
     }
   ]
 }

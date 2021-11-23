@@ -74,7 +74,7 @@ export default {
                     key: 'region',
                     minWidth: 80,
                     render: (h, params) => {
-                        return h('span', `${params.row.region} ${params.row.province}`);
+                        return h('span', `${params.row.province} ${params.row.region}`);
                     }
                 },
             ],
