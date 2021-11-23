@@ -90,8 +90,10 @@ class Label extends AuthController
         ], true);
 
         $this->services->transaction(function () use ($id, $toId) {
-            $this->services->update($id, ['sort' => $this->services->value($toId, 'sort')]);
-            $this->services->update($toId, ['sort' => $this->services->value($id, 'sort')]);
+            $toSort = $this->services->value($toId, 'sort');
+            $sort   = $this->services->value($id, 'sort');
+            $this->services->update($id, ['sort' => $toSort]);
+            $this->services->update($toId, ['sort' => $sort]);
         });
         return $this->success('修改成功');
     }
