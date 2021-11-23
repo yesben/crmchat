@@ -72,7 +72,7 @@ class AppVersion extends AuthController
         ]);
 
         $verison = $this->services->max();
-        if ($data['verison'] < $verison) {
+        if ($data['verisons'] < $verison) {
             return $this->fail('您输入的版本号必须大于：' . $verison . '版本号');
         }
         if ($id) {
