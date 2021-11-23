@@ -153,8 +153,8 @@ Route::group('api', function () {
             Route::put('/batch/group', 'User/batchGroup')->option(['real_name' => '批量修改用户分组']);
             Route::get('/label/all', 'User/getLabelAll')->option(['real_name' => '获取全部标签']);
             Route::get('/group/all', 'User/getGroupAll')->option(['real_name' => '获取全部分组']);
-            Route::get('/label/move', 'Label/move')->option(['real_name' => '标签移动排序']);
-            Route::get('/label/move_cate', 'LabelCate/move')->option(['real_name' => '标签分类移动排序']);
+            Route::post('/label/move', 'Label/move')->option(['real_name' => '标签移动排序']);
+            Route::post('/label/move_cate', 'LabelCate/move')->option(['real_name' => '标签分类移动排序']);
 
             Route::resource('label/cate', 'LabelCate')->option(['real_name' => [
                 'index'  => '获取标签分类列表接口',
