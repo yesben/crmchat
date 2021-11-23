@@ -270,6 +270,19 @@ export function userLabelAll(data) {
 }
 
 /**
+ * 修改表单分类
+ * @param id
+ * @param data
+ */
+export function userLabelCateEdit(id,data) {
+    return request({
+        url: `user/label/cate/${id}`,
+        method: 'put',
+        data
+    });
+}
+
+/**
  * 添加用户
  */
 export function getUserSaveForm() {
@@ -551,9 +564,9 @@ export function putUserLabel(uid, data) {
 
 /**
  * 修改分组
- * @param {*} id 
- * @param {*} data 
- * @returns 
+ * @param {*} id
+ * @param {*} data
+ * @returns
  */
 export function sortGroupLabel(id, data) {
     return request({
@@ -565,9 +578,9 @@ export function sortGroupLabel(id, data) {
 
 /**
  * 修改标签
- * @param {*} id 
- * @param {*} data 
- * @returns 
+ * @param {*} id
+ * @param {*} data
+ * @returns
  */
 export function sortUserLabel(id, data) {
     return request({

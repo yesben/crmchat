@@ -28,6 +28,16 @@ class Collection extends \think\Collection
      */
     public function get($key, $default = null)
     {
+        if (strstr($key, '.') !== false) {
+            $keys  = explode('.', $key);
+            $value = $this->items;
+            foreach ($keys as $k) {
+                if (isset($value[$k])) {
+                    $value = $value[$k];
+                }
+            }
+            return $value;
+        }
         if (array_key_exists($key, $this->items)) {
             return $this->items[$key];
         }
