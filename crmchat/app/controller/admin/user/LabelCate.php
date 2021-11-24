@@ -116,10 +116,7 @@ class LabelCate extends AuthController
         ], true);
 
         $this->services->transaction(function () use ($id, $toId) {
-            $toSort = $this->services->value($toId, 'sort');
-            $sort   = $this->services->value($id, 'sort');
-            $this->services->update($id, ['sort' => $toSort]);
-            $this->services->update($toId, ['sort' => $sort]);
+            $this->services->labelMove((int)$id, (int)$toId);
         });
         return $this->success('修改成功');
     }
