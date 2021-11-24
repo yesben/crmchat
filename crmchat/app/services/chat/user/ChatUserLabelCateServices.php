@@ -95,4 +95,33 @@ class ChatUserLabelCateServices extends CategoryServices
         }
         return $labelAll;
     }
+
+    /**
+     * 排序移动
+     * @param int $id
+     * @param int $toId
+     * @return bool
+     */
+    public function labelMove(int $id, int $toId)
+    {
+        $move      = $this->dao->getMoveCate($id, $toId);
+        $unsetInfo = [];
+        foreach ($move as $key => $item) {
+            if ($item['id'] == $id) {
+                $unsetInfo = $item;
+                unset($move[$key]);
+            }
+        }
+        $count             = count($move);
+        $maxSort           = $move[$count - 1]['sort'];
+        $unsetInfo['sort'] = $maxSort;
+        for ($i = 1; $i < $count - 1; $i++) {
+            $move[$i]['sort'] = $maxSort - $i;
+        }
+        array_push($move, $unsetInfo);
+        foreach ($move as $item) {
+            $this->dao->update($item['id'], ['sort' => $item['sort']]);
+        }
+        return true;
+    }
 }
