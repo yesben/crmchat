@@ -42,6 +42,6 @@ class AppVersionDao extends BaseDao
      */
     public function getVersion(string $version)
     {
-        return $this->getModel()->where('verisons_num', '>', $version)->find();
+        return $this->getModel()->where('verisons_num', '>', $version)->order('verisons_num desc')->find();
     }
 }

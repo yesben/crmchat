@@ -445,9 +445,11 @@ class Service extends AuthController
         ], true);
 
         if ($info = $services->getVersion($version)) {
-            return $this->success($info->toArray());
+            $info            = $info->toArray();
+            $info['update'] = true;
+            return $this->success($info);
         } else {
-            return $this->fail('暂无升级版本');
+            return $this->success(['update' => false]);
         }
     }
 
