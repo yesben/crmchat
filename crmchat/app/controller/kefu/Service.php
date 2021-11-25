@@ -442,7 +442,7 @@ class Service extends AuthController
         [$version, $name] = $this->request->postMore([
             ['version', ''],
             ['name', '']
-        ]);
+        ], true);
 
         if ($info = $services->getVersion($version)) {
             return $this->success($info->toArray());
