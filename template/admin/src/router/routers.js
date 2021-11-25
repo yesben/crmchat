@@ -12,7 +12,6 @@ import index from './modules/index'
 import user from './modules/user'
 // import echarts from './modules/echarts'
 import setting from './modules/setting'
-import app from './modules/app'
 import system from './modules/system'
 import BasicLayout from '@/components/main'
 import frameOut from './modules/frameOut'
@@ -94,19 +93,10 @@ const frameIn = [
         },
         component: () => import('@/components/customerInfo/index')
     },
-    {
-        path: '/admin/widget.video/index.html',
-        name: `video`,
-        meta: {
-            title: '上传视频'
-        },
-        component: () => import('@/components/uploadVideo/index')
-    },
     index,
     user,
     setting,
     system,
-    app,
     kefu
 ]
 

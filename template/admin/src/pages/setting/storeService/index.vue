@@ -319,7 +319,7 @@ export default {
   created() {
     adminAppCustomer().then(res => {
         if (res.status == 200 && res.data.list.length) {
-            this.qrcodeTextStart += `&token=${res.data.list[0].token}`;
+            this.qrcodeTextStart += `&token=${res.data.list[0].token_md5}`;
         }
     });
     this.getList()
@@ -348,7 +348,7 @@ export default {
                 colorDark : "#000000",
                 colorLight : "#ffffff",
                 correctLevel : QRCode.CorrectLevel.L
-            });   
+            });
         }
         this.modal = true;
     },
