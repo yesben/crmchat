@@ -16,6 +16,7 @@ use app\services\other\CategoryServices;
 use crmeb\basic\BaseDao;
 use crmeb\services\FormBuilder as Form;
 use think\exception\ValidateException;
+use think\facade\Db;
 
 /**
  * 标签分类
@@ -94,5 +95,21 @@ class ChatUserLabelCateServices extends CategoryServices
             }
         }
         return $labelAll;
+    }
+
+    /**
+     * 排序移动
+     * @param array $id
+     * @return bool
+     */
+    public function labelMove(array $ids)
+    {
+        $count   = count($ids);
+        $sortMax = $count + 1;
+        foreach ($ids as $id) {
+            $this->dao->update($id, ['sort' => $sortMax]);
+            $sortMax--;
+        }
+        return true;
     }
 }

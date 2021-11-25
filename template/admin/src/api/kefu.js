@@ -729,8 +729,8 @@ export function updateUserData(userId, data) {
 
 /**
  * 网站统计
- * @param {*} data 
- * @returns 
+ * @param {*} data
+ * @returns
  */
 export function userStatistics(data) {
     return request({
@@ -740,3 +740,4 @@ export function userStatistics(data) {
       data
     })
   }
+

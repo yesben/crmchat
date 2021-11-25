@@ -844,7 +844,7 @@ export function cityCleanCacheApi() {
 
 /**
  * 获取随机客服二维码
- * @returns 
+ * @returns
  */
 export function chatQrcode(params) {
     return request({
@@ -856,8 +856,8 @@ export function chatQrcode(params) {
 
 /**
  * 获取随机客服二维码表单
- * @param {*} id 
- * @returns 
+ * @param {*} id
+ * @returns
  */
 export function chatQrcodeForm(id) {
     return request({
@@ -868,8 +868,8 @@ export function chatQrcodeForm(id) {
 
 /**
  * 站点统计
- * @param {*} params 
- * @returns 
+ * @param {*} params
+ * @returns
  */
 export function chatStatistics(params) {
     return request({
@@ -881,8 +881,8 @@ export function chatStatistics(params) {
 
 /**
  * 查看所有聊天记录
- * @param {*} params 
- * @returns 
+ * @param {*} params
+ * @returns
  */
 export function chatRecord(params) {
     return request({
@@ -894,8 +894,8 @@ export function chatRecord(params) {
 
 /**
  * 获取APP升级包列表
- * @param {*} params 
- * @returns 
+ * @param {*} params
+ * @returns
  */
 export function settingVerison(params) {
     return request({
@@ -907,8 +907,8 @@ export function settingVerison(params) {
 
 /**
  * 获取创建APP升级包表单
- * @param {*} id 
- * @returns 
+ * @param {*} id
+ * @returns
  */
 export function settingVerisonForm(id) {
     return request({
@@ -919,12 +919,22 @@ export function settingVerisonForm(id) {
 
 /**
  * 保存APP升级
- * @param {*} id 
- * @returns 
+ * @param {*} id
+ * @returns
  */
 export function saveSettingVerison(id) {
     return request({
         url: `setting/verison/${id}`,
         method: 'post'
     });
+}
+
+/**
+ *
+ */
+export function recordKefuApi() {
+    return request({
+        url:'chat/record_kefu',
+        method:'get'
+    })
 }

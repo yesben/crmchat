@@ -172,10 +172,6 @@
     <edit-from ref="edits" :FromData="FromData" @submitFail="submitFail"></edit-from>
     <!-- 会员详情-->
     <user-details ref="userDetails"></user-details>
-    <!--发送图文消息 -->
-    <Modal v-model="modal13" scrollable title="发送消息" width="1200" height="800" footer-hide class="modelBox">
-      <news-category v-if="modal13" :isShowSend="isShowSend" :userIds="user_ids" :scrollerHeight="scrollerHeight" :contentTop="contentTop" :contentWidth="contentWidth" :maxCols="maxCols"></news-category>
-    </Modal>
 
     <Modal v-model="labelShow" scrollable title="请选择用户标签" :closable="false" width="320" :footer-hide="true">
       <userLabel v-if="labelShow" :uid="labelActive.uid" @close="labelClose" @onceGetList="userGroup"></userLabel>
@@ -202,16 +198,13 @@ import userGroup from './components/userGroup'; // 用户分组
 import labelGroup from './components/labelGroup';
 import { mapState } from 'vuex';
 import { userList, getUserData,getUserLabelAllApi, isShowApi, userSetGroup, userGroupApi, userSetLabelApi, userLabelApi, userSynchro, putUserLabel, userBatchGroupApi } from '@/api/user';
-import { agentSpreadApi } from '@/api/agent'
 import editFrom from '../../../components/from/from';
-import sendFrom from '@/components/sendCoupons/index';
 import userDetails from './handle/userDetails';
-import newsCategory from '@/components/newsCategory/index';
 import city from '@/utils/city';
 import customerInfo from '@/components/customerInfo'
 export default {
   name: 'user_list',
-  components: { editFrom, sendFrom, userDetails, newsCategory, customerInfo, userLabel, userGroup, labelGroup },
+  components: { editFrom, userDetails, customerInfo, userLabel, userGroup, labelGroup },
   data() {
     return {
       setUserGroupModel: false, // 设置用户分组
@@ -463,24 +456,6 @@ export default {
     changeLabel(){
       this.userFrom.page = 1;
       this.getList();
-    },
-    // 提交
-    putSend(name) {
-      this.$refs[name].validate((valid) => {
-        if(valid) {
-          if(!this.formInline.spread_uid) {
-            return this.$Message.error('请上传用户');
-          }
-          agentSpreadApi(this.formInline).then(res => {
-            this.promoterShow = false;
-            this.$Message.success(res.msg);
-            this.getList();
-            this.$refs[name].resetFields();
-          }).catch(res => {
-            this.$Message.error(res.msg);
-          })
-        }
-      })
     },
     synchro() {
       userSynchro().then(res => {

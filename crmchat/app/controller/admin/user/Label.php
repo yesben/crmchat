@@ -84,16 +84,13 @@ class Label extends AuthController
 
     public function move()
     {
-        [$id, $toId] = $this->request->postMore([
-            ['id', 0],
-            ['to_id', 0],
+        [$ids, $page] = $this->request->postMore([
+            ['ids', []],
+            ['page', 0],
         ], true);
 
-        $this->services->transaction(function () use ($id, $toId) {
-            $toSort = $this->services->value($toId, 'sort');
-            $sort   = $this->services->value($id, 'sort');
-            $this->services->update($id, ['sort' => $toSort]);
-            $this->services->update($toId, ['sort' => $sort]);
+        $this->services->transaction(function () use ($ids, $page) {
+            $this->services->moveSort($ids, $page);
         });
         return $this->success('修改成功');
     }

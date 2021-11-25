@@ -9,14 +9,11 @@
             <Form ref="formValidate" :model="formValidate" :label-width="labelWidth" :label-position="labelPosition" class="tabform" @submit.native.prevent>
                 <Row :gutter="24">
                     <Col span="10" class="ivu-text-left">
-                        <FormItem label="搜索：">
-                            <Input v-model="searchValue" placeholder="请输入" clearable search enter-button @on-search="selChange">
-                                <Select v-model="searchType" slot="prepend" style="width: 80px">
-                                    <Option value="kefu_id">客服</Option>
-                                    <Option value="msn">内容</Option>
-                                    <Option value="appid">appid</Option>
-                                </Select>
-                            </Input>
+                        <FormItem label="客服：" label-for="group_id">
+                            <Select v-model="search.kefu_id" placeholder="请选择" element-id="group_id" clearable>
+                                <Option value="all">全部</Option>
+                                <Option :value="item.id" v-for="(item, index) in kefuList" :key="index">{{item.nickname}}</Option>
+                            </Select>
                         </FormItem>
                     </Col>
                         <Col span="24" class="ivu-text-left">
@@ -25,6 +22,11 @@
                                 <Radio :label=item.val v-for="(item,i) in fromList.fromTxt" :key="i">{{item.text}}</Radio>
                             </RadioGroup>
                             <DatePicker :editable="false" @on-change="onchangeTime" :value="timeVal" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="自定义时间" style="width: 200px;"></DatePicker>
+                        </FormItem>
+                    </Col>
+                    <Col span="10" class="ivu-text-left">
+                        <FormItem label="搜索：">
+                            <Input v-model="searchValue" placeholder="请输入" clearable search enter-button @on-search="selChange"></Input>
                         </FormItem>
                     </Col>
                 </Row>
@@ -44,7 +46,7 @@
 </template>
 
 <script>
-import { chatRecord } from '@/api/setting';
+import { chatRecord, recordKefuApi } from '@/api/setting';
 import { mapState } from 'vuex'
 
 export default {
@@ -99,7 +101,11 @@ export default {
             loading: false,
             total: 0,
             page: 1,
-            limit: 15
+            limit: 15,
+            kefuList:[],
+            search:{
+                kefu_id:0,
+            },
         };
     },
     computed: {
@@ -115,13 +121,20 @@ export default {
     },
     created() {
         this.chatRecord();
+        this.recordKefu();
     },
     methods: {
+        recordKefu(){
+            console.log(1111)
+            recordKefuApi().then(res=>{
+                this.kefuList = res.data;
+            })
+        },
         chatRecord() {
             chatRecord({
                 page: this.page,
                 limit: this.limit,
-                kefu_id: this.searchType == 'kefu_id' && this.searchValue || '',
+                kefu_id: this.search.kefu_id ,
                 msn: this.searchType == 'msn' && this.searchValue || '',
                 time: this.formValidate.time,
                 appid: this.searchType == 'appid' && this.searchValue || ''

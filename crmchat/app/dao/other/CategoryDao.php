@@ -65,4 +65,23 @@ class CategoryDao extends BaseDao
             $query->with($with);
         })->order('sort DESC')->select()->toArray();
     }
+
+    /**
+     * @param int $id
+     * @param int $toId
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function getMoveCate(int $id, int $toId)
+    {
+        return $this->getModel()
+            ->where('type', 0)
+            ->where('id', '>=', $id)
+            ->where('id', '<=', $toId)
+            ->order('sort desc,id desc')
+            ->select()
+            ->toArray();
+    }
 }

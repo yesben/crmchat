@@ -164,9 +164,14 @@ export default {
                   if (!newIndex) {
                       return;
                   }
+                  var ids= [];
+                  this.labelSortArr.map(res=>{
+                    if(res.id){
+                      ids.push(res.id)
+                    }
+                  })
                   userLabelMoveCate({
-                      id: row.id,
-                      to_id: this.labelSortArr[newIndex + 1].id
+                      ids: ids,
                   }).catch(err => {
                       this.$Message.error(err.msg);
                   });
@@ -183,9 +188,15 @@ export default {
                   this.$nextTick(() => {
                       this.labelLists = this.labelListsArr;
                   });
+                var ids= [];
+                this.labelListsArr.map(res=>{
+                  if(res.id){
+                    ids.push(res.id)
+                  }
+                })
                   userLabelMove({
-                      id: row.id,
-                      to_id: this.labelListsArr[newIndex + 1].id
+                      ids: ids,
+                      page:this.labelFrom.page
                   }).catch(err => {
                       this.$Message.error(err.msg);
                   });

@@ -110,4 +110,21 @@ class ChatUserLabelServices extends BaseServices
         }
         return create_form('修改标签', $this->fromRule($label->toArray()), $this->url('user/label/' . $id), 'put');
     }
+
+    /**
+     * 移动排序
+     * @param array $ids
+     * @param int $page
+     * @return bool
+     */
+    public function moveSort(array $ids, int $page)
+    {
+        $count   = count($ids);
+        $sortMax = $page * $count + 1;
+        foreach ($ids as $id) {
+            $this->dao->update($id, ['sort' => $sortMax]);
+            $sortMax--;
+        }
+        return true;
+    }
 }

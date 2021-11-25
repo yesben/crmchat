@@ -17,12 +17,7 @@ import app from './module/app'
 import menus from './module/menus'
 import userInfo from './module/userInfo'
 import userLevel from './module/userLevel'
-import order from './module/order'
 import media from './module/media'
-import goodSelect from './module/goodSelect'
-import moren from './module/moren'
-import shopping from './module/shopping'
-import fresh from './module/fresh'
 import kefu from './module/kefu'
 
 Vue.use(Vuex)
@@ -63,12 +58,7 @@ export default new Vuex.Store({
         menus,
         userInfo,
         userLevel,
-        order,
         media,
-        goodSelect,
-        moren,
-        shopping,
-        fresh,
         kefu
     }
 })
