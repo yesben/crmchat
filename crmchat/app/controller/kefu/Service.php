@@ -445,8 +445,11 @@ class Service extends AuthController
         ], true);
 
         if ($info = $services->getVersion($version)) {
-            $info            = $info->toArray();
+            $info           = $info->toArray();
             $info['update'] = true;
+            if (strstr($info['url'], 'http://') === false || strstr($info['url'], 'https://') === false) {
+                $info['url'] = 'https://' . $this->request->host() . $info['url'];
+            }
             return $this->success($info);
         } else {
             return $this->success(['update' => false]);
