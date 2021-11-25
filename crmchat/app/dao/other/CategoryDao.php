@@ -76,6 +76,12 @@ class CategoryDao extends BaseDao
      */
     public function getMoveCate(int $id, int $toId)
     {
-        return $this->getModel()->where('id', '>', $id)->where('id', '<', $toId)->order('sort desc')->select()->toArray();
+        return $this->getModel()
+            ->where('type', 0)
+            ->where('id', '>=', $id)
+            ->where('id', '<=', $toId)
+            ->order('sort desc,id desc')
+            ->select()
+            ->toArray();
     }
 }
