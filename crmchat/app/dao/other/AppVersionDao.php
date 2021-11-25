@@ -32,4 +32,16 @@ class AppVersionDao extends BaseDao
     {
         return $this->search($where)->max($field);
     }
+
+    /**
+     * @param string $version
+     * @return array|\think\Model|null
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getVersion(string $version)
+    {
+        return $this->getModel()->where('verisons_num', '>', $version)->find();
+    }
 }

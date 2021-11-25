@@ -33,6 +33,7 @@ Route::group('api', function () {
             Route::group(function () {
 
                 Route::post('upload', 'User/upload')->name('upload');//上传图片
+                Route::post('version', 'Service/version')->name('version');//在线升级
 
             })->middleware(KefuAuthTokenMiddleware::class);
 
