@@ -268,18 +268,18 @@ export default {
                     this.labelId += this.labelId ? `,${item.labelOn}` : item.labelOn;
                 }
             });
-            if (!this.labelId) {
-                return this.$Message.info('请选择标签筛选条件');
-            }
+            // if (!this.labelId) {
+            //     return this.$Message.info('请选择标签筛选条件');
+            // }
           } else {
             this.userGroupList.forEach(item => {
                 if (item.groupOn) {
                     this.groupId += this.groupId ? `,${item.id}` : item.id;
                 }
             });
-            if (!this.groupId) {
-              return this.$Message.info('请选择分组筛选条件');
-            }
+            // if (!this.groupId) {
+            //   return this.$Message.info('请选择分组筛选条件');
+            // }
           }
           this.nickname = '';
           this.page = 1;
@@ -619,7 +619,7 @@ export default {
     /deep/ .ivu-tabs-nav {
         float: none;
         display: inline-block;
-        
+
         .ivu-tabs-ink-bar {
             background-color: #1890FF;
         }
