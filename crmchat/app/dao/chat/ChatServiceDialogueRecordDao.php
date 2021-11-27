@@ -54,7 +54,7 @@ class ChatServiceDialogueRecordDao extends BaseDao
             $query->whereLike('msn', '%' . $where['msn'] . '%');
         })->when(isset($where['appid']) && $where['appid'] !== '', function ($query) use ($where) {
             $query->where('appid', $where['appid']);
-        })->when(isset($where['kefu_id']) && ($where['kefu_id'] !== '' || $where['kefu_id'] != '0'), function ($query) use ($where) {
+        })->when(isset($where['kefu_id']) && $where['kefu_id'] !== '', function ($query) use ($where) {
             $query->where(function ($query) use ($where) {
                 $query->where('user_id', $where['kefu_id'])->whereOr('to_user_id', $where['kefu_id']);
             });
