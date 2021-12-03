@@ -50,6 +50,25 @@
 #### 应用KEY命令文档 <a target="_blank" href='https://gitee.com/ZhongBangKeJi/CRMChat/wikis/pages/preview?sort_id=4267028&doc_id=1539498'>点击查看</a>
 #### 命令行安装文档 <a target="_blank" href='https://gitee.com/ZhongBangKeJi/CRMChat/wikis/pages/preview?sort_id=4267030&doc_id=1539498'>点击查看</a>
 
+### 历史版本
+
+ **v1.1.0版本** 
+1. 新增用户标签、分组增加排序功能
+2. 客服图标增加自定义上传
+3. 后台增加客服聊天记录
+4. 后台增加客服所及二维码和复制客服连接
+5. 增加用户端站点统计
+6. 客服APP增加聊天用户删除
+7. 客服APP增加在线升级
+8. 客服APP增加客户列表筛选
+
+ **v1.0.0版本** 
+1. 客服聊天功能
+2. 客服自动回复功能增加
+3. 客服欢迎语功能增加
+4. 客服用户管理增加
+5. 客服使用文档增加
+
 ### 开发规范
 #### 命名规范
 ThinkPHP6.0遵循PSR-2命名规范和PSR-4自动加载规范，并且注意如下规范:
