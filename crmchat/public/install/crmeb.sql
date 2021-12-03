@@ -265,6 +265,7 @@ CREATE TABLE IF NOT EXISTS `eb_chat_user_label` (
   `id` int(11) NOT NULL,
   `label` varchar(100) NOT NULL DEFAULT '' COMMENT '标签名称',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '用户表自增ID',
+  `sort` INT(10) NOT NULL DEFAULT '0' COMMENT '排序',
   `cate_id` int(10) NOT NULL DEFAULT '0' COMMENT '标签分类',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COMMENT='用户标签';
