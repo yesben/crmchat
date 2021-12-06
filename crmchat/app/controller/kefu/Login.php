@@ -68,7 +68,7 @@ class Login extends AuthController
      */
     public function getLoginKey()
     {
-        $key = md5(time() . uniqid());
+        $key  = md5(time() . uniqid());
         $time = time() + 600;
         CacheService::set($key, 1, 600);
         return $this->success(['key' => $key, 'time' => $time]);
@@ -86,5 +86,13 @@ class Login extends AuthController
     public function scanLogin(string $key)
     {
         return $this->success($this->services->scanLogin($key));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAppid()
+    {
+        return $this->success();
     }
 }
