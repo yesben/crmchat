@@ -56,6 +56,11 @@ class ServiceDialogueRecord extends AuthController
         if ((int)$where['kefu_id'] === 0) {
             $where['kefu_id'] = '';
         }
+        if ($where['kefu_id']) {
+            /** @var ChatServiceServices $make */
+            $make             = app()->make(ChatServiceServices::class);
+            $where['kefu_id'] = $make->value($where['kefu_id'], 'user_id');
+        }
         return $this->success($this->services->getDialogueRecord($where));
     }
 }
