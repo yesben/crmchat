@@ -14,6 +14,7 @@ namespace app\controller\admin\chat;
 
 use app\controller\admin\AuthController;
 use app\services\chat\ChatServiceDialogueRecordServices;
+use app\services\chat\ChatServiceRecordServices;
 use app\services\chat\ChatServiceServices;
 
 /**
@@ -43,6 +44,23 @@ class ServiceDialogueRecord extends AuthController
     }
 
     /**
+     * @param ChatServiceRecordServices $services
+     * @return mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function record(ChatServiceRecordServices $services)
+    {
+        $where = $this->request->getMore([
+            ['title', ''],
+            ['time', '']
+        ]);
+        $where['delete'] = 1;
+        return $this->success($services->getAdminUserRecodeList($where));
+    }
+
+    /**
      * @return mixed
      */
     public function index()
@@ -58,7 +76,7 @@ class ServiceDialogueRecord extends AuthController
         }
         if ($where['kefu_id']) {
             /** @var ChatServiceServices $make */
-            $make             = app()->make(ChatServiceServices::class);
+            $make = app()->make(ChatServiceServices::class);
             $where['kefu_id'] = $make->value($where['kefu_id'], 'user_id');
         }
         return $this->success($this->services->getDialogueRecord($where));

@@ -44,10 +44,10 @@ Route::group('api', function () {
             Route::put('app/reset/:id', 'Application/reset')->option(['real_name' => '重置token']);
 
             Route::resource('app', 'Application')->option(['real_name' => [
-                'index'  => '获取应用列表接口',
+                'index' => '获取应用列表接口',
                 'create' => '获取应用创建接口',
-                'save'   => '保存应用接口',
-                'edit'   => '获取修改应用接口',
+                'save' => '保存应用接口',
+                'edit' => '获取修改应用接口',
                 'update' => '修改应用接口',
                 'delete' => '删除应用接口'
             ]])->except(['read']);
@@ -79,6 +79,14 @@ Route::group('api', function () {
             Route::delete('qrcode/:id', 'Qrcode/delete')->option(['real_name' => '删除随机客服二维码']);
             //客服列表
             Route::get('kefu', 'Service/index')->option(['real_name' => '客服列表']);
+            //客服组列表
+            Route::get('group', 'ServiceGroup/index')->option(['real_name' => '客服组列表']);
+            //获取客服组表单
+            Route::get('group/create/:id', 'ServiceGroup/create')->option(['real_name' => '获取客服组表单']);
+            //保存客服组
+            Route::post('group/:id', 'ServiceGroup/save')->option(['real_name' => '保存客服组']);
+            //删除客服组
+            Route::delete('group/:id', 'ServiceGroup/delete')->option(['real_name' => '删除客服组']);
             //自动回复列表
             Route::get('reply', 'AutoReply/index')->option(['real_name' => '自动回复列表']);
             //获取自动回复表单
@@ -107,32 +115,33 @@ Route::group('api', function () {
             Route::get('kefu/chat_list', 'Service/chat_list')->option(['real_name' => '查看对话']);
             //查看所有聊天记录
             Route::get('record', 'ServiceDialogueRecord/index')->option(['real_name' => '查看所有聊天记录']);
+            Route::get('record/list', 'ServiceDialogueRecord/record')->option(['real_name' => '查看所有聊天用户列表']);
             //获取所有客服
             Route::get('record_kefu', 'ServiceDialogueRecord/kefu')->option(['real_name' => '获取所有客服']);
             //客服话术资源路由
             Route::resource('speechcraft', 'ServiceSpeechcraft')->option(['real_name' => [
-                'index'  => '获取话术列表接口',
+                'index' => '获取话术列表接口',
                 'create' => '获取话术创建接口',
-                'read'   => '获取话术详情接口',
-                'save'   => '保存话术接口',
-                'edit'   => '获取修改话术接口',
+                'read' => '获取话术详情接口',
+                'save' => '保存话术接口',
+                'edit' => '获取修改话术接口',
                 'update' => '修改话术接口',
                 'delete' => '删除话术接口'
             ]]);
             //客服话术分类资源路由
             Route::resource('speechcraftcate', 'ServiceSpeechcraftCate')->option(['real_name' => [
-                'index'  => '获取话术分类列表接口',
+                'index' => '获取话术分类列表接口',
                 'create' => '获取话术分类创建接口',
-                'read'   => '获取话术分类详情接口',
-                'save'   => '保存话术分类接口',
-                'edit'   => '获取修改话术分类接口',
+                'read' => '获取话术分类详情接口',
+                'save' => '保存话术分类接口',
+                'edit' => '获取修改话术分类接口',
                 'update' => '修改话术分类接口',
                 'delete' => '删除话术分类接口'
             ]]);
             //用户反馈资源路由
             Route::resource('feedback', 'ServiceFeedback')->only(['index', 'delete', 'update', 'edit'])->option(['real_name' => [
-                'index'  => '获取用户反馈列表接口',
-                'edit'   => '获取修改用户反馈接口',
+                'index' => '获取用户反馈列表接口',
+                'edit' => '获取修改用户反馈接口',
                 'update' => '修改用户反馈接口',
                 'delete' => '删除用户反馈接口'
             ]])->except(['save', 'create', 'read']);
@@ -157,28 +166,28 @@ Route::group('api', function () {
             Route::post('/label/move_cate', 'LabelCate/move')->option(['real_name' => '标签分类移动排序']);
 
             Route::resource('label/cate', 'LabelCate')->option(['real_name' => [
-                'index'  => '获取标签分类列表接口',
+                'index' => '获取标签分类列表接口',
                 'create' => '获取标签分类创建接口',
-                'save'   => '保存标签分类接口',
-                'edit'   => '获取修改标签分类接口',
+                'save' => '保存标签分类接口',
+                'edit' => '获取修改标签分类接口',
                 'update' => '修改标签分类接口',
                 'delete' => '删除标签分类接口'
             ]])->except(['read']);
 
             Route::resource('label', 'Label')->option(['real_name' => [
-                'index'  => '获取标签列表接口',
+                'index' => '获取标签列表接口',
                 'create' => '获取标签创建接口',
-                'save'   => '保存标签接口',
-                'edit'   => '获取修改标签接口',
+                'save' => '保存标签接口',
+                'edit' => '获取修改标签接口',
                 'update' => '修改标签接口',
                 'delete' => '删除标签接口'
             ]])->except(['read']);
 
             Route::resource('group', 'Group')->option(['real_name' => [
-                'index'  => '获取分组列表接口',
+                'index' => '获取分组列表接口',
                 'create' => '获取分组创建接口',
-                'save'   => '保存分组接口',
-                'edit'   => '获取修分组签接口',
+                'save' => '保存分组接口',
+                'edit' => '获取修分组签接口',
                 'update' => '修改分组接口',
                 'delete' => '删除分组接口'
             ]])->except(['read']);
@@ -209,11 +218,11 @@ Route::group('api', function () {
             //附件分类管理资源路由
             Route::resource('category', 'AttachmentCategory')->option([
                 'real_name' => [
-                    'index'  => '获取附件分类列表接口',
+                    'index' => '获取附件分类列表接口',
                     'create' => '获取附件分类创建接口',
-                    'read'   => '获取附件分类详情接口',
-                    'save'   => '保存附件分类接口',
-                    'edit'   => '获取修改附件分类接口',
+                    'read' => '获取附件分类详情接口',
+                    'save' => '保存附件分类接口',
+                    'edit' => '获取修改附件分类接口',
                     'update' => '修改附件分类接口',
                     'delete' => '删除附件分类接口'
                 ]
@@ -305,41 +314,41 @@ Route::group('api', function () {
             Route::get('ruleList', 'system.Menus/ruleList')->option(['real_name' => '未添加的权限规则列表']);
             //组合数据资源路由
             Route::resource('group', 'system.Group')->option(['real_name' => [
-                'index'  => '获取话组合数据列表接口',
+                'index' => '获取话组合数据列表接口',
                 'create' => '获取组合数据创建接口',
-                'read'   => '获取组合数据详情接口',
-                'save'   => '保存组合数据接口',
-                'edit'   => '获取修改组合数据接口',
+                'read' => '获取组合数据详情接口',
+                'save' => '保存组合数据接口',
+                'edit' => '获取修改组合数据接口',
                 'update' => '修改组合数据接口',
                 'delete' => '删除组合数据接口'
             ]]);
             //组合数据子数据资源路由
             Route::resource('group_data', 'system.GroupData')->option(['real_name' => [
-                'index'  => '获取组合数据资源列表接口',
+                'index' => '获取组合数据资源列表接口',
                 'create' => '获取组合数据资源创建接口',
-                'read'   => '获取组合数据资源详情接口',
-                'save'   => '保存组合数据资源接口',
-                'edit'   => '获取修改组合数据资源接口',
+                'read' => '获取组合数据资源详情接口',
+                'save' => '保存组合数据资源接口',
+                'edit' => '获取修改组合数据资源接口',
                 'update' => '修改组合数据资源接口',
                 'delete' => '删除组合数据资源接口'
             ]]);
             //系统配置分类资源路由
             Route::resource('config_class', 'system.ConfigTab')->option(['real_name' => [
-                'index'  => '获取配置分类列表接口',
+                'index' => '获取配置分类列表接口',
                 'create' => '获取配置分类创建接口',
-                'read'   => '获取配置分类详情接口',
-                'save'   => '保存配置分类接口',
-                'edit'   => '获取修改配置分类接口',
+                'read' => '获取配置分类详情接口',
+                'save' => '保存配置分类接口',
+                'edit' => '获取修改配置分类接口',
                 'update' => '修改配置分类接口',
                 'delete' => '删除配置分类接口'
             ]]);;
             //系统配置资源路由
             Route::resource('config', 'system.Config')->option([
                 'real_name' => [
-                    'index'  => '获取系统配置列表接口',
+                    'index' => '获取系统配置列表接口',
                     'create' => '获取系统配置创建接口',
-                    'save'   => '保存系统配置接口',
-                    'edit'   => '获取修改系统配置接口',
+                    'save' => '保存系统配置接口',
+                    'edit' => '获取修改系统配置接口',
                     'update' => '修改系统配置接口',
                     'delete' => '删除系统配置接口'
                 ]
@@ -347,11 +356,11 @@ Route::group('api', function () {
             //权限菜单资源路由
             Route::resource('menus', 'system.Menus')->option([
                 'real_name' => [
-                    'index'  => '获取权限菜单列表接口',
+                    'index' => '获取权限菜单列表接口',
                     'create' => '获取权限菜单创建接口',
-                    'read'   => '获取权限菜单详情接口',
-                    'save'   => '保存权限菜单接口',
-                    'edit'   => '获取修改权限菜单接口',
+                    'read' => '获取权限菜单详情接口',
+                    'save' => '保存权限菜单接口',
+                    'edit' => '获取修改权限菜单接口',
                     'update' => '修改权限菜单接口',
                     'delete' => '删除权限菜单接口'
                 ]
@@ -359,10 +368,10 @@ Route::group('api', function () {
             //管理员资源路由
             Route::resource('admin', 'system.Admin')->option([
                 'real_name' => [
-                    'index'  => '获取管理员列表接口',
+                    'index' => '获取管理员列表接口',
                     'create' => '获取管理员创建接口',
-                    'save'   => '保存管理员接口',
-                    'edit'   => '获取修改管理员接口',
+                    'save' => '保存管理员接口',
+                    'edit' => '获取修改管理员接口',
                     'update' => '修改管理员接口',
                     'delete' => '删除管理员接口'
                 ]
@@ -375,7 +384,7 @@ Route::group('api', function () {
 
         Route::miss(function () {
             if (app()->request->isOptions()) {
-                $header                                = Config::get('cookie.header');
+                $header = Config::get('cookie.header');
                 $header['Access-Control-Allow-Origin'] = app()->request->header('origin');
                 return Response::create('ok')->code(200)->header($header);
             } else

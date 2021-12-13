@@ -61,6 +61,26 @@ class ChatServiceRecordServices extends BaseServices
     }
 
     /**
+     * @param array $where
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function getAdminUserRecodeList(array $where)
+    {
+        [$page, $limit] = $this->getPageValue();
+        $list = $this->dao->recordModel($where, $page, $limit, ['user'])->select()->toArray();
+        foreach ($list as &$item) {
+            if (isset($item['user']['remark_nickname']) && $item['user']['remark_nickname']) {
+                $item['nickname'] = $item['user']['remark_nickname'];
+            }
+        }
+        $count = $this->dao->recordModel($where)->count();
+        return compact('list', 'count');
+    }
+
+    /**
      * 获取客服用户聊天列表
      * @param string $appid
      * @param int $userId
@@ -181,9 +201,9 @@ class ChatServiceRecordServices extends BaseServices
             $info->type = $type;
             if ($message !== '') $info->message = $message;
             $info->message_type = $messageType;
-            $info->update_time  = time();
-            $info->mssage_num   = $num;
-            $info->online       = $online;
+            $info->update_time = time();
+            $info->mssage_num = $num;
+            $info->online = $online;
             if ($avatar) $info->avatar = $avatar;
             if ($nickname) $info->nickname = $nickname;
             $info->save();
@@ -191,19 +211,19 @@ class ChatServiceRecordServices extends BaseServices
 //            return $info->toArray();
         } else {
             $info = $this->dao->save([
-                'user_id'      => $toUserid,
-                'to_user_id'   => $userId,
-                'type'         => $type,
-                'online'       => $online,
-                'message'      => $message,
-                'avatar'       => $avatar,
-                'nickname'     => $nickname,
+                'user_id' => $toUserid,
+                'to_user_id' => $userId,
+                'type' => $type,
+                'online' => $online,
+                'message' => $message,
+                'avatar' => $avatar,
+                'nickname' => $nickname,
                 'message_type' => $messageType,
-                'mssage_num'   => $num,
-                'add_time'     => time(),
-                'update_time'  => time(),
-                'is_tourist'   => $isTourist,
-                'appid'        => $appid
+                'mssage_num' => $num,
+                'add_time' => time(),
+                'update_time' => time(),
+                'is_tourist' => $isTourist,
+                'appid' => $appid
             ]);//->toArray();
         }
 
@@ -223,9 +243,9 @@ class ChatServiceRecordServices extends BaseServices
      */
     public function getKefuSum(int $id = 0)
     {
-        $all          = $this->dao->count(['user_id' => $id]);
-        $toDayKefu    = $this->dao->count(['time' => 'today', 'user_id' => $id, 'is_tourist' => 1]);
-        $month        = $this->dao->count(['time' => 'month', 'user_id' => $id]);
+        $all = $this->dao->count(['user_id' => $id]);
+        $toDayKefu = $this->dao->count(['time' => 'today', 'user_id' => $id, 'is_tourist' => 1]);
+        $month = $this->dao->count(['time' => 'month', 'user_id' => $id]);
         $toDayTourist = $this->dao->count(['time' => 'today', 'user_id' => $id, 'is_tourist' => 0]);
         return compact('all', 'toDayKefu', 'month', 'toDayTourist');
     }
@@ -242,22 +262,22 @@ class ChatServiceRecordServices extends BaseServices
      */
     public function getKefuStatistics(int $id, int $year, int $month)
     {
-        $date      = Carbon::create($year, $month);
+        $date = Carbon::create($year, $month);
         $startTime = strtotime($date->startOfMonth()->toDateTimeString());
-        $endTime   = strtotime($date->lastOfMonth()->toDateTimeString()) + 86399;
+        $endTime = strtotime($date->lastOfMonth()->toDateTimeString()) + 86399;
 
         return [
-            'list'    => $this->dao->kefuStatistics([
-                'user_id'    => $id,
+            'list' => $this->dao->kefuStatistics([
+                'user_id' => $id,
                 'is_tourist' => 0,
-                'startTime'  => $startTime,
-                'endTime'    => $endTime,
+                'startTime' => $startTime,
+                'endTime' => $endTime,
             ]),
             'tourist' => $this->dao->kefuStatistics([
-                'user_id'    => $id,
+                'user_id' => $id,
                 'is_tourist' => 1,
-                'startTime'  => $startTime,
-                'endTime'    => $endTime,
+                'startTime' => $startTime,
+                'endTime' => $endTime,
             ])
         ];
     }

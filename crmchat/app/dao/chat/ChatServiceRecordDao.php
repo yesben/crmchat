@@ -99,6 +99,34 @@ class ChatServiceRecordDao extends BaseDao
     }
 
     /**
+     * @param array $where
+     * @param int $page
+     * @param int $limit
+     * @param array $with
+     * @return BaseModel|mixed|Model
+     */
+    public function recordModel(array $where, int $page = 0, int $limit = 0, array $with = [])
+    {
+        $labelId = isset($where['label_id']) ? $where['label_id'] : [];
+        unset($where['label_id']);
+        return $this->search($where)->when($page && $limit, function ($query) use ($page, $limit) {
+            $query->page($page, $limit);
+        })->when(count($with), function ($query) use ($with) {
+            $query->with($with);
+        })->when($labelId, function ($query) use ($labelId) {
+            $query->whereIn('to_user_id', function ($query) use ($labelId) {
+                $query->name('chat_user_label_assist')->whereIn('label_id', $labelId)->field(['user_id']);
+            });
+        })->when(isset($where['group_id']) && $where['group_id'], function ($query) use ($where) {
+            $query->whereIn('to_user_id', function ($query) use ($where) {
+                $query->name('chat_user')->whereIn('group_id', $where['group_id'])->field(['id']);
+            });
+        })->when(isset($where['delete']), function ($query) {
+            $query->whereNull('delete_time');
+        });
+    }
+
+    /**
      * 查询最近和用户聊天的uid用户
      * @param array $where
      * @param string $key

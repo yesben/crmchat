@@ -41,6 +41,14 @@ class ChatService extends BaseModel
      */
     protected $updateTime = false;
 
+    /**
+     * @return \think\model\relation\HasOne
+     */
+    public function chatgroup()
+    {
+        return $this->hasOne(ChatServiceGroup::class, 'group_id', 'id');
+    }
+
     protected function getAddTimeAttr($value)
     {
         if ($value) return date('Y-m-d H:i:s', $value);
