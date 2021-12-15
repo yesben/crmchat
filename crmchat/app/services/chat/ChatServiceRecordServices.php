@@ -77,7 +77,17 @@ class ChatServiceRecordServices extends BaseServices
             }
         }
         $count = $this->dao->recordModel($where)->count();
-        return compact('list', 'count');
+        /** @var  ChatServiceDialogueRecordServices $make */
+        $make = app()->make(ChatServiceDialogueRecordServices::class);
+        /** @var ChatUserServices $userMake */
+        $userMake = app()->make(ChatUserServices::class);
+        $data = [
+            'user_count' => $userMake->count(['is_tourist' => 0]),
+            'tourist_count' => $userMake->count(['is_tourist' => 1]),
+            'recode_count' => $this->dao->count(),
+            'dialogue_count' => $make->count()
+        ];
+        return compact('list', 'count', 'data');
     }
 
     /**
