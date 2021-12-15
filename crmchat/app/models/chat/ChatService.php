@@ -46,7 +46,7 @@ class ChatService extends BaseModel
      */
     public function chatgroup()
     {
-        return $this->hasOne(ChatServiceGroup::class, 'group_id', 'id');
+        return $this->hasOne(ChatServiceGroup::class, 'id', 'group_id');
     }
 
     protected function getAddTimeAttr($value)
