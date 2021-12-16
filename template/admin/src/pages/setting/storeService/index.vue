@@ -7,89 +7,101 @@
       </div>
     </div>
 
-    <Card :bordered="false" dis-hover class="ivu-mt">
+    <Row class="ivu-mt box-wrapper">
+      <Col span="3" class="left-wrapper">
+        <Card :bordered="false" dis-hover class="ivu-mt">
+        <Menu :theme="theme3" :active-name="sortName" width="auto">
+          <MenuGroup>
+            <MenuItem
+                    :name="item.id"
+                    class="menu-item"
+                    :class="index === current ? 'showOn' : ''"
+                    v-for="(item, index) in groupList"
+                    :key="index"
+                    @click.native="bindMenuItem(item, index)"
+            >
+              {{ item.name }}
+              <div class="icon-box" v-if="index != 0">
+                <Icon type="ios-more" size="24" @click.stop="showMenu(item,index)" />
+              </div>
+              <div class="right-menu ivu-poptip-inner" v-show="item.status">
+                <div class="ivu-poptip-body" @click="editGroup(item)">
+                  <div class="ivu-poptip-body-content">
+                    <div class="ivu-poptip-body-content-inner">编辑</div>
+                  </div>
+                </div>
+                <div class="ivu-poptip-body" @click="deleteGroup(item, '删除分组', index)">
+                  <div class="ivu-poptip-body-content">
+                    <div class="ivu-poptip-body-content-inner">删除</div>
+                  </div>
+                </div>
+              </div>
+            </MenuItem>
+          </MenuGroup>
+        </Menu>
+        </Card>
+      </Col>
+      <Col span="21" ref="rightBox">
+        <Card :bordered="false" dis-hover class="ivu-mt">
 
-      <Row type="flex" class="mb20">
-        <Col span="24">
-        <Button v-auth="['setting-store_service-add']" type="primary" icon="md-add" @click="add" class="mr10">添加客服</Button>
-        </Col>
-      </Row>
+          <Row type="flex" class="mb20">
+            <Col span="24">
+              <Button  type="primary" style="margin-right: 10px" icon="md-add" @click="editGroup({id:0})">添加标签</Button>
+              <Button v-auth="['setting-store_service-add']" type="success" icon="md-add" @click="add" class="mr10">添加客服</Button>
+            </Col>
+          </Row>
 
-      <Table :columns="columns1" :data="tableList" :loading="loading" highlight-row no-userFrom-text="暂无数据" no-filtered-userFrom-text="暂无筛选结果">
-        <template slot-scope="{ row, index }" slot="avatar">
-          <div class="tabBox_img" v-viewer>
-            <img v-lazy="row.avatar">
+          <Table :columns="columns1" :data="tableList" :loading="loading" highlight-row no-userFrom-text="暂无数据" no-filtered-userFrom-text="暂无筛选结果">
+            <template slot-scope="{ row, index }" slot="avatar">
+              <div class="tabBox_img" v-viewer>
+                <img v-lazy="row.avatar">
+              </div>
+            </template>
+            <template slot-scope="{ row, index }" slot="status">
+              <i-switch v-model="row.status" :value="row.status" :true-value="1" :false-value="0" @on-change="onchangeIsShow(row)" size="large">
+                <span slot="open">开启</span>
+                <span slot="close">关闭</span>
+              </i-switch>
+            </template>
+            <template slot-scope="{ row, index }" slot="online">
+              <Tag color="success" v-if="row.online">在线</Tag>
+              <Tag color="default" v-else>下线</Tag>
+            </template>
+
+            <template slot-scope="{ row, index }" slot="action">
+              <a @click="edit(row)">编辑</a>
+              <Divider type="vertical" v-if="row.status" />
+              <a @click="goChat(row)" v-if="row.status">进入工作台</a>
+              <Divider type="vertical"  />
+              <Dropdown @on-click="changeMenu(row,$event,index)">
+                <a href="javascript:void(0)">
+                  更多
+                  <Icon type="ios-arrow-down"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem name="1">查看二维码</DropdownItem>
+                  <DropdownItem name="2">自动回复</DropdownItem>
+                  <DropdownItem name="3">删除客服</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+
+            </template>
+          </Table>
+
+          <div class="acea-row row-right page">
+            <Page :total="total" show-elevator show-total @on-change="pageChange" :page-size="tableFrom.limit" />
           </div>
-        </template>
-        <template slot-scope="{ row, index }" slot="status">
-          <i-switch v-model="row.status" :value="row.status" :true-value="1" :false-value="0" @on-change="onchangeIsShow(row)" size="large">
-            <span slot="open">开启</span>
-            <span slot="close">关闭</span>
-          </i-switch>
-        </template>
-        <template slot-scope="{ row, index }" slot="online">
-          <Tag color="success" v-if="row.online">在线</Tag>
-          <Tag color="default" v-else>下线</Tag>
-        </template>
+        </Card>
+      </Col>
+    </Row>
 
-        <template slot-scope="{ row, index }" slot="action">
-          <a @click="handleCopy(row)">复制</a>
-          <Divider type="vertical" />
-          <a @click="edit(row)">编辑</a>
-          <Divider type="vertical" />
-          <a @click="del(row,'删除客服',index)">删除</a>
-          <Divider type="vertical" v-if="row.status" />
-          <a @click="goChat(row)" v-if="row.status">进入工作台</a>
-          <Divider type="vertical" />
-          <a @click="auth(row)">自动回复</a>
-        </template>
-      </Table>
 
-      <div class="acea-row row-right page">
-        <Page :total="total" show-elevator show-total @on-change="pageChange" :page-size="tableFrom.limit" />
-      </div>
-    </Card>
-
-    <!--聊天记录-->
-    <Modal v-model="modals3" footer-hide scrollable closable title="聊天记录" width="700">
-      <div v-if="isChat" class="modelBox">
-        <Table :loading="loading3" highlight-row no-userFrom-text="暂无数据" no-filtered-userFrom-text="暂无筛选结果" :columns="columns3" :data="tableList3">
-          <template slot-scope="{ row, index }" slot="headimgurl">
-            <div class="tabBox_img" v-viewer>
-              <img v-lazy="row.headimgurl">
-            </div>
-          </template>
-          <template slot-scope="{ row, index }" slot="action">
-            <a @click="look(row)">查看对话</a>
-          </template>
-        </Table>
-        <div class="acea-row row-right page">
-          <Page :total="total3" show-elevator show-total @on-change="pageChange3" :page-size="formValidate3.limit" />
-        </div>
-      </div>
-      <div v-if="!isChat">
-        <Button type="primary" @click="isChat=true">返回聊天记录</Button>
-        <Table :loading="loading5" highlight-row no-userFrom-text="暂无数据" class="mt20" no-filtered-userFrom-text="暂无筛选结果" :columns="columns5" :data="tableList5">
-          <template slot-scope="{ row, index }" slot="avatar">
-            <div class="tabBox_img" v-viewer>
-              <img v-lazy="row.avatar">
-            </div>
-          </template>
-          <template slot-scope="{ row, index }" slot="action">
-            <a @click="look(row)">查看对话</a>
-          </template>
-        </Table>
-        <div class="acea-row row-right page">
-          <Page :total="total5" show-elevator show-total @on-change="pageChange5" :page-size="formValidate5.limit" />
-        </div>
-      </div>
-    </Modal>
     <auto-reply ref="AutoReply" :userId="userId" :appId="appId"></auto-reply>
     <Modal v-model="modal" :title="modalTitle" footer-hide>
         <div ref="qrcode" class="qrcode-wrap"></div>
         <div class="qrcode-text">{{ qrcodeText }}</div>
         <div class="button-wrap">
-            <Button type="primary" v-clipboard="{ value: qrcodeText, success: handleCopySuccess }">复制</Button>
+            <Button type="primary" v-clipboard="{ value: qrcodeText, success: handleCopySuccess }">点击复制连接</Button>
         </div>
     </Modal>
   </div>
@@ -100,7 +112,8 @@ import { mapState } from 'vuex'
 import { setCookies } from '@/libs/util'
 import {
   kefuListApi, kefucreateApi, kefuaddApi, kefuAddApi,
-  kefusetStatusApi, kefuEditApi, kefuRecordApi, kefuChatlistApi, kefuLogin
+  kefusetStatusApi, kefuEditApi, kefuRecordApi, kefuChatlistApi,
+  kefuLogin,kefuGroupListApi,kefuCreateGroupApi
 } from '@/api/setting'
 import { adminAppCustomer } from '@/api/kefu';
 import AutoReply from "./compoents/AutoReply";
@@ -142,7 +155,10 @@ export default {
         page: 1,
         limit: 15
       },
+      groupList:[],
+      theme3: "light",
       total3: 0,
+      sortName: 0,
       loading3: false,
       modals3: false,
       tableList3: [],
@@ -204,7 +220,8 @@ export default {
       total: 0,
       tableFrom: {
         page: 1,
-        limit: 15
+        limit: 15,
+        group_id:0
       },
       timeVal: [],
       fromList: {
@@ -313,18 +330,94 @@ export default {
       modal: false,
       modalTitle: '',
       qrcodeTextStart: `${window.location.origin}/chat/index?noCanClose=1`,
-      qrcodeText: ''
+      qrcodeText: '',
+      current:0
     }
   },
-  created() {
-    adminAppCustomer().then(res => {
-        if (res.status == 200 && res.data.list.length) {
-            this.qrcodeTextStart += `&token=${res.data.list[0].token_md5}`;
-        }
-    });
-    this.getList()
+  async created() {
+    let res = await adminAppCustomer();
+    if (res.status == 200 && res.data.list.length) {
+      this.qrcodeTextStart += `&token=${res.data.list[0].token_md5}`;
+    }
+    this.getGroupList();
+    this.getList();
+    window.addEventListener('click',()=>{
+      this.groupList.forEach((el) => el.status = false)
+    })
   },
   methods: {
+    // 显示标签小菜单
+    showMenu(item,index) {
+      this.groupList.forEach((el) => {
+        if (el.id == item.id) {
+          el.status = item.status ? false : true;
+        } else {
+          el.status = false;
+        }
+      });
+      // item.status = true;
+    },
+    editGroup(row){
+      this.$modalForm(kefuCreateGroupApi(row.id)).then(() => this.getGroupList())
+    },
+    deleteGroup(row,tt,index){
+      if(!row.id){
+        return
+      }
+      let delfromData = {
+        title: tt,
+        num: index,
+        url: `chat/group/${row.id}`,
+        method: 'DELETE',
+        ids: '' // 此参数为传递给后端得数据，若无可传空
+      }
+      this.$modalSure(delfromData).then((res) => {
+        this.$Message.success(res.msg)
+        this.groupList.splice(index, 1)
+      }).catch(res => {
+        this.$Message.error(res.msg)
+      })
+    },
+    getGroupList(){
+      kefuGroupListApi().then(res=>{
+        let obj = {
+          name: "全部",
+          id: "",
+        };
+        res.data.unshift(obj);
+        res.data.forEach((el) => {
+          el.status = false;
+        });
+        this.groupList = res.data;
+        this.sortName = res.data[0].id;
+      })
+    },
+    bindMenuItem(name, index) {
+      this.current = index;
+      this.groupList.forEach((el) => {
+        el.status = false;
+      });
+      this.tableFrom.group_id = name.id;
+      this.getList();
+    },
+    // 操作
+    changeMenu(row, name, index) {
+      let uid = [];
+      uid.push(row.id);
+      let uids = { uids: uid };
+      this.activeUserInfo = row;
+      switch(name) {
+        case '1':
+          this.handleCopy(row)
+          break;
+        case '2':
+         this.auth(row);
+          break;
+        case '3':
+          this.del(row,'删除客服',index);
+          break
+      }
+    },
     // 复制成功
     handleCopySuccess() {
         this.$Message.success({
@@ -367,7 +460,6 @@ export default {
           setCookies('kefu_uuid', res.data.kefuInfo.uid, expires);
           setCookies('kefu_expires_time', res.data.exp_time, expires);
           setCookies('kefuInfo', res.data.kefuInfo, expires);
-          console.log(this.$store.state.media.isMobile, 'this.$store.state.media.isMobile');
 
           if(this.$store.state.media.isMobile) {
             url = window.location.protocol + "//" + window.location.host + '/kefu/mobile_list';
@@ -642,11 +734,45 @@ export default {
 
 .qrcode-text {
     margin-top: 16px;
+  display: none;
     word-break: break-all;
 }
 
 .button-wrap {
     margin-top: 16px;
     text-align: center;
+}
+
+/deep/ .ivu-menu-vertical .ivu-menu-item-group-title {
+  display: none;
+}
+
+.menu-item {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  word-break: break-all;
+
+  .icon-box {
+    z-index: 3;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
+  }
+
+  &:hover .icon-box {
+    display: block;
+  }
+
+  .right-menu {
+    z-index: 10;
+    position: absolute;
+    right: -106px;
+    top: -11px;
+    width: auto;
+    min-width: 121px;
+  }
 }
 </style>

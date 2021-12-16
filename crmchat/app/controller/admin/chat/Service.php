@@ -49,7 +49,10 @@ class Service extends AuthController
      */
     public function index()
     {
-        return $this->success($this->services->getServiceList([]));
+        $where = $this->request->getMore([
+            ['group_id', 0]
+        ]);
+        return $this->success($this->services->getServiceList($where));
     }
 
     /**

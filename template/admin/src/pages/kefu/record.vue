@@ -8,15 +8,7 @@
         <Card :bordered="false" dis-hover class="ivu-mt">
             <Form ref="formValidate" :model="formValidate" :label-width="labelWidth" :label-position="labelPosition" class="tabform" @submit.native.prevent>
                 <Row :gutter="24">
-                    <Col span="10" class="ivu-text-left">
-                        <FormItem label="客服：" label-for="group_id">
-                            <Select v-model="search.kefu_id" placeholder="请选择" element-id="group_id" clearable>
-                                <Option value="all">全部</Option>
-                                <Option :value="item.id" v-for="(item, index) in kefuList" :key="index">{{item.nickname}}</Option>
-                            </Select>
-                        </FormItem>
-                    </Col>
-                        <Col span="24" class="ivu-text-left">
+                    <Col span="24" class="ivu-text-left">
                         <FormItem label="时间：">
                             <RadioGroup v-model="formValidate.time" type="button" @on-change="selectChange(formValidate.time)" class="mr">
                                 <Radio :label=item.val v-for="(item,i) in fromList.fromTxt" :key="i">{{item.text}}</Radio>
@@ -37,6 +29,9 @@
                     <Divider type="vertical" />
                     <a @click="onDelete(row, '删除反馈', index)">删除</a>
                 </template>
+                <template slot-scope="{row,index}" slot="avatar">
+                    <img :src="row.avatar" alt="">
+                </template>
             </Table>
             <div class="acea-row row-right page">
                 <Page :total="total" :page-size="limit" show-elevator show-total @on-change="onChange" />
@@ -46,7 +41,7 @@
 </template>
 
 <script>
-import { chatRecord, recordKefuApi } from '@/api/setting';
+import { chatRecord, recordKefuApi,recordUserListApi } from '@/api/setting';
 import { mapState } from 'vuex'
 
 export default {
@@ -54,10 +49,10 @@ export default {
     data() {
         return {
             formValidate: {
-                kefu_id: '',
-                msn: '',
+                nickname:'',
                 time: '',
-                appid: ''
+                page: 1,
+                limit: 15,
             },
             searchType: '',
             searchValue: '',
@@ -82,9 +77,14 @@ export default {
                     width: 80
                 },
                 {
-                    title: '内容',
-                    key: 'msn',
+                    title: '用户昵称',
+                    key: 'nickname',
                     minWidth: 120
+                },
+                {
+                    title: '用户头像',
+                    slot: 'avatar',
+                    minWidth: 150,
                 },
                 {
                     title: 'APPID',
@@ -93,19 +93,24 @@ export default {
                 },
                 {
                     title: '时间',
-                    key: 'add_time',
+                    key: '_add_time',
                     minWidth: 120
+                },
+                {
+                    title: '操作',
+                    slot: 'action',
+                    minWidth: 150,
+                    fixed: 'right'
                 }
             ],
             tableData: [],
             loading: false,
             total: 0,
-            page: 1,
-            limit: 15,
             kefuList:[],
             search:{
                 kefu_id:0,
             },
+            statistics:{},
         };
     },
     computed: {
@@ -120,51 +125,38 @@ export default {
         }
     },
     created() {
-        this.chatRecord();
-        this.recordKefu();
+        this.recordUserList();
     },
     methods: {
-        recordKefu(){
-            console.log(1111)
-            recordKefuApi().then(res=>{
-                this.kefuList = res.data;
-            })
-        },
-        chatRecord() {
-            chatRecord({
-                page: this.page,
-                limit: this.limit,
-                kefu_id: this.search.kefu_id ,
-                msn: this.searchType == 'msn' && this.searchValue || '',
-                time: this.formValidate.time,
-                appid: this.searchType == 'appid' && this.searchValue || ''
-            }).then(res => {
+        recordUserList(){
+            recordUserListApi(this.formValidate).then(res=>{
                 this.tableData = res.data.list;
                 this.total = res.data.count;
-            });
+                this.statistics = res.data.data;
+            })
         },
         onChange(index) {
-            this.page = index;
-            this.chatRecord()
+            this.formValidate.page = index;
+            this.recordUserList()
         },
         selChange() {
-            this.page = 1;
-            this.chatRecord()
+            this.formValidate.page = 1;
+            this.recordUserList()
         },
         // 具体日期
         onchangeTime(e) {
             this.timeVal = e
             this.formValidate.time = this.timeVal.join('-')
-            this.page = 1
-            this.chatRecord()
+            this.formValidate.page = 1
+            this.recordUserList()
         },
         // 选择时间
         selectChange(tab) {
             console.log(tab);
             this.formValidate.time = tab
             this.timeVal = []
-            this.page = 1
-            this.chatRecord()
+            this.formValidate.page = 1
+            this.recordUserList()
         },
     }
 }

@@ -40,6 +40,7 @@ class SiteStatistics extends AuthController
     {
         $where = $this->request->getMore([
             ['province', ''],
+            ['create_time', '']
         ]);
 
         return $this->success($this->services->getList($where));
