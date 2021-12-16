@@ -68,6 +68,8 @@ class Service extends AuthController
 
     /**
      * 保存新建的资源
+     * @param ChatUserServices $services
+     * @param ApplicationServices $applicationServices
      * @return mixed
      */
     public function save(ChatUserServices $services, ApplicationServices $applicationServices)
@@ -85,6 +87,7 @@ class Service extends AuthController
             ['auto_reply', 0],
             ['welcome_words', ''],
             ['status', 1],
+            ['group_id', 0]
         ]);
         if ($data['avatar'] == '') {
             return $this->fail('请选择客服头像');
