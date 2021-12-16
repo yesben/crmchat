@@ -69,5 +69,12 @@ class ChatServiceGroupServices extends BaseServices
         return create_form($id ? '修改组名' : '添加分组', $rule, '/chat/group/' . $id);
     }
 
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->dao->getColumn([], 'name as label', 'id as value');
+    }
 
 }

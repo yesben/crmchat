@@ -13,6 +13,7 @@ namespace app\controller\admin\chat;
 
 
 use app\controller\admin\AuthController;
+use app\services\ApplicationServices;
 use app\services\chat\ChatServiceDialogueRecordServices;
 use app\services\chat\ChatServiceRecordServices;
 use app\services\chat\ChatServiceServices;
@@ -69,7 +70,7 @@ class Service extends AuthController
      * 保存新建的资源
      * @return mixed
      */
-    public function save(ChatUserServices $services)
+    public function save(ChatUserServices $services, ApplicationServices $applicationServices)
     {
         $data = $this->request->postMore([
             ['appid', ''],
@@ -109,6 +110,7 @@ class Service extends AuthController
         if ($this->services->count(['account' => $data['account']])) {
             return $this->fail('该客服账号已存在!');
         }
+        $data['appid'] = $applicationServices->value(['is_delete' => 0], 'appid');
         $data['add_time'] = time();
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
