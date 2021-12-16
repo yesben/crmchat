@@ -74,7 +74,7 @@ class ChatServiceGroupServices extends BaseServices
      */
     public function getOptions()
     {
-        return $this->dao->getColumn([], 'name as label', 'id as value');
+        return $this->dao->getDataList([], ['name as label', 'id as value'],'create_time');
     }
 
 }
