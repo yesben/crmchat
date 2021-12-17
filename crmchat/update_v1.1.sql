@@ -79,6 +79,7 @@ CREATE TABLE `eb_site_statistics` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='站点统计';
 
+-- 2021/12/17
 CREATE TABLE `eb_chat_service_group` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT '组名',
@@ -87,3 +88,5 @@ CREATE TABLE `eb_chat_service_group` (
  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='客服分组';
+
+ALTER TABLE `eb_chat_service` ADD `group_id` INT(10) NOT NULL DEFAULT '0' COMMENT '分组id' AFTER `user_id`;
