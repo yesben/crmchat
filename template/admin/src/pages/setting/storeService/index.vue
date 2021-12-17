@@ -9,7 +9,6 @@
 
     <Row class="ivu-mt box-wrapper">
       <Col span="3" class="left-wrapper">
-        <Card :bordered="false" dis-hover class="ivu-mt">
         <Menu :theme="theme3" :active-name="sortName" width="auto">
           <MenuGroup>
             <MenuItem
@@ -35,14 +34,18 @@
                     <div class="ivu-poptip-body-content-inner">删除</div>
                   </div>
                 </div>
+                <div class="ivu-poptip-body" @click="lockGroup(item)">
+                  <div class="ivu-poptip-body-content">
+                    <div class="ivu-poptip-body-content-inner">查看二维码</div>
+                  </div>
+                </div>
               </div>
             </MenuItem>
           </MenuGroup>
         </Menu>
-        </Card>
       </Col>
       <Col span="21" ref="rightBox">
-        <Card :bordered="false" dis-hover class="ivu-mt">
+        <Card :bordered="false" dis-hover class="ivu-mt" style="margin-top: 0!important;">
 
           <Row type="flex" class="mb20">
             <Col span="24">
@@ -67,7 +70,9 @@
               <Tag color="success" v-if="row.online">在线</Tag>
               <Tag color="default" v-else>下线</Tag>
             </template>
-
+            <template slot-scope="{row,index}" slot="group_name">
+                <span>{{row.chatgroup.name}}</span>
+            </template>
             <template slot-scope="{ row, index }" slot="action">
               <a @click="edit(row)">编辑</a>
               <Divider type="vertical" v-if="row.status" />
@@ -221,7 +226,7 @@ export default {
       tableFrom: {
         page: 1,
         limit: 15,
-        group_id:0
+        group_id:''
       },
       timeVal: [],
       fromList: {
@@ -254,6 +259,10 @@ export default {
           title: '客服账号',
           key: 'account',
           minWidth: 60
+        },
+        {
+          title: '客服分组',
+          slot: 'group_name',
         },
         {
           title: '客服状态',
@@ -346,6 +355,23 @@ export default {
     })
   },
   methods: {
+    lockGroup(row){
+      this.modalTitle = row.name+' 组二维码';
+      this.qrcodeText = `${this.qrcodeTextStart}&group_id=${row.id}`;
+      if (this.qrcode) {
+        this.qrcode.makeCode(this.qrcodeText);
+      } else {
+        this.qrcode = new QRCode(this.$refs.qrcode, {
+          text: this.qrcodeText,
+          width: 128,
+          height: 128,
+          colorDark : "#000000",
+          colorLight : "#ffffff",
+          correctLevel : QRCode.CorrectLevel.L
+        });
+      }
+      this.modal = true;
+    },
     // 显示标签小菜单
     showMenu(item,index) {
       this.groupList.forEach((el) => {
@@ -429,7 +455,7 @@ export default {
     },
     // 点击列表的复制
     handleCopy(row) {
-        this.modalTitle = row.nickname;
+        this.modalTitle = '客服'+row.nickname+'个人二维码';
         this.qrcodeText = `${this.qrcodeTextStart}&kefu_id=${row.id}`;
         if (this.qrcode) {
             this.qrcode.makeCode(this.qrcodeText);
@@ -767,7 +793,7 @@ export default {
   }
 
   .right-menu {
-    z-index: 10;
+    z-index: 10000;
     position: absolute;
     right: -106px;
     top: -11px;
