@@ -166,7 +166,6 @@ class Service extends AuthController
     public function update(ChatUserServices $services, $id)
     {
         $data = $this->request->postMore([
-            ['appid', ''],
             ['avatar', ''],
             ['nickname', ''],
             ['account', ''],
