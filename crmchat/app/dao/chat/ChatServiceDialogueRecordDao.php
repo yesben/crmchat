@@ -58,6 +58,8 @@ class ChatServiceDialogueRecordDao extends BaseDao
             $query->where(function ($query) use ($where) {
                 $query->where('user_id', $where['kefu_id'])->whereOr('to_user_id', $where['kefu_id']);
             });
+        })->when(isset($where['user_id']), function ($query) use ($where) {
+            $query->where('user_id|to_user_id', $where['user_id']);
         });
     }
 

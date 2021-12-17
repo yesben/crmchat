@@ -880,6 +880,29 @@ export function chatStatistics(params) {
 }
 
 /**
+ * 获取客服分组列表
+ */
+export function kefuGroupListApi() {
+    return request({
+        url: 'chat/group',
+        method: 'get',
+    });
+}
+
+/**
+ * 获取添加客服分组表单
+ * @param id
+ */
+export function kefuCreateGroupApi(id) {
+    return request({
+        url: 'chat/group/create/'+id,
+        method: 'get',
+    });
+}
+
+
+
+/**
  * 查看所有聊天记录
  * @param {*} params
  * @returns
@@ -936,5 +959,16 @@ export function recordKefuApi() {
     return request({
         url:'chat/record_kefu',
         method:'get'
+    })
+}
+
+/**
+ * 获取聊天用户列表
+ */
+export function recordUserListApi(params) {
+    return request({
+        url:'chat/record/list',
+        method:'get',
+        params
     })
 }

@@ -13,6 +13,7 @@ namespace app\controller\admin\chat;
 
 
 use app\controller\admin\AuthController;
+use app\services\ApplicationServices;
 use app\services\chat\ChatServiceDialogueRecordServices;
 use app\services\chat\ChatServiceRecordServices;
 use app\services\chat\ChatServiceServices;
@@ -49,7 +50,10 @@ class Service extends AuthController
      */
     public function index()
     {
-        return $this->success($this->services->getServiceList([]));
+        $where = $this->request->getMore([
+            ['group_id', 0]
+        ]);
+        return $this->success($this->services->getServiceList($where));
     }
 
     /**
@@ -64,9 +68,11 @@ class Service extends AuthController
 
     /**
      * 保存新建的资源
+     * @param ChatUserServices $services
+     * @param ApplicationServices $applicationServices
      * @return mixed
      */
-    public function save(ChatUserServices $services)
+    public function save(ChatUserServices $services, ApplicationServices $applicationServices)
     {
         $data = $this->request->postMore([
             ['appid', ''],
@@ -81,6 +87,7 @@ class Service extends AuthController
             ['auto_reply', 0],
             ['welcome_words', ''],
             ['status', 1],
+            ['group_id', 0]
         ]);
         if ($data['avatar'] == '') {
             return $this->fail('请选择客服头像');
@@ -106,6 +113,7 @@ class Service extends AuthController
         if ($this->services->count(['account' => $data['account']])) {
             return $this->fail('该客服账号已存在!');
         }
+        $data['appid'] = $applicationServices->value(['is_delete' => 0], 'appid');
         $data['add_time'] = time();
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 

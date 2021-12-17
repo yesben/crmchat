@@ -15,6 +15,16 @@ CREATE TABLE IF NOT EXISTS `eb_chat_auto_reply` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='自动回复';
 
 
+CREATE TABLE `eb_chat_service_group` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT '组名',
+ `sort` int(10) NOT NULL DEFAULT '0' COMMENT '排序',
+ `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
+ `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='客服分组';
+
+
 CREATE TABLE IF NOT EXISTS `eb_chat_complain` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `content` varchar(100) NOT NULL DEFAULT '' COMMENT '投诉内容',
@@ -100,6 +110,7 @@ CREATE TABLE IF NOT EXISTS `eb_chat_service` (
   `appid` varchar(32) NOT NULL DEFAULT '' COMMENT 'APPID',
   `mer_id` int(10) NOT NULL DEFAULT '0' COMMENT '商户id',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '客服uid',
+  `group_id` int(10) NOT NULL DEFAULT '0' COMMENT '客服分组id',
   `online` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否在线',
   `account` varchar(50) NOT NULL DEFAULT '' COMMENT '账号',
   `password` varchar(255) NOT NULL DEFAULT '' COMMENT '密码',

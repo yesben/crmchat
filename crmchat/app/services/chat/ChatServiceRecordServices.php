@@ -70,14 +70,24 @@ class ChatServiceRecordServices extends BaseServices
     public function getAdminUserRecodeList(array $where)
     {
         [$page, $limit] = $this->getPageValue();
-        $list = $this->dao->recordModel($where, $page, $limit, ['user'])->select()->toArray();
+        $list = $this->dao->recordModel($where, $page, $limit, ['user', 'dialogueUser'])->select()->toArray();
         foreach ($list as &$item) {
             if (isset($item['user']['remark_nickname']) && $item['user']['remark_nickname']) {
                 $item['nickname'] = $item['user']['remark_nickname'];
             }
         }
         $count = $this->dao->recordModel($where)->count();
-        return compact('list', 'count');
+        /** @var  ChatServiceDialogueRecordServices $make */
+        $make = app()->make(ChatServiceDialogueRecordServices::class);
+        /** @var ChatUserServices $userMake */
+        $userMake = app()->make(ChatUserServices::class);
+        $data = [
+            'user_count' => $userMake->count(['is_tourist' => 0]),
+            'tourist_count' => $userMake->count(['is_tourist' => 1]),
+            'recode_count' => $this->dao->count(),
+            'dialogue_count' => $make->count()
+        ];
+        return compact('list', 'count', 'data');
     }
 
     /**

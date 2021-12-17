@@ -13,6 +13,14 @@
                             <Input search enter-button @on-search="onSearch" placeholder="请输入地区搜索" element-id="province" v-model="formValidate.province" style="width: 30%;display: inline-table;" class="mr" />
                         </FormItem>
                     </Col>
+                    <Col span="24" class="ivu-text-left">
+                        <FormItem label="时间：">
+                            <RadioGroup v-model="formValidate.time" type="button" @on-change="selectChange(formValidate.time)" class="mr">
+                                <Radio :label=item.val v-for="(item,i) in fromList.fromTxt" :key="i">{{item.text}}</Radio>
+                            </RadioGroup>
+                            <DatePicker :editable="false" @on-change="onchangeTime" :value="timeVal" format="yyyy/MM/dd" type="daterange" placement="bottom-end" placeholder="自定义时间" style="width: 200px;"></DatePicker>
+                        </FormItem>
+                    </Col>
                 </Row>
             </Form>
             <Table :columns="columns" :data="tableData" :loading="loading" highlight-row no-userFrom-text="暂无数据" class="ivu-mt">
@@ -41,7 +49,21 @@ export default {
     data() {
         return {
             formValidate: {
-                province: ''
+                province: '',
+                time:'',
+            },
+            fromList: {
+                title: '选择时间',
+                custom: true,
+                fromTxt: [
+                    { text: '全部', val: '' },
+                    { text: '今天', val: 'today' },
+                    { text: '昨天', val: 'yesterday' },
+                    { text: '最近7天', val: 'lately7' },
+                    { text: '最近30天', val: 'lately30' },
+                    { text: '本月', val: 'month' },
+                    { text: '本年', val: 'year' }
+                ]
             },
             columns: [
                 {
@@ -104,7 +126,8 @@ export default {
             chatStatistics({
                 page: this.page,
                 limit: this.limit,
-                province: this.formValidate.province
+                province: this.formValidate.province,
+                create_time: this.formValidate.time
             }).then(res => {
                 this.tableData = res.data.data;
                 this.total = res.data.count;
@@ -117,7 +140,21 @@ export default {
         onChange(index) {
             this.page = index;
             this.chatStatistics();
-        }
+        },
+        // 具体日期
+        onchangeTime(e) {
+            this.timeVal = e
+            this.formValidate.time = this.timeVal.join('-')
+            this.page = 1
+            this.chatStatistics()
+        },
+        // 选择时间
+        selectChange(tab) {
+            this.formValidate.time = tab
+            this.timeVal = []
+            this.page = 1
+            this.chatStatistics()
+        },
     }
 }
 </script>

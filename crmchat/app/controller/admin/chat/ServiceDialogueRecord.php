@@ -70,6 +70,7 @@ class ServiceDialogueRecord extends AuthController
             ['msn', ''],
             ['time', ''],
             ['appid', ''],
+            ['user_id', 0]
         ]);
         if ((int)$where['kefu_id'] === 0) {
             $where['kefu_id'] = '';

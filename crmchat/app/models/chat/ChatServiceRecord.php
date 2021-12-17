@@ -52,8 +52,17 @@ class ChatServiceRecord extends BaseModel
     {
         return $this->hasOne(ChatService::class, 'uid', 'to_uid')->field(['nickname', 'uid', 'avatar'])->bind([
             'kefu_nickname' => 'nickname',
-            'kefu_avatar'   => 'avatar',
+            'kefu_avatar' => 'avatar',
         ]);
+    }
+
+    /**
+     * 客服用户关联
+     * @return \think\model\relation\HasOne
+     */
+    public function dialogueUser()
+    {
+        return $this->hasOne(ChatUser::class, 'id', 'to_user_id')->field(['id', 'nickname', 'remark_nickname', 'version']);
     }
 
     /**

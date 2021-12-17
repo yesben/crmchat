@@ -323,6 +323,7 @@ export default {
   methods: {
       handleInput() {
           let chatCon = this.$refs.editable.innerText.replace(/[\r\n]/g, '');
+          console.log(chatCon)
           this.chatCon = chatCon.trim();
       },
       handlePaste(event) {
@@ -456,7 +457,8 @@ export default {
     // 输入框选择表情
     select(data) {
       let val = `[${data}]`
-      this.chatCon += val
+      this.$refs.editable.innerText += val
+      this.chatCon +=val;
       this.isEmoji = false
     },
     // 聊天表情转换
@@ -518,7 +520,8 @@ export default {
     },
     // 话术选中
     activeTxt(data) {
-      this.chatCon = data
+      this.$refs.editable.innerText += `${data}`
+      this.chatCon +=data;
       this.isMsg = false
     },
     // 文本发送
@@ -534,10 +537,9 @@ export default {
     if (!chatCon) {
         return this.$Message.error('请输入内容');
     }
-    this.chatCon = chatCon;
     this.sendMsg(chatCon, 1);
     this.$refs.editable.innerText = '';
-    this.chatCon = '';
+      this.chatCon = '';
     },
 
     // 统一发送处理
