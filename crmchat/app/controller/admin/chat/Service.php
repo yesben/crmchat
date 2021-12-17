@@ -178,6 +178,7 @@ class Service extends AuthController
             ['auto_reply', 0],
             ['welcome_words', ''],
             ['true_password', ''],
+            ['group_id', 0]
         ]);
         $customer = $this->services->get((int)$id);
         if (!$customer) {
