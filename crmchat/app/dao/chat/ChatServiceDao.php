@@ -64,7 +64,7 @@ class ChatServiceDao extends BaseDao
             $query->whereNotIn('user_id', $where['noId']);
         })->when(isset($where['group_id']), function ($query) use ($where) {
             $query->where('group_id', $where['group_id']);
-        })->with('chatgroup')->order('id DESC')->field('appid,online,account,id,user_id,avatar,nickname,status,add_time,phone')->select()->toArray();
+        })->with('chatgroup')->order('id DESC')->field('appid,online,account,id,user_id,group_id,avatar,nickname,status,add_time,phone')->select()->toArray();
     }
 
     /**
