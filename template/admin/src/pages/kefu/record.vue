@@ -31,7 +31,10 @@
                     <a @click="lock(row)">查看聊天记录</a>
                 </template>
                 <template slot-scope="{row,index}" slot="avatar">
-                    <img class="avatar" :src="row.avatar" alt="">
+                    <img class="avatar" :src="row.user.avatar" alt="">
+                </template>
+                <template slot-scope="{row,index}" slot="nickname">
+                    <span>{{row.user.nickname}}</span>
                 </template>
                 <template slot-scope="{row,index}" slot="nickname1">
                    <span>{{row.dialogueUser.nickname}}</span>
@@ -185,7 +188,7 @@ export default {
                 },
                 {
                     title: '用户昵称',
-                    key: 'nickname',
+                    slot: 'nickname',
                     minWidth: 120
                 },
                 {
