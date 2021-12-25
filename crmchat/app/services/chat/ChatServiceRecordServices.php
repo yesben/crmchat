@@ -81,6 +81,7 @@ class ChatServiceRecordServices extends BaseServices
             } else {
                 $item['user'] = [];
             }
+            $item['_add_time'] = date('Y-m-d H:i:s', $item['add_time']);
         }
         $count = $this->dao->recordModel($where)->count();
         /** @var  ChatServiceDialogueRecordServices $make */
