@@ -47,7 +47,7 @@ class SiteStatisticsServices extends BaseServices
     public function getList(array $where = [], array $field = ['*'])
     {
         [$page, $limit] = $this->getPageValue();
-        $data  = $this->dao->getDataList($where, $field, $page, $limit);
+        $data = $this->dao->getDataList($where, $field, null, $page, $limit);
         $count = $this->dao->count($where);
         return compact('data', 'count');
     }
@@ -60,7 +60,7 @@ class SiteStatisticsServices extends BaseServices
     public function ipByCity(string $ip)
     {
         $url = "https://ip.taobao.com/service/getIpInfo.php?ip=" . $ip;
-        $ip  = json_decode(file_get_contents($url));
+        $ip = json_decode(file_get_contents($url));
         if ((string)$ip->code == '1') {
             return false;
         }
@@ -79,12 +79,12 @@ class SiteStatisticsServices extends BaseServices
         if ($res) {
             return true;
         }
-        $map                 = new QqMap();
-        $city                = $map->getMapLocationInfo($data['ip']);
-        $data['province']    = $city->get('result.ad_info.province');
-        $data['region']      = $city->get('result.ad_info.city');
+        $map = new QqMap();
+        $city = $map->getMapLocationInfo($data['ip']);
+        $data['province'] = $city->get('result.ad_info.province');
+        $data['region'] = $city->get('result.ad_info.city');
         $data['create_time'] = date('Y-m-d H:i:s');
-        $res                 = $this->dao->save($data);
+        $res = $this->dao->save($data);
         if ($res) {
             Cache::set($data['ip'], 1, 600);
         }

@@ -46,6 +46,8 @@ class LoginServices extends BaseServices
      * 客服账号密码登录
      * @param string $account
      * @param string $password
+     * @param int $isApp
+     * @param string|null $clientId
      * @return array
      * @throws DataNotFoundException
      * @throws DbException
