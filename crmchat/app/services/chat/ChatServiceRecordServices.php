@@ -70,10 +70,16 @@ class ChatServiceRecordServices extends BaseServices
     public function getAdminUserRecodeList(array $where)
     {
         [$page, $limit] = $this->getPageValue();
-        $list = $this->dao->recordModel($where, $page, $limit, ['user', 'dialogueUser'])->order('add_time desc')->select()->toArray();
+        $list = $this->dao->recordModel($where, $page, $limit, ['thisUser', 'dialogueUser'])->order('add_time desc')->select()->toArray();
         foreach ($list as &$item) {
-            if (isset($item['user']['remark_nickname']) && $item['user']['remark_nickname']) {
+            if (isset($item['thisUser']['remark_nickname']) && $item['thisUser']['remark_nickname']) {
                 $item['nickname'] = $item['user']['remark_nickname'];
+            }
+            if (isset($item['thisUser'])) {
+                $item['user'] = $item['thisUser'];
+                unset($item['thisUser']);
+            } else {
+                $item['user'] = [];
             }
         }
         $count = $this->dao->recordModel($where)->count();
