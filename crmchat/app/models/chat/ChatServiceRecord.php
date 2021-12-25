@@ -70,7 +70,7 @@ class ChatServiceRecord extends BaseModel
      */
     public function thisUser()
     {
-        return $this->hasOne(ChatUser::class, 'id', 'user_id')->field(['id', 'nickname', 'remark_nickname', 'version']);
+        return $this->hasOne(ChatUser::class, 'id', 'user_id')->field(['id', 'nickname', 'avatar', 'remark_nickname', 'version']);
     }
 
     /**
