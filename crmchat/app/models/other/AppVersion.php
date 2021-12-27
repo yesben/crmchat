@@ -39,4 +39,9 @@ class AppVersion extends BaseModel
      * @var bool
      */
     protected $autoWriteTimestamp = true;
+
+    /**
+     * @var string
+     */
+    protected $defaultSoftDelete = 'delete_time';
 }
