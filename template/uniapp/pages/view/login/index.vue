@@ -27,7 +27,7 @@
 			</div>
 
 			<div class="login_container_content_handle"><div class="login_primary_button" @click="handleLogin">登录</div></div>
-			<div class="login-to-set-domin-name"><navigator hover-class="none" url="/pages/view/dominName/index">修改域名</navigator></div>
+			<div v-if='isDomainName' class="login-to-set-domin-name"><navigator hover-class="none" url="/pages/view/dominName/index">修改域名</navigator></div>
 		</div>
 	</div>
 </template>
@@ -37,6 +37,8 @@ import loginInput from './component/loginInput.vue';
 import { navigateTo, Modal, Toast } from 'pages/utils/uniApi.js';
 import http from 'pages/api/index';
 import api from 'pages/api/api.js';
+import config from 'pages/config/app.js';
+
 export default {
 	components: {
 		loginInput
@@ -49,7 +51,8 @@ export default {
 			},
 			cid: '',
 			isCheckEd: '1', // 是否选中隐私协议
-			isCheckEdArr: []
+			isCheckEdArr: [],
+			isDomainName: config.isDomainName
 		};
 	},
 	onLoad() {
