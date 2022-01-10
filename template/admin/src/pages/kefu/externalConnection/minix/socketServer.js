@@ -108,7 +108,7 @@ export default {
     this.getServiceAdv();
 
     this.userStatistics();
-    
+
   },
   watch: {
     productMessage: {
@@ -239,7 +239,7 @@ export default {
         // 发送消息监听函数
         ws.$on(["reply", "chat"], data => {
           this.chatServerData.serviceList.push(data);
-          this.userMessage = '';
+          // this.userMessage = '';
           this.goPageBottom(); // 滑动到页面底部
 
         });

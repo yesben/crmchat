@@ -369,7 +369,7 @@ class Install extends Command
                 $unCleanTable[$k] = str_replace('eb_', $tablepre, $v);
             }
             foreach ($tableNameData as $table) {
-                if (!is_array($table, $unCleanTable)) {
+                if (!in_array($table, $unCleanTable)) {
                     $this->app->db->transaction(function () use ($table) {
                         $this->app->db->query('truncate table ' . $table);
                     });
