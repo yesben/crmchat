@@ -73,7 +73,7 @@ class ChatServiceRecordServices extends BaseServices
         $list = $this->dao->recordModel($where, $page, $limit, ['thisUser', 'dialogueUser'])->order('add_time desc')->select()->toArray();
         foreach ($list as &$item) {
             if (isset($item['thisUser']['remark_nickname']) && $item['thisUser']['remark_nickname']) {
-                $item['nickname'] = $item['user']['remark_nickname'];
+                $item['nickname'] = $item['thisUser']['remark_nickname'];
             }
             if (isset($item['thisUser'])) {
                 $item['user'] = $item['thisUser'];
