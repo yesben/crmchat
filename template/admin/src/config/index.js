@@ -7,13 +7,12 @@
 // +---------------------------------------------------------------------
 // | Author: CRMEB Team <admin@crmeb.com>
 // +---------------------------------------------------------------------
-import { getCookies } from '@/libs/util'
 
 export default {
   /**
    * @description 配置显示在浏览器标签的title
    */
-  title: getCookies('pageTitle') || 'CRMEB',
+  title: 'CRMEB',
   /**
    * @description token在Cookie中存储的天数，默认1天
    */
