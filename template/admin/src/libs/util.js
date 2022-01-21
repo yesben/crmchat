@@ -408,7 +408,8 @@ export const scrollTop = (el, from = 0, to, duration = 500, endCallback) => {
 export const setTitle = (routeItem, vm) => {
     const handledRoute = getRouteTitleHandled(routeItem)
     const pageTitle = showTitle(handledRoute, vm)
-    let title1 = getCookies('pageTitle') === undefined ? title : getCookies('pageTitle');
+    let pageTitleCooke = getCookies('pageTitle')
+    let title1 = pageTitleCooke === undefined ? title : pageTitleCooke;
     const resTitle = pageTitle ? `${title1} - ${pageTitle}` : title1
     window.document.title = resTitle
 }
