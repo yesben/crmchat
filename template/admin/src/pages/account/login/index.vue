@@ -143,6 +143,7 @@ export default {
         let data = res.data || {}
         this.login_logo = data.login_logo ? data.login_logo : require('@/assets/images/logo.png');
         this.swiperList = data.slide.length ? data.slide : [{ slide: this.defaultSwiperList }];
+        setCookies('pageTitle',data.site_name || '');
       }).catch(err => {
         this.$Message.error(err)
         this.login_logo = require('@/assets/images/logo.png')
