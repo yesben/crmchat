@@ -52,6 +52,7 @@ class AndroidOptions extends OptionsBase
                 'options' => [
                     'VV' => ['classification' => 1],
                     'HW' => [
+                        '/message/android/notification/importance' => 'HIGH',
                         '/message/android/notification/big_title' => $data['title'],
                         '/message/android/notification/big_body' => $data['body'],
                         '/message/android/notification/badge/set_num' => $this->HWbadgeNum

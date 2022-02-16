@@ -76,7 +76,7 @@ class Service extends AuthController
         //指定客服后，随机客服取消
         if ($toUserId && $kefuRand) {
             $kefuRand = 0;
-            $kefuUd   = 0;
+            $kefuUd = 0;
         }
         return app('json')->successful($this->services->getRecord($this->appId, $user, $idTo, $limit, $toUserId, (int)$cookieUid, (int)$kefuUd, (int)$kefuRand));
     }
@@ -88,7 +88,7 @@ class Service extends AuthController
     public function getKfAdv()
     {
         /** @var CacheServices $cache */
-        $cache   = app()->make(CacheServices::class);
+        $cache = app()->make(CacheServices::class);
         $content = $cache->getDbCache('kf_adv', '');
         return $this->success(compact('content'));
     }
@@ -139,7 +139,7 @@ class Service extends AuthController
         if (!$data['filename']) return $this->fail('参数有误');
         if (CacheService::has('start_uploads_' . $request->appId()) && CacheService::get('start_uploads_' . $request->appId()) >= 500) return $this->fail('非法操作');
         $upload = UploadService::init();
-        $info   = $upload->to('store/comment')->validate()->move($data['filename']);
+        $info = $upload->to('store/comment')->validate()->move($data['filename']);
         if ($info === false) {
             return $this->fail($upload->getError());
         }
@@ -163,7 +163,7 @@ class Service extends AuthController
     {
         $type = sys_config('kefu_icon_type');
         $icon = sys_config('kefu_icon_url' . $type);
-        return $this->success(['icon' => $icon]);
+        return $this->success(['icon' => $icon, 'type' => $type]);
     }
 
 }
