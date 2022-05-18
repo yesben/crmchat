@@ -17,15 +17,14 @@ use app\services\chat\ChatAutoReplyServices;
 use app\services\chat\ChatServiceDialogueRecordServices;
 use app\services\chat\ChatServiceSpeechcraftServices;
 use app\services\kefu\KefuServices;
-use app\services\message\service\StoreServiceServices;
 use app\services\other\AppVersionServices;
 use app\services\other\CategoryServices;
 use app\validate\kefu\SpeechcraftValidate;
-use app\webscoket\Room;
 use crmeb\services\CacheService;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
+use think\facade\Cache;
 
 /**
  * Class Service
@@ -467,7 +466,7 @@ class Service extends AuthController
     public function getSendId(ChatServiceDialogueRecordServices $services)
     {
         $sendId = $services->getSendId();
-        CacheService::redisHandler()->set($sendId, 1);
+        Cache::store('redis')->set($sendId, 1);
         return $this->success(['send_id' => $sendId]);
     }
 
@@ -487,7 +486,7 @@ class Service extends AuthController
             ['is_tourist', ''],
         ]);
 
-        if (CacheService::redisHandler()->has($data['guid'])) {
+        if (Cache::store('redis')->has($data['guid'])) {
             return $this->fail('消息ID不存在！');
         }
 
@@ -506,7 +505,7 @@ class Service extends AuthController
 
         $res['guid'] = $data['guid'];
 
-        CacheService::redisHandler()->delete($data['guid']);
+        Cache::store('redis')->delete($data['guid']);
 
         return $this->success('发送成功', $res);
     }
