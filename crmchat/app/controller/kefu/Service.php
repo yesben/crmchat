@@ -486,11 +486,11 @@ class Service extends AuthController
             ['is_tourist', ''],
         ]);
 
-        if (Cache::store('redis')->has($data['guid'])) {
+        if (!Cache::store('redis')->has($data['guid'])) {
             return $this->fail('消息ID不存在！');
         }
 
-        $userId = $this->request->uid();
+        $userId = $this->kefuInfo['uid'];
 
         if (!$data['to_user_id']) {
             return $this->fail('用户不存在');

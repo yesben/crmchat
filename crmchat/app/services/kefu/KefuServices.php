@@ -179,7 +179,9 @@ class KefuServices extends BaseServices
         }
 
         $msn = trim(strip_tags(str_replace(["\n", "\t", "\r", "&nbsp;"], '', htmlspecialchars_decode($msn))));
-        $saveData = compact('to_user_id', 'msn_type', 'msn');
+        $saveData['to_user_id'] = $toUserId;
+        $saveData['msn'] = $msn;
+        $saveData['msn_type'] = $msnType;
         $saveData['add_time'] = time();
         $saveData['appid'] = $appId;
         $saveData['user_id'] = $userId;
