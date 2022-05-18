@@ -479,12 +479,12 @@ class Service extends AuthController
     public function sendMessage()
     {
         $data = $this->request->postMore([
-            'to_user_id' => 0,
-            'type' => 0,
-            'msn' => '',
-            'other' => '',
-            'guid' => '',
-            'is_tourist' => '',
+            ['to_user_id', 0],
+            ['type', 0],
+            ['msn', ''],
+            ['other', ''],
+            ['guid', ''],
+            ['is_tourist', ''],
         ]);
 
         if (CacheService::redisHandler()->has($data['guid'])) {
