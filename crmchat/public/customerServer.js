@@ -131,20 +131,30 @@ function initCustomerServer(option) {
     this.settingObj.version = option.version || ''//版本号
     this.appDom = null;
     this.initStatus = false;//是否初始化过
+
+    window.addEventListener('resize', () => {
+        this.setMatchMedia();
+    })
+
     // 判断当前环境下的设备是pc端 || 移动端, 将客户信息挂载到iframe的链接上
     this.setMatchMedia = () => {
-        if (!this.settingObj.deviceType) {
-            const matchMedia = window.matchMedia;
-            // 自动判断启动端 pc 或是 移动
-            if (matchMedia('(max-width: 600px)').matches) {
-                this.settingObj.deviceType = 'Mobile';
-            } else if (matchMedia('(max-width: 992px)').matches) {
-                this.settingObj.deviceType = 'pc';
-            } else {
-                this.settingObj.deviceType = 'pc';
-            }
-            ;
+        console.log(this.settingObj)
+
+        const matchMedia = window.matchMedia
+        var deviceType = 'pc';
+        // 自动判断启动端 pc 或是 移动
+        if (matchMedia('(max-width: 600px)').matches) {
+            deviceType = 'Mobile';
+        } else if (matchMedia('(max-width: 992px)').matches) {
+            deviceType = 'pc';
+        } else {
+            deviceType = 'pc';
         }
+        console.log(matchMedia('(max-width: 600px)'));
+        if (this.settingObj.deviceType !== deviceType) {
+            this.settingObj.deviceType = deviceType
+        }
+
         // console.log(this.settingObj.deviceType);
         // 获取客服客户相关参数
         let params = {

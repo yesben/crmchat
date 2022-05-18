@@ -18,6 +18,7 @@ use think\App;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
+use think\facade\Cache;
 
 /**
  * Class ChatServiceDialogueRecordServices
@@ -207,5 +208,27 @@ class ChatServiceDialogueRecordServices extends BaseServices
     public function getServiceChatList(array $where, int $limit, int $upperId)
     {
         return $this->dao->getChatList($where, $limit, $upperId, ['userThis', 'userTO']);
+    }
+
+    /**
+     * 获取唯一id
+     * @return float|int|string
+     * @throws \Exception
+     */
+    public function getSendId()
+    {
+        $snowflake = new \Godruoyi\Snowflake\Snowflake();
+        $is_callable = function ($currentTime) {
+            $redis = Cache::store('redis');
+            $swooleSequenceResolver = new \Godruoyi\Snowflake\RedisSequenceResolver($redis->handler());
+            return $swooleSequenceResolver->sequence($currentTime);
+        };
+        //32位
+        if (PHP_INT_SIZE == 4) {
+            $id = abs($snowflake->setSequenceResolver($is_callable)->id());
+        } else {
+            $id = $snowflake->setStartTimeStamp(strtotime('2020-06-05') * 1000)->setSequenceResolver($is_callable)->id();
+        }
+        return $id;
     }
 }
