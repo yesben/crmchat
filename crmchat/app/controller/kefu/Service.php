@@ -490,7 +490,7 @@ class Service extends AuthController
             return $this->fail('消息ID不存在！');
         }
 
-        $userId = $this->kefuInfo['uid'];
+        $userId = $this->kefuInfo['user_id'];
 
         if (!$data['to_user_id']) {
             return $this->fail('用户不存在');
@@ -501,7 +501,7 @@ class Service extends AuthController
 
         $appId = $this->kefuInfo['appid'];
 
-        $res = $this->services->sendMessage($data, $userId, $appId, 'user');
+        $res = $this->services->sendMessage($data, (int)$userId, $appId, 'user');
 
         $res['guid'] = $data['guid'];
 
@@ -510,4 +510,11 @@ class Service extends AuthController
         return $this->success('发送成功', $res);
     }
 
+    /**
+     * @return mixed
+     */
+    public function ping()
+    {
+        return $this->success(['time' => time()]);
+    }
 }

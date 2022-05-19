@@ -275,9 +275,9 @@ class KefuServices extends BaseServices
         //如果在线
         if ($online && $toUserOnline) {
             if ('kefu' == $type) {
-                SwooleTaskService::user()->type('reply')->to($toUserId)->data($data)->push();
-            } else {
                 SwooleTaskService::kefu()->type('reply')->to($toUserId)->data($data)->push();
+            } else {
+                SwooleTaskService::user()->type('reply')->to($toUserId)->data($data)->push();
             }
         } else {
             //用户在线，可是没有和当前用户进行聊天，给当前用户发送未读条数
@@ -292,14 +292,14 @@ class KefuServices extends BaseServices
                 ]);
 
                 if ('kefu' == $type) {
-                    SwooleTaskService::user()->type('mssage_num')->to($toUserId)->data([
+                    SwooleTaskService::kefu()->type('mssage_num')->to($toUserId)->data([
                         'user_id' => $userId,
                         'num' => $unMessagesCount,//某个用户的未读条数
                         'allNum' => $allUnMessagesCount,//总未读条数
                         'recored' => $data['recored']
                     ])->push();
                 } else {
-                    SwooleTaskService::kefu()->type('mssage_num')->to($toUserId)->data([
+                    SwooleTaskService::user()->type('mssage_num')->to($toUserId)->data([
                         'user_id' => $userId,
                         'num' => $unMessagesCount,//某个用户的未读条数
                         'allNum' => $allUnMessagesCount,//总未读条数
