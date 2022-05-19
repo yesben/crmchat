@@ -196,7 +196,7 @@ class Service extends AuthController
             'is_tourist' => '',
         ]);
 
-        if (CacheService::redisHandler()->has($data['guid'])) {
+        if (!$data['guid']) {
             return $this->fail('消息ID不存在！');
         }
 
@@ -212,8 +212,6 @@ class Service extends AuthController
         $res = $this->services->sendMessage($data, $userId, $this->appId, 'user');
 
         $res['guid'] = $data['guid'];
-
-        CacheService::redisHandler()->delete($data['guid']);
 
         return $this->success('发送成功', $res);
     }
