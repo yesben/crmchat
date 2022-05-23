@@ -16,6 +16,7 @@ use app\Request;
 use app\services\chat\ChatServiceDialogueRecordServices;
 use app\services\chat\ChatServiceServices;
 use app\services\other\CacheServices;
+use app\services\kefu\KefuServices;
 use app\services\system\attachment\SystemAttachmentServices;
 use crmeb\services\CacheService;
 use crmeb\services\UploadService;
@@ -185,22 +186,27 @@ class Service extends AuthController
      * @return mixed
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function sendMessage()
+    public function sendMessage(KefuServices $services)
     {
         $data = $this->request->postMore([
-            'to_user_id' => 0,
-            'type' => 0,
-            'msn' => '',
-            'other' => '',
-            'guid' => '',
-            'is_tourist' => '',
+            ['to_user_id', 0],
+            ['type', 0],
+            ['msn', ''],
+            ['other', ''],
+            ['guid', ''],
+            ['is_tourist', ''],
+            ['user_id', ''],
         ]);
 
         if (!$data['guid']) {
             return $this->fail('消息ID不存在！');
         }
+        if (!$data['user_id']) {
+            return $this->fail('缺少user_id');
+        }
 
-        $userId = $this->request->uid();
+        $userId = $data['user_id'];
+        unset($data['user_id']);
 
         if (!$data['to_user_id']) {
             return $this->fail('用户不存在');
@@ -209,7 +215,7 @@ class Service extends AuthController
             return $this->fail('不能和自己聊天');
         }
 
-        $res = $this->services->sendMessage($data, $userId, $this->appId, 'user');
+        $res = $services->sendMessage($data, $userId, $this->appId, 'user');
 
         $res['guid'] = $data['guid'];
 
