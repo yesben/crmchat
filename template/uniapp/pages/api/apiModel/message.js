@@ -1,9 +1,22 @@
 // 聊天界面接口
 const customerServer = {
 	
+	pingNetWork:{
+		url:'kefu/service/ping',
+		method:'get',
+		timeout:1000
+	},
 	kefuServiceList: {
 		url: 'kefu/service/list',
 		method: 'get'
+	},
+	getSendId: {
+		url: 'kefu/service/get_send_id',
+		method: 'get'
+	},
+	sendMessage:{
+		url: 'kefu/service/send_message',
+		method: 'post'
 	},
 	// 获取转接客服列表
 	serviceTransferList: {
@@ -59,7 +72,7 @@ const customerServer = {
 
 
 }
-const api  = {
+const api = {
 	// 获取客户列表
 	userList: {
 		url: 'kefu/user/list',

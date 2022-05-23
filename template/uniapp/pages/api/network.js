@@ -1,3 +1,6 @@
+import http from '@/pages/api/index.js'
+import api from '@/pages/api/api.js'
+
 export function onNetworkStatusChange(onlineFun, offlineFun) {
 
 	//#ifdef H5
@@ -27,4 +30,30 @@ export function onNetworkStatusChange(onlineFun, offlineFun) {
 	});
 	//#endif
 
+}
+
+let NetWork = null;
+export function onNetworkStatusChangeV2(onlineFun, offlineFun) {
+
+	if (NetWork) {
+		clearInterval(NetWork);
+		NetWork = null;
+	}
+	let online = null,
+		offline = null;
+	NetWork = setInterval(() => {
+		http(api.pingNetWork).then(() => {
+			if (online === null) {
+				onlineFun();
+				online = true;
+			}
+			offline = null;
+		}).catch(() => {
+			if (offline === null) {
+				offlineFun();
+				offline = true;
+			}
+			online = null;
+		})
+	}, 1000);
 }

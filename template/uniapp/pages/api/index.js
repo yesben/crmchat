@@ -58,7 +58,6 @@ function http(api, data, base) {
 		url += api.queryKey.map(item => `/${data[item]}`).join('')
 	}
 
-	// console.log(api)
 	let post_data = {
 		url: url,
 		data: api.canNotInputQuery ? '' : data,
@@ -67,7 +66,7 @@ function http(api, data, base) {
 			'Authori-zation': 'Bearer ' + store.state.token
 		},
 		method: api.method.toUpperCase(),
-		timeout: 3000,
+		timeout: api.timeout || 3000,
 	}
 
 	return new Promise(async (reslove, reject) => {

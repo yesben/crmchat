@@ -4,7 +4,8 @@ import {
 } from 'pages/utils/uniApi.js';
 import store from '@/store';
 import {
-	onNetworkStatusChange
+	onNetworkStatusChange,
+	onNetworkStatusChangeV2
 } from './network.js'
 
 class Socket {
@@ -23,10 +24,9 @@ class Socket {
 	}
 	//网络状态变化监听
 	networkEvent() {
-		onNetworkStatusChange(() => {
+		onNetworkStatusChangeV2(() => {
 			console.log('有网了')
 			this.networkStatus = true;
-			this.socketTask.close();
 			uni.$on('timeout', this.timeoutEvent.bind(this))
 		}, () => {
 			console.log('断网了')
@@ -34,7 +34,7 @@ class Socket {
 			this.connectStatus = false;
 			clearInterval(this.timer);
 			this.timer = null;
-			uni.$off('timeout', this.timeoutEvent)
+			this.socketTask.close();
 		});
 	}
 	//开始连接

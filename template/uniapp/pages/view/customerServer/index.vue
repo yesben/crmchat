@@ -5,7 +5,8 @@
 			<view slot="header" class="header">
 				<view class="header_left" @click="goBackToMessageList"><span class="iconfont icon-fanhui"></span></view>
 				<view class="header_center">
-					{{ userData.remark_nickname ? userData.remark_nickname : userData.nickname }}</view>
+					{{ userData.remark_nickname ? userData.remark_nickname : userData.nickname }}
+				</view>
 				<view class="header_right" @click="selectCustomerServerOfTopRight(userData)"><span
 						class="iconfont">&#xe6d3;</span></view>
 			</view>
@@ -33,14 +34,16 @@
 									<view class="content_list_message_detils_value_shopMessag">
 										<view class="content_list_message_detils_value_shopMessag_item">
 											<view class="content_list_message_detils_value_shopMessag_item_label">
-												<span>库存:</span></view>
+												<span>库存:</span>
+											</view>
 											<view class="content_list_message_detils_value_shopMessag_item_value">
 												<span>{{ item.other.stock }}</span>
 											</view>
 										</view>
 										<view class="content_list_message_detils_value_shopMessag_item">
 											<view class="content_list_message_detils_value_shopMessag_item_label">
-												<span>销量:</span></view>
+												<span>销量:</span>
+											</view>
 											<view class="content_list_message_detils_value_shopMessag_item_value">
 												<span>{{ parseInt(item.other.sales) + parseInt(item.other.ficti ? item.other.ficti : 0) }}</span>
 											</view>
@@ -518,24 +521,24 @@
 			// 发送消息统一处理
 			sendMsg(msn, type) {
 				let guid = this.scoket.guid();
-				let obj = {
-					type: 'chat',
-					data: {
-						guid,
-						msn,
-						type,
-						to_user_id: this.userId
-					}
-				};
 				let chat = this.chatOptinos(guid, msn, type);
 				this.$store.commit('setChatList', {
 					id: this.userId,
 					list: chat
 				});
 				this.pushMessageToList(chat);
-				this.scoket.send(obj).then(res => {
+				http(api.sendMessage, {
+					guid,
+					msn,
+					type,
+					to_user_id: this.userId,
+				}).then(data => {
+					this.chatEvent({
+						guid: data.guid
+					});
 					this.goBottom();
-				});
+				})
+
 			},
 			selectScriptLibary() {
 				this.$refs.scriptLibaryModel.open();
