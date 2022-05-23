@@ -270,7 +270,7 @@ class KefuServices extends BaseServices
             $autoReplyData = $services->autoReply(app(), $appId, $toUserId, $userId, $msn, $msnType, $other);
             if ($autoReplyData !== false) {
                 //发送给当前客服
-                SwooleTaskService::kefu()->type('chat')->to($userId)->data($autoReplyData)->push();
+                SwooleTaskService::kefu()->type('chat')->to($toUserId)->data($autoReplyData)->push();
                 return compact('autoReply', 'autoReplyData');
             }
         }
