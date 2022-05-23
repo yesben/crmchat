@@ -79,10 +79,13 @@ class SiteStatisticsServices extends BaseServices
         if ($res) {
             return true;
         }
-        $map = new QqMap();
-        $city = $map->getMapLocationInfo($data['ip']);
-        $data['province'] = $city->get('result.ad_info.province');
-        $data['region'] = $city->get('result.ad_info.city');
+        try {
+            $map = new QqMap();
+            $city = $map->getMapLocationInfo($data['ip']);
+            $data['province'] = $city->get('result.ad_info.province');
+            $data['region'] = $city->get('result.ad_info.city');
+        } catch (\Throwable $e) {
+        }
         $data['create_time'] = date('Y-m-d H:i:s');
         $res = $this->dao->save($data);
         if ($res) {
