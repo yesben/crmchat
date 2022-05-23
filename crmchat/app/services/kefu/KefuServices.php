@@ -168,7 +168,7 @@ class KefuServices extends BaseServices
      */
     public function sendMessage(array $data, int $userId, string $appId, string $type = 'kefu')
     {
-        $msnType = $data['type'];//消息类型
+        $msnType = $data['msn_type'];//消息类型
         $msn = $data['msn'];//消息内容
         $guid = $data['guid'];//消息唯一id
         $toUserId = $data['to_user_id'];//送达人id

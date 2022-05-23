@@ -479,7 +479,7 @@ class Service extends AuthController
     {
         $data = $this->request->postMore([
             ['to_user_id', 0],
-            ['type', 0],
+            ['msn_type', 0],
             ['msn', ''],
             ['other', ''],
             ['guid', ''],
@@ -507,6 +507,8 @@ class Service extends AuthController
 
         return $this->success('发送成功', $res);
     }
+
+
 
     /**
      * @return mixed

@@ -190,7 +190,7 @@ class Service extends AuthController
     {
         $data = $this->request->postMore([
             ['to_user_id', 0],
-            ['type', 0],
+            ['msn_type', 0],
             ['msn', ''],
             ['other', ''],
             ['guid', ''],

@@ -530,7 +530,7 @@
 				http(api.sendMessage, {
 					guid,
 					msn,
-					type,
+					msn_type: type,
 					to_user_id: this.userId,
 				}).then(data => {
 					this.chatEvent({
