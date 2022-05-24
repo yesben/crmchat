@@ -14,21 +14,17 @@
 namespace app\webscoket;
 
 
-use app\services\ApplicationServices;
 use crmeb\services\CacheService;
 use Swoole\Server;
 use Swoole\Websocket\Frame;
-use think\Event;
 use think\response\Json;
-use think\swoole\Websocket;
-use think\swoole\websocket\Room;
 use app\webscoket\Room as NowRoom;
 
 /**
  * Class Manager
  * @package app\webscoket
  */
-class Manager extends Websocket
+class Manager
 {
 
     /**
@@ -56,20 +52,23 @@ class Manager extends Websocket
      */
     protected $nowRoom;
 
+    /**
+     * @var Server
+     */
+    protected $server;
+
     const USER_TYPE = ['admin', 'user', 'kefu'];
 
     /**
      * Manager constructor.
      * @param Server $server
-     * @param Room $room
-     * @param Event $event
      * @param Response $response
      * @param Ping $ping
      * @param \app\webscoket\Room $nowRoom
      */
-    public function __construct(\think\App $app, Server $server, Room $room, Event $event, Response $response, Ping $ping, NowRoom $nowRoom)
+    public function __construct(Server $server, Response $response, Ping $ping, NowRoom $nowRoom)
     {
-        parent::__construct($app, $server, $room, $event);
+        $this->server = $server;
         $this->response = $response;
         $this->pingService = $ping;
         $this->nowRoom = $nowRoom;
@@ -80,7 +79,7 @@ class Manager extends Websocket
 
     /**
      * @param int $fd
-     * @param Request $request
+     * @param \think\Request $request
      * @return mixed
      */
     public function onOpen($fd, \think\Request $request)
@@ -129,7 +128,6 @@ class Manager extends Websocket
      * @param int $userId
      * @param string $type
      * @return bool|mixed|string
-     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function getUserIdByFd(int $userId, string $type = '')
     {
@@ -153,7 +151,6 @@ class Manager extends Websocket
     /**
      * @param int $userId
      * @return array
-     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function getUserIdByFds(int $userId)
     {
@@ -168,7 +165,6 @@ class Manager extends Websocket
      * @param int $userId
      * @param int $toUserId
      * @param string $field
-     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function updateTabelField(int $userId, int $toUserId, string $field = 'to_user_id')
     {
@@ -244,7 +240,7 @@ class Manager extends Websocket
      * @param Json $json
      * @return bool
      */
-    public function send($fd, \think\response\Json $json)
+    public function send($fd, Json $json)
     {
         $this->pingService->createPing($fd, time(), $this->cache_timeout);
         return $this->pushing($fd, $json->getData());
@@ -257,7 +253,7 @@ class Manager extends Websocket
      */
     public function pushing($fds, $data, $exclude = null)
     {
-        if ($data instanceof \think\response\Json) {
+        if ($data instanceof Json) {
             $data = $data->getData();
         }
         $data = is_array($data) ? json_encode($data) : $data;
