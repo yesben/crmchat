@@ -17,15 +17,19 @@ namespace app\webscoket;
 use crmeb\services\CacheService;
 use Swoole\Server;
 use Swoole\Websocket\Frame;
+use think\App;
+use think\Event;
+use think\Request;
 use think\response\Json;
+use think\swoole\Websocket;
+use think\swoole\websocket\Room;
 use app\webscoket\Room as NowRoom;
-
 
 /**
  * Class Manager
  * @package app\webscoket
  */
-class Manager
+class Manager extends Websocket
 {
 
     /**
@@ -53,28 +57,21 @@ class Manager
      */
     protected $nowRoom;
 
-    /**
-     * @var Server
-     */
-    protected $server;
-
-    /**
-     * @var string
-     */
-    protected $sender;
-
     const USER_TYPE = ['admin', 'user', 'kefu'];
 
     /**
      * Manager constructor.
+     * @param App $app
      * @param Server $server
+     * @param Room $room
+     * @param Event $event
      * @param Response $response
      * @param Ping $ping
      * @param \app\webscoket\Room $nowRoom
      */
-    public function __construct(Server $server, Response $response, Ping $ping, NowRoom $nowRoom)
+    public function __construct(App $app, Server $server, Room $room, Event $event, Response $response, Ping $ping, NowRoom $nowRoom)
     {
-        $this->server = $server;
+        parent::__construct($app, $server, $room, $event);
         $this->response = $response;
         $this->pingService = $ping;
         $this->nowRoom = $nowRoom;
@@ -85,10 +82,10 @@ class Manager
 
     /**
      * @param int $fd
-     * @param \think\Request $request
+     * @param Request $request
      * @return mixed
      */
-    public function onOpen($fd, \think\Request $request)
+    public function onOpen($fd, Request $request)
     {
         $type = $request->get('type');
         $token = $request->get('token');
@@ -254,7 +251,9 @@ class Manager
 
     /**
      * 发送
+     * @param $fds
      * @param $data
+     * @param null $exclude
      * @return bool
      */
     public function pushing($fds, $data, $exclude = null)
@@ -277,44 +276,6 @@ class Manager
         }
         return true;
     }
-
-    /**
-     * Make sender leave multiple rooms.
-     *
-     * @param array|string|integer $rooms
-     *
-     * @return $this
-     */
-    public function leave($rooms = []): self
-    {
-        $rooms = is_string($rooms) || is_int($rooms) ? func_get_args() : $rooms;
-
-        $this->nowRoom->del($this->getSender(), $rooms);
-
-        return $this;
-    }
-
-    /**
-     * Set sender fd.
-     *
-     * @param integer
-     *
-     * @return $this
-     */
-    public function setSender(int $fd)
-    {
-        $this->sender = $fd;
-        return $this;
-    }
-
-    /**
-     * Get current sender fd.
-     */
-    public function getSender()
-    {
-        return $this->sender;
-    }
-
 
     /**
      * 关闭连接
