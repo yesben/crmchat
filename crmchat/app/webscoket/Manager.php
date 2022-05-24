@@ -20,6 +20,7 @@ use Swoole\Websocket\Frame;
 use think\response\Json;
 use app\webscoket\Room as NowRoom;
 
+
 /**
  * Class Manager
  * @package app\webscoket
@@ -56,6 +57,11 @@ class Manager
      * @var Server
      */
     protected $server;
+
+    /**
+     * @var string
+     */
+    protected $sender;
 
     const USER_TYPE = ['admin', 'user', 'kefu'];
 
@@ -271,6 +277,44 @@ class Manager
         }
         return true;
     }
+
+    /**
+     * Make sender leave multiple rooms.
+     *
+     * @param array|string|integer $rooms
+     *
+     * @return $this
+     */
+    public function leave($rooms = []): self
+    {
+        $rooms = is_string($rooms) || is_int($rooms) ? func_get_args() : $rooms;
+
+        $this->nowRoom->del($this->getSender(), $rooms);
+
+        return $this;
+    }
+
+    /**
+     * Set sender fd.
+     *
+     * @param integer
+     *
+     * @return $this
+     */
+    public function setSender(int $fd)
+    {
+        $this->sender = $fd;
+        return $this;
+    }
+
+    /**
+     * Get current sender fd.
+     */
+    public function getSender()
+    {
+        return $this->sender;
+    }
+
 
     /**
      * 关闭连接
