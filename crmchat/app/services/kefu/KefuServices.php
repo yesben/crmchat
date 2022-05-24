@@ -276,6 +276,8 @@ class KefuServices extends BaseServices
                     SwooleTaskService::kefu()->type('chat_auth')->to($toUserId)->data([$data, $autoReplyData])->push();
                 }
                 return compact('autoReply', 'autoReplyData');
+            } else {
+                $autoReply = false;
             }
         }
 
