@@ -1,6 +1,7 @@
 import { mobileScoket } from '@/libs/socket';
 import { userRecord, serviceUpload, serviceAdv, userStatistics } from '@/api/kefu';
-import { setLoc, getLoc } from '@/libs/util'
+import { sendMessageMobile } from '@/api/kefu_mobile';
+import { setLoc, getLoc, getGuid } from '@/libs/util'
 import { mapState } from 'vuex';
 import Cookies from "js-cookie";
 
@@ -142,7 +143,7 @@ export default {
             browser = 'Netscape';
         }
         userStatistics({
-            ip: window.returnCitySN.cip,
+            ip: window.returnCitySN ? window.returnCitySN.cip : '',
             path: window.location.href,
             source: window.parent.location.href,
             browser: browser
@@ -396,7 +397,7 @@ export default {
       } else {
         sendMessage = this.$refs['inputDiv'].innerText.replace(/[\r\n]/g, '');
       }
-      console.log(sendMessage)
+
       if(sendMessage) {
         this.sendMsg(sendMessage, 1);
         this.$refs['inputDiv'] ? this.$refs['inputDiv'].innerText = '' : this.userMessage = '';
@@ -410,30 +411,39 @@ export default {
     },
     // type: 1 普通文本 2 图片
     sendMsg(msn, type, id) {
-      let sendData = {
-        data: {
-          msn: msn,
-          type: type,
-          to_user_id: this.chatServerData.to_user_id,
-          is_tourist: 0
-        },
-        type: 'chat',
-        // user: {
-        //   uid: this.chatServerData.uid,
-        //   nickname: this.chatServerData.nickname,
-        //   phone: this.userMessage.phone ? this.userMessage.phone : this.chatServerData.phone
-        // }
-      }
-
       if(!this.chatStatus){
         return this.$Message.error('正在连接中');
       }
-
-      this.bus.pageWs.then((ws) => {
-        ws.send(sendData);
+      let guid = getGuid();
+      let chat = this.chatOptinos(guid, msn, type);
+      sendMessageMobile(chat).then( res => {
+        chat.add_time = Date.parse(new Date()) / 1000;
+        this.pushMessageToList(chat);
+        if (res.data.autoReply === true) {
+          this.pushMessageToList(res.data.autoReplyData);
+        }
+        this.goPageBottom();
+      }).catch(()=>{
       })
     },
-
+    pushMessageToList(data) {
+      this.chatServerData.serviceList.push(data);
+    },
+    chatOptinos(guid, msn, type, other) {
+      return {
+        msn,
+        msn_type: type,
+        to_user_id: this.chatServerData.to_user_id,
+        is_send: 0,
+        is_tourist: 0,
+        avatar: this.chatServerData.avatar,
+        user_id: this.chatServerData.user_id,
+        appid: this.chatServerData.appid,
+        other: other || {},
+        type: 0,
+        guid:guid
+      };
+    },
     // 滑动到顶部
     scrollHandler(e) {
       this.isLoad = true;

@@ -263,6 +263,7 @@
 		onUnload() {
 			console.log('聊天界面卸载');
 			uni.$off('chat', this.chatEvent);
+			uni.$off('chat_auth', this.chatAuthEvent);
 			uni.$off('reply', this.replyEvent);
 			uni.$off('success', this.successTochat);
 			uni.$off('close', this.closeEvent);
@@ -326,6 +327,14 @@
 			replyEvent(data) {
 				this.pushMessageToList(data);
 			},
+			chatAuthEvent(data) {
+				if (data.length) {
+					data.map(item => {
+						item.msn = this.replace_em(item.msn);
+						this.pushMessageToList(item);
+					})
+				}
+			},
 			chatEvent(data) {
 				this.messageList.map(item => {
 					if (item.guid === data.guid) {
@@ -358,6 +367,7 @@
 				}
 				uni.$on('success', this.successTochat);
 				uni.$on('chat', this.chatEvent);
+				uni.$on('chat_auth', this.chatAuthEvent);
 				uni.$on('reply', this.replyEvent);
 				uni.$on('close', this.closeEvent);
 				uni.$on('rm_transfer', this.rmTransferEvent);
@@ -526,6 +536,7 @@
 					id: this.userId,
 					list: chat
 				});
+				chat.msn = this.replace_em(msn);
 				this.pushMessageToList(chat);
 				http(api.sendMessage, {
 					guid,
