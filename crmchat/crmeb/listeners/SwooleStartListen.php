@@ -31,13 +31,5 @@ class SwooleStartListen implements ListenerInterface
      */
     public function handle($event): void
     {
-        try {
-            //重启过后重置房间人
-            /** @var Room $room */
-            $room = app()->make(Room::class);
-            $room->setCache(CacheService::redisHandler())->remove();
-        } catch (\Throwable $e) {
-            Log::error($e->getMessage());
-        }
     }
 }
