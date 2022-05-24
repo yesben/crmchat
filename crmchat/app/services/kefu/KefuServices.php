@@ -279,11 +279,7 @@ class KefuServices extends BaseServices
 
         //如果在线
         if ($online && $toUserOnline) {
-            if ('kefu' == $type) {
-                SwooleTaskService::kefu()->type('reply')->to($toUserId)->data($data)->push();
-            } else {
-                SwooleTaskService::user()->type('reply')->to($toUserId)->data($data)->push();
-            }
+            SwooleTaskService::serve($type)->type('reply')->to($toUserId)->data($data)->push();
         } else {
             //用户在线，可是没有和当前用户进行聊天，给当前用户发送未读条数
             if ($fds && ($userInfo[0]['to_user_id'] ?? 0) != $userId && $isBackstage && $kefuOnline) {
@@ -296,21 +292,14 @@ class KefuServices extends BaseServices
                     'type' => 0
                 ]);
 
-                if ('kefu' == $type) {
-                    SwooleTaskService::kefu()->type('mssage_num')->to($toUserId)->data([
-                        'user_id' => $userId,
-                        'num' => $unMessagesCount,//某个用户的未读条数
-                        'allNum' => $allUnMessagesCount,//总未读条数
-                        'recored' => $data['recored']
-                    ])->push();
-                } else {
-                    SwooleTaskService::user()->type('mssage_num')->to($toUserId)->data([
-                        'user_id' => $userId,
-                        'num' => $unMessagesCount,//某个用户的未读条数
-                        'allNum' => $allUnMessagesCount,//总未读条数
-                        'recored' => $data['recored']
-                    ])->push();
-                }
+
+                SwooleTaskService::serve($type)->type('mssage_num')->to($toUserId)->data([
+                    'user_id' => $userId,
+                    'num' => $unMessagesCount,//某个用户的未读条数
+                    'allNum' => $allUnMessagesCount,//总未读条数
+                    'recored' => $data['recored']
+                ])->push();
+
             } elseif ($kefuOnline && $clientId && $kefuInfo) {
                 //客服不在线,但是客服在app登录了,状态保持在线,发送app推送消息
 
