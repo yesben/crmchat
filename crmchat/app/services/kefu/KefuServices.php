@@ -264,18 +264,20 @@ class KefuServices extends BaseServices
             $isBackstage = !!$kefuInfo['is_backstage'];
         }
 
+        $toUserOnline = !!$userService->value(['id' => $toUserId], 'online');
+
         //自动回复
         if ($autoReply && $msn) {
             //如果自动回复的内容没,那么消息不会反回
             $autoReplyData = $services->autoReply(app(), $appId, $toUserId, $userId, $msn, $msnType, $other);
             if ($autoReplyData !== false) {
                 //发送给当前客服
-                SwooleTaskService::kefu()->type('chat_auth')->to($toUserId)->data([$data, $autoReplyData])->push();
+                if ($online && $toUserOnline) {
+                    SwooleTaskService::kefu()->type('chat_auth')->to($toUserId)->data([$data, $autoReplyData])->push();
+                }
                 return compact('autoReply', 'autoReplyData');
             }
         }
-
-        $toUserOnline = !!$userService->value(['id' => $toUserId], 'online');
 
         //如果在线
         if ($online && $toUserOnline) {
