@@ -190,7 +190,7 @@ class KefuServices extends BaseServices
 
 
         $online = false;
-
+        $newUserInfo = [];
         //查到送达人是否和当前用户聊天
         $fds = Manager::userFd($type, $toUserId);
         if ($fds) {
@@ -202,8 +202,12 @@ class KefuServices extends BaseServices
                     $userInfo[] = $room->get($fd);
                 }
             }
-            if ($userInfo) {
-                $online = ($userInfo[0]['to_user_id'] ?? 0) == $userId;
+            foreach ($userInfo as $item) {
+                if (isset($item['to_user_id']) && $item['to_user_id'] === $userId) {
+                    $online = true;
+                    $newUserInfo = $item;
+                    break;
+                }
             }
         }
 
@@ -292,10 +296,12 @@ class KefuServices extends BaseServices
             } else {
                 $res = true;
             }
-            if ($fds && ($userInfo[0]['to_user_id'] ?? 0) != $userId && $res) {
+            if ($fds && ($newUserInfo['to_user_id'] ?? 0) != $userId && $res) {
+
                 $data['recored']['nickname'] = $_userInfo['nickname'];
                 $data['recored']['avatar'] = $_userInfo['avatar'];
                 $data['recored']['online'] = isset($userInfo) ? 1 : 0;
+
                 $allUnMessagesCount = $logServices->getMessageNum([
                     'appid' => $appId,
                     'to_user_id' => $toUserId,
