@@ -22,7 +22,7 @@ window.$chat = {
         if (this.event[name] && this.event[name].length) {
             this.event[name].map(item => {
                 if (typeof item === 'function') {
-                    item(...attr)
+                    attr ? item(...attr) : item()
                 }
             })
         }
@@ -138,7 +138,6 @@ function initCustomerServer(option) {
 
     // 判断当前环境下的设备是pc端 || 移动端, 将客户信息挂载到iframe的链接上
     this.setMatchMedia = () => {
-        console.log(this.settingObj)
 
         const matchMedia = window.matchMedia
         var deviceType = 'pc';
@@ -150,12 +149,10 @@ function initCustomerServer(option) {
         } else {
             deviceType = 'pc';
         }
-        console.log(matchMedia('(max-width: 600px)'));
         if (this.settingObj.deviceType !== deviceType) {
             this.settingObj.deviceType = deviceType
         }
 
-        // console.log(this.settingObj.deviceType);
         // 获取客服客户相关参数
         let params = {
             token: this.settingObj.token,
@@ -477,7 +474,7 @@ window.getChatInstance = function () {
 window.onload = function () {
     var chatJava = document.getElementById('chat');
     if (chatJava) {
-        var option = JSON.parse(chatJava.getAttribute('option') || '');
+        var option = chatJava.getAttribute('option') ? JSON.parse(chatJava.getAttribute('option') ) : {};
         if (option.authInit) {
             customerServer = new initCustomerServer(option);
             customerServer.init();
