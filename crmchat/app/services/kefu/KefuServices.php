@@ -290,7 +290,7 @@ class KefuServices extends BaseServices
             SwooleTaskService::serve($type)->type('reply')->to($toUserId)->data($data)->push();
         } else {
             //用户在线，可是没有和当前用户进行聊天，给当前用户发送未读条数
-            if ($type === 'user') {
+            if ($type === 'kefu') {
                 //用户给客服发送消息需要查看客服是否在线
                 $res = $isBackstage && $kefuOnline;
             } else {
