@@ -181,7 +181,6 @@
         computed: {
             records() {
                 return this.chatServerData.serviceList.map((item, index) => {
-                    console.log(item)
                     item.time = this.$moment(item.add_time * 1000).format('MMMDo H:mm')
                     if (index) {
                         if (
