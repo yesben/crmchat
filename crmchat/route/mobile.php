@@ -22,6 +22,8 @@ Route::group('api', function () {
 
     Route::group('mobile', function () {
 
+        Route::get('service/ping', 'Service/ping')->name('ping');//响应网络ping
+
         Route::group('user', function () {
 
             Route::get('record', 'Service/getRecordList');
@@ -40,7 +42,6 @@ Route::group('api', function () {
             Route::post('cache', 'Service/setCache')->name('setCache');//设置缓存
             Route::get('get_send_id', 'Service/getSendId')->name('getSendId');//获取发送消息sendid
             Route::post('send_message', 'Service/sendMessage')->name('sendMessage');//发送消息
-            Route::get('ping', 'Service/ping')->name('ping');//响应网络ping
 
         })->middleware(MobileAuthTokenMiddleware::class);
 

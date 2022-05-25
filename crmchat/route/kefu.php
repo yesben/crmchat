@@ -20,6 +20,8 @@ Route::group('api', function () {
 
     Route::group('kefu', function () {
 
+        Route::get('service/ping', 'Service/ping')->name('ping');//响应网络ping
+
         Route::any('ticket/[:appid]', 'Login/ticket');
 
         Route::group(function () {
@@ -93,7 +95,6 @@ Route::group('api', function () {
                 Route::put('backstage/:backstage', 'Service/backstage')->name('backstage');//设置是否后台运行
                 Route::get('get_send_id', 'Service/getSendId')->name('getSendId');//获取发送消息sendid
                 Route::post('send_message', 'Service/sendMessage')->name('sendMessage');//发送消息
-                Route::get('ping', 'Service/ping')->name('ping');//响应网络ping
 
             })->middleware(KefuAuthTokenMiddleware::class);
 
