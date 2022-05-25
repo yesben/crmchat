@@ -31,7 +31,10 @@
 					let kefuInfo = JSON.parse(JSON.stringify(this.globalData.kefuInfo));
 					kefuInfo.is_backstage = 1;
 					this.globalData.kefuInfo.is_backstage = 1;
-					store.commit('setkefuInfo', kefuInfo);
+					store.commit('setkefuInfo', {
+						one: true,
+						is_backstage: 1
+					});
 				});
 			}
 
@@ -111,7 +114,7 @@
 				plus.push.addEventListener(
 					'click',
 					function(msg) {
-						console.log('点击事件:', msg.payload);
+						console.log('点击事件:', JSON.parse(JSON.parse(msg.payload)));
 						navigateTo(1, JSON.parse(JSON.parse(msg.payload)).url);
 					},
 					false
@@ -182,7 +185,6 @@
 				});
 
 				uni.$on('mssage_num', data => {
-					console.log('mssage_num', data);
 					if (data.num > 0) {
 						this.$onlineAudio.play();
 						uni.setTabBarBadge({

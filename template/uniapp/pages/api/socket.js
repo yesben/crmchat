@@ -20,7 +20,6 @@ class Socket {
 		this.networkStatus = true;
 		this.connectLing = false; //连接是否进行中
 		this.defaultEvenv(); //执行默认事件
-		this.networkEvent();
 	}
 	//网络状态变化监听
 	networkEvent() {
@@ -34,12 +33,13 @@ class Socket {
 			this.connectStatus = false;
 			clearInterval(this.timer);
 			this.timer = null;
-			this.socketTask.close();
+			this.socketTask && this.socketTask.close();
 		});
 	}
 	//开始连接
 	startConnect() {
 		console.log('开始链接')
+		this.networkEvent();
 		this.handClse = false;
 		if (!this.connectStatus) {
 			this.init();
@@ -59,10 +59,10 @@ class Socket {
 		uni.$on('recored', this.recoredEvent.bind(this));
 		uni.$on('online', this.onlineEvent.bind(this));
 	}
-	messageListEvent(){
-		
+	messageListEvent() {
+
 	}
-	
+
 	timeoutEvent() {
 		this.reconne();
 	}

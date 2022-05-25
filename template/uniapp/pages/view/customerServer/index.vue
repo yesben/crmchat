@@ -1,6 +1,7 @@
 <template>
 	<view class="container">
-		<lay-out ref="layOut" :scrollTop="scrollTop" :scrollWithAnimation="false" @goTop="goTop" @layoutScroll="scroll">
+		<lay-out id='layOut' ref="layOut" :scrollTop="scrollTop" :scrollWithAnimation="false" @goTop="goTop"
+			@layoutScroll="scroll">
 			<!-- #ifdef H5 -->
 			<view slot="header" class="header">
 				<view class="header_left" @click="goBackToMessageList"><span class="iconfont icon-fanhui"></span></view>
@@ -13,7 +14,7 @@
 			<!-- #endif -->
 			<view slot="content" class="content" id="contentMessage">
 				<view class="content_list" v-for="(item, index) in messageList" :key="index"
-					:class="{ right_box: customerServerData.user_ids.indexOf(item.user_id) !== -1 }">
+					:class="{ right_box: customerServerData.user_ids && customerServerData.user_ids.indexOf(item.user_id) !== -1 }">
 					<view class="content_list_avar" @click="selectCustomerServer(item)">
 						<image :src="item.avatar" mode="widthFix"></image>
 					</view>
@@ -249,6 +250,7 @@
 				return navigateBack(1);
 			}
 			this.customerServerData = this.$store.getters.kefuInfo;
+			console.log(this.customerServerData)
 			this.kefuInfo = this.$store.getters.kefuInfo;
 			this.messageList = this.$store.getters.chatLog(this.userId);
 			this.userData = this.$store.getters.userInfo(this.userId);
@@ -489,22 +491,21 @@
 				});
 			},
 			imageLoad() {
-				console.log('图片加载完成');
-				// this.$nextTick(() => {
-				// 	this.goBottom();
-				// });
+
 			},
 			goBottom() {
-				const query = uni.createSelectorQuery().in(this);
-				query
-					.select('#contentMessage')
-					.boundingClientRect(data => {
-						this.scrollTop = this.old.scrollTop;
-						this.$nextTick(() => {
+				this.$nextTick(() => {
+					const query = uni.createSelectorQuery().in(this);
+					query
+						.select('#contentMessage')
+						.boundingClientRect(data => {
+							this.scrollTop = this.old.scrollTop;
 							this.scrollTop = data.height + 50;
-						});
-					})
-					.exec();
+							console.log(data, this.scrollTop);
+
+						})
+						.exec();
+				});
 			},
 			// textarea获取焦点
 			textareaFocus() {
@@ -547,7 +548,6 @@
 					this.chatEvent({
 						guid: data.guid
 					});
-					this.goBottom();
 				})
 
 			},
@@ -599,7 +599,7 @@
 			},
 			// 查看用户详情
 			selectCustomerServer(item) {
-				if (this.customerServerData.user_ids.indexOf(item.user_id) === -1) {
+				if (this.customerServerData.user_ids && this.customerServerData.user_ids.indexOf(item.user_id) === -1) {
 					navigateTo(1, '/pages/view/customerServer/customerMessage', item);
 				}
 			},

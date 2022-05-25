@@ -3,6 +3,7 @@ const customerServer = {
 	
 	pingNetWork:{
 		url:'kefu/service/ping',
+		noAuth:true,
 		method:'get',
 		timeout:1000
 	},
