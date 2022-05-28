@@ -97,21 +97,6 @@ class wsSocket {
             this.ws.close();
             console.log('断网了')
         });
-
-        // this.addHandler(window,'online',()=>{
-        //     this.networkStatus = true;
-        //     console.log('联网了')
-        //     this.ws.close();
-        //     this.vm.$on('timeout',this.timeoutEvent);
-        // })
-        // this.addHandler(window,'offline',()=>{
-        //     this.networkStatus = false;
-        //     this.socketStatus = false;
-        //     this.timer && clearInterval(this.timer);
-        //     this.timer = null;
-        //     this.vm.$off('timeout',this.timeoutEvent);
-        //     console.log('断网了')
-        // });
     }
 
     reconne() {
