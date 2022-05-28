@@ -13,7 +13,6 @@ namespace app\controller;
 
 use app\Request;
 use crmeb\utils\Encrypter;
-use think\facade\Console;
 use think\helper\Str;
 
 class InstallController
@@ -457,29 +456,28 @@ class InstallController
                         $res2 = mysqli_query($conn, 'UPDATE `' . $dbPrefix . 'system_config` SET `value`=' . $site_url . ' WHERE `menu_name`="site_url"');
                     }
 
-                    if ($post['demo']) {
-                        $rand = rand(1000, 9999);
-                        $time = time();
-                        $app_secret = md5('202116257358989495' . $time . $rand);
-                        $encrypter = new Encrypter($this->parseKey($appKey), 'AES-256-CBC');
-                        $token = $encrypter->encrypt(json_encode([
-                            'appid' => '202116257358989495',
-                            'app_secret' => $app_secret,
-                            'rand' => $rand,
-                            'timestamp' => $time,
-                        ]));
-                        $tokenMd5 = md5($token);
-                        $appSQL = "UPDATE  `{$dbPrefix}application` SET `token_md5` = '" . $tokenMd5 . "', `token`= '" . $token . "',`app_secret`='" . $app_secret . "',`timestamp`= $time ,`rand`= $rand  WHERE `appid` = '202116257358989495'";
-                        $res = mysqli_query($conn, $appSQL);
-                        if (!$res) {
-                            $message = '更新APP_TOKEN失败';
-                            $arr = array('n' => 999998, 'msg' => $message);
-                            return $arr;
-                        } else {
-                            $message = '成功添加管理员<br />成功写入配置文件<br>安装完成．';
-                            $arr = array('n' => 999998, 'msg' => $message);
-                        }
+                    $rand = rand(1000, 9999);
+                    $time = time();
+                    $app_secret = md5('202116257358989495' . $time . $rand);
+                    $encrypter = new Encrypter($this->parseKey($appKey), 'AES-256-CBC');
+                    $token = $encrypter->encrypt(json_encode([
+                        'appid' => '202116257358989495',
+                        'app_secret' => $app_secret,
+                        'rand' => $rand,
+                        'timestamp' => $time,
+                    ]));
+                    $tokenMd5 = md5($token);
+                    $appSQL = "UPDATE  `{$dbPrefix}application` SET `token_md5` = '" . $tokenMd5 . "', `token`= '" . $token . "',`app_secret`='" . $app_secret . "',`timestamp`= $time ,`rand`= $rand  WHERE `appid` = '202116257358989495'";
+                    $res = mysqli_query($conn, $appSQL);
+                    if (!$res) {
+                        $message = '更新APP_TOKEN失败';
+                        $arr = array('n' => 999998, 'msg' => $message);
+                        return $arr;
+                    } else {
+                        $message = '成功添加管理员<br />成功写入配置文件<br>安装完成．';
+                        $arr = array('n' => 999998, 'msg' => $message);
                     }
+
 
                     if ($res) {
                         $message = '成功添加管理员<br />成功写入配置文件<br>安装完成．';
