@@ -270,15 +270,7 @@ class ChatServiceServices extends BaseServices
         //查找聊天记录
         $serviceLogList = $logServices->getServiceChatList(['appid' => $appId, 'to_user_id' => $userId], $limit, $idTo);
         $result['serviceList'] = array_reverse($logServices->tidyChat($serviceLogList));
-        try {
-            //欢迎语
-            $app = app();
-            Timer::after(1000, function () use ($app, $appId, $toUserId, $userId, $userInfo) {
-                $this->welcomeWords($app, $appId, $toUserId, $userId, $userInfo);
-            });
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-        }
+        $result['welcome'] = $idTo ? false : $this->welcomeWordsV2($appId, $toUserId, $userId);
         return $result;
     }
 
@@ -436,28 +428,71 @@ class ChatServiceServices extends BaseServices
             SwooleTaskService::user($app)->type('reply')->to($toUserId)->data($data)->push();
         }
         //回复给客服
-//        $nickname = $userInfo['nickname'] ?? '';
-//        $avatar = $userInfo['avatar'] ?? '';
-//        $formType = $userInfo['type'] ?? 0;
-//        $isTourist = $userInfo['is_tourist'] ?? 0;
-//        $serviceRecored->setApp($app);
-//        $count = $serviceRecored->count(['appid' => $appId, 'user_id' => $userId, 'to_user_id' => $toUserId]);
-//        $recored = $serviceRecored->saveRecord(
-//            $appId,
-//            $toUserId,
-//            $userId,
-//            $count ? '' : $msg,
-//            (int)$formType,
-//            1,
-//            0,
-//            (int)$isTourist,
-//            $nickname,
-//            $avatar,
-//            1
-//        );
-//        if (isset($userInfo['version']) && $userInfo['version']) {
-//            $recored['nickname'] = '[' . $userInfo['version'] . ']' . $recored['nickname'];
-//        }
-//        SwooleTaskService::kefu($app)->type('recored')->to($userId)->data($recored)->push();
+    }
+
+    /**
+     * 欢迎语
+     * @param string $appId
+     * @param int $userId
+     * @param int $toUserId
+     * @return array|bool
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function welcomeWordsV2(string $appId, int $userId, int $toUserId)
+    {
+        /** @var ChatServiceDialogueRecordServices $logServices */
+        $logServices = app()->make(ChatServiceDialogueRecordServices::class);
+        $unMessagesCount = $logServices->chatCount($appId, $toUserId);
+        /** @var ChatServiceDialogueRecordServices $logServices */
+        $logServices = app()->make(ChatServiceDialogueRecordServices::class);
+        $msg = $this->dao->value(['user_id' => $userId, 'appid' => $appId], 'welcome_words');
+        /** @var ChatUserServices $userService */
+        $userService = app()->make(ChatUserServices::class);
+        /** @var ChatServiceRecordServices $serviceRecored */
+        $serviceRecored = app()->make(ChatServiceRecordServices::class);
+        if (!$unMessagesCount && $msg) {
+            $data = [
+                'add_time' => time(),
+                'appid' => $appId,
+                'user_id' => $userId,
+                'to_user_id' => $toUserId,
+                'msn_type' => 1,
+                'type' => 1,
+                'is_send' => 1
+            ];
+            $data['other'] = '';
+            $data['msn'] = $msg;
+            $data = $logServices->save($data);
+            $data = $data->toArray();
+            $data['_add_time'] = $data['add_time'];
+            $data['add_time'] = strtotime($data['add_time']);
+            $_userInfo = $userService->getUserInfo($data['user_id'], ['nickname', 'avatar', 'is_tourist', 'type']);
+            $isTourist = $_userInfo['is_tourist'];
+            $data['nickname'] = $_userInfo['nickname'] ?? '';
+            $data['avatar'] = $_userInfo['avatar'] ?? '';
+            $formType = $_userInfo['type'] ?? 0;
+            $unMessagesCount = $logServices->getMessageNum(['user_id' => $userId, 'to_user_id' => $toUserId, 'type' => 0]);
+            //记录当前用户和他人聊天记录
+            $online = $this->dao->value(['appid' => $appId, 'user_id' => $toUserId], 'online');
+            $data['recored'] = $serviceRecored->saveRecord(
+                $appId,
+                $userId,
+                $toUserId,
+                $msg,
+                (int)$formType,
+                1,
+                $unMessagesCount,
+                (int)$isTourist,
+                $data['nickname'],
+                $data['avatar'],
+                $online ?: 0
+            );
+            //回复给用户
+            return $data;
+        } else {
+            return false;
+        }
     }
 }
