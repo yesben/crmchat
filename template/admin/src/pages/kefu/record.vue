@@ -237,8 +237,9 @@ export default {
         this.recordUserList();
     },
     methods: {
-        pageChange3(){
-
+        pageChange3(value){
+            this.formValidate3.page = value;
+            this.getChatRecordList()
         },
         modals3Cancel(){
             this.formValidate3.page = 1;
