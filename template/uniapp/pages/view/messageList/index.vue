@@ -213,6 +213,9 @@
 						version,
 						name
 					}).then(data => {
+						if (data.update === false) {
+							return;
+						}
 						uni.showModal({
 							title: '检测到新版本',
 							content: data.info,
