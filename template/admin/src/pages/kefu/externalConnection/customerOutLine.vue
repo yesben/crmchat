@@ -58,10 +58,8 @@ export default {
     ...mapState('media', ['isMobile']),
   },
   created() {
-    console.log('outline')
     this.selectFeedBack();
     parent.postMessage({ type: 'customerOutLine' }, "*"); // 通知客服已经离线
-    console.log(this.$route.query);
   },
   methods: {
     // 查询广告

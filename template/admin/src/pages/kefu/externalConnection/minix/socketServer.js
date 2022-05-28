@@ -236,7 +236,7 @@ export default {
               setLoc(item, getLoc(item) ? getLoc(item) : res.data[item]);
             })
 
-          if (res.data.welcome !== false) {
+          if (res.data.welcome) {
             this.pushMessageToList(res.data.welcome);
           }
           this.goPageBottom(); // 滑动到页面底部
@@ -245,7 +245,7 @@ export default {
 
       }).catch(rej => {
         if(rej.status == 400) {
-          this.$router.push({ name: 'customerOutLine', query: this.$route.query });
+          this.$router.replace({ name: 'customerOutLine', query: this.$route.query });
         }
       })
     },
@@ -267,7 +267,7 @@ export default {
 
         ws.$on('kefu_logout',data=>{
           if(data.online == 0){
-            this.$router.push({
+            this.$router.replace({
               name: 'customerOutLine',
               query: this.$route.query
             });
