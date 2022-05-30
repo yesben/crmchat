@@ -85,7 +85,7 @@ const store = new Vuex.Store({
 			state.chatList[data.id].push(data.list);
 		},
 		delChatList(state, data) {
-			state.chatList[data.id].map((item, index) => {
+			state.chatList[data.id] && state.chatList[data.id].map((item, index) => {
 				if (item.guid === data.guid) {
 					state.chatList[data.id].splice(index, 1)
 				}
@@ -125,7 +125,11 @@ const store = new Vuex.Store({
 			cache.set('chatLogPage-' + state.kefuInfo.id, state.chatLogPage);
 		},
 		setkefuInfo(state, data) {
-			state.kefuInfo = data
+			if (data.one === true) {
+				state.kefuInfo.is_backstage = data.is_backstage;
+			} else {
+				state.kefuInfo = data;
+			}
 			cache.set('kefuInfo', data)
 		},
 		setChatOnline(state, data) {
@@ -340,7 +344,6 @@ const store = new Vuex.Store({
 		},
 		chatLog: (state) => (user_id) => {
 			let chatLog = [];
-			console.log(user_id)
 			if (state.chatLog[user_id] === undefined) {
 				return [];
 			}

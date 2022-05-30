@@ -123,17 +123,6 @@
       <Modal v-model="authMsg" :mask="true" class="none-radius isMsgbox" width="600" :footer-hide="true">
         <auth-reply v-if="authMsg" @close="msgAuthClose" @activeTxt="activeTxt"></auth-reply>
       </Modal>
-      <!-- 商品弹窗 -->
-      <!-- <div v-if="isProductBox">
-        <div class="bg" @click.stop="isProductBox = false"></div>
-        <goodsDetail :goodsId="goodsId"></goodsDetail>
-      </div> -->
-      <!-- 订单详情 -->
-      <!-- <div v-if="isOrder">
-        <Modal v-model="isOrder" title="订单信息" width="700" :footer-hide="true" :mask="true" class="none-radius">
-          <orderDetail :orderId="orderId"></orderDetail>
-        </Modal>
-      </div> -->
     </div>
   </div>
 
@@ -143,6 +132,7 @@
 
 var mp3 = require('../../../assets/video/notice.wav');
 var mp3 = new Audio(mp3);
+mp3.muted = false;
 import Setting from '@/setting';
 import { HappyScroll } from 'vue-happy-scroll'
 import baseHeader from './components/baseHeader';
@@ -153,11 +143,9 @@ import { Socket } from '@/libs/socket';
 import msgWindow from "./components/msgWindow";
 import authReply from "./components/authReply";
 import transfer from './components/transfer'
-import { serviceList } from '@/api/kefu'
-// import goodsDetail from "./components/goods_detail";
-// import orderDetail from "./components/order_detail";
+import { serviceList, sendMessage } from '@/api/kefu'
 import { mapState } from 'vuex'
-import { getCookies } from '@/libs/util'
+import { getCookies, getGuid } from '@/libs/util'
 import { serviceInfo } from '@/api/kefu_mobile'
 import request from '@/libs/request'
 
@@ -368,6 +356,17 @@ export default {
             this.online = !!data.online
           }
         });
+
+
+        ws.$on('chat_auth',(data)=>{
+          if(data.length){
+            data.map(item=>{
+              item.msn = this.replace_em(item.msn);
+              this.pushMessageToList(item);
+            });
+          }
+        });
+
         ws.$on(["reply", "chat"], (data) => {
           if(data.msn_type == 1) {
             data.msn = this.replace_em(data.msn);
@@ -485,7 +484,6 @@ export default {
           ws.send({
             data: {
               id: this.userActive ? this.userActive.to_user_id : this.userActive,
-              test:2
             },
             type: "to_chat",
           });
@@ -526,13 +524,6 @@ export default {
     },
     // 文本发送
     sendText() {
-    //   let chatCon = this.chatCon.replace(/[\r\n]/g, '');
-    //   if(!chatCon){
-    //     this.chatCon = '';
-    //     return this.$Message.error('请输入内容');
-    //   }
-    //   this.sendMsg(chatCon, 1)
-    //   this.chatCon = '';
     let chatCon = this.$refs.editable.innerText.replace(/[\r\n]/g, '');
     if (!chatCon) {
         return this.$Message.error('请输入内容');
@@ -544,18 +535,32 @@ export default {
 
     // 统一发送处理
     sendMsg(msn, type) {
-      let obj = {
-        type: 'chat',
-        data: {
-          msn,
-          type,
-          to_user_id: this.userActive.to_user_id,
-          is_tourist: this.tourist
-        }
-      }
-      this.bus.pageWs.then((ws) => {
-        ws.send(obj);
-      });
+      let guid = getGuid();
+      let chat = this.chatOptinos(guid, msn, type);
+      sendMessage(chat).then(res => {
+          chat.add_time = Date.parse(new Date()) / 1000;
+        chat.msn = this.replace_em(chat.msn);
+          this.pushMessageToList(chat);
+      })
+    },
+    pushMessageToList(data) {
+      this.chatList.push(data);
+      this.setPageScrollTo();
+    },
+    chatOptinos(guid, msn, type, other) {
+      return {
+        msn,
+        msn_type: type,
+        to_user_id: this.userActive ? this.userActive.to_user_id : this.userActive,
+        is_send: 0,
+        is_tourist: 0,
+        avatar: this.kefuInfo.avatar,
+        user_id: this.kefuInfo.user_id,
+        appid: this.kefuInfo.appid,
+        other: other || {},
+        type: 0,
+          guid: guid
+      };
     },
     send(type, data) {
       Socket.send({

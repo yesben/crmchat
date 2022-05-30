@@ -13,8 +13,10 @@ namespace app\controller\mobile;
 
 
 use app\Request;
+use app\services\chat\ChatServiceDialogueRecordServices;
 use app\services\chat\ChatServiceServices;
 use app\services\other\CacheServices;
+use app\services\kefu\KefuServices;
 use app\services\system\attachment\SystemAttachmentServices;
 use crmeb\services\CacheService;
 use crmeb\services\UploadService;
@@ -164,6 +166,68 @@ class Service extends AuthController
         $type = sys_config('kefu_icon_type');
         $icon = sys_config('kefu_icon_url' . $type);
         return $this->success(['icon' => $icon, 'type' => $type]);
+    }
+
+    /**
+     * 获取消息id
+     * @param ChatServiceDialogueRecordServices $services
+     * @return mixed
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function getSendId(ChatServiceDialogueRecordServices $services)
+    {
+        $sendId = $services->getSendId();
+        CacheService::redisHandler()->set($sendId, 1);
+        return $this->success(['send_id' => $sendId]);
+    }
+
+    /**
+     * 发送消息
+     * @return mixed
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function sendMessage(KefuServices $services)
+    {
+        $data = $this->request->postMore([
+            ['to_user_id', 0],
+            ['msn_type', 0],
+            ['msn', ''],
+            ['other', ''],
+            ['guid', ''],
+            ['is_tourist', ''],
+            ['user_id', ''],
+        ]);
+
+        if (!$data['guid']) {
+            return $this->fail('消息ID不存在！');
+        }
+        if (!$data['user_id']) {
+            return $this->fail('缺少user_id');
+        }
+
+        $userId = $data['user_id'];
+        unset($data['user_id']);
+
+        if (!$data['to_user_id']) {
+            return $this->fail('用户不存在');
+        }
+        if ($data['to_user_id'] == $userId) {
+            return $this->fail('不能和自己聊天');
+        }
+
+        $res = $services->sendMessage($data, $userId, $this->appId, 'kefu');
+
+        $res['guid'] = $data['guid'];
+
+        return $this->success('发送成功', $res);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function ping()
+    {
+        return $this->success(['time' => time()]);
     }
 
 }

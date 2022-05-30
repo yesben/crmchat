@@ -23,20 +23,20 @@ export default {
       const token = this.$route.query[tokenName];
       setLoc('mobile_token', token);
       if(this.$route.query.deviceType == "pc" || this.$route.query.deviceType == "Desktop") {
-        this.$router.push({ name: 'customerServerPc', query: this.$route.query });
+        this.$router.replace({ name: 'customerServerPc', query: this.$route.query });
         return;
       }
 
       if(this.$route.query.deviceType == "Mobile") {
-        this.$router.push({ name: 'customerServerMobile', query: this.$route.query })
+        this.$router.replace({ name: 'customerServerMobile', query: this.$route.query })
         return;
       }
 
 
       if(this.isMobile) {
-        this.$router.push({ name: 'customerServerMobile', query: this.$route.query })
+        this.$router.replace({ name: 'customerServerMobile', query: this.$route.query })
       } else {
-        this.$router.push({ name: 'customerServerPc', query: this.$route.query });
+        this.$router.replace({ name: 'customerServerPc', query: this.$route.query });
       }
     }
   }

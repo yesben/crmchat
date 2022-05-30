@@ -13,7 +13,6 @@ namespace app\controller;
 
 use app\Request;
 use crmeb\utils\Encrypter;
-use think\facade\Console;
 use think\helper\Str;
 
 class InstallController
@@ -41,14 +40,14 @@ class InstallController
         date_default_timezone_set('PRC');
         error_reporting(E_ALL & ~E_NOTICE);
         //数据库
-        $sqlFile    = 'crmeb.sql';
+        $sqlFile = 'crmeb.sql';
         $configFile = '.env';
         if (!file_exists($path . 'public/install/' . $sqlFile) || !file_exists($path . 'public/install/' . $configFile)) {
             return '缺少必要的安装文件!';
         }
-        $Title   = "CRMEB安装向导";
+        $Title = "CRMEB安装向导";
         $Powered = "Powered by CRMEB";
-        $steps   = array(
+        $steps = array(
             '1' => '安装许可协议',
             '2' => '运行环境检测',
             '3' => '安装参数设置',
@@ -59,20 +58,20 @@ class InstallController
         switch ($step) {
             case '1':
                 return view('/install/step1', [
-                    'title'   => $Title,
+                    'title' => $Title,
                     'powered' => $Powered
                 ]);
             case '2':
-                $phpv               = @ phpversion();
-                $os                 = PHP_OS;
-                $tmp                = function_exists('gd_info') ? gd_info() : array();
-                $server             = $_SERVER["SERVER_SOFTWARE"];
-                $host               = (empty($_SERVER["SERVER_ADDR"]) ? $_SERVER["SERVER_HOST"] : $_SERVER["SERVER_ADDR"]);
-                $name               = $_SERVER["SERVER_NAME"];
+                $phpv = @ phpversion();
+                $os = PHP_OS;
+                $tmp = function_exists('gd_info') ? gd_info() : array();
+                $server = $_SERVER["SERVER_SOFTWARE"];
+                $host = (empty($_SERVER["SERVER_ADDR"]) ? $_SERVER["SERVER_HOST"] : $_SERVER["SERVER_ADDR"]);
+                $name = $_SERVER["SERVER_NAME"];
                 $max_execution_time = ini_get('max_execution_time');
-                $allow_reference    = (ini_get('allow_call_time_pass_reference') ? '<font color=green>[√]On</font>' : '<font color=red>[×]Off</font>');
-                $allow_url_fopen    = (ini_get('allow_url_fopen') ? '<font color=green>[√]On</font>' : '<font color=red>[×]Off</font>');
-                $safe_mode          = (ini_get('safe_mode') ? '<font color=red>[×]On</font>' : '<font color=green>[√]Off</font>');
+                $allow_reference = (ini_get('allow_call_time_pass_reference') ? '<font color=green>[√]On</font>' : '<font color=red>[×]Off</font>');
+                $allow_url_fopen = (ini_get('allow_url_fopen') ? '<font color=green>[√]On</font>' : '<font color=red>[×]Off</font>');
+                $safe_mode = (ini_get('safe_mode') ? '<font color=red>[×]On</font>' : '<font color=green>[√]Off</font>');
 
                 $err = 0;
                 if (empty($tmp['GD Version'])) {
@@ -196,26 +195,26 @@ class InstallController
                 }
 
                 return view('/install/step2', [
-                    'title'             => $Title,
-                    'powered'           => $Powered,
-                    'os'                => $os,
-                    'server'            => $server,
-                    'phpv'              => $phpv,
-                    'uploadSize'        => $uploadSize,
-                    'session'           => $session,
-                    'safe_mode'         => $safe_mode,
-                    'swoole'            => $swoole,
-                    'redis'             => $redis,
-                    'mysql'             => $mysql,
-                    'curl'              => $curl,
-                    'bcmath'            => $bcmath,
-                    'openssl'           => $openssl,
-                    'finfo_open'        => $finfo_open,
-                    'gd'                => $gd,
+                    'title' => $Title,
+                    'powered' => $Powered,
+                    'os' => $os,
+                    'server' => $server,
+                    'phpv' => $phpv,
+                    'uploadSize' => $uploadSize,
+                    'session' => $session,
+                    'safe_mode' => $safe_mode,
+                    'swoole' => $swoole,
+                    'redis' => $redis,
+                    'mysql' => $mysql,
+                    'curl' => $curl,
+                    'bcmath' => $bcmath,
+                    'openssl' => $openssl,
+                    'finfo_open' => $finfo_open,
+                    'gd' => $gd,
                     'file_put_contents' => $file_put_contents,
-                    'imagettftext'      => $imagettftext,
-                    'dirStr'            => $dirStr,
-                    'next'              => $next,
+                    'imagettftext' => $imagettftext,
+                    'dirStr' => $dirStr,
+                    'next' => $next,
                 ]);
             case '3':
                 if ($testdbpwd) {
@@ -235,10 +234,10 @@ class InstallController
                         return 0;
                     } else {
                         mysqli_query($conn, "SET GLOBAL sql_mode='NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'");
-                        $result  = mysqli_query($conn, "SELECT @@global.sql_mode");
-                        $result  = $result->fetch_array();
+                        $result = mysqli_query($conn, "SELECT @@global.sql_mode");
+                        $result = $result->fetch_array();
                         $version = mysqli_get_server_info($conn);
-                        if ($version >= 5.7) {
+                        if ($version >= 5.7 && $version < 8.0) {
                             if (strstr($result[0], 'STRICT_TRANS_TABLES') || strstr($result[0], 'STRICT_ALL_TABLES') || strstr($result[0], 'TRADITIONAL') || strstr($result[0], 'ANSI'))
                                 return -1;
                         }
@@ -249,9 +248,9 @@ class InstallController
                     }
 
                     //redis数据库信息
-                    $rbhost   = $post['rbhost'] ?? '127.0.0.1';
-                    $rbport   = $post['rbport'] ?? 6379;
-                    $rbpw     = $post['rbpw'] ?? '';
+                    $rbhost = $post['rbhost'] ?? '127.0.0.1';
+                    $rbport = $post['rbport'] ?? 6379;
+                    $rbpw = $post['rbpw'] ?? '';
                     $rbselect = $post['rbselect'] ?? 0;
 
                     try {
@@ -274,7 +273,7 @@ class InstallController
                     }
                 }
                 return view('/install/step3', [
-                    'title'   => $Title,
+                    'title' => $Title,
                     'powered' => $Powered,
                 ]);
 
@@ -302,16 +301,16 @@ class InstallController
                     if ($i == 999999) return false;
                     $arr = array();
 
-                    $dbHost         = trim($post['dbhost']);
+                    $dbHost = trim($post['dbhost']);
                     $post['dbport'] = $post['dbport'] ? $post['dbport'] : '3306';
-                    $dbName         = strtolower(trim($post['dbname']));
-                    $dbUser         = trim($post['dbuser']);
-                    $dbPwd          = trim($post['dbpw']);
-                    $dbPrefix       = empty($post['dbprefix']) ? 'eb_' : trim($post['dbprefix']);
+                    $dbName = strtolower(trim($post['dbname']));
+                    $dbUser = trim($post['dbuser']);
+                    $dbPwd = trim($post['dbpw']);
+                    $dbPrefix = empty($post['dbprefix']) ? 'eb_' : trim($post['dbprefix']);
 
                     $username = trim($post['manager']);
                     $password = trim($post['manager_pwd']);
-                    $email    = trim($post['manager_email']);
+                    $email = trim($post['manager_email']);
                     if (!function_exists('mysqli_connect')) {
                         $arr['msg'] = "请安装 mysqli 扩展!";
                         return $arr;
@@ -335,7 +334,7 @@ class InstallController
                             return $arr;
                         }
                         if ($n == -1) {
-                            $arr['n']   = 0;
+                            $arr['n'] = 0;
                             $arr['msg'] = "成功创建数据库:{$dbName}<br>";
                             return $arr;
                         }
@@ -343,7 +342,7 @@ class InstallController
                     }
 
                     //读取数据文件
-                    $sqldata   = file_get_contents($path . 'public/install/' . $sqlFile);
+                    $sqldata = file_get_contents($path . 'public/install/' . $sqlFile);
                     $sqlFormat = $this->sql_split($sqldata, $dbPrefix);
                     //创建写入sql数据库文件到库中 结束
 
@@ -361,7 +360,7 @@ class InstallController
                             if ($ret) {
                                 $message = '<li><span class="correct_span">&radic;</span>创建数据表[' . $dbPrefix . $matches[2] . ']完成!<span style="float: right;">' . date('Y-m-d H:i:s') . '</span></li> ';
                             } else {
-                                $err     = mysqli_error($conn);
+                                $err = mysqli_error($conn);
                                 $message = '<li><span class="correct_span error_span">&radic;</span>创建数据表[' . $dbPrefix . $matches[2] . ']失败!失败原因：' . $err . '<span style="float: right;">' . date('Y-m-d H:i:s') . '</span></li>';
                             }
                             $i++;
@@ -370,8 +369,8 @@ class InstallController
                         } else {
                             if (trim($sql) == '')
                                 continue;
-                            $sql     = str_replace('`eb_', '`' . $dbPrefix, $sql);//替换表前缀
-                            $ret     = mysqli_query($conn, $sql);
+                            $sql = str_replace('`eb_', '`' . $dbPrefix, $sql);//替换表前缀
+                            $ret = mysqli_query($conn, $sql);
                             $message = '';
                             $i++;
                             $arr = array('n' => $i, 'msg' => $message);
@@ -382,8 +381,8 @@ class InstallController
 
                     // 清空测试数据
                     if (!$post['demo']) {
-                        $result   = mysqli_query($conn, "show tables");
-                        $tables   = mysqli_fetch_all($result);//参数MYSQL_ASSOC、MYSQLI_NUM、MYSQLI_BOTH规定产生数组类型
+                        $result = mysqli_query($conn, "show tables");
+                        $tables = mysqli_fetch_all($result);//参数MYSQL_ASSOC、MYSQLI_NUM、MYSQLI_BOTH规定产生数组类型
                         $bl_table = array('eb_system_admin'
                         , 'eb_system_config'
                         , 'eb_system_config_tab'
@@ -415,22 +414,22 @@ class InstallController
                     // $strConfig = str_replace('#DB_DEBUG#', false, $strConfig);
 
                     //redis数据库信息
-                    $rbhost    = $post['rbhost'] ?? '127.0.0.1';
-                    $rbport    = $post['rbport'] ?? '6379';
-                    $rbpw      = $post['rbpw'] ?? '';
-                    $rbselect  = $post['rbselect'] ?? 0;
+                    $rbhost = $post['rbhost'] ?? '127.0.0.1';
+                    $rbport = $post['rbport'] ?? '6379';
+                    $rbpw = $post['rbpw'] ?? '';
+                    $rbselect = $post['rbselect'] ?? 0;
                     $strConfig = str_replace('#RB_HOST#', $rbhost, $strConfig);
                     $strConfig = str_replace('#RB_PORT#', $rbport, $strConfig);
                     $strConfig = str_replace('#RB_PWD#', $rbpw, $strConfig);
                     $strConfig = str_replace('#RB_SELECT#', $rbselect, $strConfig);
-                    $appKey    = $this->generateRandomKey();
+                    $appKey = $this->generateRandomKey();
                     $strConfig = str_replace('#APP_KEY#', $appKey, $strConfig);
 
                     //多项目部署配置
-                    $cache_prefix     = $post['cache_prefix'] ?? '';
+                    $cache_prefix = $post['cache_prefix'] ?? '';
                     $cache_tag_prefix = $post['cache_tag_prefix'] ?? '';
-                    $strConfig        = str_replace('#CACHE_PREFIX#', $cache_prefix, $strConfig);
-                    $strConfig        = str_replace('#CACHE_TAG_PREFIX#', $cache_tag_prefix, $strConfig);
+                    $strConfig = str_replace('#CACHE_PREFIX#', $cache_prefix, $strConfig);
+                    $strConfig = str_replace('#CACHE_TAG_PREFIX#', $cache_tag_prefix, $strConfig);
                     @chmod($path . '/.env', 0777); //数据库配置文件的地址
                     @file_put_contents($path . '/.env', $strConfig); //数据库配置文件的地址
 
@@ -443,51 +442,50 @@ class InstallController
                     //更新网站配置信息2
 
                     //插入管理员表字段tp_admin表
-                    $time     = time();
-                    $ip       = $this->get_client_ip();
-                    $ip       = empty($ip) ? "0.0.0.0" : $ip;
+                    $time = time();
+                    $ip = $this->get_client_ip();
+                    $ip = empty($ip) ? "0.0.0.0" : $ip;
                     $password = password_hash($post['manager_pwd'], PASSWORD_BCRYPT);
                     mysqli_query($conn, "truncate table {$dbPrefix}system_admin");
                     $addadminsql = "INSERT INTO `{$dbPrefix}system_admin` (`id`, `account`, `pwd`, `real_name`, `roles`, `last_ip`, `last_time`, `add_time`, `login_count`, `level`, `status`, `is_del`) VALUES (1, '" . $username . "', '" . $password . "', 'admin', '1', '" . $ip . "',$time , $time, 0, 0, 1, 0)";
-                    $res         = mysqli_query($conn, $addadminsql);
-                    $res2        = true;
+                    $res = mysqli_query($conn, $addadminsql);
+                    $res2 = true;
                     if (app()->request->host(true)) {
-                        $http     = app()->request->isSsl() ? 'https' : 'http';
+                        $http = app()->request->isSsl() ? 'https' : 'http';
                         $site_url = '\'"' . $http . '://' . app()->request->host(true) . '"\'';
-                        $res2     = mysqli_query($conn, 'UPDATE `' . $dbPrefix . 'system_config` SET `value`=' . $site_url . ' WHERE `menu_name`="site_url"');
+                        $res2 = mysqli_query($conn, 'UPDATE `' . $dbPrefix . 'system_config` SET `value`=' . $site_url . ' WHERE `menu_name`="site_url"');
                     }
 
-                    if ($post['demo']) {
-                        $rand       = rand(1000, 9999);
-                        $time       = time();
-                        $app_secret = md5('202116257358989495' . $time . $rand);
-                        $encrypter  = new Encrypter($this->parseKey($appKey), 'AES-256-CBC');
-                        $token      = $encrypter->encrypt(json_encode([
-                            'appid'      => '202116257358989495',
-                            'app_secret' => $app_secret,
-                            'rand'       => $rand,
-                            'timestamp'  => $time,
-                        ]));
-                        $tokenMd5   = md5($token);
-                        $appSQL     = "UPDATE  `{$dbPrefix}application` SET `token_md5` = '" . $tokenMd5 . "', `token`= '" . $token . "',`app_secret`='" . $app_secret . "',`timestamp`= $time ,`rand`= $rand  WHERE `appid` = '202116257358989495'";
-                        $res        = mysqli_query($conn, $appSQL);
-                        if (!$res) {
-                            $message = '更新APP_TOKEN失败';
-                            $arr     = array('n' => 999998, 'msg' => $message);
-                            return $arr;
-                        } else {
-                            $message = '成功添加管理员<br />成功写入配置文件<br>安装完成．';
-                            $arr = array('n' => 999998, 'msg' => $message);
-                        }
+                    $rand = rand(1000, 9999);
+                    $time = time();
+                    $app_secret = md5('202116257358989495' . $time . $rand);
+                    $encrypter = new Encrypter($this->parseKey($appKey), 'AES-256-CBC');
+                    $token = $encrypter->encrypt(json_encode([
+                        'appid' => '202116257358989495',
+                        'app_secret' => $app_secret,
+                        'rand' => $rand,
+                        'timestamp' => $time,
+                    ]));
+                    $tokenMd5 = md5($token);
+                    $appSQL = "UPDATE  `{$dbPrefix}application` SET `token_md5` = '" . $tokenMd5 . "', `token`= '" . $token . "',`app_secret`='" . $app_secret . "',`timestamp`= $time ,`rand`= $rand  WHERE `appid` = '202116257358989495'";
+                    $res = mysqli_query($conn, $appSQL);
+                    if (!$res) {
+                        $message = '更新APP_TOKEN失败';
+                        $arr = array('n' => 999998, 'msg' => $message);
+                        return $arr;
+                    } else {
+                        $message = '成功添加管理员<br />成功写入配置文件<br>安装完成．';
+                        $arr = array('n' => 999998, 'msg' => $message);
                     }
+
 
                     if ($res) {
                         $message = '成功添加管理员<br />成功写入配置文件<br>安装完成．';
-                        $arr     = array('n' => 999999, 'msg' => $message);
+                        $arr = array('n' => 999999, 'msg' => $message);
                         return $arr;
                     } else {
                         $message = '添加管理员失败<br />成功写入配置文件<br>安装完成．';
-                        $arr     = array('n' => 999999, 'msg' => $message);
+                        $arr = array('n' => 999999, 'msg' => $message);
                         return $arr;
                     }
 
@@ -495,19 +493,19 @@ class InstallController
 
 
                 return view('/install/step4', [
-                    'title'   => $Title,
+                    'title' => $Title,
                     'powered' => $Powered,
-                    'data'    => json_encode($post)
+                    'data' => json_encode($post)
                 ]);
             case '5':
                 $this->installlog();
                 @touch($path . 'public/install/install.lock');
                 //生成key
                 return view('/install/step5', [
-                    'title'   => $Title,
+                    'title' => $Title,
                     'powered' => $Powered,
-                    'ip'      => request()->ip(),
-                    'host'    => request()->host(),
+                    'ip' => request()->ip(),
+                    'host' => request()->host(),
                     'version' => get_crmeb_version()
                 ]);
         }
@@ -539,7 +537,7 @@ class InstallController
     //读取版本号
     function getversion()
     {
-        $version_arr    = [];
+        $version_arr = [];
         $curent_version = @file(app()->getRootPath() . '.version');
 
         foreach ($curent_version as $val) {
@@ -552,14 +550,14 @@ class InstallController
 //写入安装信息
     function installlog()
     {
-        $mt_rand_str  = $this->sp_random_string(6);
+        $mt_rand_str = $this->sp_random_string(6);
         $str_constant = "<?php" . PHP_EOL . "define('INSTALL_DATE'," . time() . ");" . PHP_EOL . "define('SERIALNUMBER','" . $mt_rand_str . "');";
         @file_put_contents($path . '.constant', $str_constant);
     }
 
     function sp_random_string($len = 8)
     {
-        $chars    = array(
+        $chars = array(
             "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
             "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
             "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G",
@@ -588,7 +586,7 @@ class InstallController
 
         } else {
             $tfile = "_test.txt";
-            $fp    = @fopen($d . "/" . $tfile, "w");
+            $fp = @fopen($d . "/" . $tfile, "w");
             if (!$fp) {
                 return false;
             }
@@ -629,10 +627,10 @@ class InstallController
         if (is_dir($path))
             return TRUE;
         $ftp_enable = 0;
-        $path       = $this->dir_path($path);
-        $temp       = explode('/', $path);
-        $cur_dir    = '';
-        $max        = count($temp) - 1;
+        $path = $this->dir_path($path);
+        $temp = explode('/', $path);
+        $cur_dir = '';
+        $max = count($temp) - 1;
         for ($i = 0; $i < $max; $i++) {
             $cur_dir .= $temp[$i] . '/';
             if (@is_dir($cur_dir))
@@ -659,15 +657,15 @@ class InstallController
 
         $sql = preg_replace("/TYPE=(InnoDB|MyISAM|MEMORY)( DEFAULT CHARSET=[^; ]+)?/", "ENGINE=\\1 DEFAULT CHARSET=utf8", $sql);
 
-        $sql          = str_replace("\r", "\n", $sql);
-        $ret          = array();
-        $num          = 0;
+        $sql = str_replace("\r", "\n", $sql);
+        $ret = array();
+        $num = 0;
         $queriesarray = explode(";\n", trim($sql));
         unset($sql);
         foreach ($queriesarray as $query) {
             $ret[$num] = '';
-            $queries   = explode("\n", trim($query));
-            $queries   = array_filter($queries);
+            $queries = explode("\n", trim($query));
+            $queries = array_filter($queries);
             foreach ($queries as $query) {
                 $str1 = substr($query, 0, 1);
                 if ($str1 != '#' && $str1 != '-')

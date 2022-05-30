@@ -1,18 +1,20 @@
 <template>
 	<view class="container">
-		<lay-out ref="layOut" :scrollTop="scrollTop" :scrollWithAnimation="false" @goTop="goTop" @layoutScroll="scroll">
+		<lay-out id='layOut' ref="layOut" :scrollTop="scrollTop" :scrollWithAnimation="false" @goTop="goTop"
+			@layoutScroll="scroll">
 			<!-- #ifdef H5 -->
 			<view slot="header" class="header">
 				<view class="header_left" @click="goBackToMessageList"><span class="iconfont icon-fanhui"></span></view>
 				<view class="header_center">
-					{{ userData.remark_nickname ? userData.remark_nickname : userData.nickname }}</view>
+					{{ userData.remark_nickname ? userData.remark_nickname : userData.nickname }}
+				</view>
 				<view class="header_right" @click="selectCustomerServerOfTopRight(userData)"><span
 						class="iconfont">&#xe6d3;</span></view>
 			</view>
 			<!-- #endif -->
 			<view slot="content" class="content" id="contentMessage">
 				<view class="content_list" v-for="(item, index) in messageList" :key="index"
-					:class="{ right_box: customerServerData.user_ids.indexOf(item.user_id) !== -1 }">
+					:class="{ right_box: customerServerData.user_ids && customerServerData.user_ids.indexOf(item.user_id) !== -1 }">
 					<view class="content_list_avar" @click="selectCustomerServer(item)">
 						<image :src="item.avatar" mode="widthFix"></image>
 					</view>
@@ -33,14 +35,16 @@
 									<view class="content_list_message_detils_value_shopMessag">
 										<view class="content_list_message_detils_value_shopMessag_item">
 											<view class="content_list_message_detils_value_shopMessag_item_label">
-												<span>库存:</span></view>
+												<span>库存:</span>
+											</view>
 											<view class="content_list_message_detils_value_shopMessag_item_value">
 												<span>{{ item.other.stock }}</span>
 											</view>
 										</view>
 										<view class="content_list_message_detils_value_shopMessag_item">
 											<view class="content_list_message_detils_value_shopMessag_item_label">
-												<span>销量:</span></view>
+												<span>销量:</span>
+											</view>
 											<view class="content_list_message_detils_value_shopMessag_item_value">
 												<span>{{ parseInt(item.other.sales) + parseInt(item.other.ficti ? item.other.ficti : 0) }}</span>
 											</view>
@@ -246,6 +250,7 @@
 				return navigateBack(1);
 			}
 			this.customerServerData = this.$store.getters.kefuInfo;
+			console.log(this.customerServerData)
 			this.kefuInfo = this.$store.getters.kefuInfo;
 			this.messageList = this.$store.getters.chatLog(this.userId);
 			this.userData = this.$store.getters.userInfo(this.userId);
@@ -260,6 +265,7 @@
 		onUnload() {
 			console.log('聊天界面卸载');
 			uni.$off('chat', this.chatEvent);
+			uni.$off('chat_auth', this.chatAuthEvent);
 			uni.$off('reply', this.replyEvent);
 			uni.$off('success', this.successTochat);
 			uni.$off('close', this.closeEvent);
@@ -323,6 +329,14 @@
 			replyEvent(data) {
 				this.pushMessageToList(data);
 			},
+			chatAuthEvent(data) {
+				if (data.length) {
+					data.map(item => {
+						item.msn = this.replace_em(item.msn);
+						this.pushMessageToList(item);
+					})
+				}
+			},
 			chatEvent(data) {
 				this.messageList.map(item => {
 					if (item.guid === data.guid) {
@@ -355,6 +369,7 @@
 				}
 				uni.$on('success', this.successTochat);
 				uni.$on('chat', this.chatEvent);
+				uni.$on('chat_auth', this.chatAuthEvent);
 				uni.$on('reply', this.replyEvent);
 				uni.$on('close', this.closeEvent);
 				uni.$on('rm_transfer', this.rmTransferEvent);
@@ -476,22 +491,21 @@
 				});
 			},
 			imageLoad() {
-				console.log('图片加载完成');
-				// this.$nextTick(() => {
-				// 	this.goBottom();
-				// });
+
 			},
 			goBottom() {
-				const query = uni.createSelectorQuery().in(this);
-				query
-					.select('#contentMessage')
-					.boundingClientRect(data => {
-						this.scrollTop = this.old.scrollTop;
-						this.$nextTick(() => {
+				this.$nextTick(() => {
+					const query = uni.createSelectorQuery().in(this);
+					query
+						.select('#contentMessage')
+						.boundingClientRect(data => {
+							this.scrollTop = this.old.scrollTop;
 							this.scrollTop = data.height + 50;
-						});
-					})
-					.exec();
+							console.log(data, this.scrollTop);
+
+						})
+						.exec();
+				});
 			},
 			// textarea获取焦点
 			textareaFocus() {
@@ -518,24 +532,24 @@
 			// 发送消息统一处理
 			sendMsg(msn, type) {
 				let guid = this.scoket.guid();
-				let obj = {
-					type: 'chat',
-					data: {
-						guid,
-						msn,
-						type,
-						to_user_id: this.userId
-					}
-				};
 				let chat = this.chatOptinos(guid, msn, type);
 				this.$store.commit('setChatList', {
 					id: this.userId,
 					list: chat
 				});
+				chat.msn = this.replace_em(msn);
 				this.pushMessageToList(chat);
-				this.scoket.send(obj).then(res => {
-					this.goBottom();
-				});
+				http(api.sendMessage, {
+					guid,
+					msn,
+					msn_type: type,
+					to_user_id: this.userId,
+				}).then(data => {
+					this.chatEvent({
+						guid: data.guid
+					});
+				})
+
 			},
 			selectScriptLibary() {
 				this.$refs.scriptLibaryModel.open();
@@ -585,7 +599,7 @@
 			},
 			// 查看用户详情
 			selectCustomerServer(item) {
-				if (this.customerServerData.user_ids.indexOf(item.user_id) === -1) {
+				if (this.customerServerData.user_ids && this.customerServerData.user_ids.indexOf(item.user_id) === -1) {
 					navigateTo(1, '/pages/view/customerServer/customerMessage', item);
 				}
 			},

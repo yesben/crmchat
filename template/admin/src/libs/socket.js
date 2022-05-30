@@ -7,7 +7,8 @@
 // +----------------------------------------------------------------------
 // | Author: CRMEB Team <admin@crmeb.com>
 // +----------------------------------------------------------------------
-import { wss } from '@/libs/util';
+import {wss} from '@/libs/util';
+import {netWorkPing} from '@/api/kefu';
 import Setting from '@/setting';
 import Cookies from "js-cookie";
 import Vue from 'vue';
@@ -16,6 +17,7 @@ import Vue from 'vue';
 let reconneTimer = {};
 let reconneCount = {};
 let connectGuid = {};
+let NetWork = null;
 
 class wsSocket {
     constructor(opt) {
@@ -32,15 +34,16 @@ class wsSocket {
         this.defaultEvenv();
     }
 
-    defaultEvenv(){
-        this.vm.$on('timeout',this.timeoutEvent.bind(this));
+    defaultEvenv() {
+        this.vm.$on('timeout', this.timeoutEvent.bind(this));
     }
-    timeoutEvent(){
+
+    timeoutEvent() {
         this.reconne();
     }
 
     guid() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = Math.random() * 16 | 0,
                 v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
@@ -57,40 +60,69 @@ class wsSocket {
         }
     }
 
-    networkWath(){
+    networkStatusFn(onlineFun, offlineFun) {
+        if (NetWork) {
+            clearInterval(NetWork);
+            NetWork = null;
+        }
+        let online = null,
+            offline = null;
+        NetWork = setInterval(() => {
+            netWorkPing().then(res => {
+                if (online === null) {
+                    onlineFun();
+                    online = true;
+                }
+                offline = null;
+            }).catch(() => {
+                if (offline === null) {
+                    offlineFun();
+                    offline = true;
+                }
+                online = null;
+            })
+        }, 1000)
+    }
 
-        this.addHandler(window,'online',()=>{
+    networkWath() {
+        this.networkStatusFn(() => {
             this.networkStatus = true;
             console.log('联网了')
-            this.ws.close();
-            this.vm.$on('timeout',this.timeoutEvent);
-        })
-        this.addHandler(window,'offline',()=>{
+            this.vm.$on('timeout', this.timeoutEvent);
+        }, () => {
             this.networkStatus = false;
             this.socketStatus = false;
             this.timer && clearInterval(this.timer);
             this.timer = null;
-            this.vm.$off('timeout',this.timeoutEvent);
+            this.ws.close();
             console.log('断网了')
         });
     }
 
-    reconne(){
-        if(reconneTimer[this.opt.key] || this.socketStatus || reconneCount[this.opt.key] > this.reconneMax){
+    reconne() {
+
+        if (reconneCount[this.opt.key] > this.reconneMax) {
+            //重连次数超过限制不再重连
+            if (reconneTimer[this.opt.key]) {
+                clearInterval(reconneTimer[this.opt.key]);
+            }
             return;
         }
-        reconneTimer[this.opt.key] = setInterval(()=>{
+        if (reconneTimer[this.opt.key] || this.socketStatus) {
+            return;
+        }
+        reconneTimer[this.opt.key] = setInterval(() => {
             //断线连接中发现状态为真就不用再连接
-            if(this.socketStatus){
+            if (this.socketStatus) {
                 return;
             }
             //正在连接中也不需要在连接了
-            if(!this.connectLing){
+            if (!this.connectLing) {
                 console.log('重新连接')
                 this.init(this.opt);
-                reconneCount[this.opt.key] ++;
+                reconneCount[this.opt.key]++;
             }
-        },2000)
+        }, 2000)
     }
 
     onOpen(key = false) {
@@ -106,7 +138,7 @@ class wsSocket {
     }
 
     init(opt) {
-        if(this.socketStatus){
+        if (this.socketStatus) {
             return;
         }
         let wsUrl = ''
@@ -114,19 +146,19 @@ class wsSocket {
 
         hostUrl = hostUrl + '/ws';
 
-        if(opt.key == 1) {
+        if (opt.key == 1) {
             wsUrl = hostUrl + '?type=admin' + '&token=' + util.cookies.get("token")
         }
-        if(opt.key == 2) {
+        if (opt.key == 2) {
             wsUrl = hostUrl + `?type=kefu` + '&token=' + `${Cookies.get("kefu_token")}`;
         }
-        if(opt.key == 3) {
+        if (opt.key == 3) {
             wsUrl = `${hostUrl}?type=user&form=${opt.form}&token=${opt.token}`;
         }
-        if(opt.tourist_uid) {
+        if (opt.tourist_uid) {
             wsUrl += '&tourist_uid=' + opt.tourist_uid
         }
-        if(wsUrl) {
+        if (wsUrl) {
             this.connectLing = true;
             // connectGuid[opt.key] = this.guid();
             this.ws = new WebSocket(wsUrl);
@@ -141,21 +173,21 @@ class wsSocket {
     ping() {
         var that = this;
         this.timer = setInterval(() => {
-            that.send({ type: 'ping' });
+            that.send({type: 'ping'});
         }, 10000);
     }
 
     send(data) {
-        if(!this.socketStatus || this.ws.readyState === 0 || !this.networkStatus){
+        if (!this.socketStatus || this.ws.readyState === 0 || !this.networkStatus) {
             this.reconne();
         }
         return new Promise((resolve, reject) => {
             try {
                 this.ws.send(JSON.stringify(data));
-                resolve({ status: true });
-            } catch(e) {
+                resolve({status: true});
+            } catch (e) {
                 console.log(e)
-                reject({ status: false,socketStatus: this.socketStatus,networkStatus:this.networkStatus})
+                reject({status: false, socketStatus: this.socketStatus, networkStatus: this.networkStatus})
             }
         });
     }
@@ -185,6 +217,7 @@ class wsSocket {
     $on(...args) {
         this.vm.$on(...args);
     }
+
     $off(...args) {
         this.vm.$off(...args);
     }
@@ -193,8 +226,8 @@ class wsSocket {
 let promises = {};
 
 function createSocket(key, flag, token, tourist_uid, type, form) {
-    if(flag) promises[key] = null;
-    if(!promises[key])
+    if (flag) promises[key] = null;
+    if (!promises[key])
         promises[key] = new Promise((resolve, reject) => {
             const ws = new wsSocket({
                 key,
@@ -209,7 +242,7 @@ function createSocket(key, flag, token, tourist_uid, type, form) {
                     reject(e)
                 },
                 message(res) {
-                    const { type, data = {} } = JSON.parse(res.data);
+                    const {type, data = {}} = JSON.parse(res.data);
                     ws.vm.$emit(type, data);
                 },
                 close(e) {
@@ -220,7 +253,6 @@ function createSocket(key, flag, token, tourist_uid, type, form) {
 
     return promises[key];
 }
-
 
 
 export const adminSocket = (flag, token) => createSocket(1, flag, token);

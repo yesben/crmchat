@@ -3,10 +3,10 @@
     <!-- 客服头部开始 -->
     <div class="pc_customerServer_container_header">
       <div class="pc_customerServer_container_header_title">
-        <img :src="chatServerData.to_user_avatar" alt="">
+        <img :src="chatServerData.to_user_avatar" alt="" @click="onBackPress">
         <span>{{chatServerData.to_user_nickname}}</span>
       </div>
-      <div class="pc_customerServer_container_header_handle" @click="closeIframe" v-if="upperData.noCanClose != '1'">
+      <div class="pc_customerServer_container_header_handle" @click="closeIframe" v-if="upperData.noCanClose != '1' && userAgentType === 0">
         <span class="iconfont">&#xe6c5;</span>
       </div>
     </div>
@@ -125,6 +125,7 @@
 import { HappyScroll } from 'vue-happy-scroll'
 import emojiList from "@/utils/emoji";
 import socketServer from './minix/socketServer';
+import '@/assets/js/uniapp.js';
 export default {
   components: {
     HappyScroll
@@ -139,9 +140,15 @@ export default {
       deviceType:'mobile',
     }
   },
-  created() {
-    // this.connentServer(); // 连接webSocket 服务 [mixins 方法]
-    // this.getUserRecord(); // 查看当前是否有客服在线
+  mounted() {
+    if (this.userAgentType !== 0) {
+      window.addEventListener('popstate', this.handlePopstate)
+    }
+  },
+  beforeDestroy() {
+    if (this.userAgentType !== 0) {
+      window.removeEventListener('popstate', this.handlePopstate)
+    }
   },
   computed: {
     records() {
@@ -165,7 +172,22 @@ export default {
     }
   },
   methods: {
-
+    onBackPress(){
+      alert(uniWeb)
+      uniWeb.webView.navigateBack({
+        delta: history.length,
+        fail(err){
+          alert(err)
+        },
+      });
+    },
+    handlePopstate() {
+      alert(history.length);
+      uniWeb.webView.navigateBack({
+          delta: history.length,
+      });
+      history.pushState(null, null, document.URL);
+    },
     textareaChange(e) {
       let strCont = e.target.value.replace(/\n\s(\s)*/gi, '\n') // 将多个回车换行合并为 1个
       strCont = strCont.replace(/^\s*/gi, '') // 清除首行的 空格与换行

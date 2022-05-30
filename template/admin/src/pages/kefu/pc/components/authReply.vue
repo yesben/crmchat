@@ -36,7 +36,7 @@
                     </div>
                     <div class="msg-item" v-for="(item,index) in list" :key="index" v-if="item.id">
                         <div class="box1" v-if="!item.isEdit">
-                            <div class="txt-box" @click="bindRadio(item)">
+                            <div class="txt-box">
                                 <span class="title" v-if="item.keyword">{{item.keyword | filtersTitle}}</span>
                                 <span v-if="item.content">{{item.content | filtersCon}}</span>
 
@@ -265,9 +265,6 @@
             handleReachBottom() {
                 this.getList()
             },
-            bindRadio(data) {
-                this.$emit('activeTxt', data.message)
-            }
         }
     }
 </script>

@@ -11,49 +11,49 @@
 import request from '@/libs/request'
 
 export function getKefuInfo() {
-  return request({
-    url: '/service/info',
-    method: 'get',
-    kefu: true
-  });
+    return request({
+        url: '/service/info',
+        method: 'get',
+        kefu: true
+    });
 }
 
 export function getAuthReply(params) {
-  return request({
-    url: '/service/auth_reply',
-    method: 'get',
-    params,
-    kefu: true
-  });
+    return request({
+        url: '/service/auth_reply',
+        method: 'get',
+        params,
+        kefu: true
+    });
 }
 
-export function saveAuthReply(id,data) {
-  return request({
-    url: '/service/auth_reply/'+id,
-    method: 'post',
-    data,
-    kefu: true
-  });
+export function saveAuthReply(id, data) {
+    return request({
+        url: '/service/auth_reply/' + id,
+        method: 'post',
+        data,
+        kefu: true
+    });
 }
 
 export function updateAuthReply(value) {
-  return request({
-    url: '/service/auth_reply/'+value,
-    method: 'put',
-    kefu: true
-  });
+    return request({
+        url: '/service/auth_reply/' + value,
+        method: 'put',
+        kefu: true
+    });
 }
 
 /*
  * 登录
  * */
 export function AccountLogin(data) {
-  return request({
-    url: '/login',
-    method: 'post',
-    data,
-    kefu: true
-  });
+    return request({
+        url: '/login',
+        method: 'post',
+        data,
+        kefu: true
+    });
 }
 
 /**
@@ -61,12 +61,12 @@ export function AccountLogin(data) {
  * @constructor
  */
 export function record(params) {
-  return request({
-    url: '/user/record',
-    method: 'get',
-    params,
-    kefu: true
-  });
+    return request({
+        url: '/user/record',
+        method: 'get',
+        params,
+        kefu: true
+    });
 }
 
 /**
@@ -74,11 +74,11 @@ export function record(params) {
  * @constructor
  */
 export function userInfo(id) {
-  return request({
-    url: '/user/info/' + id,
-    method: 'get',
-    kefu: true
-  });
+    return request({
+        url: '/user/info/' + id,
+        method: 'get',
+        kefu: true
+    });
 }
 
 /**
@@ -86,12 +86,12 @@ export function userInfo(id) {
  * @constructor
  */
 export function getorderList(id, params) {
-  return request({
-    url: '/order/list/' + id,
-    method: 'get',
-    params,
-    kefu: true
-  });
+    return request({
+        url: '/order/list/' + id,
+        method: 'get',
+        params,
+        kefu: true
+    });
 }
 
 /**
@@ -99,24 +99,24 @@ export function getorderList(id, params) {
  * @constructor
  */
 export function orderDelivery(id, data) {
-  return request({
-    url: '/order/delivery/' + id,
-    method: 'post',
-    data,
-    kefu: true
-  });
+    return request({
+        url: '/order/delivery/' + id,
+        method: 'post',
+        data,
+        kefu: true
+    });
 }
 
 /**
  * 一键改价
  */
 export function editPriceApi(id, data) {
-  return request({
-    url: `/order/update/${id}`,
-    method: 'put',
-    data,
-    kefu: true
-  })
+    return request({
+        url: `/order/update/${id}`,
+        method: 'put',
+        data,
+        kefu: true
+    })
 }
 
 /**
@@ -124,11 +124,11 @@ export function editPriceApi(id, data) {
  * @constructor
  */
 export function orderEdit(id) {
-  return request({
-    url: 'order/edit/' + id,
-    method: 'get',
-    kefu: true
-  });
+    return request({
+        url: 'order/edit/' + id,
+        method: 'get',
+        kefu: true
+    });
 }
 
 /**
@@ -136,11 +136,11 @@ export function orderEdit(id) {
  * @constructor
  */
 export function orderRecord(id) {
-  return request({
-    url: 'order/refund_form/' + id,
-    method: 'get',
-    kefu: true
-  });
+    return request({
+        url: 'order/refund_form/' + id,
+        method: 'get',
+        kefu: true
+    });
 }
 
 /**
@@ -148,12 +148,12 @@ export function orderRecord(id) {
  * @constructor
  */
 export function orderRefundApi(data) {
-  return request({
-    url: 'order/refund',
-    method: 'post',
-    data,
-    kefu: true
-  });
+    return request({
+        url: 'order/refund',
+        method: 'post',
+        data,
+        kefu: true
+    });
 }
 
 /**
@@ -174,12 +174,12 @@ export function orderRefundApi(data) {
  * @constructor
  */
 export function productVisit(uid, params) {
-  return request({
-    url: 'product/visit/' + uid,
-    method: 'get',
-    params,
-    kefu: true
-  });
+    return request({
+        url: 'product/visit/' + uid,
+        method: 'get',
+        params,
+        kefu: true
+    });
 }
 
 /**
@@ -187,12 +187,12 @@ export function productVisit(uid, params) {
  * @constructor
  */
 export function productHot(uid, params) {
-  return request({
-    url: 'product/hot/' + uid,
-    method: 'get',
-    params,
-    kefu: true
-  });
+    return request({
+        url: 'product/hot/' + uid,
+        method: 'get',
+        params,
+        kefu: true
+    });
 }
 
 /**
@@ -200,12 +200,12 @@ export function productHot(uid, params) {
  * @constructor
  */
 export function speeChcraft(params) {
-  return request({
-    url: 'service/speechcraft',
-    method: 'get',
-    params,
-    kefu: true
-  });
+    return request({
+        url: 'service/speechcraft',
+        method: 'get',
+        params,
+        kefu: true
+    });
 }
 
 /**
@@ -213,12 +213,12 @@ export function speeChcraft(params) {
  * @constructor
  */
 export function transferList(params) {
-  return request({
-    url: 'service/transfer_list',
-    method: 'get',
-    params,
-    kefu: true
-  });
+    return request({
+        url: 'service/transfer_list',
+        method: 'get',
+        params,
+        kefu: true
+    });
 }
 
 /**
@@ -226,12 +226,12 @@ export function transferList(params) {
  * @constructor
  */
 export function serviceTransfer(params) {
-  return request({
-    url: 'service/transfer',
-    method: 'post',
-    params,
-    kefu: true
-  });
+    return request({
+        url: 'service/transfer',
+        method: 'post',
+        params,
+        kefu: true
+    });
 }
 
 /**
@@ -239,11 +239,11 @@ export function serviceTransfer(params) {
  * @constructor
  */
 export function userLabel(id) {
-  return request({
-    url: `user/label?id=${id}`,
-    method: 'get',
-    kefu: true
-  });
+    return request({
+        url: `user/label?id=${id}`,
+        method: 'get',
+        kefu: true
+    });
 }
 
 /**
@@ -251,12 +251,12 @@ export function userLabel(id) {
  * @constructor
  */
 export function userLabelPut(id, data) {
-  return request({
-    url: `user/label/${id}`,
-    method: 'put',
-    data,
-    kefu: true
-  });
+    return request({
+        url: `user/label/${id}`,
+        method: 'put',
+        data,
+        kefu: true
+    });
 }
 
 /**
@@ -264,12 +264,12 @@ export function userLabelPut(id, data) {
  * @constructor
  */
 export function serviceList(params) {
-  return request({
-    url: `service/list`,
-    method: 'get',
-    params,
-    kefu: true
-  });
+    return request({
+        url: `service/list`,
+        method: 'get',
+        params,
+        kefu: true
+    });
 }
 
 /**
@@ -277,11 +277,11 @@ export function serviceList(params) {
  * @constructor
  */
 export function AccountLogoutKefu() {
-  return request({
-    url: `user/logout`,
-    method: 'post',
-    kefu: true
-  });
+    return request({
+        url: `user/logout`,
+        method: 'post',
+        kefu: true
+    });
 }
 
 /**
@@ -289,11 +289,11 @@ export function AccountLogoutKefu() {
  * @constructor
  */
 export function getSanCodeKey() {
-  return request({
-    url: `/key`,
-    method: 'get',
-    kefu: true
-  });
+    return request({
+        url: `/key`,
+        method: 'get',
+        kefu: true
+    });
 }
 
 /**
@@ -301,11 +301,11 @@ export function getSanCodeKey() {
  * @constructor
  */
 export function productInfo(id) {
-  return request({
-    url: `product/info/${id}`,
-    method: 'get',
-    kefu: true
-  });
+    return request({
+        url: `product/info/${id}`,
+        method: 'get',
+        kefu: true
+    });
 }
 
 
@@ -313,162 +313,162 @@ export function productInfo(id) {
  * 获取轮播图和logo
  */
 export function loginInfoApi() {
-  return request({
-    url: '/login/info',
-    method: 'get',
-    kefu: true
-  });
+    return request({
+        url: '/login/info',
+        method: 'get',
+        kefu: true
+    });
 }
 
 /**
  * 订单备注
  */
 export function orderRemark(data) {
-  return request({
-    url: '/order/remark',
-    method: 'post',
-    data,
-    kefu: true
-  });
+    return request({
+        url: '/order/remark',
+        method: 'post',
+        data,
+        kefu: true
+    });
 }
 
 /**
  * 订单详情
  */
 export function orderInfo(id) {
-  return request({
-    url: '/order/info/' + id,
-    method: 'get',
-    kefu: true
-  });
+    return request({
+        url: '/order/info/' + id,
+        method: 'get',
+        kefu: true
+    });
 }
 
 /**
  * 物流公司
  */
 export function orderExport() {
-  return request({
-    url: '/order/export',
-    method: 'get',
-    kefu: true
-  });
+    return request({
+        url: '/order/export',
+        method: 'get',
+        kefu: true
+    });
 }
 
 /**
  * 快递公司模板
  */
 export function orderTemp(params) {
-  return request({
-    url: '/order/temp',
-    method: 'get',
-    params,
-    kefu: true
-  });
+    return request({
+        url: '/order/temp',
+        method: 'get',
+        params,
+        kefu: true
+    });
 }
 
 /**
  * 获取配送员列表
  */
 export function orderDeliveryAll() {
-  return request({
-    url: '/order/delivery_all',
-    method: 'get',
-    kefu: true
-  });
+    return request({
+        url: '/order/delivery_all',
+        method: 'get',
+        kefu: true
+    });
 }
 
 /**
  * 获取发货人员
  */
 export function getSender() {
-  return request({
-    url: '/order/delivery_info',
-    method: 'get',
-    kefu: true
-  });
+    return request({
+        url: '/order/delivery_info',
+        method: 'get',
+        kefu: true
+    });
 }
 
 /**
  * 获取话术分类
  */
 export function serviceCate(params) {
-  return request({
-    url: '/service/cate',
-    method: 'get',
-    params,
-    kefu: true
-  });
+    return request({
+        url: '/service/cate',
+        method: 'get',
+        params,
+        kefu: true
+    });
 }
 
 /**
  * 修改话术
  */
 export function serviceCateUpdate(id, params) {
-  return request({
-    url: 'service/speechcraft/' + id,
-    method: 'PUT',
-    params,
-    kefu: true
-  });
+    return request({
+        url: 'service/speechcraft/' + id,
+        method: 'PUT',
+        params,
+        kefu: true
+    });
 }
 
 /**
  * 添加话术
  */
 export function addSpeeChcraft(data) {
-  return request({
-    url: 'service/speechcraft',
-    method: 'post',
-    data,
-    kefu: true
-  });
+    return request({
+        url: 'service/speechcraft',
+        method: 'post',
+        data,
+        kefu: true
+    });
 }
 
 /**
  * 添加分类
  */
 export function addServiceCate(data) {
-  return request({
-    url: 'service/cate',
-    method: 'post',
-    data,
-    kefu: true
-  });
+    return request({
+        url: 'service/cate',
+        method: 'post',
+        data,
+        kefu: true
+    });
 }
 
 /**
  * 修改分类
  */
 export function editServiceCate(id, params) {
-  return request({
-    url: 'service/cate/' + id,
-    method: 'PUT',
-    params,
-    kefu: true
-  });
+    return request({
+        url: 'service/cate/' + id,
+        method: 'PUT',
+        params,
+        kefu: true
+    });
 }
 
 /**
  * 扫码登录情况
  */
 export function scanStatus(key, params) {
-  return request({
-    url: 'scan/' + key,
-    method: 'get',
-    params,
-    kefu: true
-  });
+    return request({
+        url: 'scan/' + key,
+        method: 'get',
+        params,
+        kefu: true
+    });
 }
 
 /**
  * 扫码核销
  */
 export function orderVerificApi(id) {
-  return request({
-    url: `/order/verific/${id}`,
-    method: 'get',
-    kefu: true
-  });
+    return request({
+        url: `/order/verific/${id}`,
+        method: 'get',
+        kefu: true
+    });
 }
 
 /**
@@ -476,11 +476,11 @@ export function orderVerificApi(id) {
  * @constructor
  */
 export function userGroupApi() {
-  return request({
-    url: `user/group`,
-    method: 'get',
-    kefu: true
-  });
+    return request({
+        url: `user/group`,
+        method: 'get',
+        kefu: true
+    });
 }
 
 /**
@@ -488,11 +488,11 @@ export function userGroupApi() {
  * @constructor
  */
 export function putGroupApi(uid, id) {
-  return request({
-    url: `user/group/${uid}/${id}`,
-    method: 'put',
-    kefu: true
-  });
+    return request({
+        url: `user/group/${uid}/${id}`,
+        method: 'put',
+        kefu: true
+    });
 }
 
 /**
@@ -500,11 +500,11 @@ export function putGroupApi(uid, id) {
  * @constructor
  */
 export function kefuConfig() {
-  return request({
-    url: `config`,
-    method: 'get',
-    kefu: true
-  });
+    return request({
+        url: `config`,
+        method: 'get',
+        kefu: true
+    });
 }
 
 /**
@@ -512,12 +512,12 @@ export function kefuConfig() {
  * @constructor
  */
 export function serviceListApi(params) {
-  return request({
-    url: `tourist/user`,
-    method: 'get',
-    params,
-    kefu: true
-  });
+    return request({
+        url: `tourist/user`,
+        method: 'get',
+        params,
+        kefu: true
+    });
 }
 
 /**
@@ -525,11 +525,11 @@ export function serviceListApi(params) {
  * @constructor
  */
 export function getAdvApi() {
-  return request({
-    url: `tourist/adv`,
-    method: 'get',
-    kefu: true
-  });
+    return request({
+        url: `tourist/adv`,
+        method: 'get',
+        kefu: true
+    });
 }
 
 /**
@@ -537,12 +537,12 @@ export function getAdvApi() {
  * @constructor
  */
 export function chatListApi(params) {
-  return request({
-    url: `tourist/chat`,
-    method: 'get',
-    params,
-    kefu: true
-  });
+    return request({
+        url: `tourist/chat`,
+        method: 'get',
+        params,
+        kefu: true
+    });
 }
 
 /**
@@ -550,11 +550,11 @@ export function chatListApi(params) {
  * @constructor
  */
 export function feedbackDataApi() {
-  return request({
-    url: `tourist/feedback`,
-    method: 'get',
-    kefu: true
-  });
+    return request({
+        url: `tourist/feedback`,
+        method: 'get',
+        kefu: true
+    });
 }
 
 /**
@@ -562,12 +562,12 @@ export function feedbackDataApi() {
  * @constructor
  */
 export function feedbackFromApi(data) {
-  return request({
-    url: `tourist/feedback`,
-    method: 'post',
-    data,
-    kefu: true
-  });
+    return request({
+        url: `tourist/feedback`,
+        method: 'post',
+        data,
+        kefu: true
+    });
 }
 
 /**
@@ -575,12 +575,12 @@ export function feedbackFromApi(data) {
  * @constructor
  */
 export function getOrderApi(order_id, params) {
-  return request({
-    url: `tourist/order/${order_id}`,
-    method: 'get',
-    params,
-    kefu: true
-  });
+    return request({
+        url: `tourist/order/${order_id}`,
+        method: 'get',
+        params,
+        kefu: true
+    });
 }
 
 /**
@@ -588,11 +588,11 @@ export function getOrderApi(order_id, params) {
  * @constructor
  */
 export function productApi(id) {
-  return request({
-    url: `tourist/product/${id}`,
-    method: 'get',
-    kefu: true
-  });
+    return request({
+        url: `tourist/product/${id}`,
+        method: 'get',
+        kefu: true
+    });
 }
 
 /*
@@ -600,11 +600,11 @@ export function productApi(id) {
 */
 
 export function kefuUserInfo() {
-  return request({
-    url: 'user/userInfo',
-    method: 'get',
-    kefu: true
-  })
+    return request({
+        url: 'user/userInfo',
+        method: 'get',
+        kefu: true
+    })
 }
 
 /*
@@ -612,12 +612,12 @@ export function kefuUserInfo() {
 */
 
 export function userUserInfo(data) {
-  return request({
-    url: 'user/userInfo',
-    method: 'put',
-    kefu: true,
-    data
-  })
+    return request({
+        url: 'user/userInfo',
+        method: 'put',
+        kefu: true,
+        data
+    })
 }
 
 /*
@@ -625,12 +625,12 @@ export function userUserInfo(data) {
 */
 
 export function userRecord(params) {
-  return request({
-    url: 'user/record',
-    method: 'get',
-    mobile: true,
-    params
-  })
+    return request({
+        url: 'user/record',
+        method: 'get',
+        mobile: true,
+        params
+    })
 }
 
 /*
@@ -638,46 +638,46 @@ export function userRecord(params) {
 */
 
 export function serviceFeedback() {
-  return request({
-    url: `service/feedback`,
-    method: 'get',
-    mobile: true
-  })
+    return request({
+        url: `service/feedback`,
+        method: 'get',
+        mobile: true
+    })
 }
 
 /*
   客户端，提交用户反馈
 */
 export function serviceFeedbackPost(data) {
-  return request({
-    url: 'service/feedback',
-    method: 'post',
-    mobile: true,
-    data
-  })
+    return request({
+        url: 'service/feedback',
+        method: 'post',
+        mobile: true,
+        data
+    })
 }
 
 /*
   客户端 上传图片
 */
 export function serviceUpload(data) {
-  return request({
-    url: 'service/upload',
-    method: 'post',
-    mobile: true,
-    data
-  })
+    return request({
+        url: 'service/upload',
+        method: 'post',
+        mobile: true,
+        data
+    })
 }
 
 /*
   客户端 获取图文信息
 */
 export function serviceCache(key) {
-  return request({
-    url: `service/cache/${key}`,
-    method: 'get',
-    mobile: true
-  })
+    return request({
+        url: `service/cache/${key}`,
+        method: 'get',
+        mobile: true
+    })
 }
 
 /*
@@ -685,10 +685,10 @@ export function serviceCache(key) {
 */
 
 export function adminAppCustomer() {
-  return request({
-    url: '/app',
-    method: 'get'
-  })
+    return request({
+        url: '/app',
+        method: 'get'
+    })
 }
 
 /*
@@ -696,10 +696,10 @@ export function adminAppCustomer() {
 */
 
 export function appReset(id) {
-  return request({
-    url: `/app/reset/${id}`,
-    method: 'put'
-  })
+    return request({
+        url: `/app/reset/${id}`,
+        method: 'put'
+    })
 }
 
 /*
@@ -707,11 +707,11 @@ export function appReset(id) {
 */
 
 export function serviceAdv() {
-  return request({
-    url: '/service/adv',
-    method: 'get',
-    mobile: true
-  })
+    return request({
+        url: '/service/adv',
+        method: 'get',
+        mobile: true
+    })
 }
 
 /*
@@ -719,12 +719,12 @@ export function serviceAdv() {
 */
 
 export function updateUserData(userId, data) {
-  return request({
-    url: `user/updateUser/${userId}`,
-    method: 'put',
-    kefu: true,
-    data
-  })
+    return request({
+        url: `user/updateUser/${userId}`,
+        method: 'put',
+        kefu: true,
+        data
+    })
 }
 
 /**
@@ -734,10 +734,37 @@ export function updateUserData(userId, data) {
  */
 export function userStatistics(data) {
     return request({
-      url: 'user/statistics',
-      method: 'post',
-      mobile: true,
-      data
+        url: 'user/statistics',
+        method: 'post',
+        mobile: true,
+        data
     })
-  }
+}
 
+
+/**
+ * 客服端发送消息
+ * @param data
+ */
+export function sendMessage(data) {
+    return request({
+        url: 'service/send_message',
+        method: 'post',
+        kefu: true,
+        data
+    });
+}
+
+/**
+ * 网络请求监听
+ * @param type
+ */
+export function netWorkPing(type = false) {
+    return request({
+        url: 'service/ping',
+        mobile: type === false,
+        kefu: type,
+        method: 'get',
+        timeout: 1000,
+    });
+}

@@ -14,9 +14,9 @@ namespace app\controller\kefu;
 
 use app\Request;
 use app\services\chat\ChatAutoReplyServices;
+use app\services\chat\ChatServiceDialogueRecordServices;
 use app\services\chat\ChatServiceSpeechcraftServices;
 use app\services\kefu\KefuServices;
-use app\services\message\service\StoreServiceServices;
 use app\services\other\AppVersionServices;
 use app\services\other\CategoryServices;
 use app\validate\kefu\SpeechcraftValidate;
@@ -24,6 +24,7 @@ use crmeb\services\CacheService;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
+use think\facade\Cache;
 
 /**
  * Class Service
@@ -101,7 +102,7 @@ class Service extends AuthController
         }
         $data['add_time'] = time();
         $data['owner_id'] = $this->kefuId;
-        $data['type']     = 1;
+        $data['type'] = 1;
 
         $services->save($data);
         return $this->success('添加成功');
@@ -203,7 +204,7 @@ class Service extends AuthController
             return $this->fail('添加的内容重复');
         }
         $data['add_time'] = time();
-        $data['kefu_id']  = $this->kefuId;
+        $data['kefu_id'] = $this->kefuId;
 
         $res = $services->save($data);
         if ($res) {
@@ -298,9 +299,9 @@ class Service extends AuthController
      */
     public function getServiceInfo()
     {
-        $this->kefuInfo['site_name']          = sys_config('site_name');
+        $this->kefuInfo['site_name'] = sys_config('site_name');
         $this->kefuInfo['config_export_open'] = sys_config('config_export_open');
-        $this->kefuInfo['user_ids']           = $this->services->getColumn(['appid' => $this->kefuInfo['appid']], 'user_id');
+        $this->kefuInfo['user_ids'] = $this->services->getColumn(['appid' => $this->kefuInfo['appid']], 'user_id');
         return $this->success($this->kefuInfo->toArray());
     }
 
@@ -381,7 +382,7 @@ class Service extends AuthController
             $services->update(['id' => $id], $data);
         } else {
             $data['user_id'] = $this->kefuInfo['user_id'];
-            $data['appid']   = $this->kefuInfo['appid'];
+            $data['appid'] = $this->kefuInfo['appid'];
             $services->save($data);
         }
 
@@ -445,7 +446,7 @@ class Service extends AuthController
         ], true);
 
         if ($info = $services->getVersion($version)) {
-            $info           = $info->toArray();
+            $info = $info->toArray();
             $info['update'] = true;
             if (strstr($info['url'], 'http://') === false || strstr($info['url'], 'https://') === false) {
                 $info['url'] = 'https://' . $this->request->host() . $info['url'];
@@ -456,5 +457,64 @@ class Service extends AuthController
         }
     }
 
+    /**
+     * 获取消息id
+     * @param ChatServiceDialogueRecordServices $services
+     * @return mixed
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function getSendId(ChatServiceDialogueRecordServices $services)
+    {
+        $sendId = $services->getSendId();
+        Cache::store('redis')->set($sendId, 1);
+        return $this->success(['send_id' => $sendId]);
+    }
 
+    /**
+     * 发送消息
+     * @return mixed
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function sendMessage()
+    {
+        $data = $this->request->postMore([
+            ['to_user_id', 0],
+            ['msn_type', 0],
+            ['msn', ''],
+            ['other', ''],
+            ['guid', ''],
+            ['is_tourist', ''],
+        ]);
+
+        if (!$data['guid']) {
+            return $this->fail('消息ID不存在！');
+        }
+
+        $userId = $this->kefuInfo['user_id'];
+
+        if (!$data['to_user_id']) {
+            return $this->fail('用户不存在');
+        }
+        if ($data['to_user_id'] == $userId) {
+            return $this->fail('不能和自己聊天');
+        }
+
+        $appId = $this->kefuInfo['appid'];
+
+        $res = $this->services->sendMessage($data, (int)$userId, $appId, 'user');
+
+        $res['guid'] = $data['guid'];
+
+        return $this->success('发送成功', $res);
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function ping()
+    {
+        return $this->success(['time' => time()]);
+    }
 }

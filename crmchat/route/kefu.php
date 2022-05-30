@@ -20,6 +20,8 @@ Route::group('api', function () {
 
     Route::group('kefu', function () {
 
+        Route::get('service/ping', 'Service/ping')->name('ping');//响应网络ping
+
         Route::any('ticket/[:appid]', 'Login/ticket');
 
         Route::group(function () {
@@ -91,6 +93,8 @@ Route::group('api', function () {
                 Route::delete('auth_reply/:id', 'Service/deleteAuthReply')->name('deleteAuthReply');//删除当前自动回复内容
                 Route::put('auth_reply/:value', 'Service/setAutoReply')->name('setAutoReply');//设置是否自动回复
                 Route::put('backstage/:backstage', 'Service/backstage')->name('backstage');//设置是否后台运行
+                Route::get('get_send_id', 'Service/getSendId')->name('getSendId');//获取发送消息sendid
+                Route::post('send_message', 'Service/sendMessage')->name('sendMessage');//发送消息
 
             })->middleware(KefuAuthTokenMiddleware::class);
 
@@ -98,7 +102,7 @@ Route::group('api', function () {
 
         Route::miss(function () {
             if (app()->request->isOptions()) {
-                $header                                = Config::get('cookie.header');
+                $header = Config::get('cookie.header');
                 $header['Access-Control-Allow-Origin'] = app()->request->header('origin');
                 return Response::create('ok')->code(200)->header($header);
             } else

@@ -16,7 +16,7 @@
 
             </li>
             <li>
-                <a href="https://chat.crmeb.net/kefu" target="_blank">https://chat.crmeb.net/kefu</a> （账号：kefu 密码：kefu123）
+                <a id="chat" target="_blank">--</a> （账号：kefu 密码：kefu123）
 
             </li>
         </ul>
@@ -32,10 +32,10 @@
         <li><a href="javascript:void(0)" onclick="demo3()" >3、移动端展示</a></li>
         <li><a href="kaifa.html" target="_blank">4、演示三自定义模式</a></li>
         <li>超链接</li>
-        <li><a href="https://chat.crmeb.net/chat/index?noCanClose=1&token=e8bcc017f50e55c63b5352c4257c8904" target="_blank">4、Pc和手机超链接访问自动适应</a></li>
-        <li><a href="https://chat.crmeb.net/chat/pc?noCanClose=1&token=e8bcc017f50e55c63b5352c4257c8904" target="_blank">6、Pc超链接访问</a></li>
-        <li><a href="https://chat.crmeb.net/chat/pc?noCanClose=0&token=e8bcc017f50e55c63b5352c4257c8904" target="_blank">7、Pc超链接访问简介模式</a></li>
-        <li><a href="https://chat.crmeb.net/chat/mobile?noCanClose=0&token=e8bcc017f50e55c63b5352c4257c8904" target="_blank">8、移动端样式</a></li>
+        <li><a class="line-chat" data-href="{http}/chat/pc?token={token}&noCanClose=1" target="_blank">4、Pc和手机超链接访问自动适应</a></li>
+        <li><a class="line-chat" data-href="{http}/chat/pc?noCanClose=1&token={token}" target="_blank">6、Pc超链接访问</a></li>
+        <li><a class="line-chat" data-href="{http}/chat/pc?noCanClose=0&token={token}" target="_blank">7、Pc超链接访问简介模式</a></li>
+        <li><a class="line-chat" data-href="{http}/chat/mobile?noCanClose=0&token={token}" target="_blank">8、移动端样式</a></li>
     </ul>
 </div>
 
@@ -49,6 +49,21 @@
 <!--增加了"authInit":true 为true才会自动加载-->
 <!--<script src="/../customerServer.js" id="chat" option='{"authInit":true,"openUrl":"https://chat.crmeb.net","isShowTip":true,"token":"e8bcc017f50e55c63b5352c4257c8904"}'></script>-->
 <script>
+
+    let token = '0c8e1e252430160449fa327d5229f12b',
+        url = 'http://localhost:8080',
+        chat = document.getElementById('chat'),
+        lineChat =document.getElementsByClassName('line-chat');
+
+    chat.href = url + '/kefu';
+    chat.innerText = chat.href;
+
+    for (let i=0;i< lineChat.length;i++){
+       let href = lineChat[i].getAttribute('data-href');
+        href = href.replace('{http}',url)
+        lineChat[i].href = href.replace('{token}',token)
+    }
+
     var demostatus = {
         demo0:false,
         demo1:false,
@@ -60,8 +75,8 @@
             return;
         }
         var option = {
-            openUrl: 'https://chat.crmeb.net',
-            token: 'e8bcc017f50e55c63b5352c4257c8904',
+            openUrl: url,
+            token: token,
         };
         var canCustomerServer = new initCustomerServer(option);
         canCustomerServer.init();
@@ -73,8 +88,8 @@
             return;
         }
         var option = {
-            openUrl: 'https://chat.crmeb.net',
-            token: 'e8bcc017f50e55c63b5352c4257c8904',
+            openUrl: url,
+            token: token,
             isShowTip: true,
             windowStyle: 'center',//默认空 右下角小弹窗， center 普通中间弹窗样式
             deviceType:'pc',//打开端 pc
@@ -83,37 +98,33 @@
         var canCustomerServer = new initCustomerServer(option);
         canCustomerServer.init();
         demostatus.demo1 = true;
-        //自动弹开对话框
-//    canCustomerServer.getCustomeServer();
     }
     function demo2() {
         if(demostatus.demo2){
             return;
         }
         var option = {
-            openUrl: 'https://chat.crmeb.net',
-            token: 'e8bcc017f50e55c63b5352c4257c8904',
+            openUrl: url,
+            token: token,
             isShowTip: true,
         };
         var canCustomerServer = new initCustomerServer(option);
         canCustomerServer.init();
         demostatus.demo2 = true;
-//    canCustomerServer.getCustomeServer();
     }
     function demo3() {
         if(demostatus.demo3){
             return;
         }
         var option = {
-            openUrl: 'https://chat.crmeb.net',
-            token: 'e8bcc017f50e55c63b5352c4257c8904',
+            openUrl: url,
+            token: token,
             isShowTip: true,
             deviceType:'Mobile',//打开端 Mobile
         };
         var canCustomerServer = new initCustomerServer(option);
         canCustomerServer.init();
         demostatus.demo3 = true;
-//    canCustomerServer.getCustomeServer();
     }
 
     //其他全局事件
@@ -126,6 +137,11 @@
     window.$chat.on('chatAuthAfter',function (instance) {
 
     });
+
+    window.$chat.on('openChatWin',function () {
+        console.log('打开弹窗')
+    });
+
     //关闭弹窗事件
     window.$chat.on('closeWindow',function () {
         console.log('关闭弹窗')

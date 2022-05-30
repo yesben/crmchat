@@ -106,7 +106,7 @@ class KefuHandler extends BaseHandler
             $service = app()->make(ChatServiceRecordServices::class);
             $service->updateRecord(['to_user_id' => $user['user_id']], ['online' => $online]);
             if ($user['to_user_id']) {
-                $fd = $this->room->uidByFd($user['to_user_id']);
+                $fd = $this->manager->userFd($user['to_user_id']);
                 //给当前正在聊天的用户发送上下线消息
                 $this->manager->pushing($fd, $response->message('online', [
                     'online' => $online,
@@ -126,7 +126,7 @@ class KefuHandler extends BaseHandler
     {
         $data = $data['data'] ?? [];
         $userId = $data['recored']['user_id'] ?? 0;
-        if ($userId && $this->room->uidByFd($userId)) {
+        if ($userId && $this->manager->userFd($userId)) {
             $data['recored']['online'] = 1;
         } else {
             $data['recored']['online'] = 0;

@@ -154,6 +154,8 @@ class SwooleTaskService
 
     /**
      * 实例化
+     * @param string|null $taskType
+     * @param App|null $app
      * @return static
      */
     public static function instance(string $taskType = null, App $app = null)
@@ -166,12 +168,24 @@ class SwooleTaskService
 
     /**
      * 客服任务
+     * @param App|null $app
      * @return SwooleTaskService
      */
     public static function kefu(App $app = null)
     {
         self::instance(null, $app)->type = __FUNCTION__;
         return self::instance();
+    }
+
+    /**
+     * @param string $type
+     * @return static
+     */
+    public static function serve(string $type)
+    {
+        $instance = self::instance();
+        $instance->type = $type;
+        return $instance;
     }
 
     /**

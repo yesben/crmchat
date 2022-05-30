@@ -21,7 +21,7 @@
 				<div class="content_userMessgae">
 					<uni-swipe-action>
 						<uni-swipe-action-item v-for="(item, index) in userList" :right-options="options"
-							@click="deleteUserRecord($event, index)">
+							@click="deleteUserRecord($event, index)" :key="item.id">
 							<div :id="`content_userMessgae_item${item.id}`" class="content_userMessgae_item"
 								@click="connentServerForUser(item)">
 								<div class="content_userMessgae_item_avar">
@@ -213,6 +213,9 @@
 						version,
 						name
 					}).then(data => {
+						if (data.update === false) {
+							return;
+						}
 						uni.showModal({
 							title: '检测到新版本',
 							content: data.info,

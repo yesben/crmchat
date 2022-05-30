@@ -14,11 +14,12 @@
 namespace app\webscoket;
 
 
-use app\services\ApplicationServices;
 use crmeb\services\CacheService;
 use Swoole\Server;
 use Swoole\Websocket\Frame;
+use think\App;
 use think\Event;
+use think\Request;
 use think\response\Json;
 use think\swoole\Websocket;
 use think\swoole\websocket\Room;
@@ -60,6 +61,7 @@ class Manager extends Websocket
 
     /**
      * Manager constructor.
+     * @param App $app
      * @param Server $server
      * @param Room $room
      * @param Event $event
@@ -67,7 +69,7 @@ class Manager extends Websocket
      * @param Ping $ping
      * @param \app\webscoket\Room $nowRoom
      */
-    public function __construct(\think\App $app, Server $server, Room $room, Event $event, Response $response, Ping $ping, NowRoom $nowRoom)
+    public function __construct(App $app, Server $server, Room $room, Event $event, Response $response, Ping $ping, NowRoom $nowRoom)
     {
         parent::__construct($app, $server, $room, $event);
         $this->response = $response;
@@ -83,7 +85,7 @@ class Manager extends Websocket
      * @param Request $request
      * @return mixed
      */
-    public function onOpen($fd, \think\Request $request)
+    public function onOpen($fd, Request $request)
     {
         $type = $request->get('type');
         $token = $request->get('token');
@@ -129,7 +131,6 @@ class Manager extends Websocket
      * @param int $userId
      * @param string $type
      * @return bool|mixed|string
-     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function getUserIdByFd(int $userId, string $type = '')
     {
@@ -153,7 +154,6 @@ class Manager extends Websocket
     /**
      * @param int $userId
      * @return array
-     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function getUserIdByFds(int $userId)
     {
@@ -168,7 +168,6 @@ class Manager extends Websocket
      * @param int $userId
      * @param int $toUserId
      * @param string $field
-     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function updateTabelField(int $userId, int $toUserId, string $field = 'to_user_id')
     {
@@ -244,7 +243,7 @@ class Manager extends Websocket
      * @param Json $json
      * @return bool
      */
-    public function send($fd, \think\response\Json $json)
+    public function send($fd, Json $json)
     {
         $this->pingService->createPing($fd, time(), $this->cache_timeout);
         return $this->pushing($fd, $json->getData());
@@ -252,12 +251,14 @@ class Manager extends Websocket
 
     /**
      * 发送
+     * @param $fds
      * @param $data
+     * @param null $exclude
      * @return bool
      */
     public function pushing($fds, $data, $exclude = null)
     {
-        if ($data instanceof \think\response\Json) {
+        if ($data instanceof Json) {
             $data = $data->getData();
         }
         $data = is_array($data) ? json_encode($data) : $data;
@@ -286,7 +287,6 @@ class Manager extends Websocket
         $tabfd = (string)$fd;
         if ($this->nowRoom->exist($fd)) {
             $data = $this->nowRoom->get($tabfd);
-            $this->nowRoom->deleteFd($data['type'], $data['user_id'], $fd);
             $this->logout($data['type'], $data['user_id'], $fd);
             $this->nowRoom->type($data['type'])->del($tabfd);
             $this->exec($data['type'], 'close', [$fd, null, ['data' => $data], $this->response]);

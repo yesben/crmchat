@@ -1,6 +1,7 @@
 import { mobileScoket } from '@/libs/socket';
 import { userRecord, serviceUpload, serviceAdv, userStatistics } from '@/api/kefu';
-import { setLoc, getLoc } from '@/libs/util'
+import { sendMessageMobile } from '@/api/kefu_mobile';
+import { setLoc, getLoc, getGuid } from '@/libs/util'
 import { mapState } from 'vuex';
 import Cookies from "js-cookie";
 
@@ -8,6 +9,7 @@ var mp3 = require('@/assets/video/notice.wav');
 export default {
   data() {
     return {
+      userAgentType:0,
       mp3: new Audio(mp3),
       inputConType: 1,
       userMessage: '',
@@ -51,6 +53,8 @@ export default {
   },
   created() {
     this.redirect();
+    this.loadJS();
+
     // 获取url参数
     this.upperData = this.$route.query;
     // 更新token
@@ -69,40 +73,37 @@ export default {
     // 获取从父页面传递过来的数据
     window.addEventListener("message", e => {
       // 获取图文数据
-      if(e.data.type == 'getImgOrText') {
-        this.userKey = e.data.key;
-        if(e.data.productInfo) {
-          this.productMessage = e.data.productInfo;
-        }
-      }
-
-      if(e.data.type == 'openCustomeServer') {
-        this.bus.pageWs.then((ws) => {
-          ws.send({ type: 'to_chat', data: { id: this.chatServerData.to_user_id } });
-          this.toChat = true;
-          if(this.unReadMesage) {
-            this.getUserRecord()
+      switch (e.data.type) {
+        case 'getImgOrText'://发送商品信息
+          this.userKey = e.data.key;
+          if(e.data.productInfo) {
+            this.productMessage = e.data.productInfo;
           }
-
-        })
-      }
-
-      if(e.data.type == 'closeCustomeServer') {
-        this.bus.pageWs.then((ws) => {
-          ws.send({ type: 'to_chat', data: { id: 0 } });
-          this.toChat = true;
-        })
-      }
-      //自定义发送消息
-      if(e.data.type === 'chat' && e.data.data){
-        if(e.data.data.type){
+          break;
+        case 'openCustomeServer'://打开窗口
           this.bus.pageWs.then((ws) => {
-            ws.send({type:e.data.data.type,data:e.data.data.data});
+            ws.send({ type: 'to_chat', data: { id: this.chatServerData.to_user_id } });
+            this.toChat = true;
+            if(this.unReadMesage) {
+              this.getUserRecord()
+            }
+
           })
-        }
+          break;
+        case 'closeCustomeServer'://关闭窗口
+          this.bus.pageWs.then((ws) => {
+            ws.send({ type: 'to_chat', data: { id: 0 } });
+            this.toChat = true;
+          })
+          break;
+        case 'chat'://自定义发送消息
+          if(e.data.data.type && e.data.data){
+            this.bus.pageWs.then((ws) => {
+              ws.send({type:e.data.data.type,data:e.data.data.data});
+            })
+          }
+          break;
       }
-
-
     });
 
     this.getServiceAdv();
@@ -125,6 +126,39 @@ export default {
     },
   },
   methods: {
+    loadJS(){
+      var userAgent = navigator.userAgent;
+      if (userAgent.indexOf('AlipayClient') > -1) {
+        this.userAgentType = 1;
+        // 支付宝小程序的 JS-SDK 防止 404 需要动态加载，如果不需要兼容支付宝小程序，则无需引用此 JS 文件。
+        document.writeln('<script src="https://appx/web-view.min.js"' + '>' + '<' + '/' + 'script>');
+      } else if (/QQ/i.test(userAgent) && /miniProgram/i.test(userAgent)) {
+        this.userAgentType = 2;
+        // QQ 小程序
+        document.write(
+            '<script type="text/javascript" src="https://qqq.gtimg.cn/miniprogram/webview_jssdk/qqjssdk-1.0.0.js"><\/script>'
+        );
+      } else if (/miniProgram/i.test(userAgent) && /micromessenger/i.test(userAgent)) {
+        this.userAgentType = 3;
+        // 微信小程序 JS-SDK 如果不需要兼容微信小程序，则无需引用此 JS 文件。
+        document.write('<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"><\/script>');
+      } else if (/toutiaomicroapp/i.test(userAgent)) {
+        this.userAgentType = 4;
+        // 头条小程序 JS-SDK 如果不需要兼容头条小程序，则无需引用此 JS 文件。
+        document.write(
+            '<script type="text/javascript" src="https://s3.pstatp.com/toutiao/tmajssdk/jssdk-1.0.1.js"><\/script>');
+      } else if (/swan/i.test(userAgent)) {
+        this.userAgentType = 5;
+        // 百度小程序 JS-SDK 如果不需要兼容百度小程序，则无需引用此 JS 文件。
+        document.write(
+            '<script type="text/javascript" src="https://b.bdstatic.com/searchbox/icms/searchbox/js/swan-2.0.18.js"><\/script>'
+        );
+      } else if (/quickapp/i.test(userAgent)) {
+        this.userAgentType = 6;
+        // quickapp
+        document.write('<script type="text/javascript" src="https://quickapp/jssdk.webview.min.js"><\/script>');
+      }
+    },
     userStatistics() {
         let ua = window.navigator.userAgent;
         let browser = '';
@@ -142,7 +176,7 @@ export default {
             browser = 'Netscape';
         }
         userStatistics({
-            ip: window.returnCitySN.cip,
+            ip: window.returnCitySN ? window.returnCitySN.cip : '',
             path: window.location.href,
             source: window.parent.location.href,
             browser: browser
@@ -201,13 +235,17 @@ export default {
             Object.keys(cookieData).forEach(item => {
               setLoc(item, getLoc(item) ? getLoc(item) : res.data[item]);
             })
+
+          if (res.data.welcome) {
+            this.pushMessageToList(res.data.welcome);
+          }
           this.goPageBottom(); // 滑动到页面底部
           document.title = res.data.to_user_nickname ? `正在和${res.data.to_user_nickname}对话中 - ${this.chatServerData.site_name}` : '正在和游客对话中 - ' + this.chatServerData.site_name;
           this.connentServer(); // 建立socket 链接
 
       }).catch(rej => {
         if(rej.status == 400) {
-          this.$router.push({ name: 'customerOutLine', query: this.$route.query });
+          this.$router.replace({ name: 'customerOutLine', query: this.$route.query });
         }
       })
     },
@@ -229,7 +267,7 @@ export default {
 
         ws.$on('kefu_logout',data=>{
           if(data.online == 0){
-            this.$router.push({
+            this.$router.replace({
               name: 'customerOutLine',
               query: this.$route.query
             });
@@ -396,7 +434,7 @@ export default {
       } else {
         sendMessage = this.$refs['inputDiv'].innerText.replace(/[\r\n]/g, '');
       }
-      console.log(sendMessage)
+
       if(sendMessage) {
         this.sendMsg(sendMessage, 1);
         this.$refs['inputDiv'] ? this.$refs['inputDiv'].innerText = '' : this.userMessage = '';
@@ -410,30 +448,39 @@ export default {
     },
     // type: 1 普通文本 2 图片
     sendMsg(msn, type, id) {
-      let sendData = {
-        data: {
-          msn: msn,
-          type: type,
-          to_user_id: this.chatServerData.to_user_id,
-          is_tourist: 0
-        },
-        type: 'chat',
-        // user: {
-        //   uid: this.chatServerData.uid,
-        //   nickname: this.chatServerData.nickname,
-        //   phone: this.userMessage.phone ? this.userMessage.phone : this.chatServerData.phone
-        // }
-      }
-
       if(!this.chatStatus){
         return this.$Message.error('正在连接中');
       }
-
-      this.bus.pageWs.then((ws) => {
-        ws.send(sendData);
+      let guid = getGuid();
+      let chat = this.chatOptinos(guid, msn, type);
+      sendMessageMobile(chat).then( res => {
+        chat.add_time = Date.parse(new Date()) / 1000;
+        this.pushMessageToList(chat);
+        if (res.data.autoReply === true) {
+          this.pushMessageToList(res.data.autoReplyData);
+        }
+        this.goPageBottom();
+      }).catch(()=>{
       })
     },
-
+    pushMessageToList(data) {
+      this.chatServerData.serviceList.push(data);
+    },
+    chatOptinos(guid, msn, type, other) {
+      return {
+        msn,
+        msn_type: type,
+        to_user_id: this.chatServerData.to_user_id,
+        is_send: 0,
+        is_tourist: 0,
+        avatar: this.chatServerData.avatar,
+        user_id: this.chatServerData.user_id,
+        appid: this.chatServerData.appid,
+        other: other || {},
+        type: 0,
+        guid:guid
+      };
+    },
     // 滑动到顶部
     scrollHandler(e) {
       this.isLoad = true;
