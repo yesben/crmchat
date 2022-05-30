@@ -1,4 +1,3 @@
-﻿
 #
 # Structure for table "eb_app_version"
 #
