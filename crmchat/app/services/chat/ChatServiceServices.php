@@ -309,13 +309,16 @@ class ChatServiceServices extends BaseServices
             return false;
         }
         $data['msn'] = '';
-        /** @var PullWord $words */
-        $pullWord = $app->make(PullWord::class);
-        $result = $pullWord->pull($msg)->toJson()->get();
-        $result = json_decode($result, true);
         $keyword = [];
-        foreach ($result as $item) {
-            $keyword[] = $item['t'];
+        try {
+            /** @var PullWord $words */
+            $pullWord = $app->make(PullWord::class);
+            $result = $pullWord->pull($msg)->toJson()->get();
+            $result = json_decode($result, true);
+            foreach ($result as $item) {
+                $keyword[] = $item['t'];
+            }
+        } catch (\Throwable $e) {
         }
         array_push($keyword, $msg);
         if ($keyword) {
