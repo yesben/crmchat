@@ -258,8 +258,11 @@ class AbstractAPI
      */
     public function http(string $url, array $data, string $method = 'post')
     {
-//        $token  = $this->getToken();//本地
-        $token = $this->getAuthToken();//远程
+        if ($this->appId && $this->appKey) {
+            $token = $this->getToken();//本地
+        } else {
+            $token = $this->getAuthToken();//远程
+        }
         $header = [
             'token:' . $token
         ];
