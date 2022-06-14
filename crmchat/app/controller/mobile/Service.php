@@ -222,12 +222,6 @@ class Service extends AuthController
         return $this->success('发送成功', $res);
     }
 
-    /**
-     * @return mixed
-     */
-    public function ping()
-    {
-        return $this->success(['time' => time()]);
-    }
+
 
 }
