@@ -29,6 +29,7 @@ window.$chat = {
     }
 };
 
+
 //放入默认事件
 window.$chat.on('postMessage', function (type, data) {
     if (!this.iframe_contanier) {

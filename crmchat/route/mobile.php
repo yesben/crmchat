@@ -22,7 +22,7 @@ Route::group('api', function () {
 
     Route::group('mobile', function () {
 
-        Route::get('service/ping', 'Service/ping')->name('ping');//响应网络ping
+        Route::get('service/ping', 'Comment/ping')->name('ping');//响应网络ping
 
         Route::group('user', function () {
 

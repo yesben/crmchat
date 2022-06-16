@@ -20,7 +20,7 @@ Route::group('api', function () {
 
     Route::group('kefu', function () {
 
-        Route::get('service/ping', 'Comment/ping')->name('ping');//响应网络ping
+        Route::get('service/ping', 'Service/ping')->name('ping');//响应网络ping
 
         Route::any('ticket/[:appid]', 'Login/ticket');
 
