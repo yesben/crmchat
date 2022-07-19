@@ -168,6 +168,12 @@ class KefuServices extends BaseServices
      */
     public function sendMessage(array $data, int $userId, string $appId, string $type = 'kefu')
     {
+
+        $isCcli = (bool)preg_match("/cli/i", php_sapi_name());
+        if (!$isCcli) {
+            throw new ValidateException('请在CLI模式下运行');
+        }
+
         $msnType = $data['msn_type'];//消息类型
         $msn = $data['msn'];//消息内容
         $guid = $data['guid'];//消息唯一id

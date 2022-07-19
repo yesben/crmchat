@@ -272,7 +272,11 @@ class Manager extends Websocket
             } elseif ($exclude && $exclude == $fd) {
                 continue;
             }
-            $this->server->push($fd, $data);
+            try {
+                $this->server->push($fd, $data);
+            } catch (\Throwable $e) {
+
+            }
         }
         return true;
     }
