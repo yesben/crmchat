@@ -267,7 +267,7 @@ ThinkPHP6.0遵循PSR-2命名规范和PSR-4自动加载规范，并且注意如�
 
 加群请写备注 **CRMCHAT** 
 
-![输入图片说明](readme/images/image.png)
+![输入图片说明](readme/images/111.png)
 
 本项目包含的第三方源码和二进制文件之版权信息另行标注。
 
