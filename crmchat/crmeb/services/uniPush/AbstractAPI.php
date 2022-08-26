@@ -220,6 +220,7 @@ class AbstractAPI
                 $this->cache->set($name, $data['token'], 3600);
                 $this->cache->set($nameAppId, $data['appId'], 3600);
                 $token = $data['token'];
+                $appId = $data['appId'];
             }
         }
         $this->appId = $appId;
