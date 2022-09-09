@@ -27,7 +27,7 @@ class ApiErrorCode
     const ERR_RULE = [400012, 'Interface is not authorized, you cannot access'];
     const ERR_ADMINID_VOID = [400013, 'Failed to get administrator ID'];
     //保存token失败
-    const ERR_SAVE_TOKEN = [400, 'Failed to save token'];
+    const ERR_SAVE_TOKEN = [400, '保存TOKEN失败，请检查Redis配置是否正确'];
     //登陆状态不正确
     const ERR_LOGIN_STATUS = [410002, 'The login status is incorrect. Please login again.'];
     //请登陆
