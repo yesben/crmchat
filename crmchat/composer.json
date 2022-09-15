@@ -41,7 +41,8 @@
         "alipaysdk/easysdk": "2.0",
         "topthink/think-migration": "^3.0",
         "topthink/think-swoole": "^3.1",
-        "xiaodi/think-pullword": "v1.2.0"
+        "xiaodi/think-pullword": "v1.2.0",
+        "fastknife/ajcaptcha": "^1.1"
     },
     "autoload": {
         "psr-4": {
