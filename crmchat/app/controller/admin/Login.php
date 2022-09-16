@@ -40,7 +40,7 @@ class Login
     public function __construct(SystemAdminServices $services)
     {
         $this->services = $services;
-        $this->request  = app()->request;
+        $this->request = app()->request;
     }
 
     /**
@@ -53,6 +53,34 @@ class Login
     }
 
     /**
+     * @return mixed
+     */
+    public function ajcaptcha()
+    {
+        $captchaType = $this->request->get('captchaType', 'blockPuzzle');
+        return app('json')->success(aj_captcha_create($captchaType));
+    }
+
+    /**
+     * 一次验证
+     * @return mixed
+     */
+    public function ajcheck()
+    {
+        [$token, $pointJson, $captchaType] = $this->request->postMore([
+            ['token', ''],
+            ['pointJson', ''],
+            ['captchaType', ''],
+        ], true);
+        try {
+            aj_captcha_check_one($captchaType, $token, $pointJson);
+            return app('json')->success();
+        } catch (\Throwable $e) {
+            return app('json')->fail(400336);
+        }
+    }
+
+    /**
      * 登陆
      * @return mixed
      * @throws DataNotFoundException
@@ -61,12 +89,17 @@ class Login
      */
     public function login()
     {
-        [$account, $password, $imgcode, $key] = $this->request->postMore([
-            'account', 'pwd', ['imgcode', ''], ['key', '']
+        [$account, $password, $captchaVerification, $captchaType] = $this->request->postMore([
+            'account',
+            'pwd',
+            ['captchaVerification', ''],
+            ['captchaType', '']
         ], true);
 
-        if (!app()->make(Captcha::class)->checkApi($imgcode, $key)) {
-            return app('json')->fail('验证码错误，请重新输入');
+        try {
+            aj_captcha_check_two($captchaType, $captchaVerification);
+        } catch (\Throwable $e) {
+            return app('json')->fail(400336);
         }
 
         validate(SystemAdminValidata::class)->scene('get')->check(['account' => $account, 'pwd' => $password]);

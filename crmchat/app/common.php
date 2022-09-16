@@ -12,10 +12,14 @@
 // 应用公共文件
 
 use Carbon\Carbon;
+use Fastknife\Service\BlockPuzzleCaptchaService;
+use Fastknife\Service\ClickWordCaptchaService;
+use Fastknife\Service\Service;
 use think\exception\ValidateException;
 use crmeb\services\FormBuilder as Form;
 use crmeb\services\UploadService;
 use Swoole\Coroutine;
+use think\facade\Config;
 use think\Model;
 use function Swoole\Coroutine\run;
 
@@ -1091,5 +1095,68 @@ if (!function_exists('time_model')) {
                     }
                 }
         }
+    }
+}
+
+if (!function_exists('aj_captcha_check_one')) {
+    /**
+     * 验证滑块1次验证
+     * @param string $token
+     * @param string $pointJson
+     * @return bool
+     */
+    function aj_captcha_check_one(string $captchaType, string $token, string $pointJson)
+    {
+        aj_get_serevice($captchaType)->check($token, $pointJson);
+        return true;
+    }
+}
+
+if (!function_exists('aj_captcha_check_two')) {
+    /**
+     * 验证滑块2次验证
+     * @param string $token
+     * @param string $pointJson
+     * @return bool
+     */
+    function aj_captcha_check_two(string $captchaType, string $captchaVerification )
+    {
+        aj_get_serevice($captchaType)->verificationByEncryptCode($captchaVerification);
+        return true;
+    }
+}
+
+
+if (!function_exists('aj_captcha_create')) {
+    /**
+     * 创建验证码
+     * @return array
+     */
+    function aj_captcha_create(string $captchaType)
+    {
+        return aj_get_serevice($captchaType)->get();
+    }
+}
+
+if (!function_exists('aj_get_serevice')) {
+
+    /**
+     * @param string $captchaType
+     * @return ClickWordCaptchaService|BlockPuzzleCaptchaService
+     */
+    function aj_get_serevice(string $captchaType)
+    {
+        $config = Config::get('ajcaptcha');
+        switch ($captchaType) {
+            case "clickWord":
+                $service = new ClickWordCaptchaService($config);
+                break;
+            case "blockPuzzle":
+                $service = new BlockPuzzleCaptchaService($config);
+                break;
+            default:
+                throw new ValidateException('captchaType参数不正确！');
+        }
+        return $service;
     }
 }
