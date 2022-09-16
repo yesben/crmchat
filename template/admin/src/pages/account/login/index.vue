@@ -52,6 +52,7 @@
         </Form>
       </div>
     </div>
+    
     <!-- <Modal
       v-model="modals"
       scrollable
@@ -67,7 +68,12 @@
         <div id="msg"></div>
       </div>
     </Modal> -->
-    <vcode :show="isShow" @success="closeModel()" @close="closeModel()" successText="验证通过" />
+      <Verify
+        @success="success"
+        captchaType="blockPuzzle"
+        :imgSize="{ width: '330px', height: '155px' }"
+      ref="verify"
+    ></Verify>
   </div>
 </template>
 <script>
@@ -78,11 +84,11 @@ import Setting from '@/setting';
 import { setCookies } from '@/libs/util';
 import '../../../assets/js/canvas-nest.min';
 // import '../../../assets/js/jigsaw.js';
-import Vcode from 'vue-puzzle-vcode';
+import Verify from "@/components/verifition/Verify";
 export default {
   // mixins: [mixins],
   components: {
-    Vcode,
+    Verify,
   },
   data() {
     return {
@@ -182,8 +188,11 @@ export default {
           this.swiperList = [{ slide: this.defaultSwiperList }];
         });
     },
+    success(params){ 
+      this.closeModel(params);
+    },
     // 关闭模态框
-    closeModel() {
+    closeModel(params) {
       this.isShow = false;
       let msg = this.$Message.loading({
         content: '登录中...',
@@ -194,7 +203,9 @@ export default {
         account: this.formInline.username,
         pwd: this.formInline.password,
         imgcode: this.formInline.code,
-        key: this.formInline.key
+        captchaType: 'blockPuzzle',
+        captchaVerification: params.captchaVerification,
+
       })
         .then(async (res) => {
           msg();
@@ -222,25 +233,6 @@ export default {
 
           // if (this.jigsaw) this.jigsaw.reset();
 
-          try {
-            if (data.queue === false) {
-              this.$Notice.warning({
-                title: '温馨提示',
-                desc: '您的【消息队列】未开启，没有开启会导致异步任务无法执行。请尽快执行命令开启！！',
-                duration: 30,
-              });
-            }
-            if (data.timer === false) {
-              this.$Notice.warning({
-                title: '温馨提示',
-                desc: '您的【定时任务】未开启，没有开启会导致定时执行的任务无法执行。请尽快执行命令开启！！',
-                duration: 30,
-              });
-            }
-
-            this.checkSocket();
-          } catch (e) {}
-
           return this.$router.replace({ path: '/admin/home/' || '/admin/' });
         })
         .catch((res) => {
@@ -255,37 +247,6 @@ export default {
       setTimeout((e) => {
         this.loading = false;
       }, 1000);
-    },
-    checkSocket() {
-      getWorkermanUrl().then((res) => {
-        let url = res.data.admin;
-        let isNotice = false;
-        let socket = new WebSocket(url);
-        socket.onopen = () => {
-          isNotice = true;
-          socket.close();
-        };
-        socket.onerror = (err) => {
-          if (!isNotice) {
-            isNotice = true;
-            this.$Notice.warning({
-              title: '温馨提示',
-              desc: '您的【长连接】未开启，没有开启会导致客服消息无法发送,后台订单通知无法收到。请尽快执行命令开启！！',
-              duration: 30,
-            });
-          }
-        };
-        socket.onclose = (err) => {
-          if (!isNotice) {
-            isNotice = true;
-            this.$Notice.warning({
-              title: '温馨提示',
-              desc: '您的【长连接】未开启，没有开启会导致客服消息无法发送,后台订单通知无法收到。请尽快执行命令开启！！',
-              duration: 30,
-            });
-          }
-        };
-      });
     },
     getExpiresTime(expiresTime) {
       let nowTimeNum = Math.round(new Date() / 1000);
@@ -316,11 +277,13 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          if (this.errorNum >= 2) {
-            this.isShow = true;
-          } else {
-            this.closeModel();
-          }
+          this.$refs.verify.show()
+
+          // if (this.errorNum >= 2) {
+          //   this.isShow = true;
+          // } else {
+          //   this.closeModel();
+          // }
         }
       });
     },
@@ -449,5 +412,21 @@ a:link, a:visited, a:hover, a:active {
 
 .from-wh {
   width: 400px;
+}
+
+.pull-right {
+    float: right!important;
+}
+.footer{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  margin: 0;
+  background: rgba(255,255,255,.8);
+  border-top: 1px solid #e7eaec;
+  overflow: hidden;
+  padding: 10px 20px;
+  height: 36px;
 }
 </style>
