@@ -89,12 +89,17 @@ class Login
      */
     public function login()
     {
-        [$account, $password, $captchaVerification, $captchaType] = $this->request->postMore([
+        [$account, $password, $imgcode, $captchaVerification, $captchaType] = $this->request->postMore([
             'account',
             'pwd',
+            ['imgcode', ''],
             ['captchaVerification', ''],
             ['captchaType', '']
         ], true);
+
+        if (!app()->make(Captcha::class)->check($imgcode)) {
+            return app('json')->fail('请输入正确的验证码');
+        }
 
         try {
             aj_captcha_check_two($captchaType, $captchaVerification);
