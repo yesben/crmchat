@@ -76,7 +76,7 @@ class Login
             aj_captcha_check_one($captchaType, $token, $pointJson);
             return app('json')->success();
         } catch (\Throwable $e) {
-            return app('json')->fail(400336);
+            return app('json')->fail('滑块验证失败');
         }
     }
 
@@ -99,7 +99,7 @@ class Login
         try {
             aj_captcha_check_two($captchaType, $captchaVerification);
         } catch (\Throwable $e) {
-            return app('json')->fail(400336);
+            return app('json')->fail('滑块验证失败');
         }
 
         validate(SystemAdminValidata::class)->scene('get')->check(['account' => $account, 'pwd' => $password]);
