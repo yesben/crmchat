@@ -126,7 +126,7 @@
 			<view class="scriptLibary">
 				<view class="scriptLibary_header">
 					<view class="scriptLibary_header_title">
-						<view v-for="(item, index) in speechArtTypeList" :key="index" @click="selectSpeechArtType(item)"
+						<view class="tit" v-for="(item, index) in speechArtTypeList" :key="index" @click="selectSpeechArtType(item)"
 							:class="{ speechArtSelectEd: speechArtType == item.id }">
 							<span>{{ item.label }}</span>
 						</view>
