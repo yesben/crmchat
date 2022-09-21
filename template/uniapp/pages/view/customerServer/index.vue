@@ -133,13 +133,13 @@
 					</view>
 
 					<view class="scriptLibary_header_icon">
-						<view @click="editScript"><span class="iconfont">&#xe6b4;</span></view>
+						<view @click="editScript"><span class="iconfont icon_edit">&#xe6b4;</span></view>
 						<view @click="closeScript"><span class="iconfont">&#xe6b5;</span></view>
 					</view>
 				</view>
 				<view class="scriptLibary_search">
-					<view>
-						<span @click="handleSetTitle" class="iconfont">&#xe6d8;</span>
+					<view class="search">
+						<span @click="handleSetTitle" class="iconfont icon_search">&#xe6d8;</span>
 						<input v-model="scriptTitle" type="text" placeholder="搜索快捷回复" />
 					</view>
 				</view>

@@ -1,6 +1,6 @@
 <!-- 话数库 -->
 <template>
-	<div class="scriptLibary_container" :style="{ 'max-height': maxHeight, height: height }">
+	<div class="scriptLibary_container" :style="{ 'max-height': maxHeight, height: height,'min-height': minWidth, width: width }">
 		<div class="script_group">
 			<scroll-view scroll-y="true" class="script_group_scroll">
 				<div class="tag_list flex-center" @click="addGroup" v-if="speechArtType == 1">
@@ -21,7 +21,7 @@
 				</div>
 				<div class="script_list_item" v-for="(item, index) in scriptList" :key="index" @click="selectScript(item)">
 					<div class="script_list_item_label">{{ item.title }}</div>
-					<div class="script_list_item_value">{{ item.message }}</div>
+					<div class="script_list_item_value line2">{{ item.message }}</div>
 					<div class="edit_box" v-if="speechArtType == 1">
 						<div @click.stop="editSpeech(item)"><span class="iconfont">&#xe6b2;</span></div>
 						<div @click.stop="handleDeleteServiceSpeechcraft(item)"><span class="iconfont">&#xe6b3;</span></div>
@@ -39,7 +39,7 @@
 				</div>
 
 				<div class="addGroup_form">
-					<div class="input_box"><input v-model="speechData.title" type="text" placeholder="请输入标题名称" /></div>
+					<div class="input_box"><input class="inp_title" maxlength="20" v-model="speechData.title" type="text" placeholder="请输入标题名称" /></div>
 					<div class="input_box"><textarea v-model="speechData.message" type="text" placeholder="请输入您的话术"></textarea></div>
 					<div class="button_box" :class="{ canInput: speechData.title && speechData.message }" @click="handleSubmiteditAdd"><div>确定</div></div>
 				</div>
@@ -93,6 +93,15 @@ export default {
 			type: String,
 			default: ''
 		},
+		minWidth: {
+			type: String,
+			default: ''
+		},
+		width: {
+			type: String,
+			default: ''
+		},
+		
 
 	},
 	data() {
@@ -219,6 +228,8 @@ export default {
 		},
 		// 添加话术
 		addSpeech() {
+			this.speechData.title = '';
+			this.speechData.message = '';
 			this.handleAdEdType = 1;
 			this.$refs.addEdGroup.open();
 		},
@@ -339,9 +350,12 @@ export default {
 	display: flex;
 	overflow: hidden;
 	.script_group {
-		width: 176rpx;
+		// width: 176rpx;
+		width: 20%;
+		position: fixed;
 		background: #f5f6f9;
 		.script_group_scroll {
+			width: 100%;
 			height: 100%;
 			.tag_list {
 				width: 100%;
@@ -393,7 +407,10 @@ export default {
 	}
 
 	.script_list {
-		flex: 1;
+		// flex: 1;
+		width: 80%;
+		position: absolute;
+		right: 0;
 		.add_script {
 			display: flex;
 			align-items: center;
@@ -506,5 +523,14 @@ export default {
 			}
 		}
 	}
+}
+.line2 {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+.inp_title {
+	width: 600rpx;
 }
 </style>
