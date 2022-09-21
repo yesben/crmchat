@@ -325,7 +325,8 @@ export default {
             request({
                 url: this.upload,
                 method: 'post',
-                data: formData
+                data: formData,
+                kefu: true
             }).then(res => {
                 this.sendMsg(res.data.url, 3);
                 this.$refs.editable.innerText = '';
