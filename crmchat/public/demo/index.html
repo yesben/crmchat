@@ -49,7 +49,9 @@
 <!--增加了"authInit":true 为true才会自动加载-->
 <!--<script src="/../customerServer.js" id="chat" option='{"authInit":true,"openUrl":"https://chat.crmeb.net","isShowTip":true,"token":"e8bcc017f50e55c63b5352c4257c8904"}'></script>-->
 <script>
-
+    document.getElementById('page').click(function () {
+        location.replace(this.href)
+    })
     let token = '0c8e1e252430160449fa327d5229f12b',
         url = 'http://localhost:8080',
         chat = document.getElementById('chat'),

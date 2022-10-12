@@ -190,15 +190,9 @@ export default {
         // 记录用户信息
         this.$store.commit('kefu/setInfo', res.data.kefuInfo)
 
+        // pc页面
+        return this.$router.replace({ path: this.$route.query.redirect || '/kefu/pc_list' });
 
-        if(this.$store.state.media.isMobile) {
-          //手机页面
-          // this.$router.push({ name: 'kefu_mobile_list' });
-          return this.$router.replace({ path: this.$route.query.redirect || '/kefu/mobile_list' });
-        } else {
-          // pc页面
-          return this.$router.replace({ path: this.$route.query.redirect || '/kefu/pc_list' });
-        }
       }).catch(rej => {
         msg();
         let data = rej === undefined ? {} : rej;
