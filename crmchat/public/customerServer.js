@@ -255,7 +255,7 @@ function initCustomerServer(option) {
         this.iframeLayout = document.createElement('div');
         this.iframeLayout.setAttribute('id', 'iframe_content');
         this.setStyleOfCustomerServer(this.iframeLayout, customerServerStyleObject.iframe_content);
-        this.iframeLayout.style['z-index'] = 999;
+        this.iframeLayout.style['z-index'] = 999999;
         this.iframeLayout.innerHTML = iframeHtml;
         this.body.appendChild(this.iframeLayout);
 
