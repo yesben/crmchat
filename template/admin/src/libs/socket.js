@@ -61,6 +61,15 @@ class wsSocket {
     }
 
     networkStatusFn(onlineFun, offlineFun) {
+        this.addHandler(window, 'online', () => {
+            onlineFun()
+        })
+        this.addHandler(window, 'offline', () => {
+            offlineFun()
+        });
+    }
+
+    networkStatusFnv2(onlineFun, offlineFun) {
         if (NetWork) {
             clearInterval(NetWork);
             NetWork = null;

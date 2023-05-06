@@ -23,7 +23,7 @@ class Socket {
 	}
 	//网络状态变化监听
 	networkEvent() {
-		onNetworkStatusChangeV2(() => {
+		onNetworkStatusChange(() => {
 			console.log('有网了')
 			this.networkStatus = true;
 			uni.$on('timeout', this.timeoutEvent.bind(this))
