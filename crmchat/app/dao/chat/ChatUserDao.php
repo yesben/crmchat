@@ -157,7 +157,9 @@ class ChatUserDao extends BaseDao
         })->when(isset($where['group_id']) && $where['group_id'], function ($query) use ($where) {
             $query->where('group_id', $where['group_id']);
         })->when(isset($where['label_id']) && $where['label_id'], function ($query) use ($where) {
-            $labelId = explode(',', $where['label_id']);
+            $labelId = array_filter(array_map('intval', explode(',', $where['label_id'])), function ($var) {
+                return $var > 0;
+            });
             $query->whereIn('id', function ($query) use ($labelId) {
                 $query->name('chat_user_label_assist')->whereIn('label_id', $labelId)->field(['user_id']);
             });
