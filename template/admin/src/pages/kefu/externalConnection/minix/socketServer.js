@@ -178,7 +178,7 @@ export default {
         userStatistics({
             ip: window.returnCitySN ? window.returnCitySN.cip : '',
             path: window.location.href,
-            source: window.parent.location.href,
+            source: '',//window.parent.location.href
             browser: browser
         });
       },
