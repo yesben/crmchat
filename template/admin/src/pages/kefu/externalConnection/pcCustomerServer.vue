@@ -143,7 +143,7 @@
                     <!-- 内容输入结束 -->
                 </div>
 
-                <div class="pc_customerServer_container_advertisement"
+                <!-- <div class="pc_customerServer_container_advertisement"
                      v-if="upperData.noCanClose == '1' || upperData.windowStyle == `center`">
                     <div class="advertisement">
                         <div v-html="advertisement"></div>
@@ -151,7 +151,7 @@
                             <span>CRMChat开源客服系统</span>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
 
         </div>
