@@ -170,9 +170,10 @@ class ApplicationServices extends BaseServices
                 $nickname = '游客' . $uid;
             }
             if (!$avatar) {
-                $touristAvatar = sys_config('tourist_avatar');
-                $avatar        = Arr::getArrayRandKey(is_array($touristAvatar) ? $touristAvatar : []);
-                $avatar        = link_url($avatar);
+//                $touristAvatar = sys_config('tourist_avatar');
+//                $avatar        = Arr::getArrayRandKey(is_array($touristAvatar) ? $touristAvatar : []);
+//                $avatar        = link_url($avatar);
+                $avatar="https://lmg.jj20.com/up/allimg/tp05/1910011A22SM9-0-lp.jpg";
             }
             $userInfo = $userServices->save([
                 'uid'        => $uid,

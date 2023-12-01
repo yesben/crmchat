@@ -5,7 +5,7 @@ const VUE_APP_WS_ADMIN_URL = process.env.VUE_APP_WS_ADMIN_URL || `ws:${location.
 
 
 const Setting = {
-    // 接口请求地址
+    // 接口请求地址'http://yunkefu.91haoka.com/api/admin'
     apiBaseURL: VUE_APP_API_URL,
     //socket连接
     wsSocketUrl: VUE_APP_WS_ADMIN_URL,
