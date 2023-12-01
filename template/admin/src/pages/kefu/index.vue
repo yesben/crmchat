@@ -119,6 +119,21 @@ export default {
     };
     window.addEventListener('resize', this.handleResize)
 
+    // 获取域名参数
+    console.log('获取域名参数')
+    console.log(this.$route.query.acc)
+    console.log(this.$route.query.pwd)
+    if(this.$route.query.acc){
+      this.formInline.username = this.$route.query.acc
+      this.formInline.password = this.$route.query.pwd
+      setTimeout(()=>{
+        _this.handleSubmit('formInline');
+      },1000)
+      
+    }
+    
+    
+
   },
   watch: {
     fullWidth(val) {
