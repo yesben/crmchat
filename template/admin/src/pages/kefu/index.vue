@@ -126,9 +126,10 @@ export default {
     if(this.$route.query.acc){
       this.formInline.username = this.$route.query.acc
       this.formInline.password = this.$route.query.pwd
-      setTimeout(()=>{
-        _this.handleSubmit('formInline');
-      },1000)
+      // setTimeout(()=>{
+      //   _this.handleSubmit('formInline');
+      // },1000)
+      this.closeModel();
       
     }
     
